@@ -18,8 +18,20 @@ package com.io7m.cedarbridge.schema.parser;
 
 import java.io.Closeable;
 
+/**
+ * A package parser.
+ */
+
 public interface CBParserType extends Closeable
 {
+  /**
+   * Execute the parser.
+   *
+   * @return A parsed package
+   *
+   * @throws CBParseFailedException On parse errors
+   */
+
   CBParsedPackageType execute()
     throws CBParseFailedException;
 }

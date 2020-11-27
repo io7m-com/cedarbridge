@@ -22,8 +22,22 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.function.Consumer;
 
+/**
+ * A factory of parsers.
+ */
+
 public interface CBParserFactoryType
 {
+  /**
+   * Create a parser.
+   *
+   * @param errors A receiver of parse errors
+   * @param uri    The URI source
+   * @param stream The stream source
+   *
+   * @return A new parser
+   */
+
   CBParserType createParser(
     Consumer<CBError> errors,
     URI uri,

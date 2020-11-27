@@ -38,12 +38,25 @@ import java.util.function.Consumer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+/**
+ * A parser factory.
+ */
+
 public final class CBParserFactory implements CBParserFactoryType
 {
   private final CBStringsType strings;
   private final JSXLexerSupplierType lexers;
   private final JSXParserSupplierType parsers;
   private final JSXSerializerSupplierType serializers;
+
+  /**
+   * Construct a parser factory.
+   *
+   * @param inStrings     String resources
+   * @param inLexers      S-expression lexers
+   * @param inParsers     S-expression parsers
+   * @param inSerializers S-expression serializers
+   */
 
   public CBParserFactory(
     final CBStringsType inStrings,
@@ -60,6 +73,10 @@ public final class CBParserFactory implements CBParserFactoryType
     this.serializers =
       Objects.requireNonNull(inSerializers, "serializers");
   }
+
+  /**
+   * Construct a parser factory
+   */
 
   public CBParserFactory()
   {

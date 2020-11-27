@@ -24,13 +24,29 @@ import org.immutables.value.Value;
 
 import java.util.List;
 
+/**
+ * A parsed package.
+ */
+
 @ImmutableStyleType
 @Value.Immutable
 public interface CBParsedPackageType
 {
+  /**
+   * @return The name of the package
+   */
+
   CBASTPackageName<CBParsed> name();
 
+  /**
+   * @return The packages imported by this package
+   */
+
   List<CBASTImport<CBParsed>> imports();
+
+  /**
+   * @return The type declarations in the package
+   */
 
   List<CBASTTypeDeclarationType<CBParsed>> types();
 }

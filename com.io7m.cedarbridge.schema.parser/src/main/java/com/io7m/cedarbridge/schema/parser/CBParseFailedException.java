@@ -16,8 +16,16 @@
 
 package com.io7m.cedarbridge.schema.parser;
 
+/**
+ * Parsing failed.
+ */
+
 public final class CBParseFailedException extends Exception
 {
+  /**
+   * Construct an exception.
+   */
+
   public CBParseFailedException()
   {
 
