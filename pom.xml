@@ -185,6 +185,21 @@
 
   <build>
     <plugins>
+      <!-- Generate immutables.org types -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <dependency>
+              <groupId>org.immutables</groupId>
+              <artifactId>value</artifactId>
+              <version>${org.immutables.version}</version>
+            </dependency>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+
       <!-- Generate a site -->
       <plugin>
         <groupId>com.io7m.minisite</groupId>

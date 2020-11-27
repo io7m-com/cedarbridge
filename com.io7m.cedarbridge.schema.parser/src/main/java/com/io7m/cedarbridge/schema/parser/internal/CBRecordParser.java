@@ -19,11 +19,9 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
-import com.io7m.cedarbridge.schema.ast.CBASTFieldNames;
+import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.CBParsed;
@@ -74,7 +72,7 @@ public final class CBRecordParser
       final var symbol =
         subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
       try {
-        return CBASTFieldNames.of(expression, PARSED, symbol.text());
+        return CBASTNames.fieldName(expression, PARSED, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorRecordFieldNameInvalid", e);
       }
@@ -116,7 +114,7 @@ public final class CBRecordParser
       final var symbol =
         subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
       try {
-        return CBASTTypeParameterNames.of(expression, PARSED, symbol.text());
+        return CBASTNames.typeParameterName(expression, PARSED, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorTypeParameterNameInvalid", e);
       }
@@ -138,7 +136,7 @@ public final class CBRecordParser
       final var symbol =
         subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
       try {
-        return CBASTTypeNames.of(expression, PARSED, symbol.text());
+        return CBASTNames.typeName(expression, PARSED, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorTypeNameInvalid", e);
       }

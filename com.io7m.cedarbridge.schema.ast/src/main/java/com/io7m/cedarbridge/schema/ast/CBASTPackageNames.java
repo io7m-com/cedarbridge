@@ -16,10 +16,6 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.jlexing.core.LexicalType;
-
-import java.net.URI;
-
 /**
  * Functions over package names.
  */
@@ -35,28 +31,5 @@ public final class CBASTPackageNames extends CBASTNameChecker
   private CBASTPackageNames()
   {
     super("[a-z][a-z0-9_]*(\\.[a-z][a-z0-9_]*)*");
-  }
-
-  /**
-   * Construct a name.
-   *
-   * @param lexical Lexical data
-   * @param data    Pass-specific data
-   * @param text    The text
-   * @param <T>     The type of pass-specific data
-   *
-   * @return A name
-   */
-
-  public static <T> CBASTPackageName<T> of(
-    final LexicalType<URI> lexical,
-    final T data,
-    final String text)
-  {
-    return CBASTPackageName.<T>builder()
-      .setLexical(lexical.lexical())
-      .setData(data)
-      .setText(text)
-      .build();
   }
 }

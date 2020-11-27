@@ -16,10 +16,6 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.jlexing.core.LexicalType;
-
-import java.net.URI;
-
 /**
  * Functions over record field names.
  */
@@ -37,26 +33,4 @@ public final class CBASTFieldNames extends CBASTNameChecker
     super("[a-z][a-zA-Z0-9]*");
   }
 
-  /**
-   * Construct a name.
-   *
-   * @param lexical Lexical data
-   * @param data    Pass-specific data
-   * @param text    The text
-   * @param <T>     The type of pass-specific data
-   *
-   * @return A name
-   */
-
-  public static <T> CBASTFieldName<T> of(
-    final LexicalType<URI> lexical,
-    final T data,
-    final String text)
-  {
-    return CBASTFieldName.<T>builder()
-      .setLexical(lexical.lexical())
-      .setData(data)
-      .setText(text)
-      .build();
-  }
 }

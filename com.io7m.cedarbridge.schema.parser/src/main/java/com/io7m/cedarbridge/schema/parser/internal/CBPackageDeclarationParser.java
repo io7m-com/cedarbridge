@@ -16,9 +16,9 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
-import com.io7m.cedarbridge.schema.ast.CBASTPackageNames;
 import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.CBParsed;
 import com.io7m.jsx.SExpressionListType;
@@ -76,7 +76,7 @@ public final class CBPackageDeclarationParser
            context.openExpectingOneOf(
              "objectPackageName", List.of("<package-name>"))) {
       try {
-        return CBASTPackageNames.of(packName, PARSED, packName.text());
+        return CBASTNames.packageName(packName, PARSED, packName.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(packName, "errorPackageNameInvalid", e);
       }

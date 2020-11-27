@@ -16,11 +16,10 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
-import com.io7m.cedarbridge.schema.ast.CBASTPackageNames;
+import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeNames;
 import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.CBParsed;
 import com.io7m.jsx.SExpressionListType;
@@ -69,17 +68,17 @@ public final class CBTypeExpressionParser
 
         if (segments.size() == 1) {
           builder.setName(
-            CBASTTypeNames.of(expression, PARSED, segments.get(0))
+            CBASTNames.typeName(expression, PARSED, segments.get(0))
           );
           return builder.build();
         }
 
         if (segments.size() == 2) {
           builder.setPackageName(
-            CBASTPackageNames.of(expression, PARSED, segments.get(0))
+            CBASTNames.packageName(expression, PARSED, segments.get(0))
           );
           builder.setName(
-            CBASTTypeNames.of(expression, PARSED, segments.get(1))
+            CBASTNames.typeName(expression, PARSED, segments.get(1))
           );
           return builder.build();
         }
