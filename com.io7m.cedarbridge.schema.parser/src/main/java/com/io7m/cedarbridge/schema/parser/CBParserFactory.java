@@ -17,26 +17,15 @@
 package com.io7m.cedarbridge.schema.parser;
 
 import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
+import com.io7m.cedarbridge.schema.parser.api.CBParserFactoryType;
+import com.io7m.cedarbridge.schema.parser.api.CBParserType;
 import com.io7m.cedarbridge.schema.parser.internal.CBParser;
-import com.io7m.cedarbridge.schema.parser.internal.CBParserServices;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jeucreader.UnicodeCharacterReader;
-import com.io7m.jsx.api.lexer.JSXLexerComment;
-import com.io7m.jsx.api.lexer.JSXLexerConfiguration;
-import com.io7m.jsx.api.lexer.JSXLexerSupplierType;
-import com.io7m.jsx.api.parser.JSXParserConfiguration;
-import com.io7m.jsx.api.parser.JSXParserSupplierType;
-import com.io7m.jsx.api.serializer.JSXSerializerSupplierType;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URI;
-import java.util.EnumSet;
 import java.util.Objects;
 import java.util.function.Consumer;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * A parser factory.
@@ -45,33 +34,18 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public final class CBParserFactory implements CBParserFactoryType
 {
   private final CBStringsType strings;
-  private final JSXLexerSupplierType lexers;
-  private final JSXParserSupplierType parsers;
-  private final JSXSerializerSupplierType serializers;
 
   /**
    * Construct a parser factory.
    *
-   * @param inStrings     String resources
-   * @param inLexers      S-expression lexers
-   * @param inParsers     S-expression parsers
-   * @param inSerializers S-expression serializers
+   * @param inStrings String resources
    */
 
   public CBParserFactory(
-    final CBStringsType inStrings,
-    final JSXLexerSupplierType inLexers,
-    final JSXParserSupplierType inParsers,
-    final JSXSerializerSupplierType inSerializers)
+    final CBStringsType inStrings)
   {
     this.strings =
       Objects.requireNonNull(inStrings, "inStrings");
-    this.lexers =
-      Objects.requireNonNull(inLexers, "inLexers");
-    this.parsers =
-      Objects.requireNonNull(inParsers, "parsers");
-    this.serializers =
-      Objects.requireNonNull(inSerializers, "serializers");
   }
 
   /**
@@ -81,48 +55,15 @@ public final class CBParserFactory implements CBParserFactoryType
   public CBParserFactory()
   {
     this(
-      CBParserStrings.create(),
-      CBParserServices.find(JSXLexerSupplierType.class),
-      CBParserServices.find(JSXParserSupplierType.class),
-      CBParserServices.find(JSXSerializerSupplierType.class)
+      CBParserStrings.create()
     );
   }
 
   @Override
   public CBParserType createParser(
     final Consumer<CBError> errors,
-    final URI uri,
-    final InputStream stream)
+    final CBExpressionSourceType source)
   {
-    Objects.requireNonNull(errors, "errors");
-    Objects.requireNonNull(uri, "uri");
-    Objects.requireNonNull(stream, "stream");
-
-    final var reader =
-      UnicodeCharacterReader.newReader(new InputStreamReader(stream, UTF_8));
-
-    final var lexerConfiguration =
-      JSXLexerConfiguration.builder()
-        .setComments(EnumSet.of(JSXLexerComment.COMMENT_HASH))
-        .setFile(URI.create("urn:stdin"))
-        .setNewlinesInQuotedStrings(true)
-        .setSquareBrackets(true)
-        .build();
-
-    final var lexer =
-      this.lexers.create(lexerConfiguration, reader);
-
-    final var parserConfiguration =
-      JSXParserConfiguration.builder()
-        .setPreserveLexical(true)
-        .build();
-
-    final var parser =
-      this.parsers.create(parserConfiguration, lexer);
-
-    final var serializer =
-      this.serializers.create();
-
-    return new CBParser(errors, uri, stream, parser, this.strings, serializer);
+    return new CBParser(this.strings, errors, source);
   }
 }

@@ -15,7 +15,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.cedarbridge.schema.parser</name>
-  <description>cedarbridge serialization (Schema parser)</description>
+  <description>Cedarbridge message protocol (Schema parser)</description>
   <url>https://www.github.com/io7m/cedarbridge</url>
 
   <dependencies>
@@ -27,6 +27,16 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.ast</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.exprsrc.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.parser.api</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -47,10 +57,6 @@
       <groupId>com.io7m.jlexing</groupId>
       <artifactId>com.io7m.jlexing.core</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.io7m.jeucreader</groupId>
-      <artifactId>com.io7m.jeucreader.core</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>org.osgi</groupId>
@@ -62,32 +68,6 @@
       <artifactId>org.osgi.annotation.bundle</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.immutables</groupId>
-      <artifactId>value</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.immutables.style</groupId>
-      <artifactId>com.io7m.immutables.style</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- Ignore dependencies that bytecode analysis gets wrong. -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <failOnWarning>true</failOnWarning>
-          <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>com.io7m.immutables.style:com.io7m.immutables.style:*</ignoredUnusedDeclaredDependency>
-          </ignoredUnusedDeclaredDependencies>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

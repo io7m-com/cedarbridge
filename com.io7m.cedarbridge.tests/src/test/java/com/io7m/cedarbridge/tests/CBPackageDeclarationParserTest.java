@@ -17,13 +17,13 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
+import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBPackageDeclarationParser;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -31,19 +31,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import static com.io7m.cedarbridge.tests.CBTestExpressions.expression;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBPackageDeclarationParserTest
+public final class CBPackageDeclarationParserTest extends
+  CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBPackageDeclarationParserTest.class);
 
   private CBStringsType strings;
-  private CBPackageDeclarationParser parser;
-  private CBParseContext context;
-  private JSXSerializerType serializer;
   private ArrayList<CBError> errors;
 
   private CBError takeError()
@@ -63,22 +60,26 @@ public final class CBPackageDeclarationParserTest
   {
     this.errors = new ArrayList<CBError>();
     this.strings = CBParserStrings.create();
-    this.serializer = new JSXSerializerTrivialSupplier().create();
-    this.parser = new CBPackageDeclarationParser();
-    this.context =
-      new CBParseContext(this.strings, this.serializer, this::addError);
+  }
+
+  private CBASTPackageDeclaration<CBParsed> parse(
+    final String text)
+    throws CBParseFailedException
+  {
+    final var parser = new CBPackageDeclarationParser();
+    final var expr = this.expression(text);
+    final var context = new CBParseContext(
+      this.strings,
+      this.source,
+      this::addError);
+    return parser.parse(context.current(), expr);
   }
 
   @Test
   public void testPackageOK0()
     throws Exception
   {
-    final var packageV =
-      this.parser.parse(
-        this.context.current(),
-        expression("[package com.io7m.cedarbridge]")
-      );
-
+    final var packageV = this.parse("[package com.io7m.cedarbridge]");
     assertEquals("com.io7m.cedarbridge", packageV.name().text());
   }
 
@@ -87,10 +88,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[]")
-      );
+      this.parse("[]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageInvalid", this.takeError().errorCode());
@@ -102,10 +100,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import]")
-      );
+      this.parse("[import]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageInvalid", this.takeError().errorCode());
@@ -117,10 +112,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record]")
-      );
+      this.parse("[record]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageInvalid", this.takeError().errorCode());
@@ -132,10 +124,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record x]")
-      );
+      this.parse("[record x]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageKeyword", this.takeError().errorCode());
@@ -147,10 +136,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[package com.io7m.cedarbridge X]")
-      );
+      this.parse("[package com.io7m.cedarbridge X]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageInvalid", this.takeError().errorCode());
@@ -162,10 +148,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[package X]")
-      );
+      this.parse("[package X]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageNameInvalid", this.takeError().errorCode());
@@ -177,10 +160,7 @@ public final class CBPackageDeclarationParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[[] com.io7m.cedarbridge]")
-      );
+      this.parse("[[] com.io7m.cedarbridge]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageKeyword", this.takeError().errorCode());

@@ -17,13 +17,13 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBImportParser;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -31,19 +31,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import static com.io7m.cedarbridge.tests.CBTestExpressions.expression;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBImportParserTest
+public final class CBImportParserTest extends CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBImportParserTest.class);
 
   private CBStringsType strings;
-  private CBImportParser parser;
-  private CBParseContext context;
-  private JSXSerializerType serializer;
   private ArrayList<CBError> errors;
 
   private CBError takeError()
@@ -63,10 +59,19 @@ public final class CBImportParserTest
   {
     this.errors = new ArrayList<CBError>();
     this.strings = CBParserStrings.create();
-    this.serializer = new JSXSerializerTrivialSupplier().create();
-    this.parser = new CBImportParser();
-    this.context =
-      new CBParseContext(this.strings, this.serializer, this::addError);
+  }
+
+  private CBASTImport<CBParsed> parse(
+    final String text)
+    throws CBParseFailedException
+  {
+    final var parser = new CBImportParser();
+    final var expr = this.expression(text);
+    final var context = new CBParseContext(
+      this.strings,
+      this.source,
+      this::addError);
+    return parser.parse(context.current(), expr);
   }
 
   @Test
@@ -74,10 +79,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var importV =
-      this.parser.parse(
-        this.context.current(),
-        expression("[import com.io7m.cedarbridge cb]")
-      );
+      this.parse("[import com.io7m.cedarbridge cb]");
 
     assertEquals("com.io7m.cedarbridge", importV.target().text());
     assertEquals("cb", importV.shortName().text());
@@ -88,10 +90,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[]")
-      );
+      this.parse("[]");
     });
     LOG.debug("", ex);
     assertEquals("errorImportInvalid", this.takeError().errorCode());
@@ -103,10 +102,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import]")
-      );
+      this.parse("[import]");
     });
     LOG.debug("", ex);
     assertEquals("errorImportInvalid", this.takeError().errorCode());
@@ -118,10 +114,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record]")
-      );
+      this.parse("[record]");
     });
     LOG.debug("", ex);
     assertEquals("errorImportInvalid", this.takeError().errorCode());
@@ -133,10 +126,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record x y]")
-      );
+      this.parse("[record x y]");
     });
     LOG.debug("", ex);
     assertEquals("errorImportKeyword", this.takeError().errorCode());
@@ -148,10 +138,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import com.io7m.cedarbridge X]")
-      );
+      this.parse("[import com.io7m.cedarbridge X]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageShortNameInvalid", this.takeError().errorCode());
@@ -163,10 +150,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import X cb]")
-      );
+      this.parse("[import X cb]");
     });
     LOG.debug("", ex);
     assertEquals("errorPackageNameInvalid", this.takeError().errorCode());
@@ -178,10 +162,7 @@ public final class CBImportParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[[] com.io7m.cedarbridge cb]")
-      );
+      this.parse("[[] com.io7m.cedarbridge cb]");
     });
     LOG.debug("", ex);
     assertEquals("errorImportKeyword", this.takeError().errorCode());

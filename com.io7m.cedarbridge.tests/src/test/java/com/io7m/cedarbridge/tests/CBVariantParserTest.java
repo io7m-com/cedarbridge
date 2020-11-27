@@ -17,13 +17,13 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.schema.parser.internal.CBVariantParser;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -31,19 +31,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import static com.io7m.cedarbridge.tests.CBTestExpressions.expression;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBVariantParserTest
+public final class CBVariantParserTest extends CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBVariantParserTest.class);
 
   private CBStringsType strings;
-  private CBVariantParser parser;
-  private CBParseContext context;
-  private JSXSerializerType serializer;
   private ArrayList<CBError> errors;
 
   private CBError takeError()
@@ -58,15 +54,24 @@ public final class CBVariantParserTest
     this.errors.add(error);
   }
 
+  private CBASTTypeVariant<CBParsed> parse(
+    final String text)
+    throws CBParseFailedException
+  {
+    final var parser = new CBVariantParser();
+    final var expr = this.expression(text);
+    final var context = new CBParseContext(
+      this.strings,
+      this.source,
+      this::addError);
+    return parser.parse(context.current(), expr);
+  }
+
   @BeforeEach
   public void setup()
   {
     this.errors = new ArrayList<CBError>();
     this.strings = CBParserStrings.create();
-    this.serializer = new JSXSerializerTrivialSupplier().create();
-    this.parser = new CBVariantParser();
-    this.context =
-      new CBParseContext(this.strings, this.serializer, this::addError);
   }
 
   @Test
@@ -74,10 +79,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var variant =
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant Q]")
-      );
+      this.parse("[variant Q]");
 
     assertEquals(0, variant.cases().size());
     assertEquals("Q", variant.name().text());
@@ -89,16 +91,13 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var variant =
-      this.parser.parse(
-        this.context.current(),
-        expression(
-          "[variant " +
-            "Option " +
-            "(parameter A) " +
-            "(record Some [field value A])" +
-            "(record None)" +
-            "]")
-      );
+      this.parse(
+        "[variant " +
+          "Option " +
+          "(parameter A) " +
+          "(record Some [field value A])" +
+          "(record None)" +
+          "]");
 
     assertEquals(2, variant.cases().size());
     final var record0 = variant.cases().get(0);
@@ -118,10 +117,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant x]")
-      );
+      this.parse("[variant x]");
     });
     LOG.debug("", ex);
     assertEquals("errorTypeNameInvalid", this.takeError().errorCode());
@@ -133,10 +129,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant (X B)]")
-      );
+      this.parse("[variant (X B)]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -148,10 +141,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X (parameter)]")
-      );
+      this.parse("[variant X (parameter)]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -165,10 +155,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X (parameter A B)]")
-      );
+      this.parse("[variant X (parameter A B)]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -182,10 +169,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X (parameter a)]")
-      );
+      this.parse("[variant X (parameter a)]");
     });
     LOG.debug("", ex);
     assertEquals("errorTypeParameterNameInvalid", this.takeError().errorCode());
@@ -197,10 +181,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X (what)]")
-      );
+      this.parse("[variant X (what)]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -214,10 +195,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X what]")
-      );
+      this.parse("[variant X what]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -229,10 +207,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X ([])]")
-      );
+      this.parse("[variant X ([])]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -244,13 +219,12 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[]")
-      );
+      this.parse("[]");
     });
     LOG.debug("", ex);
-    assertEquals("errorVariantInvalidDeclaration", this.takeError().errorCode());
+    assertEquals(
+      "errorVariantInvalidDeclaration",
+      this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 
@@ -259,10 +233,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import x y]")
-      );
+      this.parse("[import x y]");
     });
     LOG.debug("", ex);
     assertEquals("errorVariantKeyword", this.takeError().errorCode());
@@ -274,10 +245,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[variant X ()]")
-      );
+      this.parse("[variant X ()]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -291,10 +259,7 @@ public final class CBVariantParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("\"hello\"")
-      );
+      this.parse("\"hello\"");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());

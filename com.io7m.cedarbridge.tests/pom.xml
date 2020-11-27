@@ -15,7 +15,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.cedarbridge.tests</name>
-  <description>cedarbridge serialization (Test suite)</description>
+  <description>Cedarbridge message protocol (Test suite)</description>
   <url>https://www.github.com/io7m/cedarbridge</url>
 
   <properties>
@@ -36,6 +36,21 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.parser</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.binder</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.compiled</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.exprsrc</artifactId>
       <version>${project.version}</version>
     </dependency>
 

@@ -14,20 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser;
+package com.io7m.cedarbridge.schema.binder.api;
 
 /**
- * Parsing failed.
+ * A package binder.
  */
 
-public final class CBParseFailedException extends Exception
+public interface CBBinderType extends AutoCloseable
 {
   /**
-   * Construct an exception.
+   * Execute the binder.
+   *
+   * @return A bound package
+   *
+   * @throws CBBindFailedException On errors
    */
 
-  public CBParseFailedException()
-  {
+  CBBoundPackage execute()
+    throws CBBindFailedException;
 
-  }
+  @Override
+  void close();
 }

@@ -14,33 +14,17 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser;
-
-import com.io7m.cedarbridge.errors.CBError;
-
-import java.io.InputStream;
-import java.net.URI;
-import java.util.function.Consumer;
-
 /**
- * A factory of parsers.
+ * Cedarbridge message protocol (Schema loader)
  */
 
-public interface CBParserFactoryType
+module com.io7m.cedarbridge.schema.loader.api
 {
-  /**
-   * Create a parser.
-   *
-   * @param errors A receiver of parse errors
-   * @param uri    The URI source
-   * @param stream The stream source
-   *
-   * @return A new parser
-   */
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
 
-  CBParserType createParser(
-    Consumer<CBError> errors,
-    URI uri,
-    InputStream stream
-  );
+  requires com.io7m.cedarbridge.errors;
+  requires com.io7m.cedarbridge.schema.compiled;
+
+  exports com.io7m.cedarbridge.schema.loader.api;
 }

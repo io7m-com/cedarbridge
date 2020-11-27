@@ -14,39 +14,30 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser;
+package com.io7m.cedarbridge.exprsrc.api;
 
-import com.io7m.cedarbridge.schema.ast.CBASTImport;
-import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
-import com.io7m.jlexing.core.ImmutableStyleType;
-import org.immutables.value.Value;
-
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
- * A parsed package.
+ * A factory of expression sources.
  */
 
-@ImmutableStyleType
-@Value.Immutable
-public interface CBParsedPackageType
+public interface CBExpressionSourceFactoryType
 {
-  /**
-   * @return The name of the package
-   */
+  CBExpressionSourceType create(
+    URI uri,
+    InputStream stream);
 
-  CBASTPackageName<CBParsed> name();
-
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBASTImport<CBParsed>> imports();
-
-  /**
-   * @return The type declarations in the package
-   */
-
-  List<CBASTTypeDeclarationType<CBParsed>> types();
+  default CBExpressionSourceType create(
+    final Path path)
+    throws IOException
+  {
+    Objects.requireNonNull(path, "path");
+    return this.create(path.toUri(), Files.newInputStream(path));
+  }
 }

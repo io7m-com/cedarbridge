@@ -16,7 +16,7 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jlexing.core.LexicalPosition;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;

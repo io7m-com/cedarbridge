@@ -3,15 +3,17 @@
 <!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
 
 <properties>
-  <entry key="errorParse"><![CDATA[Error: {0}:{1}:{2}: {3}
-  {4}
-  ^^^
+  <entry key="errorParse"><![CDATA[{0}:{1}:{2}: {3}
+{4}
   Object: {5}
+
   Expected one of:
     {6}
 ]]></entry>
 
-  <entry key="errorParseBasic">Error: {0}:{1}:{2}: {3}</entry>
+  <entry key="errorParseBasic"><![CDATA[{0}:{1}:{2}: {3}
+{4}
+]]></entry>
 
   <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
   <entry key="errorEmptyTypeApplication">Empty type application.</entry>

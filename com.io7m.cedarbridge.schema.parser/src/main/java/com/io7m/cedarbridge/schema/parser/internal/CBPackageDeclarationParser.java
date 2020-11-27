@@ -19,15 +19,15 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.CBParsed;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.parser.CBParsed.PARSED;
+import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
 
 /**
  * A parser for package declarations.

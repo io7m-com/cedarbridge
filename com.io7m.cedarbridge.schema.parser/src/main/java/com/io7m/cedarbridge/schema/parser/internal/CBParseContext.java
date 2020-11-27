@@ -17,17 +17,14 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -39,33 +36,29 @@ public final class CBParseContext
 {
   private final LinkedList<Context> stack;
   private final CBStringsType strings;
-  private final JSXSerializerType serializer;
   private final Consumer<CBError> errorConsumer;
+  private final CBExpressionLineLogType lines;
   private int errors;
 
   public CBParseContext(
     final CBStringsType inStrings,
-    final JSXSerializerType inSerializer,
+    final CBExpressionLineLogType inLines,
     final Consumer<CBError> inErrorConsumer)
   {
     Objects.requireNonNull(inErrorConsumer, "inErrorConsumer");
 
     this.strings =
       Objects.requireNonNull(inStrings, "strings");
-    this.serializer =
-      Objects.requireNonNull(inSerializer, "inSerializer");
+    this.lines =
+      Objects.requireNonNull(inLines, "inLines");
 
     this.errorConsumer = error -> {
       ++this.errors;
       inErrorConsumer.accept(error);
     };
 
-    this.stack = new LinkedList<Context>();
-    this.stack.push(new Context(
-      this,
-      "?",
-      List.of("?")
-    ));
+    this.stack = new LinkedList<>();
+    this.stack.push(new Context(this, "?", List.of("?")));
   }
 
   public CBParseContextType current()
@@ -148,47 +141,44 @@ public final class CBParseContext
       Objects.requireNonNull(expression, "expression");
       Objects.requireNonNull(errorCode, "messageId");
 
-      try (var bao = new ByteArrayOutputStream()) {
-        this.root.serializer.serialize(expression, bao);
+      final var lexical =
+        expression.lexical();
+      final var error =
+        this.root.strings.format(errorCode);
+      final var expectedPattern =
+        String.join("\n  | ", this.expectingShapes);
+      final var expectedKindTranslated =
+        this.root.strings.format(this.expectingKind);
+      final var context =
+        this.root.lines.contextualize(lexical).orElse("");
 
-        final var lexical =
-          expression.lexical();
-        final var error =
-          this.root.strings.format(errorCode);
-        final var expectedPattern =
-          String.join("\n  | ", this.expectingShapes);
-        final var expectedKindTranslated =
-          this.root.strings.format(this.expectingKind);
+      final var text =
+        this.root.strings.format(
+          "errorParse",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          context,
+          expectedKindTranslated,
+          expectedPattern
+        );
 
-        final var text =
-          this.root.strings.format(
-            "errorParse",
-            lexical.file().orElse(URI.create("urn:unspecified")),
-            Integer.valueOf(lexical.line()),
-            Integer.valueOf(lexical.column()),
-            error,
-            bao.toString(StandardCharsets.UTF_8),
-            expectedKindTranslated,
-            expectedPattern
-          );
+      final var errorValue =
+        CBError.builder()
+          .setErrorCode(errorCode)
+          .setException(Objects.requireNonNullElseGet(
+            e,
+            CBParseFailedException::new))
+          .setLexical(lexical)
+          .setMessage(text)
+          .setSeverity(ERROR)
+          .build();
 
-        final var errorValue =
-          CBError.builder()
-            .setErrorCode(errorCode)
-            .setException(Objects.requireNonNullElseGet(
-              e,
-              CBParseFailedException::new))
-            .setLexical(lexical)
-            .setMessage(text)
-            .setSeverity(ERROR)
-            .build();
-
-        this.root.errorConsumer.accept(errorValue);
-        return new CBParseFailedException();
-      } catch (final IOException ex) {
-        throw new IllegalStateException(ex);
-      }
+      this.root.errorConsumer.accept(errorValue);
+      return new CBParseFailedException();
     }
+
 
     @Override
     public CBParseFailedException failed(
@@ -214,6 +204,8 @@ public final class CBParseContext
     {
       final var error =
         this.root.strings.format(errorCode);
+      final var context =
+        this.root.lines.contextualize(lexical).orElse("");
 
       final var text =
         this.root.strings.format(
@@ -221,7 +213,8 @@ public final class CBParseContext
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
           Integer.valueOf(lexical.column()),
-          error
+          error,
+          context
         );
 
       final var errorValue =

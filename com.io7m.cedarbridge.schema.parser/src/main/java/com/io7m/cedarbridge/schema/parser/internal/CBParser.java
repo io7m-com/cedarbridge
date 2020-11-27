@@ -17,24 +17,20 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.CBParsed;
-import com.io7m.cedarbridge.schema.parser.CBParsedPackage;
-import com.io7m.cedarbridge.schema.parser.CBParsedPackageType;
-import com.io7m.cedarbridge.schema.parser.CBParserType;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
+import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
+import com.io7m.cedarbridge.schema.parser.api.CBParserType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPositions;
 import com.io7m.jsx.api.parser.JSXParserException;
-import com.io7m.jsx.api.parser.JSXParserType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -44,32 +40,20 @@ import java.util.stream.Collectors;
 public final class CBParser implements CBParserType
 {
   private final Consumer<CBError> errors;
-  private final URI uri;
-  private final InputStream stream;
-  private final JSXParserType parser;
   private final CBStringsType strings;
-  private final JSXSerializerType serializer;
+  private final CBExpressionSourceType source;
 
   public CBParser(
-    final Consumer<CBError> inErrors,
-    final URI inUri,
-    final InputStream inStream,
-    final JSXParserType inParser,
     final CBStringsType inStrings,
-    final JSXSerializerType inSerializer)
+    final Consumer<CBError> inErrors,
+    final CBExpressionSourceType inSource)
   {
     this.errors =
       Objects.requireNonNull(inErrors, "errors");
-    this.uri =
-      Objects.requireNonNull(inUri, "uri");
-    this.stream =
-      Objects.requireNonNull(inStream, "inStream");
-    this.parser =
-      Objects.requireNonNull(inParser, "parser");
     this.strings =
       Objects.requireNonNull(inStrings, "inStrings");
-    this.serializer =
-      Objects.requireNonNull(inSerializer, "inSerializer");
+    this.source =
+      Objects.requireNonNull(inSource, "inSource");
   }
 
   private static List<CBASTTypeDeclarationType<CBParsed>> findTypes(
@@ -91,20 +75,20 @@ public final class CBParser implements CBParserType
   }
 
   @Override
-  public CBParsedPackageType execute()
+  public CBParsedPackage execute()
     throws CBParseFailedException
   {
     final var declParser =
       new CBDeclarationParser();
     final var context =
-      new CBParseContext(this.strings, this.serializer, this.errors);
+      new CBParseContext(this.strings, this.source, this.errors);
     final var declarations =
       new ArrayList<CBASTDeclarationType<CBParsed>>();
 
     while (true) {
       try {
         final var expressionOpt =
-          this.parser.parseExpressionOrEOF();
+          this.source.parseExpressionOrEOF();
         if (expressionOpt.isEmpty()) {
           break;
         }
@@ -127,7 +111,7 @@ public final class CBParser implements CBParserType
         );
       } catch (final IOException e) {
         context.current().failed(
-          LexicalPositions.zeroWithFile(this.uri),
+          LexicalPositions.zeroWithFile(this.source.source()),
           e,
           "errorIO"
         );
@@ -142,7 +126,7 @@ public final class CBParser implements CBParserType
     return this.processDeclarations(context.current(), declarations);
   }
 
-  private CBParsedPackageType processDeclarations(
+  private CBParsedPackage processDeclarations(
     final CBParseContextType context,
     final List<CBASTDeclarationType<CBParsed>> declarations)
     throws CBParseFailedException
@@ -174,7 +158,7 @@ public final class CBParser implements CBParserType
 
     if (names.isEmpty()) {
       throw context.failed(
-        LexicalPositions.zeroWithFile(this.uri),
+        LexicalPositions.zeroWithFile(this.source.source()),
         "errorPackageNameMissing"
       );
     }
@@ -193,6 +177,6 @@ public final class CBParser implements CBParserType
   public void close()
     throws IOException
   {
-    this.stream.close();
+    this.source.close();
   }
 }

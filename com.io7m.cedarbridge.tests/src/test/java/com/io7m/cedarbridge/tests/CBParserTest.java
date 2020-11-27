@@ -17,15 +17,15 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
+import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
-import com.io7m.cedarbridge.schema.parser.CBParserType;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParserType;
 import com.io7m.cedarbridge.schema.parser.internal.CBImportParser;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jsx.api.serializer.JSXSerializerType;
 import org.apache.commons.io.input.BrokenInputStream;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -109,7 +109,7 @@ public final class CBParserTest
   public void testBroken0()
     throws Exception
   {
-    try (var stream = this.stream("broken0.cbs")) {
+    try (var stream = this.stream("errorBroken0.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorSExpressionInvalid", this.takeError().errorCode());
@@ -122,7 +122,7 @@ public final class CBParserTest
   public void testBroken1()
     throws Exception
   {
-    try (var stream = this.stream("broken1.cbs")) {
+    try (var stream = this.stream("errorBroken1.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorSExpressionInvalid", this.takeError().errorCode());
@@ -154,7 +154,7 @@ public final class CBParserTest
   public void testBasicTooManyPackageNames()
     throws Exception
   {
-    try (var stream = this.stream("basicTooManyPackageNames.cbs")) {
+    try (var stream = this.stream("errorBasicTooManyPackageNames.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorPackageNameMultiple", this.takeError().errorCode());
@@ -166,11 +166,11 @@ public final class CBParserTest
   private CBParserType parser(
     final InputStream stream)
   {
-    return this.parsers.createParser(
-      this::addError,
-      URI.create("urn:test"),
-      stream
-    );
+    final var sources =
+      new CBExpressionSources();
+    final var source =
+      sources.create(URI.create("urn:test"), stream);
+    return this.parsers.createParser(this::addError, source);
   }
 
   @Test

@@ -20,8 +20,6 @@
 
 module com.io7m.cedarbridge.schema.parser
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
@@ -30,6 +28,8 @@ module com.io7m.cedarbridge.schema.parser
   requires transitive com.io7m.cedarbridge.errors;
 
   requires transitive com.io7m.cedarbridge.schema.ast;
+  requires transitive com.io7m.cedarbridge.schema.parser.api;
+
   requires com.io7m.cedarbridge.strings.api;
   requires com.io7m.jsx.core;
   requires com.io7m.jeucreader.core;

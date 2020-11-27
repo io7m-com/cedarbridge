@@ -14,17 +14,20 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser;
+package com.io7m.cedarbridge.schema.compiled;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * Data for the parser compilation pass.
+ * A compiled package.
  */
 
-public enum CBParsed
+public interface CBPackageType
 {
-  /**
-   * The AST has been parsed.
-   */
+  String name();
 
-  PARSED
+  List<String> imports();
+
+  Map<String, CBTypeType> types();
 }

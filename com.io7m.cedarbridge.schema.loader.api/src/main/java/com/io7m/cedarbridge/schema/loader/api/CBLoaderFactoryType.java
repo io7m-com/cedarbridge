@@ -14,24 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser;
+package com.io7m.cedarbridge.schema.loader.api;
 
-import java.io.Closeable;
+import com.io7m.cedarbridge.errors.CBError;
+
+import java.util.function.Consumer;
 
 /**
- * A package parser.
+ * A factory of package loaders.
  */
 
-public interface CBParserType extends Closeable
+public interface CBLoaderFactoryType
 {
   /**
-   * Execute the parser.
+   * Create a loader.
    *
-   * @return A parsed package
+   * @param errors A receiver of loader errors
    *
-   * @throws CBParseFailedException On parse errors
+   * @return A new loader
    */
 
-  CBParsedPackageType execute()
-    throws CBParseFailedException;
+  CBLoaderType createLoader(
+    Consumer<CBError> errors
+  );
 }

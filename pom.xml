@@ -22,11 +22,18 @@
   <url>https://www.github.com/io7m/cedarbridge</url>
 
   <modules>
-    <module>com.io7m.cedarbridge.tests</module>
-    <module>com.io7m.cedarbridge.schema.parser</module>
-    <module>com.io7m.cedarbridge.schema.ast</module>
-    <module>com.io7m.cedarbridge.strings.api</module>
     <module>com.io7m.cedarbridge.errors</module>
+    <module>com.io7m.cedarbridge.exprsrc.api</module>
+    <module>com.io7m.cedarbridge.exprsrc</module>
+    <module>com.io7m.cedarbridge.schema.ast</module>
+    <module>com.io7m.cedarbridge.schema.binder.api</module>
+    <module>com.io7m.cedarbridge.schema.binder</module>
+    <module>com.io7m.cedarbridge.schema.compiled</module>
+    <module>com.io7m.cedarbridge.schema.loader.api</module>
+    <module>com.io7m.cedarbridge.schema.parser.api</module>
+    <module>com.io7m.cedarbridge.schema.parser</module>
+    <module>com.io7m.cedarbridge.strings.api</module>
+    <module>com.io7m.cedarbridge.tests</module>
   </modules>
 
   <properties>

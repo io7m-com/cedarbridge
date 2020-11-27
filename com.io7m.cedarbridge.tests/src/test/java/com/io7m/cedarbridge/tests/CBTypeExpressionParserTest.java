@@ -19,15 +19,15 @@ package com.io7m.cedarbridge.tests;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeNamedType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.schema.parser.internal.CBTypeExpressionParser;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -36,19 +36,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static com.io7m.cedarbridge.tests.CBTestExpressions.expression;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBTypeExpressionParserTest
+public final class CBTypeExpressionParserTest extends CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBTypeExpressionParserTest.class);
 
   private CBStringsType strings;
-  private CBTypeExpressionParser parser;
-  private CBParseContext context;
-  private JSXSerializerType serializer;
   private ArrayList<CBError> errors;
 
   private CBError takeError()
@@ -63,16 +59,24 @@ public final class CBTypeExpressionParserTest
     this.errors.add(error);
   }
 
+  private CBASTTypeExpressionType<CBParsed> parse(
+    final String text)
+    throws CBParseFailedException
+  {
+    final var parser = new CBTypeExpressionParser();
+    final var expr = this.expression(text);
+    final var context = new CBParseContext(
+      this.strings,
+      this.source,
+      this::addError);
+    return parser.parse(context.current(), expr);
+  }
+
   @BeforeEach
   public void setup()
   {
     this.errors = new ArrayList<>();
     this.strings = CBParserStrings.create();
-    this.serializer = new JSXSerializerTrivialSupplier().create();
-    this.parser =
-      new CBTypeExpressionParser();
-    this.context =
-      new CBParseContext(this.strings, this.serializer, this::addError);
   }
 
   @Test
@@ -80,10 +84,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("\"hello\"")
-      );
+      this.parse("\"hello\"");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -95,10 +96,7 @@ public final class CBTypeExpressionParserTest
     throws CBParseFailedException
   {
     final var name =
-      (CBASTTypeNamedType<?>) this.parser.parse(
-        this.context.current(),
-        expression("T")
-      );
+      (CBASTTypeNamedType<?>) this.parse("T");
 
     assertEquals(Optional.empty(), name.packageName());
     assertEquals("T", name.name().text());
@@ -109,10 +107,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("x")
-      );
+      this.parse("x");
     });
     LOG.debug("", ex);
     assertEquals("errorTypePathInvalid", this.takeError().errorCode());
@@ -124,10 +119,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var name =
-      (CBASTTypeNamedType<?>) this.parser.parse(
-        this.context.current(),
-        expression("com.io7m.cedarbridge:T")
-      );
+      (CBASTTypeNamedType<?>) this.parse("com.io7m.cedarbridge:T");
 
     assertEquals(
       "com.io7m.cedarbridge",
@@ -140,10 +132,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("com.io7m.cedarbridge:")
-      );
+      this.parse("com.io7m.cedarbridge:");
     });
     LOG.debug("", ex);
     assertEquals("errorTypePathInvalid", this.takeError().errorCode());
@@ -155,10 +144,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("com.io7m.cedarbridge:::2")
-      );
+      this.parse("com.io7m.cedarbridge:::2");
     });
     LOG.debug("", ex);
     assertEquals("errorTypePathInvalid", this.takeError().errorCode());
@@ -170,10 +156,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parser.parse(
-        this.context.current(),
-        expression("(A B)")
-      );
+      (CBASTTypeApplication<?>) this.parse("(A B)");
 
     final var name0 =
       (CBASTTypeNamed<?>) app.target();
@@ -189,10 +172,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parser.parse(
-        this.context.current(),
-        expression("(A)")
-      );
+      (CBASTTypeApplication<?>) this.parse("(A)");
 
     final var name0 =
       (CBASTTypeNamed<?>) app.target();
@@ -206,10 +186,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parser.parse(
-        this.context.current(),
-        expression("([A B] [C D])")
-      );
+      (CBASTTypeApplication<?>) this.parse("([A B] [C D])");
 
     final var app0 =
       (CBASTTypeApplication<?>) app.target();
@@ -237,10 +214,7 @@ public final class CBTypeExpressionParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[]")
-      );
+      this.parse("[]");
     });
     LOG.debug("", ex);
     assertEquals("errorEmptyTypeApplication", this.takeError().errorCode());

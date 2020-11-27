@@ -17,13 +17,13 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.schema.parser.internal.CBRecordParser;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
-import com.io7m.jsx.api.serializer.JSXSerializerType;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -31,19 +31,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
-import static com.io7m.cedarbridge.tests.CBTestExpressions.expression;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBRecordParserTest
+public final class CBRecordParserTest extends CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBRecordParserTest.class);
 
   private CBStringsType strings;
-  private CBRecordParser parser;
-  private CBParseContext context;
-  private JSXSerializerType serializer;
   private ArrayList<CBError> errors;
 
   private CBError takeError()
@@ -58,15 +54,24 @@ public final class CBRecordParserTest
     this.errors.add(error);
   }
 
+  private CBASTTypeRecord<CBParsed> parse(
+    final String text)
+    throws CBParseFailedException
+  {
+    final var parser = new CBRecordParser();
+    final var expr = this.expression(text);
+    final var context = new CBParseContext(
+      this.strings,
+      this.source,
+      this::addError);
+    return parser.parse(context.current(), expr);
+  }
+
   @BeforeEach
   public void setup()
   {
     this.errors = new ArrayList<CBError>();
     this.strings = CBParserStrings.create();
-    this.serializer = new JSXSerializerTrivialSupplier().create();
-    this.parser = new CBRecordParser();
-    this.context =
-      new CBParseContext(this.strings, this.serializer, this::addError);
   }
 
   @Test
@@ -74,10 +79,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var record =
-      this.parser.parse(
-        this.context.current(),
-        expression("[record Q]")
-      );
+      this.parse("[record Q]");
 
     assertEquals(0, record.fields().size());
     assertEquals("Q", record.name().text());
@@ -89,11 +91,8 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var record =
-      this.parser.parse(
-        this.context.current(),
-        expression(
-          "[record Q (parameter A) (parameter B) (field f0 [List A]) (field f1 [List B])]")
-      );
+      this.parse(
+        "[record Q (parameter A) (parameter B) (field f0 [List A]) (field f1 [List B])]");
 
     assertEquals(2, record.fields().size());
     final var field0 = record.fields().get(0);
@@ -115,11 +114,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var record =
-      this.parser.parse(
-        this.context.current(),
-        expression(
-          "[record Q (field f0 Float) (field f1 Float) (field f2 Float)]")
-      );
+      this.parse("[record Q (field f0 Float) (field f1 Float) (field f2 Float)]");
 
     assertEquals(3, record.fields().size());
     final var field0 = record.fields().get(0);
@@ -138,10 +133,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (field x Y z)]")
-      );
+      this.parse("[record X (field x Y z)]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordInvalidField", this.takeError().errorCode());
@@ -153,10 +145,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (field 23 Y)]")
-      );
+      this.parse("[record X (field 23 Y)]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordFieldNameInvalid", this.takeError().errorCode());
@@ -168,10 +157,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record x]")
-      );
+      this.parse("[record x]");
     });
     LOG.debug("", ex);
     assertEquals("errorTypeNameInvalid", this.takeError().errorCode());
@@ -183,10 +169,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record [X B]]")
-      );
+      this.parse("[record [X B]]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -198,10 +181,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (parameter)]")
-      );
+      this.parse("[record X (parameter)]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -215,10 +195,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (parameter A B)]")
-      );
+      this.parse("[record X (parameter A B)]");
     });
     LOG.debug("", ex);
     assertEquals(
@@ -232,10 +209,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (parameter a)]")
-      );
+      this.parse("[record X (parameter a)]");
     });
     LOG.debug("", ex);
     assertEquals("errorTypeParameterNameInvalid", this.takeError().errorCode());
@@ -247,10 +221,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X (what)]")
-      );
+      this.parse("[record X (what)]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordUnrecognizedMember", this.takeError().errorCode());
@@ -262,10 +233,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X what]")
-      );
+      this.parse("[record X what]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -277,10 +245,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X ([])]")
-      );
+      this.parse("[record X ([])]");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
@@ -292,10 +257,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[]")
-      );
+      this.parse("[]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordInvalidDeclaration", this.takeError().errorCode());
@@ -307,10 +269,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[import x y]")
-      );
+      this.parse("[import x y]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordKeyword", this.takeError().errorCode());
@@ -322,10 +281,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("[record X ()]")
-      );
+      this.parse("[record X ()]");
     });
     LOG.debug("", ex);
     assertEquals("errorRecordUnrecognizedMember", this.takeError().errorCode());
@@ -337,10 +293,7 @@ public final class CBRecordParserTest
     throws Exception
   {
     final var ex = assertThrows(CBParseFailedException.class, () -> {
-      this.parser.parse(
-        this.context.current(),
-        expression("\"hello\"")
-      );
+      this.parse("\"hello\"");
     });
     LOG.debug("", ex);
     assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());

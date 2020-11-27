@@ -28,7 +28,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
-import com.io7m.cedarbridge.schema.parser.CBParsedPackage;
+import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DynamicTest;
@@ -38,6 +38,19 @@ import java.util.stream.Stream;
 
 public final class CBEqualsTest
 {
+  private static DynamicTest toTest(
+    final Class<?> clazz)
+  {
+    return DynamicTest.dynamicTest(
+      String.format("testEquals_%s", clazz.getCanonicalName()),
+      () -> {
+        EqualsVerifier.forClass(clazz)
+          .suppress(Warning.NULL_FIELDS)
+          .verify();
+      }
+    );
+  }
+
   @TestFactory
   public Stream<DynamicTest> testEquals()
   {
@@ -56,18 +69,5 @@ public final class CBEqualsTest
       CBASTTypeRecord.class,
       CBASTTypeVariant.class
     ).map(CBEqualsTest::toTest);
-  }
-
-  private static DynamicTest toTest(
-    final Class<?> clazz)
-  {
-    return DynamicTest.dynamicTest(
-      String.format("testEquals_%s", clazz.getCanonicalName()),
-      () -> {
-        EqualsVerifier.forClass(clazz)
-          .suppress(Warning.NULL_FIELDS)
-          .verify();
-      }
-    );
   }
 }

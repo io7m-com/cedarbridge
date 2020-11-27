@@ -15,7 +15,7 @@
 
   <packaging>jar</packaging>
   <name>com.io7m.cedarbridge.strings.api</name>
-  <description>cedarbridge serialization (String resources API)</description>
+  <description>Cedarbridge message protocol (String resources API)</description>
   <url>https://www.github.com/io7m/cedarbridge</url>
 
   <dependencies>

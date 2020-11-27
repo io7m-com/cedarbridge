@@ -22,8 +22,8 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
-import com.io7m.cedarbridge.schema.parser.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.CBParsed;
+import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
+import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
@@ -33,7 +33,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.io7m.cedarbridge.schema.parser.CBParsed.PARSED;
+import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
 
 /**
  * A parser for variant declarations.
