@@ -296,6 +296,20 @@ public final class CBVariantParserTest extends CBElementParserContract
   }
 
   @Test
+  public void testNonsense9()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[variant X (case x T)]");
+    });
+    LOG.debug("", ex);
+    assertEquals(
+      "errorVariantCaseNameInvalid",
+      this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
   public void testQuotedBad()
     throws Exception
   {

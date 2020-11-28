@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
 import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
+import com.io7m.cedarbridge.schema.ast.CBASTVariantCaseName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
@@ -95,6 +96,28 @@ public final class CBNames
         return CBASTNames.typeName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorTypeNameInvalid", e);
+      }
+    }
+  }
+
+  static CBASTVariantCaseName parseVariantCaseName(
+    final CBParseContextType context,
+    final SExpressionSymbolType expression)
+    throws CBParseFailedException
+  {
+    final var expectingKind =
+      "objectVariantCaseName";
+    final var expectingForms =
+      List.of("<variant-case-name>");
+
+    try (var subContext =
+           context.openExpectingOneOf(expectingKind, expectingForms)) {
+      final var symbol =
+        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
+      try {
+        return CBASTNames.variantCaseName(expression, symbol.text());
+      } catch (final IllegalArgumentException e) {
+        throw subContext.failed(expression, "errorVariantCaseNameInvalid", e);
       }
     }
   }

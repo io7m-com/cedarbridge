@@ -19,50 +19,27 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
-import java.util.List;
-
 /**
- * The  type of type declarations.
+ * The type of variant case names.
  */
 
-public interface CBASTTypeDeclarationType extends CBASTDeclarationType
+@ImmutablesStyleType
+@Value.Immutable
+public interface CBASTVariantCaseNameType extends CBASTElementType
 {
-  CBASTTypeName name();
+  /**
+   * @return The name text
+   */
 
-  List<CBASTTypeParameterName> parameters();
+  String text();
 
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeRecordType extends CBASTTypeDeclarationType
+  /**
+   * Check preconditions for the type.
+   */
+
+  @Value.Check
+  default void checkPreconditions()
   {
-    @Override
-    CBASTTypeName name();
-
-    @Override
-    List<CBASTTypeParameterName> parameters();
-
-    List<CBASTField> fields();
-  }
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeVariantType extends CBASTTypeDeclarationType
-  {
-    @Override
-    CBASTTypeName name();
-
-    @Override
-    List<CBASTTypeParameterName> parameters();
-
-    List<CBASTTypeVariantCase> cases();
-  }
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeVariantCaseType extends CBASTDeclarationType
-  {
-    CBASTVariantCaseName name();
-
-    List<CBASTField> fields();
+    CBASTVariantCaseNames.INSTANCE.checkValid(this.text());
   }
 }

@@ -54,7 +54,7 @@ public final class CBVariantCaseParser
     final var typeName =
       context.checkExpressionIs(expression.get(1), SExpressionSymbolType.class);
     final var name =
-      CBNames.parseTypeName(context, typeName);
+      CBNames.parseVariantCaseName(context, typeName);
 
     final var errorsThen = context.errorCount();
     for (var index = 2; index < expression.size(); ++index) {

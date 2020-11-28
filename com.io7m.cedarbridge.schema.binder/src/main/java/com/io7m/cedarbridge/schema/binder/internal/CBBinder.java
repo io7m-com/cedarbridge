@@ -62,7 +62,7 @@ public final class CBBinder implements CBBinderType
     throws CBBindFailedException
   {
     final var context =
-      new CBBinderContext(this.strings, loader, this.lineLog, this.errors);
+      new CBBinderContext(this.strings, this.loader, this.lineLog, this.errors);
     final var contextMain =
       context.current();
 

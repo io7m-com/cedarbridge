@@ -40,6 +40,7 @@
   <entry key="errorTypePathInvalid">Invalid type path.</entry>
   <entry key="errorUnexpectedExpressionForm">Unexpected expression form.</entry>
   <entry key="errorVariantCaseInvalidDeclaration">Invalid variant case declaration.</entry>
+  <entry key="errorVariantCaseNameInvalid">Invalid variant case name.</entry>
   <entry key="errorVariantInvalidDeclaration">Invalid variant declaration.</entry>
   <entry key="errorVariantInvalidName">Invalid variant name.</entry>
   <entry key="errorVariantInvalidTypeParameter">Invalid type parameter.</entry>
@@ -63,6 +64,7 @@
   <entry key="objectTypeParameterName">Type parameter name</entry>
   <entry key="objectTypePath">Type path</entry>
   <entry key="objectVariantCase">Variant case declaration</entry>
+  <entry key="objectVariantCaseName">Variant case name</entry>
   <entry key="objectVariantDeclaration">Variant declaration</entry>
   <entry key="objectVariantField">Variant field</entry>
   <entry key="objectVariantFieldName">Variant field name</entry>

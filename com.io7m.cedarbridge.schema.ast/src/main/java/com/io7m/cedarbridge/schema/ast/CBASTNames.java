@@ -121,4 +121,23 @@ public final class CBASTNames
       .setText(text)
       .build();
   }
+
+  /**
+   * Construct a name.
+   *
+   * @param lexical Lexical data
+   * @param text    The text
+   *
+   * @return A name
+   */
+
+  public static CBASTVariantCaseName variantCaseName(
+    final LexicalType<URI> lexical,
+    final String text)
+  {
+    return CBASTVariantCaseName.builder()
+      .setLexical(lexical.lexical())
+      .setText(text)
+      .build();
+  }
 }
