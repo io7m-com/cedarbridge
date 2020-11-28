@@ -17,20 +17,19 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
-import com.io7m.cedarbridge.schema.ast.CBASTNames;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
+import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
 
 /**
  * A parser for variant declarations.
@@ -42,24 +41,6 @@ public final class CBVariantParser
   public CBVariantParser()
   {
 
-  }
-
-  private static List<CBASTTypeRecord> getCases(
-    final Collection<?> items)
-  {
-    return items.stream()
-      .filter(x -> x instanceof CBASTTypeRecord)
-      .map(x -> (CBASTTypeRecord) x)
-      .collect(Collectors.toList());
-  }
-
-  private static List<CBASTTypeParameterName> getParameters(
-    final Collection<Object> items)
-  {
-    return items.stream()
-      .filter(i -> i instanceof CBASTTypeParameterName)
-      .map(x -> (CBASTTypeParameterName) x)
-      .collect(Collectors.toList());
   }
 
   private static CBASTElementType parseVariantMemberParameter(
@@ -79,50 +60,6 @@ public final class CBVariantParser
       }
 
       return parseTypeParameterName(subContext, expression.get(1));
-    }
-  }
-
-  private static CBASTElementType parseTypeParameterName(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectTypeParameterName";
-    final var expectingForms =
-      List.of("<type-parameter-name>");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingForms)) {
-      final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
-      try {
-        return CBASTNames.typeParameterName(expression, symbol.text());
-      } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeParameterNameInvalid", e);
-      }
-    }
-  }
-
-  private static CBASTTypeName parseTypeName(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectTypeName";
-    final var expectingForms =
-      List.of("<type-name>");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingForms)) {
-      final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
-      try {
-        return CBASTNames.typeName(expression, symbol.text());
-      } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeNameInvalid", e);
-      }
     }
   }
 
@@ -158,9 +95,9 @@ public final class CBVariantParser
     }
 
     final var parameters =
-      getParameters(items);
+      CBFilters.filter(items, CBASTTypeParameterName.class);
     final var cases =
-      getCases(items);
+      CBFilters.filter(items, CBASTTypeVariantCase.class);
 
     return CBASTTypeVariant.builder()
       .setLexical(expression.lexical())
@@ -180,7 +117,7 @@ public final class CBVariantParser
     final var expectingShapes =
       List.of(
         "(parameter <type-parameter-name>)",
-        "<record-decl>"
+        "(case <type-name> <field-decl> ...)"
       );
 
     try (var subContext =
@@ -207,19 +144,11 @@ public final class CBVariantParser
     switch (start.text()) {
       case "parameter":
         return parseVariantMemberParameter(context, expression);
-      case "record":
-        return parseVariantMemberRecord(context, expression);
+      case "case":
+        return new CBVariantCaseParser().parse(context, expression);
       default:
         throw context.failed(expression, "errorVariantUnrecognizedMember");
     }
-  }
-
-  private static CBASTElementType parseVariantMemberRecord(
-    final CBParseContextType context,
-    final SExpressionListType expression)
-    throws CBParseFailedException
-  {
-    return new CBRecordParser().parse(context, expression);
   }
 
   @Override

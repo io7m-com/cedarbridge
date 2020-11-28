@@ -95,8 +95,8 @@ public final class CBVariantParserTest extends CBElementParserContract
         "[variant " +
           "Option " +
           "(parameter A) " +
-          "(record Some [field value A])" +
-          "(record None)" +
+          "(case Some [field value A]) " +
+          "(case None) " +
           "]");
 
     assertEquals(2, variant.cases().size());
@@ -250,6 +250,48 @@ public final class CBVariantParserTest extends CBElementParserContract
     LOG.debug("", ex);
     assertEquals(
       "errorVariantUnrecognizedMember",
+      this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testNonsense6()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[variant X (case Q [])]");
+    });
+    LOG.debug("", ex);
+    assertEquals(
+      "errorFieldInvalid",
+      this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testNonsense7()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[variant X (unrecognized)]");
+    });
+    LOG.debug("", ex);
+    assertEquals(
+      "errorVariantUnrecognizedMember",
+      this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testNonsense8()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[variant X (case)]");
+    });
+    LOG.debug("", ex);
+    assertEquals(
+      "errorVariantCaseInvalidDeclaration",
       this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }

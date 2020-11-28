@@ -7,7 +7,7 @@
 {4}
   Object: {5}
 
-  Expected one of:
+  Expected:
     {6}
 ]]></entry>
 
@@ -16,7 +16,10 @@
 ]]></entry>
 
   <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
+  <entry key="errorDeclarationUnrecognized">Unrecognized package-level declaration.</entry>
   <entry key="errorEmptyTypeApplication">Empty type application.</entry>
+  <entry key="errorFieldInvalid">Invalid field.</entry>
+  <entry key="errorFieldNameInvalid">Invalid field name.</entry>
   <entry key="errorIO">I/O error.</entry>
   <entry key="errorImportInvalid">Invalid import declaration.</entry>
   <entry key="errorImportKeyword">Expected 'import' keyword.</entry>
@@ -26,9 +29,7 @@
   <entry key="errorPackageNameMissing">No package name was declared.</entry>
   <entry key="errorPackageNameMultiple">Multiple package names were declared.</entry>
   <entry key="errorPackageShortNameInvalid">Invalid short package name.</entry>
-  <entry key="errorRecordFieldNameInvalid">Invalid record field name.</entry>
   <entry key="errorRecordInvalidDeclaration">Invalid record declaration.</entry>
-  <entry key="errorRecordInvalidField">Invalid record field.</entry>
   <entry key="errorRecordInvalidName">Invalid record name.</entry>
   <entry key="errorRecordInvalidTypeParameter">Invalid type parameter.</entry>
   <entry key="errorRecordKeyword">Expected 'record' keyword.</entry>
@@ -38,23 +39,21 @@
   <entry key="errorTypeParameterNameInvalid">Invalid type parameter name.</entry>
   <entry key="errorTypePathInvalid">Invalid type path.</entry>
   <entry key="errorUnexpectedExpressionForm">Unexpected expression form.</entry>
-  <entry key="errorVariantFieldNameInvalid">Invalid record field name.</entry>
+  <entry key="errorVariantCaseInvalidDeclaration">Invalid variant case declaration.</entry>
   <entry key="errorVariantInvalidDeclaration">Invalid variant declaration.</entry>
-  <entry key="errorVariantInvalidField">Invalid record field.</entry>
-  <entry key="errorVariantInvalidName">Invalid record name.</entry>
+  <entry key="errorVariantInvalidName">Invalid variant name.</entry>
   <entry key="errorVariantInvalidTypeParameter">Invalid type parameter.</entry>
   <entry key="errorVariantKeyword">Expected 'variant' keyword.</entry>
-  <entry key="errorVariantOneNameRequired">Exactly one record name required.</entry>
-  <entry key="errorVariantUnrecognizedMember">Unrecognized record member declaration.</entry>
+  <entry key="errorVariantUnrecognizedMember">Unrecognized variant member declaration.</entry>
 
   <entry key="objectDeclaration">Package-level declaration</entry>
+  <entry key="objectField">Field</entry>
+  <entry key="objectFieldName">Field name</entry>
   <entry key="objectImport">Import declaration</entry>
   <entry key="objectPackage">Package declaration</entry>
   <entry key="objectPackageName">Package name</entry>
   <entry key="objectPackageShortName">Package short name</entry>
   <entry key="objectRecordDeclaration">Record declaration</entry>
-  <entry key="objectRecordField">Record field</entry>
-  <entry key="objectRecordFieldName">Record field name</entry>
   <entry key="objectRecordMember">Record member</entry>
   <entry key="objectRecordName">Record name</entry>
   <entry key="objectTypeApplication">Type application</entry>
@@ -63,6 +62,7 @@
   <entry key="objectTypeParameter">Type parameter</entry>
   <entry key="objectTypeParameterName">Type parameter name</entry>
   <entry key="objectTypePath">Type path</entry>
+  <entry key="objectVariantCase">Variant case declaration</entry>
   <entry key="objectVariantDeclaration">Variant declaration</entry>
   <entry key="objectVariantField">Variant field</entry>
   <entry key="objectVariantFieldName">Variant field name</entry>

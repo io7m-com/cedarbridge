@@ -18,9 +18,6 @@ package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
-import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
-import com.io7m.cedarbridge.schema.ast.CBASTNames;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
@@ -29,9 +26,10 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
+import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
 
 /**
  * A parser for record declarations.
@@ -43,37 +41,6 @@ public final class CBRecordParser
   public CBRecordParser()
   {
 
-  }
-
-  private static List<CBASTField> getFields(
-    final Collection<Object> items)
-  {
-    return items.stream()
-      .filter(i -> i instanceof CBASTField)
-      .map(x -> (CBASTField) x)
-      .collect(Collectors.toList());
-  }
-
-  private static CBASTFieldName parseFieldName(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectRecordFieldName";
-    final var expectingForms =
-      List.of("<field-name>");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingForms)) {
-      final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
-      try {
-        return CBASTNames.fieldName(expression, symbol.text());
-      } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorRecordFieldNameInvalid", e);
-      }
-    }
   }
 
   private static CBASTElementType parseRecordMemberParameter(
@@ -94,59 +61,6 @@ public final class CBRecordParser
 
       return parseTypeParameterName(subContext, expression.get(1));
     }
-  }
-
-  private static CBASTElementType parseTypeParameterName(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectTypeParameterName";
-    final var expectingForms =
-      List.of("<type-parameter-name>");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingForms)) {
-      final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
-      try {
-        return CBASTNames.typeParameterName(expression, symbol.text());
-      } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeParameterNameInvalid", e);
-      }
-    }
-  }
-
-  private static CBASTTypeName parseTypeName(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectTypeName";
-    final var expectingForms =
-      List.of("<type-name>");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingForms)) {
-      final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
-      try {
-        return CBASTNames.typeName(expression, symbol.text());
-      } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeNameInvalid", e);
-      }
-    }
-  }
-
-  private static List<CBASTTypeParameterName> getParameters(
-    final Collection<Object> items)
-  {
-    return items.stream()
-      .filter(i -> i instanceof CBASTTypeParameterName)
-      .map(x -> (CBASTTypeParameterName) x)
-      .collect(Collectors.toList());
   }
 
   private static CBASTTypeRecord parseRecord(
@@ -181,9 +95,9 @@ public final class CBRecordParser
     }
 
     final var fields =
-      getFields(items);
+      CBFilters.filter(items, CBASTField.class);
     final var parameters =
-      getParameters(items);
+      CBFilters.filter(items, CBASTTypeParameterName.class);
 
     return CBASTTypeRecord.builder()
       .setLexical(expression.lexical())
@@ -231,38 +145,9 @@ public final class CBRecordParser
       case "parameter":
         return parseRecordMemberParameter(context, expression);
       case "field":
-        return parseRecordMemberField(context, expression);
+        return new CBFieldParser().parse(context, expression);
       default:
         throw context.failed(expression, "errorRecordUnrecognizedMember");
-    }
-  }
-
-  private static CBASTElementType parseRecordMemberField(
-    final CBParseContextType context,
-    final SExpressionListType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectRecordField";
-    final var expectingShapes =
-      List.of("(field <field-name> <type-expression>)");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingShapes)) {
-      if (expression.size() != 3) {
-        throw subContext.failed(expression, "errorRecordInvalidField");
-      }
-
-      final var name =
-        parseFieldName(subContext, expression.get(1));
-      final var expr =
-        new CBTypeExpressionParser().parse(subContext, expression.get(2));
-
-      return CBASTField.builder()
-        .setLexical(expression.lexical())
-        .setName(name)
-        .setType(expr)
-        .build();
     }
   }
 

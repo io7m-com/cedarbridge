@@ -163,6 +163,19 @@ public final class CBParserTest
     }
   }
 
+  @Test
+  public void testUnrecognizedThing()
+    throws Exception
+  {
+    try (var stream = this.stream("errorUnrecognizedThing.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals("errorDeclarationUnrecognized", this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
   private CBParserType parser(
     final InputStream stream)
   {

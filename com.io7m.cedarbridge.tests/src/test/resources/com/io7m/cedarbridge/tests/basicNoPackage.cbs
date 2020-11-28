@@ -1,17 +1,17 @@
 (import x.y.z b)
 
 (variant UnitType
-  [record U])
+  [case U])
 
 (variant Option
   [parameter T]
-  [record None]
-  [record Some (field value T)])
+  [case None]
+  [case Some (field value T)])
 
 (variant List
   [parameter T]
-  [record Null]
-  [record Cons
+  [case Null]
+  [case Cons
     (field head T)
     (field rest [List T])])
 

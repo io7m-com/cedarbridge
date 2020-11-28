@@ -136,7 +136,7 @@ public final class CBRecordParserTest extends CBElementParserContract
       this.parse("[record X (field x Y z)]");
     });
     LOG.debug("", ex);
-    assertEquals("errorRecordInvalidField", this.takeError().errorCode());
+    assertEquals("errorFieldInvalid", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 
@@ -148,7 +148,7 @@ public final class CBRecordParserTest extends CBElementParserContract
       this.parse("[record X (field 23 Y)]");
     });
     LOG.debug("", ex);
-    assertEquals("errorRecordFieldNameInvalid", this.takeError().errorCode());
+    assertEquals("errorFieldNameInvalid", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 

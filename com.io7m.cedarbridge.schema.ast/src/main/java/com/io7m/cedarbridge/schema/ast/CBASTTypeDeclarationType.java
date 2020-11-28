@@ -54,6 +54,15 @@ public interface CBASTTypeDeclarationType extends CBASTDeclarationType
     @Override
     List<CBASTTypeParameterName> parameters();
 
-    List<CBASTTypeRecord> cases();
+    List<CBASTTypeVariantCase> cases();
+  }
+
+  @ImmutablesStyleType
+  @Value.Immutable
+  interface CBASTTypeVariantCaseType extends CBASTDeclarationType
+  {
+    CBASTTypeName name();
+
+    List<CBASTField> fields();
   }
 }
