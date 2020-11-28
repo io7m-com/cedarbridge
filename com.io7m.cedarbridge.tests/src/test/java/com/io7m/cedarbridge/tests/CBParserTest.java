@@ -170,7 +170,9 @@ public final class CBParserTest
     try (var stream = this.stream("errorUnrecognizedThing.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
-        assertEquals("errorDeclarationUnrecognized", this.takeError().errorCode());
+        assertEquals(
+          "errorDeclarationUnrecognized",
+          this.takeError().errorCode());
         assertEquals(0, this.errors.size());
       }
     }
