@@ -19,7 +19,6 @@ package com.io7m.cedarbridge.tests;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBPackageDeclarationParser;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;

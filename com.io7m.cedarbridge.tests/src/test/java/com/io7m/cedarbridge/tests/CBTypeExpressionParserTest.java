@@ -23,7 +23,6 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeNamedType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.schema.parser.internal.CBParserStrings;
 import com.io7m.cedarbridge.schema.parser.internal.CBTypeExpressionParser;
