@@ -61,7 +61,7 @@ public final class CBImportParserTest extends CBElementParserContract
     this.strings = CBParserStrings.create();
   }
 
-  private CBASTImport<CBParsed> parse(
+  private CBASTImport parse(
     final String text)
     throws CBParseFailedException
   {

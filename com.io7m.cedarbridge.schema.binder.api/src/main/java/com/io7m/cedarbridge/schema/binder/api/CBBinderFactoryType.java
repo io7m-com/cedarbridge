@@ -18,8 +18,8 @@ package com.io7m.cedarbridge.schema.binder.api;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 
 import java.util.function.Consumer;
 
@@ -44,6 +44,6 @@ public interface CBBinderFactoryType
     CBLoaderType loader,
     Consumer<CBError> errors,
     CBExpressionLineLogType lineLog,
-    CBParsedPackage parsedPackage
+    CBASTPackage parsedPackage
   );
 }

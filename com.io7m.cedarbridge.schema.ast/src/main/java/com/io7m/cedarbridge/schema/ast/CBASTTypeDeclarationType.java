@@ -23,39 +23,37 @@ import java.util.List;
 
 /**
  * The  type of type declarations.
- *
- * @param <T> The type of pass-specific data
  */
 
-public interface CBASTTypeDeclarationType<T> extends CBASTDeclarationType<T>
+public interface CBASTTypeDeclarationType extends CBASTDeclarationType
 {
-  CBASTTypeName<T> name();
+  CBASTTypeName name();
 
-  List<CBASTTypeParameterName<T>> parameters();
+  List<CBASTTypeParameterName> parameters();
 
   @ImmutablesStyleType
   @Value.Immutable
-  interface CBASTTypeRecordType<T> extends CBASTTypeDeclarationType<T>
+  interface CBASTTypeRecordType extends CBASTTypeDeclarationType
   {
     @Override
-    CBASTTypeName<T> name();
+    CBASTTypeName name();
 
     @Override
-    List<CBASTTypeParameterName<T>> parameters();
+    List<CBASTTypeParameterName> parameters();
 
-    List<CBASTField<T>> fields();
+    List<CBASTField> fields();
   }
 
   @ImmutablesStyleType
   @Value.Immutable
-  interface CBASTTypeVariantType<T> extends CBASTTypeDeclarationType<T>
+  interface CBASTTypeVariantType extends CBASTTypeDeclarationType
   {
     @Override
-    CBASTTypeName<T> name();
+    CBASTTypeName name();
 
     @Override
-    List<CBASTTypeParameterName<T>> parameters();
+    List<CBASTTypeParameterName> parameters();
 
-    List<CBASTTypeRecord<T>> cases();
+    List<CBASTTypeRecord> cases();
   }
 }

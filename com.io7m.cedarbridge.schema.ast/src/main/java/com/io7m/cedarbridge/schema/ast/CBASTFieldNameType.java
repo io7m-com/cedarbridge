@@ -21,13 +21,11 @@ import org.immutables.value.Value;
 
 /**
  * The  type of record field names.
- *
- * @param <T> The type of pass-specific data
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBASTFieldNameType<T> extends CBASTElementType<T>
+public interface CBASTFieldNameType extends CBASTElementType
 {
   /**
    * @return The name text

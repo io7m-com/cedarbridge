@@ -24,27 +24,25 @@ import java.util.Optional;
 
 /**
  * The  type of type expressions.
- *
- * @param <T> The type of pass-specific data
  */
 
-public interface CBASTTypeExpressionType<T> extends CBASTElementType<T>
+public interface CBASTTypeExpressionType extends CBASTElementType
 {
   @ImmutablesStyleType
   @Value.Immutable
-  interface CBASTTypeNamedType<T> extends CBASTTypeExpressionType<T>
+  interface CBASTTypeNamedType extends CBASTTypeExpressionType
   {
-    Optional<CBASTPackageName<T>> packageName();
+    Optional<CBASTPackageName> packageName();
 
-    CBASTTypeName<T> name();
+    CBASTTypeName name();
   }
 
   @ImmutablesStyleType
   @Value.Immutable
-  interface CBASTTypeApplicationType<T> extends CBASTTypeExpressionType<T>
+  interface CBASTTypeApplicationType extends CBASTTypeExpressionType
   {
-    CBASTTypeExpressionType<T> target();
+    CBASTTypeExpressionType target();
 
-    List<CBASTTypeExpressionType<T>> arguments();
+    List<CBASTTypeExpressionType> arguments();
   }
 }

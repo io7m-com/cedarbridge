@@ -21,9 +21,9 @@ import org.immutables.value.Value;
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBASTFieldType<T> extends CBASTElementType<T>
+public interface CBASTFieldType extends CBASTElementType
 {
-  CBASTFieldName<T> name();
+  CBASTFieldName name();
 
-  CBASTTypeExpressionType<T> type();
+  CBASTTypeExpressionType type();
 }

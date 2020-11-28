@@ -21,13 +21,11 @@ import org.immutables.value.Value;
 
 /**
  * The type of type names.
- *
- * @param <T> The type of pass-specific data
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBASTTypeNameType<T> extends CBASTElementType<T>
+public interface CBASTTypeNameType extends CBASTElementType
 {
   /**
    * @return The name text

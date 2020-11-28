@@ -18,14 +18,15 @@ package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderType;
-import com.io7m.cedarbridge.schema.binder.api.CBBoundPackage;
-import com.io7m.cedarbridge.schema.loader.api.CBLoadFailedException;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -33,7 +34,7 @@ public final class CBBinder implements CBBinderType
 {
   private final CBLoaderType loader;
   private final CBExpressionLineLogType lineLog;
-  private final CBParsedPackage parsedPackage;
+  private final CBASTPackage parsedPackage;
   private final CBStringsType strings;
   private final Consumer<CBError> errors;
 
@@ -42,7 +43,7 @@ public final class CBBinder implements CBBinderType
     final CBLoaderType inLoader,
     final Consumer<CBError> inErrors,
     final CBExpressionLineLogType inLineLog,
-    final CBParsedPackage inParsedPackage)
+    final CBASTPackage inParsedPackage)
   {
     this.strings =
       Objects.requireNonNull(inStrings, "inStrings");
@@ -57,44 +58,41 @@ public final class CBBinder implements CBBinderType
   }
 
   @Override
-  public CBBoundPackage execute()
+  public CBASTPackage execute()
     throws CBBindFailedException
   {
     final var context =
-      new CBBinderContext(this.strings, this.lineLog, this.errors);
+      new CBBinderContext(this.strings, loader, this.lineLog, this.errors);
     final var contextMain =
       context.current();
 
-    this.processImports(contextMain);
+    final var imports =
+      this.processImports(contextMain);
+
     throw new UnsupportedOperationException();
   }
 
-  private void processImports(
+  private List<CBASTImport> processImports(
     final CBBinderContextType context)
     throws CBBindFailedException
   {
     var failed = false;
 
+    final var newImports =
+      new ArrayList<CBASTImport>(this.parsedPackage.imports().size());
     for (final var importV : this.parsedPackage.imports()) {
-      final var longName = importV.target().text();
-      final var shortName = importV.shortName().text();
-
       try {
-        final var packageV = this.loader.load(longName);
-        context.registerPackage(importV.lexical(), shortName, packageV);
-      } catch (final CBLoadFailedException e) {
+        newImports.add(new CBImportBinder().bind(context, importV));
+      } catch (final CBBindFailedException e) {
         failed = true;
-        context.failed(
-          importV.lexical(),
-          "errorPackageUnavailable",
-          longName
-        );
       }
     }
 
     if (failed) {
       throw new CBBindFailedException();
     }
+
+    return List.copyOf(newImports);
   }
 
   @Override

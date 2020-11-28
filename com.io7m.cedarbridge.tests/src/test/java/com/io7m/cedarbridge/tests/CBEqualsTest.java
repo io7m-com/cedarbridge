@@ -19,6 +19,7 @@ package com.io7m.cedarbridge.tests;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageShortName;
@@ -28,7 +29,6 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DynamicTest;
@@ -55,7 +55,7 @@ public final class CBEqualsTest
   public Stream<DynamicTest> testEquals()
   {
     return Stream.of(
-      CBParsedPackage.class,
+      CBASTPackage.class,
       CBASTField.class,
       CBASTFieldName.class,
       CBASTImport.class,

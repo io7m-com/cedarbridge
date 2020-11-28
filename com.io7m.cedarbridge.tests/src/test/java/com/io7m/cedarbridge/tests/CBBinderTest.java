@@ -19,11 +19,10 @@ package com.io7m.cedarbridge.tests;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
-import com.io7m.cedarbridge.schema.binder.api.CBBoundPackage;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -53,7 +52,7 @@ public final class CBBinderTest
   private Path directory;
   private CBFakeLoader loader;
 
-  private CBParsedPackage parse(
+  private CBASTPackage parse(
     final String name)
     throws Exception
   {
@@ -66,7 +65,7 @@ public final class CBBinderTest
     return parser.execute();
   }
 
-  private CBBoundPackage bind(
+  private CBASTPackage bind(
     final String name)
     throws Exception
   {

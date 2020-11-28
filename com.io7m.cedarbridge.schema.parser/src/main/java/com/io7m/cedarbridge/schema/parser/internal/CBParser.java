@@ -20,11 +20,10 @@ import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import com.io7m.cedarbridge.schema.parser.api.CBParserType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPositions;
@@ -56,26 +55,26 @@ public final class CBParser implements CBParserType
       Objects.requireNonNull(inSource, "inSource");
   }
 
-  private static List<CBASTTypeDeclarationType<CBParsed>> findTypes(
-    final List<CBASTDeclarationType<CBParsed>> declarations)
+  private static List<CBASTTypeDeclarationType> findTypes(
+    final List<CBASTDeclarationType> declarations)
   {
     return declarations.stream()
       .filter(i -> i instanceof CBASTTypeDeclarationType)
-      .map(x -> (CBASTTypeDeclarationType<CBParsed>) x)
+      .map(x -> (CBASTTypeDeclarationType) x)
       .collect(Collectors.toList());
   }
 
-  private static List<CBASTImport<CBParsed>> findImports(
-    final List<CBASTDeclarationType<CBParsed>> declarations)
+  private static List<CBASTImport> findImports(
+    final List<CBASTDeclarationType> declarations)
   {
     return declarations.stream()
       .filter(i -> i instanceof CBASTImport)
-      .map(x -> (CBASTImport<CBParsed>) x)
+      .map(x -> (CBASTImport) x)
       .collect(Collectors.toList());
   }
 
   @Override
-  public CBParsedPackage execute()
+  public CBASTPackage execute()
     throws CBParseFailedException
   {
     final var declParser =
@@ -83,7 +82,7 @@ public final class CBParser implements CBParserType
     final var context =
       new CBParseContext(this.strings, this.source, this.errors);
     final var declarations =
-      new ArrayList<CBASTDeclarationType<CBParsed>>();
+      new ArrayList<CBASTDeclarationType>();
 
     while (true) {
       try {
@@ -126,9 +125,9 @@ public final class CBParser implements CBParserType
     return this.processDeclarations(context.current(), declarations);
   }
 
-  private CBParsedPackage processDeclarations(
+  private CBASTPackage processDeclarations(
     final CBParseContextType context,
-    final List<CBASTDeclarationType<CBParsed>> declarations)
+    final List<CBASTDeclarationType> declarations)
     throws CBParseFailedException
   {
     final var name =
@@ -138,22 +137,22 @@ public final class CBParser implements CBParserType
     final var types =
       findTypes(declarations);
 
-    return CBParsedPackage.builder()
+    return CBASTPackage.builder()
       .setName(name.name())
       .setImports(imports)
       .setTypes(types)
       .build();
   }
 
-  private CBASTPackageDeclaration<CBParsed> findName(
+  private CBASTPackageDeclaration findName(
     final CBParseContextType context,
-    final List<CBASTDeclarationType<CBParsed>> declarations)
+    final List<CBASTDeclarationType> declarations)
     throws CBParseFailedException
   {
     final var names =
       declarations.stream()
         .filter(i -> i instanceof CBASTPackageDeclaration)
-        .map(x -> (CBASTPackageDeclaration<CBParsed>) x)
+        .map(x -> (CBASTPackageDeclaration) x)
         .collect(Collectors.toList());
 
     if (names.isEmpty()) {

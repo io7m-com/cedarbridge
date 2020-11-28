@@ -62,7 +62,7 @@ public final class CBPackageDeclarationParserTest extends
     this.strings = CBParserStrings.create();
   }
 
-  private CBASTPackageDeclaration<CBParsed> parse(
+  private CBASTPackageDeclaration parse(
     final String text)
     throws CBParseFailedException
   {

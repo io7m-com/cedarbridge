@@ -31,21 +31,17 @@ public final class CBASTNames
    * Construct a name.
    *
    * @param lexical Lexical data
-   * @param data    Pass-specific data
    * @param text    The text
-   * @param <T>     The type of pass-specific data
    *
    * @return A name
    */
 
-  public static <T> CBASTFieldName<T> fieldName(
+  public static CBASTFieldName fieldName(
     final LexicalType<URI> lexical,
-    final T data,
     final String text)
   {
-    return CBASTFieldName.<T>builder()
+    return CBASTFieldName.builder()
       .setLexical(lexical.lexical())
-      .setData(data)
       .setText(text)
       .build();
   }
@@ -54,21 +50,17 @@ public final class CBASTNames
    * Construct a name.
    *
    * @param lexical Lexical data
-   * @param data    Pass-specific data
    * @param text    The text
-   * @param <T>     The type of pass-specific data
    *
    * @return A name
    */
 
-  public static <T> CBASTPackageName<T> packageName(
+  public static CBASTPackageName packageName(
     final LexicalType<URI> lexical,
-    final T data,
     final String text)
   {
-    return CBASTPackageName.<T>builder()
+    return CBASTPackageName.builder()
       .setLexical(lexical.lexical())
-      .setData(data)
       .setText(text)
       .build();
   }
@@ -77,21 +69,17 @@ public final class CBASTNames
    * Construct a name.
    *
    * @param lexical Lexical data
-   * @param data    Pass-specific data
    * @param text    The text
-   * @param <T>     The type of pass-specific data
    *
    * @return A name
    */
 
-  public static <T> CBASTPackageShortName<T> shortPackageName(
+  public static CBASTPackageShortName shortPackageName(
     final LexicalType<URI> lexical,
-    final T data,
     final String text)
   {
-    return CBASTPackageShortName.<T>builder()
+    return CBASTPackageShortName.builder()
       .setLexical(lexical.lexical())
-      .setData(data)
       .setText(text)
       .build();
   }
@@ -100,21 +88,17 @@ public final class CBASTNames
    * Construct a name.
    *
    * @param lexical Lexical data
-   * @param data    Pass-specific data
    * @param text    The text
-   * @param <T>     The type of pass-specific data
    *
    * @return A name
    */
 
-  public static <T> CBASTTypeName<T> typeName(
+  public static CBASTTypeName typeName(
     final LexicalType<URI> lexical,
-    final T data,
     final String text)
   {
-    return CBASTTypeName.<T>builder()
+    return CBASTTypeName.builder()
       .setLexical(lexical.lexical())
-      .setData(data)
       .setText(text)
       .build();
   }
@@ -123,21 +107,17 @@ public final class CBASTNames
    * Construct a name.
    *
    * @param lexical Lexical data
-   * @param data    Pass-specific data
    * @param text    The text
-   * @param <T>     The type of pass-specific data
    *
    * @return A name
    */
 
-  public static <T> CBASTTypeParameterName<T> typeParameterName(
+  public static CBASTTypeParameterName typeParameterName(
     final LexicalType<URI> lexical,
-    final T data,
     final String text)
   {
-    return CBASTTypeParameterName.<T>builder()
+    return CBASTTypeParameterName.builder()
       .setLexical(lexical.lexical())
-      .setData(data)
       .setText(text)
       .build();
   }

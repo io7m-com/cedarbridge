@@ -18,11 +18,9 @@ package com.io7m.cedarbridge.schema.ast;
 
 /**
  * The base type of AST declarations.
- *
- * @param <T> The type of pass-specific data
  */
 
-public interface CBASTDeclarationType<T> extends CBASTElementType<T>
+public interface CBASTDeclarationType extends CBASTElementType
 {
 
 }

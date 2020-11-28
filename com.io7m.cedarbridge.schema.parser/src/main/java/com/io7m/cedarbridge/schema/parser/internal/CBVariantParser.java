@@ -23,7 +23,6 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
@@ -33,39 +32,37 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
-
 /**
  * A parser for variant declarations.
  */
 
 public final class CBVariantParser
-  implements CBElementParserType<CBParsed, CBASTTypeVariant<CBParsed>>
+  implements CBElementParserType<CBASTTypeVariant>
 {
   public CBVariantParser()
   {
 
   }
 
-  private static List<CBASTTypeRecord<CBParsed>> getCases(
+  private static List<CBASTTypeRecord> getCases(
     final Collection<?> items)
   {
     return items.stream()
       .filter(x -> x instanceof CBASTTypeRecord)
-      .map(x -> (CBASTTypeRecord<CBParsed>) x)
+      .map(x -> (CBASTTypeRecord) x)
       .collect(Collectors.toList());
   }
 
-  private static List<CBASTTypeParameterName<CBParsed>> getParameters(
+  private static List<CBASTTypeParameterName> getParameters(
     final Collection<Object> items)
   {
     return items.stream()
       .filter(i -> i instanceof CBASTTypeParameterName)
-      .map(x -> (CBASTTypeParameterName<CBParsed>) x)
+      .map(x -> (CBASTTypeParameterName) x)
       .collect(Collectors.toList());
   }
 
-  private static CBASTElementType<CBParsed> parseVariantMemberParameter(
+  private static CBASTElementType parseVariantMemberParameter(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
@@ -85,7 +82,7 @@ public final class CBVariantParser
     }
   }
 
-  private static CBASTElementType<CBParsed> parseTypeParameterName(
+  private static CBASTElementType parseTypeParameterName(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException
@@ -100,14 +97,14 @@ public final class CBVariantParser
       final var symbol =
         subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
       try {
-        return CBASTNames.typeParameterName(expression, PARSED, symbol.text());
+        return CBASTNames.typeParameterName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorTypeParameterNameInvalid", e);
       }
     }
   }
 
-  private static CBASTTypeName<CBParsed> parseTypeName(
+  private static CBASTTypeName parseTypeName(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException
@@ -122,14 +119,14 @@ public final class CBVariantParser
       final var symbol =
         subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
       try {
-        return CBASTNames.typeName(expression, PARSED, symbol.text());
+        return CBASTNames.typeName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(expression, "errorTypeNameInvalid", e);
       }
     }
   }
 
-  private static CBASTTypeVariant<CBParsed> parseVariant(
+  private static CBASTTypeVariant parseVariant(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
@@ -165,16 +162,15 @@ public final class CBVariantParser
     final var cases =
       getCases(items);
 
-    return CBASTTypeVariant.<CBParsed>builder()
+    return CBASTTypeVariant.builder()
       .setLexical(expression.lexical())
       .setCases(cases)
       .setParameters(parameters)
-      .setData(PARSED)
       .setName(name)
       .build();
   }
 
-  private static CBASTElementType<CBParsed> parseVariantMember(
+  private static CBASTElementType parseVariantMember(
     final CBParseContextType context,
     final SExpressionType subExpression)
     throws CBParseFailedException
@@ -196,7 +192,7 @@ public final class CBVariantParser
     }
   }
 
-  private static CBASTElementType<CBParsed> parseVariantMemberActual(
+  private static CBASTElementType parseVariantMemberActual(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
@@ -218,7 +214,7 @@ public final class CBVariantParser
     }
   }
 
-  private static CBASTElementType<CBParsed> parseVariantMemberRecord(
+  private static CBASTElementType parseVariantMemberRecord(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
@@ -227,7 +223,7 @@ public final class CBVariantParser
   }
 
   @Override
-  public CBASTTypeVariant<CBParsed> parse(
+  public CBASTTypeVariant parse(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException

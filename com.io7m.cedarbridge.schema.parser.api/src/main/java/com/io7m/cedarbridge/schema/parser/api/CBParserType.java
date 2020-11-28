@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.parser.api;
 
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+
 import java.io.Closeable;
 
 /**
@@ -32,6 +34,6 @@ public interface CBParserType extends Closeable
    * @throws CBParseFailedException On parse errors
    */
 
-  CBParsedPackage execute()
+  CBASTPackage execute()
     throws CBParseFailedException;
 }

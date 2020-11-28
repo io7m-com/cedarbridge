@@ -20,21 +20,18 @@ import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
-
 /**
  * A parser for package declarations.
  */
 
 public final class CBPackageDeclarationParser
-  implements CBElementParserType<CBParsed, CBASTPackageDeclaration<CBParsed>>
+  implements CBElementParserType<CBASTPackageDeclaration>
 {
   private static final String EXPECTING_KIND =
     "objectPackage";
@@ -46,7 +43,7 @@ public final class CBPackageDeclarationParser
 
   }
 
-  private static CBASTPackageDeclaration<CBParsed> parsePackage(
+  private static CBASTPackageDeclaration parsePackage(
     final CBParseContextType context,
     final SExpressionListType list)
     throws CBParseFailedException
@@ -60,14 +57,13 @@ public final class CBPackageDeclarationParser
     final var packName =
       context.checkExpressionIs(list.get(1), SExpressionSymbolType.class);
 
-    return CBASTPackageDeclaration.<CBParsed>builder()
-      .setData(PARSED)
+    return CBASTPackageDeclaration.builder()
       .setLexical(list.lexical())
       .setName(parsePackageName(context, packName))
       .build();
   }
 
-  private static CBASTPackageName<CBParsed> parsePackageName(
+  private static CBASTPackageName parsePackageName(
     final CBParseContextType context,
     final SExpressionSymbolType packName)
     throws CBParseFailedException
@@ -76,7 +72,7 @@ public final class CBPackageDeclarationParser
            context.openExpectingOneOf(
              "objectPackageName", List.of("<package-name>"))) {
       try {
-        return CBASTNames.packageName(packName, PARSED, packName.text());
+        return CBASTNames.packageName(packName, packName.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(packName, "errorPackageNameInvalid", e);
       }
@@ -84,7 +80,7 @@ public final class CBPackageDeclarationParser
   }
 
   @Override
-  public CBASTPackageDeclaration<CBParsed> parse(
+  public CBASTPackageDeclaration parse(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException

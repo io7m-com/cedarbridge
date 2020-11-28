@@ -14,25 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.parser.internal;
+package com.io7m.cedarbridge.schema.binder.internal;
 
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
+import com.io7m.cedarbridge.schema.ast.CBASTElementType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 
-public final class CBParserServices
+public interface CBElementBinderType<T extends CBASTElementType>
 {
-  private CBParserServices()
-  {
-
-  }
-
-  public static <T> T find(
-    final Class<T> clazz)
-  {
-    return ServiceLoader.load(clazz)
-      .findFirst()
-      .orElseThrow(() -> new ServiceConfigurationError(
-        String.format("No providers of type %s", clazz.getCanonicalName()))
-      );
-  }
+  T bind(
+    CBBinderContextType context,
+    T item)
+    throws CBBindFailedException;
 }

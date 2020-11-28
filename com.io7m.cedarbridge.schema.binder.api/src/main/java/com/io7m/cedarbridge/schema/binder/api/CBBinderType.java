@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.binder.api;
 
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+
 /**
  * A package binder.
  */
@@ -30,7 +32,7 @@ public interface CBBinderType extends AutoCloseable
    * @throws CBBindFailedException On errors
    */
 
-  CBBoundPackage execute()
+  CBASTPackage execute()
     throws CBBindFailedException;
 
   @Override

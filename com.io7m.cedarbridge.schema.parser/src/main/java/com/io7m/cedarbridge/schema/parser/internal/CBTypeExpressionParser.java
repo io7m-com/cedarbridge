@@ -21,28 +21,25 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
-
 /**
  * A parser for type expressions.
  */
 
 public final class CBTypeExpressionParser
-  implements CBElementParserType<CBParsed, CBASTTypeExpressionType<CBParsed>>
+  implements CBElementParserType<CBASTTypeExpressionType>
 {
   public CBTypeExpressionParser()
   {
 
   }
 
-  private static CBASTTypeExpressionType.CBASTTypeNamedType<CBParsed> parseTypePath(
+  private static CBASTTypeExpressionType.CBASTTypeNamedType parseTypePath(
     final CBParseContextType context,
     final SExpressionSymbolType expression)
     throws CBParseFailedException
@@ -59,8 +56,7 @@ public final class CBTypeExpressionParser
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       try {
         final var builder =
-          CBASTTypeNamed.<CBParsed>builder()
-            .setData(PARSED)
+          CBASTTypeNamed.builder()
             .setLexical(expression.lexical());
 
         final var text = expression.text();
@@ -68,17 +64,17 @@ public final class CBTypeExpressionParser
 
         if (segments.size() == 1) {
           builder.setName(
-            CBASTNames.typeName(expression, PARSED, segments.get(0))
+            CBASTNames.typeName(expression, segments.get(0))
           );
           return builder.build();
         }
 
         if (segments.size() == 2) {
           builder.setPackageName(
-            CBASTNames.packageName(expression, PARSED, segments.get(0))
+            CBASTNames.packageName(expression, segments.get(0))
           );
           builder.setName(
-            CBASTNames.typeName(expression, PARSED, segments.get(1))
+            CBASTNames.typeName(expression, segments.get(1))
           );
           return builder.build();
         }
@@ -94,7 +90,7 @@ public final class CBTypeExpressionParser
   }
 
   @Override
-  public CBASTTypeExpressionType<CBParsed> parse(
+  public CBASTTypeExpressionType parse(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException
@@ -119,7 +115,7 @@ public final class CBTypeExpressionParser
     }
   }
 
-  private CBASTTypeExpressionType<CBParsed> parseTypeApplication(
+  private CBASTTypeExpressionType parseTypeApplication(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
@@ -133,8 +129,7 @@ public final class CBTypeExpressionParser
            context.openExpectingOneOf(expectingKind, expectingForms)) {
 
       final var builder =
-        CBASTTypeApplication.<CBParsed>builder()
-          .setData(PARSED)
+        CBASTTypeApplication.builder()
           .setLexical(expression.lexical());
 
       if (expression.size() == 0) {

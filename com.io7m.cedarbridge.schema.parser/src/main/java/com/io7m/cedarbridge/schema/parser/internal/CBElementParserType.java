@@ -20,7 +20,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionType;
 
-public interface CBElementParserType<U, T extends CBASTElementType<U>>
+public interface CBElementParserType<T extends CBASTElementType>
 {
   T parse(
     CBParseContextType context,

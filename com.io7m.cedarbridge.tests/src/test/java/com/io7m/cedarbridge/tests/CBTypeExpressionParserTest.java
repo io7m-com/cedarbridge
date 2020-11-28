@@ -59,7 +59,7 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     this.errors.add(error);
   }
 
-  private CBASTTypeExpressionType<CBParsed> parse(
+  private CBASTTypeExpressionType parse(
     final String text)
     throws CBParseFailedException
   {
@@ -96,7 +96,7 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     throws CBParseFailedException
   {
     final var name =
-      (CBASTTypeNamedType<?>) this.parse("T");
+      (CBASTTypeNamedType) this.parse("T");
 
     assertEquals(Optional.empty(), name.packageName());
     assertEquals("T", name.name().text());
@@ -119,7 +119,7 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     throws Exception
   {
     final var name =
-      (CBASTTypeNamedType<?>) this.parse("com.io7m.cedarbridge:T");
+      (CBASTTypeNamedType) this.parse("com.io7m.cedarbridge:T");
 
     assertEquals(
       "com.io7m.cedarbridge",
@@ -156,12 +156,12 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parse("(A B)");
+      (CBASTTypeApplication) this.parse("(A B)");
 
     final var name0 =
-      (CBASTTypeNamed<?>) app.target();
+      (CBASTTypeNamed) app.target();
     final var name1 =
-      (CBASTTypeNamed<?>) app.arguments().get(0);
+      (CBASTTypeNamed) app.arguments().get(0);
 
     assertEquals("A", name0.name().text());
     assertEquals("B", name1.name().text());
@@ -172,10 +172,10 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parse("(A)");
+      (CBASTTypeApplication) this.parse("(A)");
 
     final var name0 =
-      (CBASTTypeNamed<?>) app.target();
+      (CBASTTypeNamed) app.target();
 
     assertEquals("A", name0.name().text());
     assertEquals(0, app.arguments().size());
@@ -186,22 +186,22 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     throws Exception
   {
     final var app =
-      (CBASTTypeApplication<?>) this.parse("([A B] [C D])");
+      (CBASTTypeApplication) this.parse("([A B] [C D])");
 
     final var app0 =
-      (CBASTTypeApplication<?>) app.target();
+      (CBASTTypeApplication) app.target();
     final var app1 =
-      (CBASTTypeApplication<?>) app.arguments().get(0);
+      (CBASTTypeApplication) app.arguments().get(0);
 
     final var name0 =
-      (CBASTTypeNamed<?>) app0.target();
+      (CBASTTypeNamed) app0.target();
     final var name1 =
-      (CBASTTypeNamed<?>) app0.arguments().get(0);
+      (CBASTTypeNamed) app0.arguments().get(0);
 
     final var name2 =
-      (CBASTTypeNamed<?>) app1.target();
+      (CBASTTypeNamed) app1.target();
     final var name3 =
-      (CBASTTypeNamed<?>) app1.arguments().get(0);
+      (CBASTTypeNamed) app1.arguments().get(0);
 
     assertEquals("A", name0.name().text());
     assertEquals("B", name1.name().text());

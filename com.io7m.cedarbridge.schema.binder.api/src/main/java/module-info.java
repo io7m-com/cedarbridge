@@ -20,14 +20,13 @@
 
 module com.io7m.cedarbridge.schema.binder.api
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
-  requires com.io7m.cedarbridge.errors;
-  requires com.io7m.cedarbridge.schema.loader.api;
-  requires com.io7m.cedarbridge.schema.parser.api;
+  requires transitive com.io7m.cedarbridge.errors;
+  requires transitive com.io7m.cedarbridge.exprsrc.api;
+  requires transitive com.io7m.cedarbridge.schema.ast;
+  requires transitive com.io7m.cedarbridge.schema.loader.api;
 
   exports com.io7m.cedarbridge.schema.binder.api;
 }

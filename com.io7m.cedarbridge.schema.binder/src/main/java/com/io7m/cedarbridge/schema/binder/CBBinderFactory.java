@@ -18,12 +18,12 @@ package com.io7m.cedarbridge.schema.binder;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderFactoryType;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderType;
 import com.io7m.cedarbridge.schema.binder.internal.CBBinder;
 import com.io7m.cedarbridge.schema.binder.internal.CBBinderStrings;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
-import com.io7m.cedarbridge.schema.parser.api.CBParsedPackage;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 
 import java.util.Objects;
@@ -60,7 +60,7 @@ public final class CBBinderFactory implements CBBinderFactoryType
     final CBLoaderType loader,
     final Consumer<CBError> errors,
     final CBExpressionLineLogType lineLog,
-    final CBParsedPackage parsedPackage)
+    final CBASTPackage parsedPackage)
   {
     Objects.requireNonNull(loader, "loader");
     Objects.requireNonNull(errors, "errors");

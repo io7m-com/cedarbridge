@@ -16,38 +16,41 @@
 
 package com.io7m.cedarbridge.schema.binder.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
-import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
-import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jlexing.core.LexicalPosition;
+import com.io7m.cedarbridge.schema.loader.api.CBLoadFailedException;
 
-import java.net.URI;
-
-public interface CBBinderContextType extends AutoCloseable
+public final class CBImportBinder implements CBElementBinderType<CBASTImport>
 {
-  CBLoaderType loader();
+  public CBImportBinder()
+  {
 
-  CBBinderContextType openBindingScope();
+  }
 
   @Override
-  void close()
-    throws CBParseFailedException;
+  public CBASTImport bind(
+    final CBBinderContextType context,
+    final CBASTImport item)
+    throws CBBindFailedException
+  {
+    final var loader = context.loader();
+    final var longName = item.target().text();
+    final var shortName = item.shortName().text();
 
-  void registerPackage(
-    LexicalPosition<URI> lexical,
-    String text,
-    CBPackageType packageV)
-    throws CBBindFailedException;
+    try {
+      final var packageV = loader.load(longName);
+      context.registerPackage(item.lexical(), shortName, packageV);
 
-  CBBindFailedException failed(
-    LexicalPosition<URI> lexical,
-    String errorCode,
-    Object... arguments);
-
-  CBBindFailedException failedWithOther(
-    LexicalPosition<URI> lexical,
-    LexicalPosition<URI> lexicalOther,
-    String errorCode,
-    Object... arguments);
+      return item.withUserData(
+        item.userData().plus(CBPackageType.class, packageV)
+      );
+    } catch (final CBLoadFailedException e) {
+      throw context.failed(
+        item.lexical(),
+        "errorPackageUnavailable",
+        longName
+      );
+    }
+  }
 }

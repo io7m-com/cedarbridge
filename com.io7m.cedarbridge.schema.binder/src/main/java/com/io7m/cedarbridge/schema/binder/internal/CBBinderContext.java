@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
 
@@ -39,17 +40,21 @@ public final class CBBinderContext
   private final CBExpressionLineLogType lineLog;
   private final HashMap<String, CBPackageType> packagesByShortName;
   private final HashMap<String, LexicalPosition<URI>> packagesByShortNameImports;
+  private final CBLoaderType loader;
   private int errors;
 
   public CBBinderContext(
     final CBStringsType inStrings,
+    final CBLoaderType inLoader,
     final CBExpressionLineLogType inLineLog,
     final Consumer<CBError> inErrorConsumer)
   {
-    Objects.requireNonNull(inErrorConsumer, "inErrorConsumer");
+    Objects.requireNonNull(inErrorConsumer, "errorConsumer");
 
+    this.loader =
+      Objects.requireNonNull(inLoader, "loader");
     this.lineLog =
-      Objects.requireNonNull(inLineLog, "inLineLog");
+      Objects.requireNonNull(inLineLog, "lineLog");
     this.strings =
       Objects.requireNonNull(inStrings, "strings");
 
@@ -86,6 +91,12 @@ public final class CBBinderContext
     {
       this.root =
         Objects.requireNonNull(inRoot, "root");
+    }
+
+    @Override
+    public CBLoaderType loader()
+    {
+      return this.root.loader;
     }
 
     @Override

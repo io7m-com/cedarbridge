@@ -14,9 +14,36 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.binder.api;
+package com.io7m.cedarbridge.schema.ast;
 
-public interface CBBindingType
+import com.io7m.immutables.styles.ImmutablesStyleType;
+import org.immutables.value.Value;
+
+import java.util.List;
+
+/**
+ * A package.
+ */
+
+@ImmutablesStyleType
+@Value.Immutable
+public interface CBASTPackageType
 {
+  /**
+   * @return The name of the package
+   */
 
+  CBASTPackageName name();
+
+  /**
+   * @return The packages imported by this package
+   */
+
+  List<CBASTImport> imports();
+
+  /**
+   * @return The type declarations in the package
+   */
+
+  List<CBASTTypeDeclarationType> types();
 }

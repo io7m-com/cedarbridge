@@ -21,21 +21,18 @@ import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageShortName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.cedarbridge.schema.parser.api.CBParsed;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.parser.api.CBParsed.PARSED;
-
 /**
  * A parser for import declarations.
  */
 
 public final class CBImportParser
-  implements CBElementParserType<CBParsed, CBASTImport<CBParsed>>
+  implements CBElementParserType<CBASTImport>
 {
   private static final String EXPECTING_KIND =
     "objectImport";
@@ -47,7 +44,7 @@ public final class CBImportParser
 
   }
 
-  private static CBASTImport<CBParsed> parseImport(
+  private static CBASTImport parseImport(
     final CBParseContextType context,
     final SExpressionListType list)
     throws CBParseFailedException
@@ -64,15 +61,14 @@ public final class CBImportParser
     final var packShort =
       context.checkExpressionIs(list.get(2), SExpressionSymbolType.class);
 
-    return CBASTImport.<CBParsed>builder()
-      .setData(PARSED)
+    return CBASTImport.builder()
       .setLexical(list.lexical())
       .setTarget(parsePackageName(context, packName))
       .setShortName(parseShortName(context, packShort))
       .build();
   }
 
-  private static CBASTPackageShortName<CBParsed> parseShortName(
+  private static CBASTPackageShortName parseShortName(
     final CBParseContextType context,
     final SExpressionSymbolType packShort)
     throws CBParseFailedException
@@ -81,14 +77,14 @@ public final class CBImportParser
            context.openExpectingOneOf(
              "objectPackageShortName", List.of("<package-short-name>"))) {
       try {
-        return CBASTNames.shortPackageName(packShort, PARSED, packShort.text());
+        return CBASTNames.shortPackageName(packShort, packShort.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(packShort, "errorPackageShortNameInvalid", e);
       }
     }
   }
 
-  private static CBASTPackageName<CBParsed> parsePackageName(
+  private static CBASTPackageName parsePackageName(
     final CBParseContextType context,
     final SExpressionSymbolType packName)
     throws CBParseFailedException
@@ -97,7 +93,7 @@ public final class CBImportParser
            context.openExpectingOneOf(
              "objectPackageName", List.of("<package-name>"))) {
       try {
-        return CBASTNames.packageName(packName, PARSED, packName.text());
+        return CBASTNames.packageName(packName, packName.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(packName, "errorPackageNameInvalid", e);
       }
@@ -105,7 +101,7 @@ public final class CBImportParser
   }
 
   @Override
-  public CBASTImport<CBParsed> parse(
+  public CBASTImport parse(
     final CBParseContextType context,
     final SExpressionType expression)
     throws CBParseFailedException

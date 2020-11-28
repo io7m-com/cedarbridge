@@ -21,13 +21,11 @@ import org.immutables.value.Value;
 
 /**
  * The  type of package short names.
- *
- * @param <T> The type of pass-specific data
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBASTPackageShortNameType<T> extends CBASTElementType<T>
+public interface CBASTPackageShortNameType extends CBASTElementType
 {
   /**
    * @return The name text

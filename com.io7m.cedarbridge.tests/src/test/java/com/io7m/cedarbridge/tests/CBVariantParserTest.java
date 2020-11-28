@@ -54,7 +54,7 @@ public final class CBVariantParserTest extends CBElementParserContract
     this.errors.add(error);
   }
 
-  private CBASTTypeVariant<CBParsed> parse(
+  private CBASTTypeVariant parse(
     final String text)
     throws CBParseFailedException
   {

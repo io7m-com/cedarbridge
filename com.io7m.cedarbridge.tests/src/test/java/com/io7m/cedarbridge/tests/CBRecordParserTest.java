@@ -54,7 +54,7 @@ public final class CBRecordParserTest extends CBElementParserContract
     this.errors.add(error);
   }
 
-  private CBASTTypeRecord<CBParsed> parse(
+  private CBASTTypeRecord parse(
     final String text)
     throws CBParseFailedException
   {

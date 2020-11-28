@@ -21,7 +21,7 @@ import org.immutables.value.Value;
 
 @ImmutableStyleType
 @Value.Immutable
-public interface CBASTPackageDeclarationType<T> extends CBASTDeclarationType<T>
+public interface CBASTPackageDeclarationType extends CBASTDeclarationType
 {
-  CBASTPackageName<T> name();
+  CBASTPackageName name();
 }
