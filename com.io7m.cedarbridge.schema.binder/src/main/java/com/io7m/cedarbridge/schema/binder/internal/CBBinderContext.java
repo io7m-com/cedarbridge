@@ -19,18 +19,26 @@ package com.io7m.cedarbridge.schema.binder.internal;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocal;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
 
+import java.math.BigInteger;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_FIELD_NAME;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE_PARAMETER;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_VARIANT_CASE;
 
 public final class CBBinderContext
 {
@@ -41,6 +49,7 @@ public final class CBBinderContext
   private final HashMap<String, CBPackageType> packagesByShortName;
   private final HashMap<String, LexicalPosition<URI>> packagesByShortNameImports;
   private final CBLoaderType loader;
+  private BigInteger idPool;
   private int errors;
 
   public CBBinderContext(
@@ -64,8 +73,10 @@ public final class CBBinderContext
     };
 
     this.stack = new LinkedList<>();
-    this.stack.push(new Context(this));
+    this.stack.push(new Context(this, null));
 
+    this.idPool =
+      BigInteger.ONE;
     this.packagesByShortName =
       new HashMap<>();
     this.packagesByShortNameImports =
@@ -85,12 +96,25 @@ public final class CBBinderContext
   private static final class Context implements CBBinderContextType
   {
     private final CBBinderContext root;
+    private final Context parent;
+    private final Map<String, CBBindingLocalType> typeBindings;
+    private final Map<String, CBBindingLocalType> fieldBindings;
+    private final Map<String, CBBindingLocalType> caseBindings;
 
     Context(
-      final CBBinderContext inRoot)
+      final CBBinderContext inRoot,
+      final Context inParent)
     {
       this.root =
         Objects.requireNonNull(inRoot, "root");
+      this.parent =
+        inParent;
+      this.typeBindings =
+        new HashMap<>();
+      this.fieldBindings =
+        new HashMap<>();
+      this.caseBindings =
+        new HashMap<>();
     }
 
     @Override
@@ -102,7 +126,7 @@ public final class CBBinderContext
     @Override
     public CBBinderContextType openBindingScope()
     {
-      final var context = new Context(this.root);
+      final var context = new Context(this.root, this);
       this.root.stack.push(context);
       return context;
     }
@@ -215,6 +239,217 @@ public final class CBBinderContext
 
       this.root.errorConsumer.accept(errorValue);
       return new CBBindFailedException();
+    }
+
+    private CBBindingLocalType findTypeBinding(
+      final String name)
+    {
+      Objects.requireNonNull(name, "name");
+
+      final var existing = this.typeBindings.get(name);
+      if (existing != null) {
+        return existing;
+      }
+      if (this.parent != null) {
+        return this.parent.findTypeBinding(name);
+      }
+      return null;
+    }
+
+    private CBBindingLocalType findFieldBinding(
+      final String name)
+    {
+      Objects.requireNonNull(name, "name");
+
+      final var existing = this.fieldBindings.get(name);
+      if (existing != null) {
+        return existing;
+      }
+      if (this.parent != null) {
+        return this.parent.findFieldBinding(name);
+      }
+      return null;
+    }
+
+    private CBBindingLocalType findCaseBinding(
+      final String name)
+    {
+      Objects.requireNonNull(name, "name");
+
+      final var existing = this.caseBindings.get(name);
+      if (existing != null) {
+        return existing;
+      }
+      if (this.parent != null) {
+        return this.parent.findCaseBinding(name);
+      }
+      return null;
+    }
+
+    @Override
+    public CBBindingLocalType bindType(
+      final String name,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(name, "name");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findTypeBinding(name);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          name
+        );
+      }
+
+      final var binding =
+        CBBindingLocal.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setKind(BINDING_TYPE)
+          .setName(name)
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.typeBindings.put(name, binding);
+      return binding;
+    }
+
+    @Override
+    public CBBindingLocalType bindTypeParameter(
+      final String name,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(name, "name");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findTypeBinding(name);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          name
+        );
+      }
+
+      final var binding =
+        CBBindingLocal.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setKind(BINDING_TYPE_PARAMETER)
+          .setName(name)
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.typeBindings.put(name, binding);
+      return binding;
+    }
+
+    @Override
+    public CBBindingLocalType bindField(
+      final String name,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(name, "name");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findFieldBinding(name);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          name
+        );
+      }
+
+      final var binding =
+        CBBindingLocal.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setKind(BINDING_FIELD_NAME)
+          .setName(name)
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.fieldBindings.put(name, binding);
+      return binding;
+    }
+
+    @Override
+    public CBBindingLocalType checkTypeBinding(
+      final String text,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      final var existing = this.findTypeBinding(text);
+      if (existing == null) {
+        throw this.failed(
+          lexical,
+          "errorBindingMissing",
+          text
+        );
+      }
+      return existing;
+    }
+
+    @Override
+    public CBBindingLocalType bindVariantCase(
+      final String name,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(name, "name");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findCaseBinding(name);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          name
+        );
+      }
+
+      final var binding =
+        CBBindingLocal.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setKind(BINDING_VARIANT_CASE)
+          .setName(name)
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.caseBindings.put(name, binding);
+      return binding;
+    }
+
+    @Override
+    public CBPackageType checkPackageBinding(
+      final String text,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(text, "text");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var pack = this.root.packagesByShortName.get(text);
+      if (pack == null) {
+        throw this.failed(
+          lexical,
+          "errorPackageUnavailable",
+          text
+        );
+      }
+
+      return pack;
     }
   }
 }

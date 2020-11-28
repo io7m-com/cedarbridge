@@ -56,4 +56,11 @@ public final class CBFakePackage implements CBPackageType
   {
     return this.types;
   }
+
+  public void addType(
+    final CBFakeRecord t)
+  {
+    t.setOwner(this);
+    this.types.put(t.name(), t);
+  }
 }

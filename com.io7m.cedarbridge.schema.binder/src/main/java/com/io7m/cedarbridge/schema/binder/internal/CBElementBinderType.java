@@ -21,7 +21,7 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 
 public interface CBElementBinderType<T extends CBASTElementType>
 {
-  T bind(
+  void bind(
     CBBinderContextType context,
     T item)
     throws CBBindFailedException;

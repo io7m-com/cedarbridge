@@ -23,10 +23,11 @@ module com.io7m.cedarbridge.schema.binder
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires com.io7m.junreachable.core;
+
   requires transitive com.io7m.cedarbridge.errors;
   requires transitive com.io7m.cedarbridge.schema.binder.api;
   requires transitive com.io7m.cedarbridge.schema.loader.api;
-  requires transitive com.io7m.cedarbridge.schema.parser.api;
   requires transitive com.io7m.cedarbridge.strings.api;
   requires transitive com.io7m.cedarbridge.schema.compiled;
 

@@ -1,0 +1,5 @@
+(package com.io7m.cedarbridge)
+
+(record T
+  [parameter A]
+  [parameter A])

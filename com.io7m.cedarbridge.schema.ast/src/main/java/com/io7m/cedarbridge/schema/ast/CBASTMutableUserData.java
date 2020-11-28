@@ -21,42 +21,81 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-public final class CBASTUserData
+/**
+ * Mutable user data associated with AST elements. This structure
+ * is effectively a type-indexed heterogeneous map.
+ */
+
+public final class CBASTMutableUserData
 {
   private final Map<Class<?>, Object> items;
 
-  public CBASTUserData(
-    final Map<Class<?>, Object> inItems)
+  /**
+   * Construct an empty metadata map.
+   */
+
+  public CBASTMutableUserData()
   {
-    this.items = Objects.requireNonNull(inItems, "items");
+    this.items = new HashMap<>();
   }
 
-  public CBASTUserData()
-  {
-    this(Map.of());
-  }
+  /**
+   * Put a value into the user data, replacing any existing data of the
+   * same type.
+   *
+   * @param clazz The user data type
+   * @param item  The data
+   * @param <T>   The precise type of data
+   */
 
-  public <T> CBASTUserData plus(
+  public <T> void put(
     final Class<T> clazz,
     final T item)
   {
     Objects.requireNonNull(clazz, "clazz");
     Objects.requireNonNull(item, "item");
-
-    final Map<Class<?>, Object> newMap = new HashMap<>(this.items);
-    newMap.put(clazz, item);
-    return new CBASTUserData(newMap);
+    this.items.put(clazz, item);
   }
+
+  /**
+   * Get data from the map with the given type.
+   *
+   * @param clazz The user data type
+   * @param <T>   The precise type of data
+   *
+   * @return The data, if any
+   *
+   * @throws IllegalArgumentException If no data exists with the given type
+   */
 
   public <T> T get(
     final Class<T> clazz)
+    throws IllegalArgumentException
+  {
+    Objects.requireNonNull(clazz, "clazz");
+
+    return this.find(clazz)
+      .orElseThrow(() -> new IllegalArgumentException(
+        String.format("No user data registered of type %s", clazz)
+      ));
+  }
+
+  /**
+   * Get data from the map with the given type.
+   *
+   * @param clazz The user data type
+   * @param <T>   The precise type of data
+   *
+   * @return The data, if any
+   *
+   * @throws IllegalArgumentException If no data exists with the given type
+   */
+
+  private <T> Optional<T> find(final Class<T> clazz)
   {
     Objects.requireNonNull(clazz, "clazz");
 
     return Optional.ofNullable(this.items.get(clazz))
-      .map(clazz::cast)
-      .orElseThrow(() -> new IllegalArgumentException(
-        String.format("No user data registered of type %s", clazz)
-      ));
+      .map(clazz::cast);
   }
 }

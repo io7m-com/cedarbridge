@@ -187,6 +187,11 @@
         <artifactId>equalsverifier</artifactId>
         <version>3.4.3</version>
       </dependency>
+      <dependency>
+        <groupId>com.io7m.junreachable</groupId>
+        <artifactId>com.io7m.junreachable.core</artifactId>
+        <version>3.0.0</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

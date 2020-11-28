@@ -109,7 +109,7 @@ public final class CBParserTest
   public void testBroken0()
     throws Exception
   {
-    try (var stream = this.stream("errorBroken0.cbs")) {
+    try (var stream = this.stream("errorParseBroken0.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorSExpressionInvalid", this.takeError().errorCode());
@@ -122,7 +122,7 @@ public final class CBParserTest
   public void testBroken1()
     throws Exception
   {
-    try (var stream = this.stream("errorBroken1.cbs")) {
+    try (var stream = this.stream("errorParseBroken1.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorSExpressionInvalid", this.takeError().errorCode());
@@ -141,7 +141,7 @@ public final class CBParserTest
   public void testBasicNoPackage()
     throws Exception
   {
-    try (var stream = this.stream("basicNoPackage.cbs")) {
+    try (var stream = this.stream("errorParseBasicNoPackage.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorPackageNameMissing", this.takeError().errorCode());
@@ -154,7 +154,7 @@ public final class CBParserTest
   public void testBasicTooManyPackageNames()
     throws Exception
   {
-    try (var stream = this.stream("errorBasicTooManyPackageNames.cbs")) {
+    try (var stream = this.stream("errorParseBasicTooManyPackageNames.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals("errorPackageNameMultiple", this.takeError().errorCode());
@@ -167,7 +167,7 @@ public final class CBParserTest
   public void testUnrecognizedThing()
     throws Exception
   {
-    try (var stream = this.stream("errorUnrecognizedThing.cbs")) {
+    try (var stream = this.stream("errorParseUnrecognizedThing.cbs")) {
       try (var parser = this.parser(stream)) {
         assertThrows(CBParseFailedException.class, parser::execute);
         assertEquals(

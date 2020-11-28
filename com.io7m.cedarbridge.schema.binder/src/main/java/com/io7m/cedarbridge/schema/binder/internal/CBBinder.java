@@ -18,14 +18,14 @@ package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
-import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -57,32 +57,38 @@ public final class CBBinder implements CBBinderType
       Objects.requireNonNull(inParsedPackage, "parsedPackage");
   }
 
-  @Override
-  public CBASTPackage execute()
-    throws CBBindFailedException
-  {
-    final var context =
-      new CBBinderContext(this.strings, this.loader, this.lineLog, this.errors);
-    final var contextMain =
-      context.current();
-
-    final var imports =
-      this.processImports(contextMain);
-
-    throw new UnsupportedOperationException();
-  }
-
-  private List<CBASTImport> processImports(
-    final CBBinderContextType context)
+  private static void bindTypeDeclarations(
+    final CBBinderContextType context,
+    final List<CBASTTypeDeclarationType> types)
     throws CBBindFailedException
   {
     var failed = false;
+    for (final var type : types) {
+      try (var subContext = context.openBindingScope()) {
+        try {
+          new CBTypeDeclarationBinder().bind(subContext, type);
+        } catch (final CBBindFailedException e) {
+          failed = true;
+        }
+      }
+    }
+    if (failed) {
+      throw new CBBindFailedException();
+    }
+  }
 
-    final var newImports =
-      new ArrayList<CBASTImport>(this.parsedPackage.imports().size());
-    for (final var importV : this.parsedPackage.imports()) {
+  private static void collectTopLevelBindings(
+    final CBBinderContextType context,
+    final List<CBASTTypeDeclarationType> types)
+    throws CBBindFailedException
+  {
+    var failed = false;
+    for (final var typeV : types) {
+      final var name = typeV.name();
       try {
-        newImports.add(new CBImportBinder().bind(context, importV));
+        final var binding =
+          context.bindType(name.text(), name.lexical());
+        name.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
         failed = true;
       }
@@ -91,8 +97,47 @@ public final class CBBinder implements CBBinderType
     if (failed) {
       throw new CBBindFailedException();
     }
+  }
 
-    return List.copyOf(newImports);
+  @Override
+  public void execute()
+    throws CBBindFailedException
+  {
+    final var context =
+      new CBBinderContext(this.strings, this.loader, this.lineLog, this.errors);
+    final var contextMain =
+      context.current();
+
+    this.processImports(contextMain);
+    this.processTypes(contextMain);
+  }
+
+  private void processTypes(
+    final CBBinderContextType context)
+    throws CBBindFailedException
+  {
+    final var types = this.parsedPackage.types();
+    collectTopLevelBindings(context, types);
+    bindTypeDeclarations(context, types);
+  }
+
+  private void processImports(
+    final CBBinderContextType context)
+    throws CBBindFailedException
+  {
+    var failed = false;
+
+    for (final var importV : this.parsedPackage.imports()) {
+      try {
+        new CBImportBinder().bind(context, importV);
+      } catch (final CBBindFailedException e) {
+        failed = true;
+      }
+    }
+
+    if (failed) {
+      throw new CBBindFailedException();
+    }
   }
 
   @Override

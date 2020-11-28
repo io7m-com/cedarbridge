@@ -10,11 +10,14 @@
 
   <entry key="errorBindWithOther"><![CDATA[{0}:{1}:{2}: {3}
 {4}
-  At {5}:{6}:{7}:
+  See {5}:{6}:{7}:
 {8}
 ]]></entry>
 
+  <entry key="errorTypeMissing">Type "{0}" is not present in package "{1}".</entry>
   <entry key="errorPackageUnavailable">Package "{0}" is unavailable.</entry>
-  <entry key="errorPackageShortNameUsed">Package short name "{0}" has already been used.</entry>
+  <entry key="errorPackageShortNameUsed">Package short name "{0}" has already been defined.</entry>
+  <entry key="errorBindingConflict">Name "{0}" has already been defined.</entry>
+  <entry key="errorBindingMissing">Name "{0}" is not defined or is not in scope.</entry>
 
 </properties>

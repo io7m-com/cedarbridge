@@ -14,22 +14,39 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Cedarbridge message protocol (Schema binder API)
- */
+package com.io7m.cedarbridge.tests;
 
-module com.io7m.cedarbridge.schema.binder.api
+import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeType;
+
+import java.util.Objects;
+
+public final class CBFakeRecord implements CBTypeType
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+  private final String name;
+  private CBPackageType owner;
 
-  requires transitive com.io7m.cedarbridge.schema.compiled;
-  requires transitive com.io7m.cedarbridge.errors;
-  requires transitive com.io7m.cedarbridge.exprsrc.api;
-  requires transitive com.io7m.cedarbridge.schema.ast;
-  requires transitive com.io7m.cedarbridge.schema.loader.api;
+  public CBFakeRecord(
+    final String inName)
+  {
+    this.name = Objects.requireNonNull(inName, "name");
+  }
 
-  exports com.io7m.cedarbridge.schema.binder.api;
+  public void setOwner(
+    final CBPackageType inOwner)
+  {
+    this.owner = Objects.requireNonNull(inOwner, "owner");
+  }
+
+  @Override
+  public CBPackageType owner()
+  {
+    return this.owner;
+  }
+
+  @Override
+  public String name()
+  {
+    return this.name;
+  }
 }

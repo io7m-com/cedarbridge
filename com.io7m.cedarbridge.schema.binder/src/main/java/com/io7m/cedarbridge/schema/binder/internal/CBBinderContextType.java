@@ -17,9 +17,9 @@
 package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
-import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jlexing.core.LexicalPosition;
 
 import java.net.URI;
@@ -32,7 +32,7 @@ public interface CBBinderContextType extends AutoCloseable
 
   @Override
   void close()
-    throws CBParseFailedException;
+    throws CBBindFailedException;
 
   void registerPackage(
     LexicalPosition<URI> lexical,
@@ -50,4 +50,34 @@ public interface CBBinderContextType extends AutoCloseable
     LexicalPosition<URI> lexicalOther,
     String errorCode,
     Object... arguments);
+
+  CBBindingLocalType bindType(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  CBBindingLocalType bindTypeParameter(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  CBBindingLocalType bindField(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  CBBindingLocalType checkTypeBinding(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  CBBindingLocalType bindVariantCase(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  CBPackageType checkPackageBinding(
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
 }

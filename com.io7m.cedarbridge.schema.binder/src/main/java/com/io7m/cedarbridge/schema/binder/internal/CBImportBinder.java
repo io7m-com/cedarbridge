@@ -29,7 +29,7 @@ public final class CBImportBinder implements CBElementBinderType<CBASTImport>
   }
 
   @Override
-  public CBASTImport bind(
+  public void bind(
     final CBBinderContextType context,
     final CBASTImport item)
     throws CBBindFailedException
@@ -41,10 +41,7 @@ public final class CBImportBinder implements CBElementBinderType<CBASTImport>
     try {
       final var packageV = loader.load(longName);
       context.registerPackage(item.lexical(), shortName, packageV);
-
-      return item.withUserData(
-        item.userData().plus(CBPackageType.class, packageV)
-      );
+      item.userData().put(CBPackageType.class, packageV);
     } catch (final CBLoadFailedException e) {
       throw context.failed(
         item.lexical(),

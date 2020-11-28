@@ -29,9 +29,9 @@ import java.net.URI;
 public interface CBASTElementType extends LexicalType<URI>
 {
   @Value.Default
-  default CBASTUserData userData()
+  default CBASTMutableUserData userData()
   {
-    return new CBASTUserData();
+    return new CBASTMutableUserData();
   }
 
   @Override
