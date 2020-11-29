@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.binder.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
@@ -52,8 +53,7 @@ public interface CBBinderContextType extends AutoCloseable
     Object... arguments);
 
   CBBindingLocalType bindType(
-    String text,
-    LexicalPosition<URI> lexical)
+    CBASTTypeDeclarationType type)
     throws CBBindFailedException;
 
   CBBindingLocalType bindTypeParameter(

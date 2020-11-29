@@ -14,13 +14,8 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+/**
+ * Cedarbridge message protocol (Schema type checker [Internal classes])
+ */
 
-public interface CBTypeType
-{
-  CBPackageType owner();
-
-  String name();
-
-  int arity();
-}
+package com.io7m.cedarbridge.schema.typer.internal;

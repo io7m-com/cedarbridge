@@ -134,7 +134,7 @@ public final class CBTypeExpressionBinder
         .setType(typeV)
         .build();
 
-    name.userData().put(CBBindingType.class, external);
+    item.userData().put(CBBindingType.class, external);
   }
 
   @Override

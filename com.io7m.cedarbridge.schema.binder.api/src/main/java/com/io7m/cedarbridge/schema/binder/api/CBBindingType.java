@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.binder.api;
 
+import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeType;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jlexing.core.LexicalPosition;
@@ -32,37 +33,6 @@ import java.net.URI;
 public interface CBBindingType extends LexicalType<URI>
 {
   /**
-   * The kind of object to which the name binds.
-   */
-
-  enum Kind
-  {
-    /**
-     * The binding names a type.
-     */
-
-    BINDING_TYPE,
-
-    /**
-     * The binding names a type parameter.
-     */
-
-    BINDING_TYPE_PARAMETER,
-
-    /**
-     * The binding names a field.
-     */
-
-    BINDING_FIELD_NAME,
-
-    /**
-     * The binding names a variant case.
-     */
-
-    BINDING_VARIANT_CASE
-  }
-
-  /**
    * @return The name
    */
 
@@ -75,8 +45,7 @@ public interface CBBindingType extends LexicalType<URI>
    * A binding to something declared within the same package.
    */
 
-  @ImmutablesStyleType
-  @Value.Immutable
+
   interface CBBindingLocalType extends CBBindingType
   {
     /**
@@ -86,10 +55,48 @@ public interface CBBindingType extends LexicalType<URI>
     BigInteger id();
 
     /**
-     * @return The kind of the binding
+     * The binding names a type parameter.
      */
 
-    Kind kind();
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalTypeParameterType extends CBBindingLocalType
+    {
+
+    }
+
+    /**
+     * The binding names a type declaration.
+     */
+
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalTypeDeclarationType extends CBBindingLocalType
+    {
+      CBASTTypeDeclarationType type();
+    }
+
+    /**
+     * The binding names a variant case.
+     */
+
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalVariantCaseType extends CBBindingLocalType
+    {
+
+    }
+
+    /**
+     * The binding names a field name.
+     */
+
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalFieldNameType extends CBBindingLocalType
+    {
+
+    }
   }
 
   /**

@@ -24,12 +24,15 @@ import java.util.Objects;
 public final class CBFakeRecord implements CBTypeType
 {
   private final String name;
+  private final int arity;
   private CBPackageType owner;
 
   public CBFakeRecord(
-    final String inName)
+    final String inName,
+    final int arity)
   {
     this.name = Objects.requireNonNull(inName, "name");
+    this.arity = arity;
   }
 
   public void setOwner(
@@ -48,5 +51,11 @@ public final class CBFakeRecord implements CBTypeType
   public String name()
   {
     return this.name;
+  }
+
+  @Override
+  public int arity()
+  {
+    return this.arity;
   }
 }

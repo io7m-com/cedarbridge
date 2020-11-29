@@ -14,13 +14,33 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.api;
 
-public interface CBTypeType
+import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+
+import java.util.function.Consumer;
+
+/**
+ * A factory of package type checkers.
+ */
+
+public interface CBTypeCheckerFactoryType
 {
-  CBPackageType owner();
+  /**
+   * Create a type checker.
+   *
+   * @param errors        A receiver of type checker errors
+   * @param parsedPackage A parsed package
+   * @param lineLog       A line log, for diagnostic messages
+   *
+   * @return A new type checker
+   */
 
-  String name();
-
-  int arity();
+  CBTypeCheckerType createTypeChecker(
+    Consumer<CBError> errors,
+    CBExpressionLineLogType lineLog,
+    CBASTPackage parsedPackage
+  );
 }

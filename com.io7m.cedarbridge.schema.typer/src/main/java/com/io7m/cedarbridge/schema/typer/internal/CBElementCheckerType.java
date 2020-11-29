@@ -14,13 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.internal;
 
-public interface CBTypeType
+import com.io7m.cedarbridge.schema.ast.CBASTElementType;
+import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
+
+public interface CBElementCheckerType<T extends CBASTElementType>
 {
-  CBPackageType owner();
-
-  String name();
-
-  int arity();
+  void check(
+    CBTyperContextType context,
+    T item)
+    throws CBTypeCheckFailedException;
 }

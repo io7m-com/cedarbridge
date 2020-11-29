@@ -14,13 +14,36 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.internal;
 
-public interface CBTypeType
+import com.io7m.cedarbridge.strings.api.CBAbstractStrings;
+import com.io7m.cedarbridge.strings.api.CBStringsType;
+
+import java.util.ResourceBundle;
+
+public final class CBTyperStrings extends CBAbstractStrings
 {
-  CBPackageType owner();
+  private CBTyperStrings(
+    final ResourceBundle inResources)
+  {
+    super(inResources);
+  }
 
-  String name();
+  public static CBStringsType create()
+  {
+    return new CBTyperStrings(
+      ofXMLResource(
+        CBTyperStrings.class,
+        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml")
+    );
+  }
 
-  int arity();
+  @Override
+  public String toString()
+  {
+    return String.format(
+      "[CBParserStrings 0x%s]",
+      Long.toUnsignedString(System.identityHashCode(this), 16)
+    );
+  }
 }

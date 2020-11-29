@@ -14,13 +14,20 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.api;
 
-public interface CBTypeType
+/**
+ * Type checking failed.
+ */
+
+public final class CBTypeCheckFailedException extends Exception
 {
-  CBPackageType owner();
+  /**
+   * Construct an exception.
+   */
 
-  String name();
+  public CBTypeCheckFailedException()
+  {
 
-  int arity();
+  }
 }

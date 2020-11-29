@@ -1,0 +1,10 @@
+(package x.y.z)
+
+(variant T)
+
+(variant U
+  [parameter A]
+  [parameter B])
+
+(variant V
+  [case C (field r ([U T] T))])

@@ -14,13 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.api;
 
-public interface CBTypeType
+import com.io7m.immutables.styles.ImmutablesStyleType;
+import com.io7m.jaffirm.core.Preconditions;
+import org.immutables.value.Value;
+
+@ImmutablesStyleType
+@Value.Immutable
+public interface CBTypeAssignmentType
 {
-  CBPackageType owner();
-
-  String name();
-
   int arity();
+
+  @Value.Check
+  default void checkPreconditions()
+  {
+    Preconditions.checkPreconditionI(
+      this.arity(),
+      this.arity() >= 0,
+      value -> "Arity must be non-negative"
+    );
+  }
 }

@@ -14,13 +14,36 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.errors;
 
-public interface CBTypeType
+import java.util.Objects;
+
+public final class CBExceptionTracker<T extends Exception>
 {
-  CBPackageType owner();
+  private T exception;
 
-  String name();
+  public CBExceptionTracker()
+  {
 
-  int arity();
+  }
+
+  public void addException(
+    final T nextException)
+  {
+    Objects.requireNonNull(nextException, "exception");
+
+    if (this.exception == null) {
+      this.exception = nextException;
+    } else {
+      this.exception.addSuppressed(nextException);
+    }
+  }
+
+  public void throwIfNecessary()
+    throws T
+  {
+    if (this.exception != null) {
+      throw this.exception;
+    }
+  }
 }

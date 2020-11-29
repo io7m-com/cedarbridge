@@ -1,0 +1,5 @@
+(package x.y.z)
+
+(variant T)
+(variant U
+  [case C (field x T)])

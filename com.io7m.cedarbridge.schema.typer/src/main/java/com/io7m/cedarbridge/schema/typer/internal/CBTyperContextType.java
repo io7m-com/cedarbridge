@@ -14,13 +14,28 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.internal;
 
-public interface CBTypeType
+import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
+import com.io7m.jlexing.core.LexicalPosition;
+
+import java.net.URI;
+
+public interface CBTyperContextType extends AutoCloseable
 {
-  CBPackageType owner();
+  @Override
+  void close()
+    throws CBTypeCheckFailedException;
 
-  String name();
+  CBTypeCheckFailedException failed(
+    LexicalPosition<URI> lexical,
+    String errorCode,
+    Object... arguments);
 
-  int arity();
+  CBTypeCheckFailedException failedWithOther(
+    LexicalPosition<URI> lexical,
+    LexicalPosition<URI> lexicalOther,
+    String errorCode,
+    Object... arguments);
+
 }

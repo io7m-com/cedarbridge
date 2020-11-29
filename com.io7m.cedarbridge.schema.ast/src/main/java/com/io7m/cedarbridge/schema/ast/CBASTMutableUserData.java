@@ -83,6 +83,33 @@ public final class CBASTMutableUserData
   /**
    * Get data from the map with the given type.
    *
+   * @param clazzSuper The user data supertype
+   * @param clazzSub   The user data subtype
+   * @param <T>        The precise supertype of data
+   * @param <U>        The precise subtype of data
+   *
+   * @return The data, if any
+   *
+   * @throws IllegalArgumentException If no data exists with the given type
+   */
+
+  public <T, U extends T> U getSpecific(
+    final Class<T> clazzSuper,
+    final Class<U> clazzSub)
+    throws IllegalArgumentException
+  {
+    Objects.requireNonNull(clazzSuper, "clazzSuper");
+    Objects.requireNonNull(clazzSub, "clazzSub");
+
+    return this.findSpecific(clazzSuper, clazzSub)
+      .orElseThrow(() -> new IllegalArgumentException(
+        String.format("No user data registered of type %s", clazzSuper)
+      ));
+  }
+
+  /**
+   * Get data from the map with the given type.
+   *
    * @param clazz The user data type
    * @param <T>   The precise type of data
    *
@@ -91,11 +118,36 @@ public final class CBASTMutableUserData
    * @throws IllegalArgumentException If no data exists with the given type
    */
 
-  private <T> Optional<T> find(final Class<T> clazz)
+  private <T> Optional<T> find(
+    final Class<T> clazz)
   {
     Objects.requireNonNull(clazz, "clazz");
 
     return Optional.ofNullable(this.items.get(clazz))
       .map(clazz::cast);
+  }
+
+  /**
+   * Get data from the map with the given type.
+   *
+   * @param clazzSuper The user data supertype
+   * @param clazzSub   The user data subtype
+   * @param <T>        The precise supertype of data
+   * @param <U>        The precise subtype of data
+   *
+   * @return The data, if any
+   *
+   * @throws IllegalArgumentException If no data exists with the given type
+   */
+
+  private <T, U extends T> Optional<U> findSpecific(
+    final Class<T> clazzSuper,
+    final Class<U> clazzSub)
+  {
+    Objects.requireNonNull(clazzSuper, "clazzSuper");
+    Objects.requireNonNull(clazzSub, "clazzSub");
+
+    return Optional.ofNullable(this.items.get(clazzSuper))
+      .map(clazzSub::cast);
   }
 }

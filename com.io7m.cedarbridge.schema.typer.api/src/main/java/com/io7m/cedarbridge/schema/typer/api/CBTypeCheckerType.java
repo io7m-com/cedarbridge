@@ -14,13 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.api;
 
-public interface CBTypeType
+/**
+ * A package type checker.
+ */
+
+public interface CBTypeCheckerType extends AutoCloseable
 {
-  CBPackageType owner();
+  /**
+   * Execute the type checker.
+   *
+   * @throws CBTypeCheckFailedException On errors
+   */
 
-  String name();
+  void execute()
+    throws CBTypeCheckFailedException;
 
-  int arity();
+  @Override
+  void close();
 }

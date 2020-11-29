@@ -11,41 +11,22 @@
     <groupId>com.io7m.cedarbridge</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <artifactId>com.io7m.cedarbridge.tests</artifactId>
+  <artifactId>com.io7m.cedarbridge.schema.typer</artifactId>
 
   <packaging>jar</packaging>
-  <name>com.io7m.cedarbridge.tests</name>
-  <description>Cedarbridge message protocol (Test suite)</description>
+  <name>com.io7m.cedarbridge.schema.typer</name>
+  <description>Cedarbridge message protocol (Schema type checker)</description>
   <url>https://www.github.com/io7m/cedarbridge</url>
-
-  <properties>
-    <mdep.analyze.skip>true</mdep.analyze.skip>
-  </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.errors</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.ast</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.strings.api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.schema.parser</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.schema.binder</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.schema.typer</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -55,21 +36,32 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.exprsrc</artifactId>
+      <artifactId>com.io7m.cedarbridge.schema.binder.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.typer.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.exprsrc.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.strings.api</artifactId>
       <version>${project.version}</version>
     </dependency>
 
     <dependency>
-      <groupId>com.io7m.jsx</groupId>
-      <artifactId>com.io7m.jsx.parser</artifactId>
+      <groupId>com.io7m.jlexing</groupId>
+      <artifactId>com.io7m.jlexing.core</artifactId>
     </dependency>
     <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>nl.jqno.equalsverifier</groupId>
-      <artifactId>equalsverifier</artifactId>
+      <groupId>com.io7m.junreachable</groupId>
+      <artifactId>com.io7m.junreachable.core</artifactId>
     </dependency>
 
     <dependency>
@@ -82,24 +74,6 @@
       <artifactId>org.osgi.annotation.bundle</artifactId>
       <scope>provided</scope>
     </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
   </dependencies>
-
-  <build>
-    <plugins>
-      <!-- Determine test coverage -->
-      <plugin>
-        <groupId>org.jacoco</groupId>
-        <artifactId>jacoco-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>

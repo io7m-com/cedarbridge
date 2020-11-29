@@ -14,13 +14,24 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+/**
+ * Cedarbridge message protocol (Schema type checker API)
+ */
 
-public interface CBTypeType
+module com.io7m.cedarbridge.schema.typer
 {
-  CBPackageType owner();
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
 
-  String name();
+  requires transitive com.io7m.cedarbridge.errors;
+  requires transitive com.io7m.cedarbridge.exprsrc.api;
+  requires transitive com.io7m.cedarbridge.schema.ast;
+  requires transitive com.io7m.cedarbridge.schema.compiled;
+  requires transitive com.io7m.cedarbridge.schema.typer.api;
+  requires transitive com.io7m.cedarbridge.strings.api;
 
-  int arity();
+  requires com.io7m.cedarbridge.schema.binder.api;
+  requires com.io7m.junreachable.core;
+
+  exports com.io7m.cedarbridge.schema.typer;
 }

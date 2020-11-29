@@ -86,8 +86,7 @@ public final class CBBinder implements CBBinderType
     for (final var typeV : types) {
       final var name = typeV.name();
       try {
-        final var binding =
-          context.bindType(name.text(), name.lexical());
+        final var binding = context.bindType(typeV);
         name.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
         failed = true;

@@ -16,21 +16,23 @@
 
 package com.io7m.cedarbridge.tests;
 
-import com.io7m.jeucreader.UnicodeCharacterReader;
-import com.io7m.jsx.api.lexer.JSXLexerComment;
-import com.io7m.jsx.api.lexer.JSXLexerConfiguration;
-import com.io7m.jsx.api.parser.JSXParserConfiguration;
-import com.io7m.jsx.lexer.JSXLexerSupplier;
-import com.io7m.jsx.parser.JSXParserSupplier;
-import com.io7m.jsx.serializer.JSXSerializerTrivialSupplier;
+import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.errors.CBErrorType;
+import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
+import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
+import com.io7m.cedarbridge.schema.parser.CBParserFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.InputStreamReader;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
-import java.util.EnumSet;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 public final class Main
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(Main.class);
+
   private Main()
   {
 
@@ -40,49 +42,26 @@ public final class Main
     final String[] args)
     throws Exception
   {
-    final var parsers =
-      new JSXParserSupplier();
-    final var lexers =
-      new JSXLexerSupplier();
-    final var serializers =
-      new JSXSerializerTrivialSupplier();
+    final var sources = new CBExpressionSources();
+    final var parsers = new CBParserFactory();
+    final var binders = new CBBinderFactory();
+    final var loader = new CBFakeLoader();
 
-    final var reader =
-      UnicodeCharacterReader.newReader(
-        new InputStreamReader(System.in, StandardCharsets.UTF_8)
-      );
+    final var failed = new AtomicBoolean(false);
 
-    final var lexerConfiguration =
-      JSXLexerConfiguration.builder()
-        .setComments(EnumSet.of(JSXLexerComment.COMMENT_HASH))
-        .setFile(URI.create("urn:stdin"))
-        .setNewlinesInQuotedStrings(true)
-        .setSquareBrackets(true)
-        .build();
+    final Consumer<CBError> onError =
+      error -> {
+        LOG.error("{}", error.message());
+        failed.set(true);
+      };
 
-    final var lexer =
-      lexers.create(lexerConfiguration, reader);
-
-    final var parserConfiguration =
-      JSXParserConfiguration.builder()
-        .setPreserveLexical(true)
-        .build();
-
-    final var parser =
-      parsers.create(parserConfiguration, lexer);
-
-    final var serializer =
-      serializers.create();
-
-    while (true) {
-      final var expressionOpt = parser.parseExpressionOrEOF();
-      if (expressionOpt.isEmpty()) {
-        return;
+    try (var source = sources.create(URI.create("urn:stdin"), System.in)) {
+      try (var parser = parsers.createParser(onError, source)) {
+        final var pack = parser.execute();
+        try (var binder = binders.createBinder(loader, onError, source, pack)) {
+          binder.execute();
+        }
       }
-
-      final var expression = expressionOpt.get();
-      serializer.serialize(expression, System.out);
-      System.out.println();
     }
   }
 }

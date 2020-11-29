@@ -27,7 +27,8 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import org.junit.jupiter.api.Assertions;
@@ -43,8 +44,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE_PARAMETER;
+import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -64,7 +64,7 @@ public final class CBBinderTest
   private ArrayList<CBError> errors;
   private Path directory;
   private CBFakeLoader loader;
-  private HashMap<BigInteger, CBBindingLocal> bindings;
+  private HashMap<BigInteger, CBBindingLocalType> bindings;
 
   private CBASTPackage parse(
     final String name)
@@ -108,8 +108,8 @@ public final class CBBinderTest
   public void setup()
     throws IOException
   {
-    this.errors = new ArrayList<CBError>();
-    this.bindings = new HashMap<BigInteger, CBBindingLocal>();
+    this.errors = new ArrayList<>();
+    this.bindings = new HashMap<>();
     this.directory = CBTestDirectories.createTempDirectory();
     this.sources = new CBExpressionSources();
     this.parsers = new CBParserFactory();
@@ -298,8 +298,8 @@ public final class CBBinderTest
       this.checkHaveNotSeenBefore(f0.name());
 
       final var f0t = (CBASTTypeNamed) f0.type();
-      final var f0tb = (CBBindingLocal) this.checkHaveSeenBefore(f0t);
-      assertEquals(BINDING_TYPE_PARAMETER, f0tb.kind());
+      final var f0tb =
+        (CBBindingLocalTypeParameter) this.checkHaveSeenBefore(f0t);
     }
 
     {
@@ -315,13 +315,12 @@ public final class CBBinderTest
 
       final var ta = (CBASTTypeApplication) f0.type();
       final var tab0 =
-        (CBBindingLocal) this.checkHaveSeenBefore(ta.target());
-      assertEquals(BINDING_TYPE, tab0.kind());
+        (CBBindingLocalTypeDeclaration) this.checkHaveSeenBefore(ta.target());
+
       final var arguments = ta.arguments();
       assertEquals(1, arguments.size());
       final var tab1 =
-        (CBBindingLocal) this.checkHaveSeenBefore(arguments.get(0));
-      assertEquals(BINDING_TYPE, tab1.kind());
+        (CBBindingLocalTypeDeclaration) this.checkHaveSeenBefore(arguments.get(0));
 
       final var f1 = tf.get(1);
       this.checkHaveNotSeenBefore(f1.name());
@@ -335,7 +334,7 @@ public final class CBBinderTest
     throws Exception
   {
     final var otherPack = new CBFakePackage("x.y.z");
-    final var rec = new CBFakeRecord("T");
+    final var rec = new CBFakeRecord("T", 0);
     otherPack.addType(rec);
     this.loader.addPackage(otherPack);
 
@@ -359,7 +358,7 @@ public final class CBBinderTest
       final var fType =
         (CBASTTypeNamed) f.type();
       final var fBind =
-        (CBBindingExternal) fType.name().userData().get(CBBindingType.class);
+        (CBBindingExternal) fType.userData().get(CBBindingType.class);
 
       assertSame(rec, fBind.type());
     }
@@ -367,11 +366,11 @@ public final class CBBinderTest
     assertEquals(0, this.errors.size());
   }
 
-  private CBBindingLocal checkHaveSeenBefore(
+  private CBBindingLocalType checkHaveSeenBefore(
     final CBASTElementType element)
   {
     return this.checkHaveSeenBefore(
-      (CBBindingLocal) element.userData().get(CBBindingType.class)
+      (CBBindingLocalType) element.userData().get(CBBindingType.class)
     );
   }
 
@@ -379,12 +378,12 @@ public final class CBBinderTest
     final CBASTElementType element)
   {
     this.checkHaveNotSeenBefore(
-      (CBBindingLocal) element.userData().get(CBBindingType.class)
+      (CBBindingLocalType) element.userData().get(CBBindingType.class)
     );
   }
 
-  private CBBindingLocal checkHaveSeenBefore(
-    final CBBindingLocal bind)
+  private CBBindingLocalType checkHaveSeenBefore(
+    final CBBindingLocalType bind)
   {
     final var existing = this.bindings.get(bind.id());
     if (existing == null) {
@@ -396,7 +395,7 @@ public final class CBBinderTest
   }
 
   private void checkHaveNotSeenBefore(
-    final CBBindingLocal bind)
+    final CBBindingLocalType bind)
   {
     final var existing = this.bindings.get(bind.id());
     if (existing != null) {

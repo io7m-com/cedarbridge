@@ -18,8 +18,12 @@ package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalFieldName;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
@@ -35,10 +39,6 @@ import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_FIELD_NAME;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_TYPE_PARAMETER;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.Kind.BINDING_VARIANT_CASE;
 
 public final class CBBinderContext
 {
@@ -288,13 +288,13 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindType(
-      final String name,
-      final LexicalPosition<URI> lexical)
+      final CBASTTypeDeclarationType type)
       throws CBBindFailedException
     {
-      Objects.requireNonNull(name, "name");
-      Objects.requireNonNull(lexical, "lexical");
+      Objects.requireNonNull(type, "type");
 
+      final var lexical = type.lexical();
+      final var name = type.name().text();
       final var existing = this.findTypeBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
@@ -306,11 +306,11 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocal.builder()
+        CBBindingLocalTypeDeclaration.builder()
           .setLexical(lexical)
           .setId(this.root.idPool)
-          .setKind(BINDING_TYPE)
           .setName(name)
+          .setType(type)
           .build();
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
@@ -338,10 +338,9 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocal.builder()
+        CBBindingLocalTypeParameter.builder()
           .setLexical(lexical)
           .setId(this.root.idPool)
-          .setKind(BINDING_TYPE_PARAMETER)
           .setName(name)
           .build();
 
@@ -370,10 +369,9 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocal.builder()
+        CBBindingLocalFieldName.builder()
           .setLexical(lexical)
           .setId(this.root.idPool)
-          .setKind(BINDING_FIELD_NAME)
           .setName(name)
           .build();
 
@@ -419,10 +417,9 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocal.builder()
+        CBBindingLocalVariantCase.builder()
           .setLexical(lexical)
           .setId(this.root.idPool)
-          .setKind(BINDING_VARIANT_CASE)
           .setName(name)
           .build();
 

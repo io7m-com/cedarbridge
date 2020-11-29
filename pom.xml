@@ -32,8 +32,10 @@
     <module>com.io7m.cedarbridge.schema.loader.api</module>
     <module>com.io7m.cedarbridge.schema.parser.api</module>
     <module>com.io7m.cedarbridge.schema.parser</module>
+    <module>com.io7m.cedarbridge.schema.typer.api</module>
     <module>com.io7m.cedarbridge.strings.api</module>
     <module>com.io7m.cedarbridge.tests</module>
+    <module>com.io7m.cedarbridge.schema.typer</module>
   </modules>
 
   <properties>

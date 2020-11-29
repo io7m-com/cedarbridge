@@ -1,0 +1,10 @@
+(package x.y.z)
+
+(record T)
+
+(record U
+  [parameter A]
+  [field x A])
+
+(variant V
+  (case C (field x (U U))))
