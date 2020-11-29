@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.schema.compiler.CBSchemaCompilerFactory;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
+
 /**
  * Cedarbridge message protocol (Schema compiler)
  */
@@ -24,6 +27,8 @@ module com.io7m.cedarbridge.schema.compiler
   requires static org.osgi.annotation.versioning;
 
   requires transitive com.io7m.cedarbridge.schema.compiler.api;
+
+  provides CBSchemaCompilerFactoryType with CBSchemaCompilerFactory;
 
   exports com.io7m.cedarbridge.schema.compiler;
 }

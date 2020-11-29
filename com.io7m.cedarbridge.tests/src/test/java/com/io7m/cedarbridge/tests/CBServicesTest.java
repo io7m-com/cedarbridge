@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceFactoryType;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderFactoryType;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.parser.api.CBParserFactoryType;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerFactoryType;
 import org.junit.jupiter.api.DynamicTest;
@@ -35,7 +36,8 @@ public final class CBServicesTest
       CBParserFactoryType.class,
       CBTypeCheckerFactoryType.class,
       CBBinderFactoryType.class,
-      CBExpressionSourceFactoryType.class
+      CBExpressionSourceFactoryType.class,
+      CBSchemaCompilerFactoryType.class
     ).map(CBServicesTest::testOf);
   }
 
