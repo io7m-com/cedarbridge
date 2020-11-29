@@ -29,6 +29,12 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalFieldName;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
+import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DynamicTest;
@@ -55,10 +61,10 @@ public final class CBEqualsTest
   public Stream<DynamicTest> testEquals()
   {
     return Stream.of(
-      CBASTPackage.class,
       CBASTField.class,
       CBASTFieldName.class,
       CBASTImport.class,
+      CBASTPackage.class,
       CBASTPackageDeclaration.class,
       CBASTPackageName.class,
       CBASTPackageShortName.class,
@@ -67,7 +73,13 @@ public final class CBEqualsTest
       CBASTTypeNamed.class,
       CBASTTypeParameterName.class,
       CBASTTypeRecord.class,
-      CBASTTypeVariant.class
+      CBASTTypeVariant.class,
+      CBBindingExternal.class,
+      CBBindingLocalFieldName.class,
+      CBBindingLocalTypeDeclaration.class,
+      CBBindingLocalTypeParameter.class,
+      CBBindingLocalVariantCase.class,
+      CBTypeAssignment.class
     ).map(CBEqualsTest::toTest);
   }
 }
