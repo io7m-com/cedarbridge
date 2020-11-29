@@ -14,32 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.compiler;
 
-import java.util.List;
-import java.util.Map;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerType;
+import com.io7m.cedarbridge.schema.compiler.internal.CBSchemaCompiler;
 
-/**
- * A compiled package.
- */
+import java.util.Objects;
 
-public interface CBPackageType
+public final class CBSchemaCompilerFactory
+  implements CBSchemaCompilerFactoryType
 {
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
+  public CBSchemaCompilerFactory()
+  {
 
-  String name();
+  }
 
-  /**
-   * @return The packages imported by this package
-   */
+  @Override
+  public CBSchemaCompilerType createCompiler(
+    final CBSchemaCompilerConfiguration configuration)
+  {
+    Objects.requireNonNull(configuration, "configuration");
 
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
+    return new CBSchemaCompiler(configuration);
+  }
 }

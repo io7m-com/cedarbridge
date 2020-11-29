@@ -16,7 +16,17 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-public interface CBRecordType extends CBTypeType
-{
+import java.util.List;
 
+/**
+ * A record type, or algebraic (nominal) product type.
+ */
+
+public interface CBRecordType extends CBTypeDeclarationType, CBFieldOwnerType
+{
+  /**
+   * @return The fields of the record
+   */
+
+  List<CBFieldType> fields();
 }

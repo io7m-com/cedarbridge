@@ -17,7 +17,7 @@
 package com.io7m.cedarbridge.schema.binder.api;
 
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jlexing.core.LexicalPosition;
 import com.io7m.jlexing.core.LexicalType;
@@ -111,6 +111,6 @@ public interface CBBindingType extends LexicalType<URI>
      * @return The type
      */
 
-    CBTypeType type();
+    CBTypeDeclarationType type();
   }
 }

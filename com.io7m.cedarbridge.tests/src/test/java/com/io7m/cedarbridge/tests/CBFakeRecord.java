@@ -16,12 +16,15 @@
 
 package com.io7m.cedarbridge.tests;
 
+import com.io7m.cedarbridge.schema.compiled.CBFieldType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeType;
+import com.io7m.cedarbridge.schema.compiled.CBRecordType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 
+import java.util.List;
 import java.util.Objects;
 
-public final class CBFakeRecord implements CBTypeType
+public final class CBFakeRecord implements CBRecordType
 {
   private final String name;
   private final int arity;
@@ -57,5 +60,17 @@ public final class CBFakeRecord implements CBTypeType
   public int arity()
   {
     return this.arity;
+  }
+
+  @Override
+  public List<CBTypeParameterType> parameters()
+  {
+    return List.of();
+  }
+
+  @Override
+  public List<CBFieldType> fields()
+  {
+    return List.of();
   }
 }

@@ -14,32 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.codegen.java;
 
-import java.util.List;
-import java.util.Map;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorType;
 
-/**
- * A compiled package.
- */
+import java.util.Objects;
 
-public interface CBPackageType
+public final class CBCGJava implements CBSPICodeGeneratorType
 {
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
+  private final CBSPICodeGeneratorConfiguration configuration;
 
-  String name();
+  public CBCGJava(
+    final CBSPICodeGeneratorConfiguration inConfiguration)
+  {
+    this.configuration =
+      Objects.requireNonNull(inConfiguration, "configuration");
+  }
 
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
+  @Override
+  public void execute()
+    throws CBSPICodeGeneratorException
+  {
+    throw new CBSPICodeGeneratorException();
+  }
 }

@@ -16,30 +16,11 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * A compiled package.
+ * The objects that can contain fields.
  */
 
-public interface CBPackageType
+public interface CBFieldOwnerType
 {
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
 
-  String name();
-
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
 }

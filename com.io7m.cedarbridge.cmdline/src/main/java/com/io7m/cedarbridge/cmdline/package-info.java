@@ -14,32 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
-
-import java.util.List;
-import java.util.Map;
-
 /**
- * A compiled package.
+ * Cedarbridge message protocol (Command-line interface)
  */
 
-public interface CBPackageType
-{
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
+@Export
+@Version("1.0.0")
+package com.io7m.cedarbridge.cmdline;
 
-  String name();
-
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
-}
+import org.osgi.annotation.bundle.Export;
+import org.osgi.annotation.versioning.Version;

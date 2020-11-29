@@ -17,7 +17,7 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,8 +27,8 @@ import java.util.Objects;
 
 public final class CBFakePackage implements CBPackageType
 {
-  public final List<String> imports;
-  public final Map<String, CBTypeType> types;
+  public final List<CBPackageType> imports;
+  public final Map<String, CBTypeDeclarationType> types;
   private final String name;
 
   public CBFakePackage(
@@ -46,13 +46,13 @@ public final class CBFakePackage implements CBPackageType
   }
 
   @Override
-  public List<String> imports()
+  public List<CBPackageType> imports()
   {
     return this.imports;
   }
 
   @Override
-  public Map<String, CBTypeType> types()
+  public Map<String, CBTypeDeclarationType> types()
   {
     return this.types;
   }

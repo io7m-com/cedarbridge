@@ -14,32 +14,14 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.codegen.spi;
 
-import java.util.List;
-import java.util.Map;
+import com.io7m.immutables.styles.ImmutablesStyleType;
+import org.immutables.value.Value;
 
-/**
- * A compiled package.
- */
-
-public interface CBPackageType
+@ImmutablesStyleType
+@Value.Immutable
+public interface CBSPICodeGeneratorConfigurationType
 {
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
 
-  String name();
-
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
 }

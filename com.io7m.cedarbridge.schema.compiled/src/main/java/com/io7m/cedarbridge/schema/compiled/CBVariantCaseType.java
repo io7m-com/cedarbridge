@@ -17,29 +17,29 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * A compiled package.
+ * A single case within a {@link CBVariantType}. A (nominal) algebraic
+ * product type, analogous to an anonymous {@link CBRecordType}.
  */
 
-public interface CBPackageType
+public interface CBVariantCaseType extends CBFieldOwnerType
 {
   /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
+   * @return The type within which this case is declared
+   */
+
+  CBVariantType owner();
+
+  /**
+   * @return The name of the variant case
    */
 
   String name();
 
   /**
-   * @return The packages imported by this package
+   * @return The fields of the variant case
    */
 
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
+  List<CBFieldType> fields();
 }

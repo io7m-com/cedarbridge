@@ -16,11 +16,27 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-public interface CBTypeType
+/**
+ * A field within a {@link CBRecordType}, or a {@link CBVariantCaseType}.
+ */
+
+public interface CBFieldType
 {
-  CBPackageType owner();
+  /**
+   * @return The object that contains this field
+   */
+
+  CBFieldOwnerType fieldOwner();
+
+  /**
+   * @return The name of the field
+   */
 
   String name();
 
-  int arity();
+  /**
+   * @return The type of the field
+   */
+
+  CBTypeExpressionType type();
 }

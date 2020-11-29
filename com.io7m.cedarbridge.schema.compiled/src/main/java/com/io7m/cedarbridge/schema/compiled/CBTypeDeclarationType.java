@@ -17,29 +17,37 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
-import java.util.Map;
 
 /**
- * A compiled package.
+ * The base type of type declarations.
  */
 
-public interface CBPackageType
+public interface CBTypeDeclarationType
 {
   /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
+   * @return The package that owns this declaration
+   */
+
+  CBPackageType owner();
+
+  /**
+   * @return The package-unique declaration name
    */
 
   String name();
 
   /**
-   * @return The packages imported by this package
+   * @return The number of type parameters
    */
 
-  List<CBPackageType> imports();
+  default int arity()
+  {
+    return this.parameters().size();
+  }
 
   /**
-   * @return The types declared within this package
+   * @return The type parameters, if any
    */
 
-  Map<String, CBTypeDeclarationType> types();
+  List<CBTypeParameterType> parameters();
 }

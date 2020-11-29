@@ -22,6 +22,7 @@
   <url>https://www.github.com/io7m/cedarbridge</url>
 
   <modules>
+    <module>com.io7m.cedarbridge.codegen.spi</module>
     <module>com.io7m.cedarbridge.errors</module>
     <module>com.io7m.cedarbridge.exprsrc.api</module>
     <module>com.io7m.cedarbridge.exprsrc</module>
@@ -29,13 +30,18 @@
     <module>com.io7m.cedarbridge.schema.binder.api</module>
     <module>com.io7m.cedarbridge.schema.binder</module>
     <module>com.io7m.cedarbridge.schema.compiled</module>
+    <module>com.io7m.cedarbridge.schema.compiler.api</module>
+    <module>com.io7m.cedarbridge.schema.compiler</module>
     <module>com.io7m.cedarbridge.schema.loader.api</module>
     <module>com.io7m.cedarbridge.schema.parser.api</module>
     <module>com.io7m.cedarbridge.schema.parser</module>
     <module>com.io7m.cedarbridge.schema.typer.api</module>
+    <module>com.io7m.cedarbridge.schema.typer</module>
     <module>com.io7m.cedarbridge.strings.api</module>
     <module>com.io7m.cedarbridge.tests</module>
-    <module>com.io7m.cedarbridge.schema.typer</module>
+    <module>com.io7m.cedarbridge.codegen.java</module>
+    <module>com.io7m.cedarbridge.cmdline</module>
+    <module>com.io7m.cedarbridge.version</module>
   </modules>
 
   <properties>
@@ -99,6 +105,16 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>com.io7m.claypot</groupId>
+        <artifactId>com.io7m.claypot.core</artifactId>
+        <version>0.0.5</version>
+      </dependency>
+      <dependency>
+        <groupId>com.beust</groupId>
+        <artifactId>jcommander</artifactId>
+        <version>1.78</version>
+      </dependency>
       <dependency>
         <groupId>com.io7m.primogenitor</groupId>
         <artifactId>com.io7m.primogenitor.support</artifactId>
@@ -193,6 +209,11 @@
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
         <version>3.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>2.0.0-alpha1</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

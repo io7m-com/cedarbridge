@@ -16,7 +16,17 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-public interface CBVariantType extends CBTypeType
-{
+import java.util.List;
 
+/**
+ * A variant type, or algebraic sum type.
+ */
+
+public interface CBVariantType extends CBTypeDeclarationType
+{
+  /**
+   * @return The cases of the variant type
+   */
+
+  List<CBVariantCaseType> cases();
 }

@@ -14,32 +14,18 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
-
-import java.util.List;
-import java.util.Map;
-
 /**
- * A compiled package.
+ * Cedarbridge message protocol (Schema compiler API)
  */
 
-public interface CBPackageType
+module com.io7m.cedarbridge.schema.compiler.api
 {
-  /**
-   * @return The full name of the package, such as {@code com.io7m.cedarbridge}
-   */
+  requires static com.io7m.immutables.style;
+  requires static org.immutables.value;
+  requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
 
-  String name();
+  requires transitive com.io7m.cedarbridge.schema.compiled;
 
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBPackageType> imports();
-
-  /**
-   * @return The types declared within this package
-   */
-
-  Map<String, CBTypeDeclarationType> types();
+  exports com.io7m.cedarbridge.schema.compiler.api;
 }
