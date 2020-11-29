@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.schema.parser.CBParserFactory;
+import com.io7m.cedarbridge.schema.parser.api.CBParserFactoryType;
+
 /**
  * Cedarbridge message protocol (Schema parser)
  */
@@ -33,6 +36,8 @@ module com.io7m.cedarbridge.schema.parser
   requires com.io7m.cedarbridge.strings.api;
   requires com.io7m.jsx.core;
   requires com.io7m.jeucreader.core;
+
+  provides CBParserFactoryType with CBParserFactory;
 
   uses com.io7m.jsx.api.lexer.JSXLexerSupplierType;
   uses com.io7m.jsx.api.parser.JSXParserSupplierType;

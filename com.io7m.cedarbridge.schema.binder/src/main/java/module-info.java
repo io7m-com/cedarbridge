@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
+import com.io7m.cedarbridge.schema.binder.api.CBBinderFactoryType;
+
 /**
  * Cedarbridge message protocol (Schema binder)
  */
@@ -30,6 +33,8 @@ module com.io7m.cedarbridge.schema.binder
   requires transitive com.io7m.cedarbridge.schema.loader.api;
   requires transitive com.io7m.cedarbridge.strings.api;
   requires transitive com.io7m.cedarbridge.schema.compiled;
+
+  provides CBBinderFactoryType with CBBinderFactory;
 
   exports com.io7m.cedarbridge.schema.binder;
 }

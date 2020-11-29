@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
+import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerFactoryType;
+
 /**
  * Cedarbridge message protocol (Schema type checker API)
  */
@@ -32,6 +35,8 @@ module com.io7m.cedarbridge.schema.typer
 
   requires com.io7m.cedarbridge.schema.binder.api;
   requires com.io7m.junreachable.core;
+
+  provides CBTypeCheckerFactoryType with CBTypeCheckerFactory;
 
   exports com.io7m.cedarbridge.schema.typer;
 }

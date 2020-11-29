@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceFactoryType;
+
 /**
  * Cedarbridge message protocol (Expression source)
  */
@@ -28,6 +31,8 @@ module com.io7m.cedarbridge.exprsrc
   requires com.io7m.jlexing.core;
   requires com.io7m.jsx.core;
   requires com.io7m.jsx.parser.api;
+
+  provides CBExpressionSourceFactoryType with CBExpressionSources;
 
   exports com.io7m.cedarbridge.exprsrc;
 }
