@@ -14,23 +14,31 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.internal;
 
-/**
- * A type parameter.
- */
+import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
 
-public interface CBTypeParameterType
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+
+import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
+
+public final class CBTypeExpressionApplication
+  implements CBTypeExprApplicationType
 {
-  /**
-   * @return The name of the type parameter
-   */
+  private final List<CBTypeExpressionType> expressions;
 
-  String name();
+  public CBTypeExpressionApplication(
+    final Collection<? extends CBTypeExpressionType> inExpressions)
+  {
+    this.expressions =
+      List.copyOf(Objects.requireNonNull(inExpressions, "inExpressions"));
+  }
 
-  /**
-   * @return The type declaration parameterized by this parameter
-   */
-
-  CBTypeDeclarationType owner();
+  @Override
+  public List<CBTypeExpressionType> expressions()
+  {
+    return this.expressions;
+  }
 }

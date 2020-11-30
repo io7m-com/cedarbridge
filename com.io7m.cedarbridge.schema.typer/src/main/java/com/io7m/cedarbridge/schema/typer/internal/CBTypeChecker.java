@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.errors.CBExceptionTracker;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
+import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerType;
@@ -74,6 +75,11 @@ public final class CBTypeChecker implements CBTypeCheckerType
 
     this.processTopLevelDeclarations();
     this.processDeclarations(current);
+
+    this.packageV.userData()
+      .put(
+        CBPackageType.class,
+        new CBPackageBuilder().build(this.packageV));
   }
 
   private void processDeclarations(

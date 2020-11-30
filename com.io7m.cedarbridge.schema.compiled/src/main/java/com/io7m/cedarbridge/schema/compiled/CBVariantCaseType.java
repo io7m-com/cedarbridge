@@ -16,8 +16,6 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-import java.util.List;
-
 /**
  * A single case within a {@link CBVariantType}. A (nominal) algebraic
  * product type, analogous to an anonymous {@link CBRecordType}.
@@ -36,10 +34,4 @@ public interface CBVariantCaseType extends CBFieldOwnerType
    */
 
   String name();
-
-  /**
-   * @return The fields of the variant case
-   */
-
-  List<CBFieldType> fields();
 }

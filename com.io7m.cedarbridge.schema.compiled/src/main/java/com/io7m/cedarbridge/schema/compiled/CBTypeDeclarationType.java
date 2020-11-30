@@ -17,6 +17,9 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * The base type of type declarations.
@@ -46,8 +49,19 @@ public interface CBTypeDeclarationType
   }
 
   /**
-   * @return The type parameters, if any
+   * @return The type parameters, if any, in declaration order
    */
 
   List<CBTypeParameterType> parameters();
+
+  /**
+   * @return The type parameters of the type by name
+   */
+
+  default Map<String, CBTypeParameterType> parametersByName()
+  {
+    return this.parameters()
+      .stream()
+      .collect(Collectors.toMap(CBTypeParameterType::name, Function.identity()));
+  }
 }

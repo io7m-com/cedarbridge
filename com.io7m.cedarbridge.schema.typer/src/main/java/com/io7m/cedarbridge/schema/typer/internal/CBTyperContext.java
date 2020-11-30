@@ -63,11 +63,6 @@ public final class CBTyperContext
     return this.stack.peek();
   }
 
-  public int errorCount()
-  {
-    return this.errors;
-  }
-
   private static final class Context implements CBTyperContextType
   {
     private final CBTyperContext root;

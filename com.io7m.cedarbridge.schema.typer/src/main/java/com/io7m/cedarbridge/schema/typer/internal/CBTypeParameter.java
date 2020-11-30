@@ -14,23 +14,39 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+package com.io7m.cedarbridge.schema.typer.internal;
 
-/**
- * A type parameter.
- */
+import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 
-public interface CBTypeParameterType
+import java.util.Objects;
+
+public final class CBTypeParameter implements CBTypeParameterType
 {
-  /**
-   * @return The name of the type parameter
-   */
+  private final String name;
+  private CBTypeDeclarationType owner;
 
-  String name();
+  public CBTypeParameter(
+    final String inName)
+  {
+    this.name = Objects.requireNonNull(inName, "name");
+  }
 
-  /**
-   * @return The type declaration parameterized by this parameter
-   */
+  public void setOwner(
+    final CBTypeDeclarationType type)
+  {
+    this.owner = Objects.requireNonNull(type, "type");
+  }
 
-  CBTypeDeclarationType owner();
+  @Override
+  public String name()
+  {
+    return this.name;
+  }
+
+  @Override
+  public CBTypeDeclarationType owner()
+  {
+    return this.owner;
+  }
 }

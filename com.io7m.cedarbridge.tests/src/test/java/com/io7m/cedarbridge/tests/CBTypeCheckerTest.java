@@ -19,15 +19,27 @@ package com.io7m.cedarbridge.tests;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
+import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
+import com.io7m.cedarbridge.schema.compiled.CBFieldType;
+import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.schema.compiled.CBRecordType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
+import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
+import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -39,8 +51,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import static com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType.*;
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.*;
+import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -134,6 +149,8 @@ public final class CBTypeCheckerTest
     final var t0 = types.get(0);
     final var t0a = t0.userData().get(CBTypeAssignment.class);
     assertEquals(0, t0a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -153,6 +170,27 @@ public final class CBTypeCheckerTest
     final var t1 = types.get(0);
     final var t1a = t1.userData().get(CBTypeAssignment.class);
     assertEquals(0, t1a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+    {
+      final var vpack = pack.userData().get(CBPackageType.class);
+      assertEquals("x.y.z", vpack.name());
+      assertEquals(2, vpack.types().size());
+
+      final var vt0 = (CBRecordType) vpack.types().get("T");
+      assertEquals("T", vt0.name());
+      assertEquals(0, vt0.fields().size());
+      assertEquals(0, vt0.parameters().size());
+
+      final var vt1 = (CBRecordType) vpack.types().get("U");
+      assertEquals("U", vt1.name());
+      assertEquals(1, vt1.fields().size());
+      final var vt1f0 = vt1.fields().get(0);
+      assertEquals("x", vt1f0.name());
+      assertSame(vt1, vt1f0.fieldOwner());
+      assertSame(vt0, ((CBTypeExprNamedType) vt1f0.type()).type());
+      assertEquals(0, vt1.parameters().size());
+    }
   }
 
   @Test
@@ -168,6 +206,22 @@ public final class CBTypeCheckerTest
     final var t0 = types.get(0);
     final var t0a = t0.userData().get(CBTypeAssignment.class);
     assertEquals(1, t0a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+    {
+      final var vpack = pack.userData().get(CBPackageType.class);
+      assertEquals("x.y.z", vpack.name());
+      assertEquals(1, vpack.types().size());
+
+      final var vt0 = (CBRecordType) vpack.types().get("U");
+      assertEquals("U", vt0.name());
+      assertEquals(1, vt0.fields().size());
+      final var vt1f0 = vt0.fields().get(0);
+      assertEquals("x", vt1f0.name());
+      assertSame(vt0, vt1f0.fieldOwner());
+      assertSame(vt0.parameters().get(0), ((CBTypeExprParameterType) vt1f0.type()).parameter());
+      assertEquals(1, vt0.parameters().size());
+    }
   }
 
   @Test
@@ -197,6 +251,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -229,6 +285,8 @@ public final class CBTypeCheckerTest
       final var f0 = t.fields().get(0);
       assertEquals("r", f0.name().text());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -251,6 +309,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -279,6 +339,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -359,6 +421,8 @@ public final class CBTypeCheckerTest
     final var t0 = types.get(0);
     final var t0a = t0.userData().get(CBTypeAssignment.class);
     assertEquals(0, t0a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -378,6 +442,8 @@ public final class CBTypeCheckerTest
     final var t1 = types.get(0);
     final var t1a = t1.userData().get(CBTypeAssignment.class);
     assertEquals(0, t1a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -393,6 +459,8 @@ public final class CBTypeCheckerTest
     final var t0 = types.get(0);
     final var t0a = t0.userData().get(CBTypeAssignment.class);
     assertEquals(1, t0a.arity());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -422,6 +490,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -451,6 +521,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -473,6 +545,8 @@ public final class CBTypeCheckerTest
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
     }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
 
   @Test
@@ -500,6 +574,120 @@ public final class CBTypeCheckerTest
       final var t = types.get(1);
       final var ta = t.userData().get(CBTypeAssignment.class);
       assertEquals(0, ta.arity());
+    }
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+  }
+
+  private static void checkPackagesMatch(
+    final CBASTPackage srcPack,
+    final CBPackageType tarPack)
+  {
+    assertEquals(srcPack.name().text(), tarPack.name());
+    final var srcImports = srcPack.imports();
+    final var tarImports = tarPack.imports();
+    assertEquals(srcImports.size(), tarImports.size());
+
+    for (var index = 0; index < srcImports.size(); ++index) {
+      final var srcI = srcImports.get(index);
+      final var tarI = tarImports.get(index);
+      assertEquals(srcI.target().text(), tarI.name());
+    }
+
+    final var srcTypes = srcPack.types();
+    final var tarTypes = tarPack.types();
+    assertEquals(srcTypes.size(), tarTypes.size());
+
+    for (var index = 0; index < srcTypes.size(); ++index) {
+      final var srcType = srcTypes.get(index);
+      final var tarType = tarTypes.get(srcType.name().text());
+
+      final var srcParams = srcType.parameters();
+      final var tarParams = tarType.parameters();
+      assertEquals(srcParams.size(), tarParams.size());
+      assertEquals(tarType.owner(), tarPack);
+
+      for (var pIndex = 0; pIndex < srcParams.size(); ++pIndex) {
+        final var srcParam = srcParams.get(pIndex);
+        final var tarParam = tarParams.get(pIndex);
+        assertEquals(srcParam.text(), tarParam.name());
+        assertEquals(tarType, tarParam.owner());
+      }
+
+      if (srcType instanceof CBASTTypeVariantType) {
+        final var srcVar = (CBASTTypeVariantType) srcType;
+        final var tarVar = (CBVariantType) tarType;
+        final var srcCases = srcVar.cases();
+        final var tarCases = tarVar.cases();
+        assertEquals(srcCases.size(), tarCases.size());
+
+        for (var cIndex = 0; cIndex < srcCases.size(); ++cIndex) {
+          final var srcCase = srcCases.get(cIndex);
+          final var tarCase = tarCases.get(cIndex);
+          assertEquals(srcCase.name().text(), tarCase.name());
+          checkFieldsMatch(srcCase.fields(), tarCase.fields());
+        }
+      } else if (srcType instanceof CBASTTypeRecordType) {
+        final var srcRec = (CBASTTypeRecordType) srcType;
+        final var tarRec = (CBRecordType) tarType;
+        final var srcFields = srcRec.fields();
+        final var tarFields = tarRec.fields();
+        checkFieldsMatch(srcFields, tarFields);
+      } else {
+        throw new UnreachableCodeException();
+      }
+    }
+  }
+
+  private static void checkFieldsMatch(
+    final List<CBASTField> srcFields,
+    final List<CBFieldType> tarFields)
+  {
+    assertEquals(srcFields.size(), tarFields.size());
+
+    for (var index = 0; index < srcFields.size(); ++index) {
+      final var srcField = srcFields.get(index);
+      final var tarField = tarFields.get(index);
+      assertEquals(srcField.name().text(), tarField.name());
+      checkTypeExpressionsMatch(srcField.type(), tarField.type());
+    }
+  }
+
+  private static void checkTypeExpressionsMatch(
+    final CBASTTypeExpressionType srcType,
+    final CBTypeExpressionType tarType)
+  {
+    if (srcType instanceof CBASTTypeApplication) {
+      final var tarApp = (CBTypeExprApplicationType) tarType;
+      final var srcApp = (CBASTTypeApplication) srcType;
+      checkTypeExpressionsMatch(srcApp.target(), tarApp.expressions().get(0));
+      for (var index = 0; index < srcApp.arguments().size(); ++index) {
+        checkTypeExpressionsMatch(
+          srcApp.arguments().get(index),
+          tarApp.expressions().get(index + 1)
+        );
+      }
+    } else if (srcType instanceof CBASTTypeNamed) {
+      final var binding = srcType.userData().get(CBBindingType.class);
+      if (binding instanceof CBBindingLocalType) {
+        if (binding instanceof CBBindingLocalTypeDeclaration) {
+          final var tarNam = (CBTypeExprNamedType) tarType;
+          final var bindNam = (CBBindingLocalTypeDeclaration) binding;
+          assertEquals(bindNam.name(), tarNam.type().name());
+        } else if (binding instanceof CBBindingLocalTypeParameter) {
+          final var tarPar = (CBTypeExprParameterType) tarType;
+          final var bindNam = (CBBindingLocalTypeParameter) binding;
+          assertEquals(bindNam.name(), tarPar.parameter().name());
+        } else {
+          throw new UnreachableCodeException();
+        }
+      } else {
+        final var tarNam = (CBTypeExprNamedType) tarType;
+        final var bindExt = (CBBindingExternalType) binding;
+        assertEquals(bindExt.type(), tarNam.type());
+      }
+    } else {
+      throw new UnreachableCodeException();
     }
   }
 }

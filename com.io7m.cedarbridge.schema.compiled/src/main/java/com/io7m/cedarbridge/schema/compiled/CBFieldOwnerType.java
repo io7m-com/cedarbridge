@@ -16,11 +16,31 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * The objects that can contain fields.
  */
 
 public interface CBFieldOwnerType
 {
+  /**
+   * @return The fields of the record in declaration order
+   */
 
+  List<CBFieldType> fields();
+
+  /**
+   * @return The fields of the record by name
+   */
+
+  default Map<String, CBFieldType> fieldsByName()
+  {
+    return this.fields()
+      .stream()
+      .collect(Collectors.toMap(CBFieldType::name, Function.identity()));
+  }
 }

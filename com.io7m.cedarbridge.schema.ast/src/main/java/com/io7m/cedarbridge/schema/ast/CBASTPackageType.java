@@ -29,6 +29,12 @@ import java.util.List;
 @Value.Immutable
 public interface CBASTPackageType
 {
+  @Value.Default
+  default CBASTMutableUserData userData()
+  {
+    return new CBASTMutableUserData();
+  }
+
   /**
    * @return The name of the package
    */

@@ -18,4 +18,7 @@
  * Cedarbridge message protocol (Schema type checker [Internal classes])
  */
 
+@Version("1.0.0")
 package com.io7m.cedarbridge.schema.typer.internal;
+
+import org.osgi.annotation.versioning.Version;
