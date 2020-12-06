@@ -42,10 +42,10 @@ public final class CBCommandListCodeGenerators extends CLPAbstractCommand
   protected Status executeActual()
     throws Exception
   {
-    final var directory = new CBCodeGenerators();
+    final var codeGenerators = new CBCodeGenerators();
 
     final var factories =
-      directory.availableGenerators();
+      codeGenerators.availableGenerators();
 
     for (final var factory : factories) {
       final var description = factory.description();

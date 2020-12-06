@@ -31,6 +31,7 @@ module com.io7m.cedarbridge.codegen.java
 
   provides CBSPICodeGeneratorFactoryType with CBCGJavaFactory;
 
+  requires org.slf4j;
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;
   requires com.squareup.javapoet;

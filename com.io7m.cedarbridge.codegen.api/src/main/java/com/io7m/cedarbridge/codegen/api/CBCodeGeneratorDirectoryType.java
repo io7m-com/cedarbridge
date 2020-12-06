@@ -17,6 +17,9 @@
 package com.io7m.cedarbridge.codegen.api;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * A directory of code generators.
@@ -29,4 +32,36 @@ public interface CBCodeGeneratorDirectoryType
    */
 
   List<CBCodeGeneratorFactoryType> availableGenerators();
+
+  /**
+   * Find a code generator that has the given language name.
+   *
+   * @param languageName The language name (case insensitive)
+   *
+   * @return A code generator, if any
+   */
+
+  default Optional<CBCodeGeneratorFactoryType> findByLanguageName(
+    final String languageName)
+  {
+    Objects.requireNonNull(languageName, "languageName");
+
+    final var languageUpper = languageName.toUpperCase(Locale.ROOT);
+    return this.availableGenerators()
+      .stream()
+      .filter(g -> languageNameMatches(g, languageUpper))
+      .findFirst();
+  }
+
+  private static boolean languageNameMatches(
+    final CBCodeGeneratorFactoryType factory,
+    final String languageName)
+  {
+    final var descriptionName =
+      factory.description()
+        .languageName()
+        .toUpperCase(Locale.ROOT);
+
+    return descriptionName.equals(languageName);
+  }
 }

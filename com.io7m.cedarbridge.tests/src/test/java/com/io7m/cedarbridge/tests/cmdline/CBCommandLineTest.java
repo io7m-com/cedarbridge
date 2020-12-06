@@ -41,12 +41,17 @@ public final class CBCommandLineTest
   private ByteArrayOutputStream output;
   private PrintStream outputPrint;
   private Path directory;
+  private Path directoryOutput;
 
   @BeforeEach
   public void setup()
     throws IOException
   {
-    this.directory = CBTestDirectories.createTempDirectory();
+    this.directory =
+      CBTestDirectories.createTempDirectory();
+    this.directoryOutput =
+      CBTestDirectories.createTempDirectory();
+
     this.output = new ByteArrayOutputStream();
     this.outputPrint = new PrintStream(this.output);
     System.setOut(null);
@@ -218,6 +223,56 @@ public final class CBCommandLineTest
     this.flush();
     final var text = this.output.toString();
     assertTrue(text.contains("Java 11+"));
+    LOG.debug("{}", text);
+  }
+
+  @Test
+  public void testCompileNothing()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    MainExitless.main(new String[]{
+      "compile",
+      "--language",
+      "Java 11+",
+      "--output-directory",
+      this.directoryOutput.toString()
+    });
+
+    this.flush();
+    final var text = this.output.toString();
+    assertEquals("", text.trim());
+    LOG.debug("{}", text);
+  }
+
+  @Test
+  public void testCompileSimple()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    final var file =
+      CBTestDirectories.resourceOf(
+        CBCommandLineTest.class,
+        this.directory,
+        "basicWithCore.cbs"
+      );
+
+    MainExitless.main(new String[]{
+      "compile",
+      "--file",
+      file.toString(),
+      "--language",
+      "Java 11+",
+      "--output-directory",
+      this.directoryOutput.toString()
+    });
+
+    this.flush();
+    final var text = this.output.toString();
     LOG.debug("{}", text);
   }
 }

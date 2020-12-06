@@ -24,11 +24,16 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorResult;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public final class CBCGJava implements CBSPICodeGeneratorType
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(CBCGJava.class);
+
   private final CBSPICodeGeneratorConfiguration configuration;
 
   public CBCGJava(
@@ -61,6 +66,10 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       final var wroteSerializerFactory =
         new CBCGJavaSerializerFactoryGenerator()
           .execute(this.configuration, type);
+
+      LOG.debug("generate: {}", wroteData);
+      LOG.debug("generate: {}", wroteSerializer);
+      LOG.debug("generate: {}", wroteSerializerFactory);
 
       resultBuilder.addCreatedFiles(wroteData);
       resultBuilder.addCreatedFiles(wroteSerializer);
