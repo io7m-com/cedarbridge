@@ -16,6 +16,12 @@
 
 package com.io7m.cedarbridge.tests;
 
+import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorConfiguration;
+import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorDescription;
+import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorResult;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorDescription;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorResult;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
@@ -79,6 +85,12 @@ public final class CBEqualsTest
       CBBindingLocalTypeDeclaration.class,
       CBBindingLocalTypeParameter.class,
       CBBindingLocalVariantCase.class,
+      CBCodeGeneratorConfiguration.class,
+      CBCodeGeneratorDescription.class,
+      CBCodeGeneratorResult.class,
+      CBSPICodeGeneratorConfiguration.class,
+      CBSPICodeGeneratorDescription.class,
+      CBSPICodeGeneratorResult.class,
       CBTypeAssignment.class
     ).map(CBEqualsTest::toTest);
   }
