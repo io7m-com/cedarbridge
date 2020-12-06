@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.cmdline;
 
 import com.io7m.cedarbridge.cmdline.internal.CBCommandCheck;
+import com.io7m.cedarbridge.cmdline.internal.CBCommandListCodeGenerators;
 import com.io7m.cedarbridge.cmdline.internal.CBCommandVersion;
 import com.io7m.claypot.core.CLPApplicationConfiguration;
 import com.io7m.claypot.core.CLPCommandConstructorType;
@@ -53,8 +54,9 @@ public final class Main implements Runnable
 
     final List<CLPCommandConstructorType> commands =
       List.of(
-        CBCommandVersion::new,
-        CBCommandCheck::new
+        CBCommandCheck::new,
+        CBCommandListCodeGenerators::new,
+        CBCommandVersion::new
       );
 
     final var configuration =

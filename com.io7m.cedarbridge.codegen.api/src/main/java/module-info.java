@@ -14,6 +14,8 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorFactoryType;
+
 /**
  * Cedarbridge message protocol (Code generator API)
  */
@@ -26,6 +28,9 @@ module com.io7m.cedarbridge.codegen.api
   requires static org.osgi.annotation.versioning;
 
   requires transitive com.io7m.cedarbridge.schema.compiled;
+  requires com.io7m.cedarbridge.codegen.spi;
+
+  uses CBSPICodeGeneratorFactoryType;
 
   exports com.io7m.cedarbridge.codegen.api;
 }

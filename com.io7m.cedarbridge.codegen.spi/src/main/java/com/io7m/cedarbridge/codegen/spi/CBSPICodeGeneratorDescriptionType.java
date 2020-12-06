@@ -28,8 +28,20 @@ import org.immutables.value.Value;
 public interface CBSPICodeGeneratorDescriptionType
 {
   /**
+   * @return The ID of the generator
+   */
+
+  String id();
+
+  /**
    * @return The name of the target language
    */
 
   String languageName();
+
+  /**
+   * @return A humanly-readable description of the generator
+   */
+
+  String description();
 }

@@ -24,6 +24,11 @@
       <artifactId>com.io7m.cedarbridge.schema.compiled</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.codegen.spi</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>org.immutables</groupId>

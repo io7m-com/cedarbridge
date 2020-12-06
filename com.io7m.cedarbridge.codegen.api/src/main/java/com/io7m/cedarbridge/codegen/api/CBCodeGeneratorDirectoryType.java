@@ -14,27 +14,19 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+package com.io7m.cedarbridge.codegen.api;
+
+import java.util.List;
+
 /**
- * Cedarbridge message protocol (Command-line interface)
+ * A directory of code generators.
  */
 
-module com.io7m.cedarbridge.cmdline
+public interface CBCodeGeneratorDirectoryType
 {
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+  /**
+   * @return The available code generators
+   */
 
-  requires com.io7m.cedarbridge.codegen.api;
-  requires com.io7m.cedarbridge.schema.compiler.api;
-  requires com.io7m.cedarbridge.schema.core.types;
-  requires com.io7m.cedarbridge.schema.loader.api;
-  requires com.io7m.cedarbridge.version;
-  requires com.io7m.claypot.core;
-  requires jcommander;
-  requires org.slf4j;
-
-  uses com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
-
-  opens com.io7m.cedarbridge.cmdline.internal to jcommander;
-
-
+  List<CBCodeGeneratorFactoryType> availableGenerators();
 }

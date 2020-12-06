@@ -30,7 +30,9 @@ public final class CBCGJavaFactory implements CBSPICodeGeneratorFactoryType
 {
   private static final CBSPICodeGeneratorDescription DESCRIPTION =
     CBSPICodeGeneratorDescription.builder()
+      .setId("com.io7m.cedarbridge.java11")
       .setLanguageName("Java 11+")
+      .setDescription("A generator that produces Java 11 sources.")
       .build();
 
   /**
