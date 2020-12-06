@@ -29,18 +29,6 @@ import java.util.stream.Stream;
 
 public final class CBServicesTest
 {
-  @TestFactory
-  public Stream<DynamicTest> testServices()
-  {
-    return Stream.of(
-      CBParserFactoryType.class,
-      CBTypeCheckerFactoryType.class,
-      CBBinderFactoryType.class,
-      CBExpressionSourceFactoryType.class,
-      CBSchemaCompilerFactoryType.class
-    ).map(CBServicesTest::testOf);
-  }
-
   private static DynamicTest testOf(
     final Class<?> clazz)
   {
@@ -52,5 +40,17 @@ public final class CBServicesTest
           .orElseThrow();
       }
     );
+  }
+
+  @TestFactory
+  public Stream<DynamicTest> testServices()
+  {
+    return Stream.of(
+      CBParserFactoryType.class,
+      CBTypeCheckerFactoryType.class,
+      CBBinderFactoryType.class,
+      CBExpressionSourceFactoryType.class,
+      CBSchemaCompilerFactoryType.class
+    ).map(CBServicesTest::testOf);
   }
 }

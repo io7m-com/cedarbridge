@@ -17,7 +17,6 @@
 package com.io7m.cedarbridge.tests;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.errors.CBErrorType;
 import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;

@@ -19,9 +19,19 @@ package com.io7m.cedarbridge.codegen.spi;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+import java.nio.file.Path;
+
+/**
+ * Configuration information for code generators.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBSPICodeGeneratorConfigurationType
 {
+  /**
+   * @return The directory to which code is written
+   */
 
+  Path outputDirectory();
 }

@@ -17,6 +17,9 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * A variant type, or algebraic sum type.
@@ -25,8 +28,19 @@ import java.util.List;
 public interface CBVariantType extends CBTypeDeclarationType
 {
   /**
-   * @return The cases of the variant type
+   * @return The cases of the variant type in declaration order
    */
 
   List<CBVariantCaseType> cases();
+
+  /**
+   * @return The cases of the variant by name
+   */
+
+  default Map<String, CBVariantCaseType> casesByName()
+  {
+    return this.cases()
+      .stream()
+      .collect(Collectors.toMap(CBVariantCaseType::name, Function.identity()));
+  }
 }

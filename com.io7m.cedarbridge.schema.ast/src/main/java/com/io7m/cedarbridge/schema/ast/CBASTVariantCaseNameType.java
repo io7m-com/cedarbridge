@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
+import com.io7m.cedarbridge.schema.names.CBVariantCaseNames;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
@@ -40,6 +41,6 @@ public interface CBASTVariantCaseNameType extends CBASTElementType
   @Value.Check
   default void checkPreconditions()
   {
-    CBASTVariantCaseNames.INSTANCE.checkValid(this.text());
+    CBVariantCaseNames.INSTANCE.checkValid(this.text());
   }
 }

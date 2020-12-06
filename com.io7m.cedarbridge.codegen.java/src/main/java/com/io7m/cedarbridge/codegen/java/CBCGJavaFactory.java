@@ -16,15 +16,36 @@
 
 package com.io7m.cedarbridge.codegen.java;
 
+import com.io7m.cedarbridge.codegen.java.internal.CBCGJava;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorDescription;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorFactoryType;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorType;
 
+/**
+ * A factory of Java code generators.
+ */
+
 public final class CBCGJavaFactory implements CBSPICodeGeneratorFactoryType
 {
+  private static final CBSPICodeGeneratorDescription DESCRIPTION =
+    CBSPICodeGeneratorDescription.builder()
+      .setLanguageName("Java 11+")
+      .build();
+
+  /**
+   * Construct a code generator factory.
+   */
+
   public CBCGJavaFactory()
   {
 
+  }
+
+  @Override
+  public CBSPICodeGeneratorDescription description()
+  {
+    return DESCRIPTION;
   }
 
   @Override

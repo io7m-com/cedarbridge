@@ -16,8 +16,26 @@
 
 package com.io7m.cedarbridge.codegen.spi;
 
+/**
+ * A factory of code generators.
+ */
+
 public interface CBSPICodeGeneratorFactoryType
 {
+  /**
+   * @return The description of the code generators
+   */
+
+  CBSPICodeGeneratorDescription description();
+
+  /**
+   * Create a new code generator based on the given configuration values.
+   *
+   * @param configuration The configuration values
+   *
+   * @return A code generator
+   */
+
   CBSPICodeGeneratorType createGenerator(
     CBSPICodeGeneratorConfiguration configuration);
 }

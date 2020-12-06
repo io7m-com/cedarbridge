@@ -27,11 +27,6 @@ import java.net.URI;
 @Value.Immutable
 public interface CBErrorType extends LexicalType<URI>
 {
-  enum Severity {
-    ERROR,
-    WARNING
-  }
-
   @Override
   LexicalPosition<URI> lexical();
 
@@ -42,4 +37,10 @@ public interface CBErrorType extends LexicalType<URI>
   String errorCode();
 
   String message();
+
+  enum Severity
+  {
+    ERROR,
+    WARNING
+  }
 }

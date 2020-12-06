@@ -15,8 +15,8 @@
   </p>
 
   <p>
-    The <tt>cedarbridge</tt> package implements an efficient, strongly-typed, platform-independent,
-    binary message protocol based around sum and product types.
+    The <tt>cedarbridge</tt> package implements an efficient, strongly-typed, platform-independent, binary message
+    protocol based around sum and product types.
   </p>
 
 </div>

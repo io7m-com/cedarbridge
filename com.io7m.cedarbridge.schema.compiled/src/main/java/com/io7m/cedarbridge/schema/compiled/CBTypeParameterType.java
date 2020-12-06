@@ -23,6 +23,12 @@ package com.io7m.cedarbridge.schema.compiled;
 public interface CBTypeParameterType
 {
   /**
+   * @return The index of this type parameter on the owning type (starting from 0)
+   */
+
+  int index();
+
+  /**
    * @return The name of the type parameter
    */
 

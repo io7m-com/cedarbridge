@@ -16,10 +16,23 @@
 
 package com.io7m.cedarbridge.codegen.spi;
 
+import java.util.Objects;
+
+/**
+ * The type of exceptions raised by code generators.
+ */
+
 public final class CBSPICodeGeneratorException extends Exception
 {
-  public CBSPICodeGeneratorException()
-  {
+  /**
+   * Construct an exception.
+   *
+   * @param exception The cause
+   */
 
+  public CBSPICodeGeneratorException(
+    final Exception exception)
+  {
+    super(Objects.requireNonNull(exception, "exception"));
   }
 }

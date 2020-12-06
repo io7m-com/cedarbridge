@@ -67,7 +67,7 @@ public interface CBASTTypeExpressionType extends CBASTElementType, Formattable
   @Value.Immutable
   interface CBASTTypeApplicationType extends CBASTTypeExpressionType
   {
-    CBASTTypeExpressionType target();
+    CBASTTypeNamedType target();
 
     List<CBASTTypeExpressionType> arguments();
 

@@ -7,4 +7,4 @@
   [parameter B])
 
 (variant V
-  [case C (field r ([U T] T))])
+  [case C (field r [U T T])])

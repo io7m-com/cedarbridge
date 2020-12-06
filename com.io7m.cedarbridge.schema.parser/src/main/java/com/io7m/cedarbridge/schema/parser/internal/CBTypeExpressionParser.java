@@ -123,7 +123,7 @@ public final class CBTypeExpressionParser
     final var expectingKind =
       "objectTypeApplication";
     final var expectingForms =
-      List.of("(<type-expression> <type-expression>...)");
+      List.of("(<type-path> <type-expression>...)");
 
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
@@ -136,7 +136,14 @@ public final class CBTypeExpressionParser
         throw subContext.failed(expression, "errorEmptyTypeApplication");
       }
 
-      builder.setTarget(this.parse(subContext, expression.get(0)));
+      builder.setTarget(
+        parseTypePath(
+          subContext,
+          subContext.checkExpressionIs(
+            expression.get(0),
+            SExpressionSymbolType.class))
+      );
+
       for (int index = 1; index < expression.size(); ++index) {
         builder.addArguments(this.parse(subContext, expression.get(index)));
       }

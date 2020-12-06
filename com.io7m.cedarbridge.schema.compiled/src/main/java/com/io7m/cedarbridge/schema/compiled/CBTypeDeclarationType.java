@@ -62,6 +62,8 @@ public interface CBTypeDeclarationType
   {
     return this.parameters()
       .stream()
-      .collect(Collectors.toMap(CBTypeParameterType::name, Function.identity()));
+      .collect(Collectors.toMap(
+        CBTypeParameterType::name,
+        Function.identity()));
   }
 }

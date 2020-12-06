@@ -79,7 +79,7 @@ public final class CBTypeChecker implements CBTypeCheckerType
     this.packageV.userData()
       .put(
         CBPackageType.class,
-        new CBPackageBuilder().build(this.packageV));
+        new CBTypePackageConverter().build(this.packageV));
   }
 
   private void processDeclarations(

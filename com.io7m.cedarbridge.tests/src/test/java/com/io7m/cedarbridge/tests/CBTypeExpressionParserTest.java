@@ -181,34 +181,6 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
   }
 
   @Test
-  public void testApplication2()
-    throws Exception
-  {
-    final var app =
-      (CBASTTypeApplication) this.parse("([A B] [C D])");
-
-    final var app0 =
-      (CBASTTypeApplication) app.target();
-    final var app1 =
-      (CBASTTypeApplication) app.arguments().get(0);
-
-    final var name0 =
-      (CBASTTypeNamed) app0.target();
-    final var name1 =
-      (CBASTTypeNamed) app0.arguments().get(0);
-
-    final var name2 =
-      (CBASTTypeNamed) app1.target();
-    final var name3 =
-      (CBASTTypeNamed) app1.arguments().get(0);
-
-    assertEquals("A", name0.name().text());
-    assertEquals("B", name1.name().text());
-    assertEquals("C", name2.name().text());
-    assertEquals("D", name3.name().text());
-  }
-
-  @Test
   public void testApplicationBad0()
     throws Exception
   {
@@ -217,6 +189,18 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
     });
     LOG.debug("", ex);
     assertEquals("errorEmptyTypeApplication", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testApplicationBad1()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("([A B] [C D])");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 }

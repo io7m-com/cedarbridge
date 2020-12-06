@@ -9,4 +9,4 @@
   [field y B])
 
 (record V
-  [field r ([U T] T)])
+  [field r (U T T)])

@@ -25,5 +25,7 @@ module com.io7m.cedarbridge.codegen.spi
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires transitive com.io7m.cedarbridge.schema.compiled;
+
   exports com.io7m.cedarbridge.codegen.spi;
 }

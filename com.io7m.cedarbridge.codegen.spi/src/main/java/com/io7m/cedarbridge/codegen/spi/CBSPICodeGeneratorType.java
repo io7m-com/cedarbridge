@@ -16,8 +16,25 @@
 
 package com.io7m.cedarbridge.codegen.spi;
 
+import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+
+/**
+ * A code generator.
+ */
+
 public interface CBSPICodeGeneratorType
 {
-  void execute()
+  /**
+   * Execute code generation for the given package.
+   *
+   * @param pack The package
+   *
+   * @return The result of generation
+   *
+   * @throws CBSPICodeGeneratorException On errors
+   */
+
+  CBSPICodeGeneratorResult execute(
+    CBPackageType pack)
     throws CBSPICodeGeneratorException;
 }
