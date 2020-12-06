@@ -28,7 +28,24 @@ public interface CBSchemaCompilerConfigurationType
 {
   List<Path> includeDirectories();
 
-  Path fileToCompile();
+  List<Path> filesToCompile();
 
-  Path outputDirectory();
+  @Value.Check
+  default void checkPreconditions()
+  {
+    this.includeDirectories()
+      .forEach(CBSchemaCompilerConfigurationType::checkAbsolute);
+    this.filesToCompile()
+      .forEach(CBSchemaCompilerConfigurationType::checkAbsolute);
+  }
+
+  private static void checkAbsolute(
+    final Path directory)
+  {
+    if (!directory.isAbsolute()) {
+      throw new IllegalArgumentException(
+        String.format("Path %s must be an absolute path", directory)
+      );
+    }
+  }
 }

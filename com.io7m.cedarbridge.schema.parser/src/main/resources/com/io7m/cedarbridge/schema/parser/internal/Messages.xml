@@ -8,12 +8,10 @@
   Object: {5}
 
   Expected:
-    {6}
-]]></entry>
+    {6}]]></entry>
 
   <entry key="errorParseBasic"><![CDATA[{0}:{1}:{2}: {3}
-{4}
-]]></entry>
+{4}]]></entry>
 
   <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
   <entry key="errorDeclarationUnrecognized">Unrecognized package-level declaration.</entry>

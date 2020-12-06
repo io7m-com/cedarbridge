@@ -77,8 +77,11 @@ public final class CBJavaCodeGeneratorTest
     final List<Path> createdFiles)
     throws IOException
   {
-    final var listener = new Diagnostics();
-    final var tool = ToolProvider.getSystemJavaCompiler();
+    final var listener =
+      new Diagnostics();
+    final var tool =
+      ToolProvider.getSystemJavaCompiler();
+
     try (var fileManager = tool.getStandardFileManager(listener, ROOT, UTF_8)) {
 
       final var compileFiles =
@@ -362,7 +365,7 @@ public final class CBJavaCodeGeneratorTest
   public void testBasicWithCore()
     throws Exception
   {
-    this.loader.addPackage(CBCore.get());
+    this.loader.register(CBCore.get());
 
     final var pack = this.check("basicWithCore.cbs");
     assertEquals(0, this.errors.size());
@@ -381,7 +384,7 @@ public final class CBJavaCodeGeneratorTest
   public void testBasicType3()
     throws Exception
   {
-    this.loader.addPackage(CBCore.get());
+    this.loader.register(CBCore.get());
 
     final var pack = this.check("basicType3.cbs");
     assertEquals(0, this.errors.size());

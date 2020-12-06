@@ -16,19 +16,55 @@
 
 package com.io7m.cedarbridge.schema.compiler;
 
+import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceFactoryType;
+import com.io7m.cedarbridge.schema.binder.api.CBBinderFactoryType;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerType;
+import com.io7m.cedarbridge.schema.compiler.internal.CBLoader;
 import com.io7m.cedarbridge.schema.compiler.internal.CBSchemaCompiler;
+import com.io7m.cedarbridge.schema.compiler.internal.CBSchemaCompilerInternalFactory;
+import com.io7m.cedarbridge.schema.compiler.internal.CBServices;
+import com.io7m.cedarbridge.schema.parser.api.CBParserFactoryType;
+import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerFactoryType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public final class CBSchemaCompilerFactory
   implements CBSchemaCompilerFactoryType
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(CBSchemaCompiler.class);
+
+  private final CBSchemaCompilerInternalFactory factory;
+
   public CBSchemaCompilerFactory()
   {
+    this(
+      CBServices.findService(CBExpressionSourceFactoryType.class),
+      CBServices.findService(CBParserFactoryType.class),
+      CBServices.findService(CBBinderFactoryType.class),
+      CBServices.findService(CBTypeCheckerFactoryType.class)
+    );
+  }
 
+  public CBSchemaCompilerFactory(
+    final CBExpressionSourceFactoryType inSources,
+    final CBParserFactoryType inParsers,
+    final CBBinderFactoryType inBinders,
+    final CBTypeCheckerFactoryType inTypers)
+  {
+    this.factory =
+      new CBSchemaCompilerInternalFactory(
+        inSources,
+        inParsers,
+        inBinders,
+        inTypers
+      );
   }
 
   @Override
@@ -37,6 +73,24 @@ public final class CBSchemaCompilerFactory
   {
     Objects.requireNonNull(configuration, "configuration");
 
-    return new CBSchemaCompiler(configuration);
+    final Consumer<CBError> errorConsumer = error -> {
+      switch (error.severity()) {
+        case ERROR:
+          LOG.error("{}", error.message());
+          break;
+        case WARNING:
+          LOG.warn("{}", error.message());
+          break;
+      }
+    };
+
+    return this.factory.createNewCompiler(
+      errorConsumer,
+      configuration,
+      new CBLoader(
+        this.factory,
+        configuration.includeDirectories(),
+        errorConsumer)
+    );
   }
 }

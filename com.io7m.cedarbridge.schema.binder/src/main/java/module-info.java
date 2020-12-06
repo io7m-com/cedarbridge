@@ -27,6 +27,7 @@ module com.io7m.cedarbridge.schema.binder
   requires static org.osgi.annotation.versioning;
 
   requires com.io7m.junreachable.core;
+  requires org.slf4j;
 
   requires transitive com.io7m.cedarbridge.errors;
   requires transitive com.io7m.cedarbridge.schema.binder.api;

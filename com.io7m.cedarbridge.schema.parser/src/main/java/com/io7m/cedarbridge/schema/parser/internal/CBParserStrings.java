@@ -32,9 +32,10 @@ public final class CBParserStrings extends CBAbstractStrings
   public static CBStringsType create()
   {
     return new CBParserStrings(
-      ofXMLResource(
-        CBParserStrings.class,
-        "/com/io7m/cedarbridge/schema/parser/internal/Messages.xml")
+      ofXML(
+        CBParserStrings.class.getResourceAsStream(
+          "/com/io7m/cedarbridge/schema/parser/internal/Messages.xml")
+      )
     );
   }
 

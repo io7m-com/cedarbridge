@@ -133,8 +133,8 @@ public final class CBBinderTest
   public void testImportConflict()
     throws Exception
   {
-    this.loader.addPackage(new CBFakePackage("x.y.z"));
-    this.loader.addPackage(new CBFakePackage("a.b.c"));
+    this.loader.register(new CBFakePackage("x.y.z"));
+    this.loader.register(new CBFakePackage("a.b.c"));
 
     assertThrows(CBBindFailedException.class, () -> {
       this.bind("errorBindPackageTwice.cbs");
@@ -257,7 +257,7 @@ public final class CBBinderTest
   public void testMissingType4()
     throws Exception
   {
-    this.loader.addPackage(new CBFakePackage("x.y.z"));
+    this.loader.register(new CBFakePackage("x.y.z"));
 
     assertThrows(CBBindFailedException.class, () -> {
       this.bind("errorBindTypeReference4.cbs");
@@ -336,7 +336,7 @@ public final class CBBinderTest
     final var otherPack = new CBFakePackage("x.y.z");
     final var rec = new CBFakeRecord("T", 0);
     otherPack.addType(rec);
-    this.loader.addPackage(otherPack);
+    this.loader.register(otherPack);
 
     final var pack = this.bind("bindOk1.cbs");
 

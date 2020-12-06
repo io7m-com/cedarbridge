@@ -16,6 +16,8 @@
 
 import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceFactoryType;
+import com.io7m.jsx.api.lexer.JSXLexerSupplierType;
+import com.io7m.jsx.api.parser.JSXParserSupplierType;
 
 /**
  * Cedarbridge message protocol (Expression source)
@@ -31,6 +33,9 @@ module com.io7m.cedarbridge.exprsrc
   requires com.io7m.jlexing.core;
   requires com.io7m.jsx.core;
   requires com.io7m.jsx.parser.api;
+
+  uses JSXLexerSupplierType;
+  uses JSXParserSupplierType;
 
   provides CBExpressionSourceFactoryType with CBExpressionSources;
 

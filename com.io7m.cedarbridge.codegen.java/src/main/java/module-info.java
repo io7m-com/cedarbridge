@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.codegen.java.CBCGJavaFactory;
+import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorFactoryType;
+
 /**
  * Cedarbridge message protocol (Java code generator)
  */
@@ -25,6 +28,8 @@ module com.io7m.cedarbridge.codegen.java
 
   requires transitive com.io7m.cedarbridge.codegen.spi;
   requires transitive com.io7m.cedarbridge.runtime.api;
+
+  provides CBSPICodeGeneratorFactoryType with CBCGJavaFactory;
 
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;

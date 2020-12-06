@@ -16,8 +16,12 @@
 
 package com.io7m.cedarbridge.schema.compiler.api;
 
+import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
+
 public interface CBSchemaCompilerType
 {
+  CBLoaderType loader();
+
   CBSchemaCompilation execute()
     throws CBSchemaCompilerException;
 }

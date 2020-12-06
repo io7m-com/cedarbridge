@@ -32,14 +32,16 @@ public final class CBFakeLoader implements CBLoaderType
     this.packages = new HashMap<>();
   }
 
-  public void addPackage(
-    final CBPackageType packageV)
+  @Override
+  public void register(
+    final CBPackageType pack)
   {
-    this.packages.put(packageV.name(), packageV);
+    this.packages.put(pack.name(), pack);
   }
 
   @Override
   public CBPackageType load(
+    final String from,
     final String name)
     throws CBLoadFailedException
   {

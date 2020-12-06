@@ -32,9 +32,9 @@ public final class CBBinderStrings extends CBAbstractStrings
   public static CBStringsType create()
   {
     return new CBBinderStrings(
-      ofXMLResource(
-        CBBinderStrings.class,
-        "/com/io7m/cedarbridge/schema/binder/internal/Messages.xml")
+      ofXML(
+        CBBinderStrings.class.getResourceAsStream(
+        "/com/io7m/cedarbridge/schema/binder/internal/Messages.xml"))
     );
   }
 

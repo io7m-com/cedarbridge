@@ -20,9 +20,14 @@ import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoadFailedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class CBImportBinder implements CBElementBinderType<CBASTImport>
 {
+  private static final Logger LOG =
+    LoggerFactory.getLogger(CBImportBinder.class);
+
   public CBImportBinder()
   {
 
@@ -39,10 +44,12 @@ public final class CBImportBinder implements CBElementBinderType<CBASTImport>
     final var shortName = item.shortName().text();
 
     try {
-      final var packageV = loader.load(longName);
+      final var packageV =
+        loader.load(context.currentPackage(), longName);
       context.registerPackage(item.lexical(), shortName, packageV);
       item.userData().put(CBPackageType.class, packageV);
     } catch (final CBLoadFailedException e) {
+      LOG.debug("failed to load package {}: ", longName, e);
       throw context.failed(
         item.lexical(),
         "errorPackageUnavailable",

@@ -49,6 +49,7 @@ public final class CBBinderContext
   private final HashMap<String, CBPackageType> packagesByShortName;
   private final HashMap<String, LexicalPosition<URI>> packagesByShortNameImports;
   private final CBLoaderType loader;
+  private final String packageName;
   private BigInteger idPool;
   private int errors;
 
@@ -56,8 +57,11 @@ public final class CBBinderContext
     final CBStringsType inStrings,
     final CBLoaderType inLoader,
     final CBExpressionLineLogType inLineLog,
-    final Consumer<CBError> inErrorConsumer)
+    final Consumer<CBError> inErrorConsumer,
+    final String inPackageName)
   {
+    this.packageName =
+      Objects.requireNonNull(inPackageName, "inPackageName");
     Objects.requireNonNull(inErrorConsumer, "errorConsumer");
 
     this.loader =
@@ -447,6 +451,12 @@ public final class CBBinderContext
       }
 
       return pack;
+    }
+
+    @Override
+    public String currentPackage()
+    {
+      return this.root.packageName;
     }
   }
 }

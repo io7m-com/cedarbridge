@@ -5,17 +5,14 @@
 <properties>
 
   <entry key="errorType"><![CDATA[{0}:{1}:{2}: {3}
-{4}
-]]></entry>
+{4}]]></entry>
 
   <entry key="errorTypeWithOther"><![CDATA[{0}:{1}:{2}: {3}
 {4}
   See {5}:{6}:{7}:
-{8}
-]]></entry>
+{8}]]></entry>
 
   <entry key="errorTypeArgumentsIncorrect"><![CDATA[Incorrect number of arguments to type expression.
-  Type expression {0} takes {1} argument(s), but {2} were provided.
-]]></entry>
+  Type expression {0} takes {1} argument(s), but {2} were provided.]]></entry>
 
 </properties>

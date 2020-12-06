@@ -414,7 +414,7 @@ public final class CBTypeCheckerTest
     final var trec = new CBFakeRecord("T", 0);
     final var tpack = new CBFakePackage("a.b.c");
     tpack.addType(trec);
-    this.loader.addPackage(tpack);
+    this.loader.register(tpack);
 
     final var pack = this.check("typeRecordOk5.cbs");
     assertEquals(0, this.errors.size());
@@ -438,7 +438,7 @@ public final class CBTypeCheckerTest
     final var trec = new CBFakeRecord("T", 1);
     final var tpack = new CBFakePackage("a.b.c");
     tpack.addType(trec);
-    this.loader.addPackage(tpack);
+    this.loader.register(tpack);
 
     final var pack = this.check("typeRecordOk6.cbs");
     assertEquals(0, this.errors.size());
@@ -516,7 +516,7 @@ public final class CBTypeCheckerTest
     final var trec = new CBFakeRecord("T", 0);
     final var tpack = new CBFakePackage("a.b.c");
     tpack.addType(trec);
-    this.loader.addPackage(tpack);
+    this.loader.register(tpack);
 
     assertThrows(CBTypeCheckFailedException.class, () -> {
       this.check("errorType4.cbs");
@@ -650,7 +650,7 @@ public final class CBTypeCheckerTest
     final var trec = new CBFakeRecord("T", 0);
     final var tpack = new CBFakePackage("a.b.c");
     tpack.addType(trec);
-    this.loader.addPackage(tpack);
+    this.loader.register(tpack);
 
     final var pack = this.check("typeVariantOk5.cbs");
     assertEquals(0, this.errors.size());
@@ -674,7 +674,7 @@ public final class CBTypeCheckerTest
     final var trec = new CBFakeRecord("T", 1);
     final var tpack = new CBFakePackage("a.b.c");
     tpack.addType(trec);
-    this.loader.addPackage(tpack);
+    this.loader.register(tpack);
 
     final var pack = this.check("typeVariantOk6.cbs");
     assertEquals(0, this.errors.size());

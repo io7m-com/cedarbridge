@@ -24,4 +24,6 @@ module com.io7m.cedarbridge.schema.core.types
   requires static org.osgi.annotation.versioning;
 
   requires transitive com.io7m.cedarbridge.schema.compiled;
+
+  exports com.io7m.cedarbridge.schema.core_types;
 }

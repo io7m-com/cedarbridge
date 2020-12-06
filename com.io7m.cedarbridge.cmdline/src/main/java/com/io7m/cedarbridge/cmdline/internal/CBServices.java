@@ -30,7 +30,7 @@ public final class CBServices
 
   }
 
-  private static <T> T findService(
+  public static <T> T findService(
     final Class<T> service)
   {
     return ServiceLoader.load(service)

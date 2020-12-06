@@ -26,7 +26,11 @@ import java.io.Closeable;
 
 public interface CBLoaderType extends Closeable
 {
+  void register(
+    CBPackageType pack);
+
   CBPackageType load(
+    String from,
     String name)
     throws CBLoadFailedException;
 }

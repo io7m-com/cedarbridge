@@ -14,8 +14,13 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceFactoryType;
+import com.io7m.cedarbridge.schema.binder.api.CBBinderFactoryType;
 import com.io7m.cedarbridge.schema.compiler.CBSchemaCompilerFactory;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
+import com.io7m.cedarbridge.schema.loader.api.CBLoaderFactoryType;
+import com.io7m.cedarbridge.schema.parser.api.CBParserFactoryType;
+import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerFactoryType;
 
 /**
  * Cedarbridge message protocol (Schema compiler)
@@ -26,7 +31,21 @@ module com.io7m.cedarbridge.schema.compiler
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires transitive com.io7m.cedarbridge.exprsrc.api;
+  requires transitive com.io7m.cedarbridge.schema.binder.api;
   requires transitive com.io7m.cedarbridge.schema.compiler.api;
+  requires transitive com.io7m.cedarbridge.schema.loader.api;
+  requires transitive com.io7m.cedarbridge.schema.parser.api;
+  requires transitive com.io7m.cedarbridge.schema.typer.api;
+  requires com.io7m.cedarbridge.strings.api;
+
+  requires org.slf4j;
+
+  uses CBParserFactoryType;
+  uses CBExpressionSourceFactoryType;
+  uses CBTypeCheckerFactoryType;
+  uses CBBinderFactoryType;
+  uses CBLoaderFactoryType;
 
   provides CBSchemaCompilerFactoryType with CBSchemaCompilerFactory;
 

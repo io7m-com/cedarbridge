@@ -103,10 +103,15 @@ public final class CBBinder implements CBBinderType
     throws CBBindFailedException
   {
     final var context =
-      new CBBinderContext(this.strings, this.loader, this.lineLog, this.errors);
-    final var contextMain =
-      context.current();
+      new CBBinderContext(
+        this.strings,
+        this.loader,
+        this.lineLog,
+        this.errors,
+        this.parsedPackage.name().text()
+      );
 
+    final var contextMain = context.current();
     this.processImports(contextMain);
     this.processTypes(contextMain);
   }

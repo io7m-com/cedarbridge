@@ -80,4 +80,6 @@ public interface CBBinderContextType extends AutoCloseable
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
+
+  String currentPackage();
 }

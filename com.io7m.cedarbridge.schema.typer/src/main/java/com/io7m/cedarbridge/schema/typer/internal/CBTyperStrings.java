@@ -32,9 +32,9 @@ public final class CBTyperStrings extends CBAbstractStrings
   public static CBStringsType create()
   {
     return new CBTyperStrings(
-      ofXMLResource(
-        CBTyperStrings.class,
-        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml")
+      ofXML(
+        CBTyperStrings.class.getResourceAsStream(
+        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml"))
     );
   }
 
