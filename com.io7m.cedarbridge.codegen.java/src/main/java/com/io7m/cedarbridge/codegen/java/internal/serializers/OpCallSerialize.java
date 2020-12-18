@@ -20,6 +20,8 @@ import com.squareup.javapoet.CodeBlock;
 
 import java.util.Objects;
 
+import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.fieldAccessorName;
+
 public final class OpCallSerialize extends OpAbstract
 {
   private final String fieldName;
@@ -41,7 +43,7 @@ public final class OpCallSerialize extends OpAbstract
       .addStatement(
         "this.$L.serialize(context,value.$L())",
         this.fieldName,
-        this.fieldName)
+        fieldAccessorName(this.fieldName))
       .addStatement("context.end($S)", this.fieldName)
       .build();
   }

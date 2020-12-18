@@ -736,7 +736,13 @@ public final class CBTypeCheckerTest
     final var protos = pack.protocols();
     assertEquals(1, protos.size());
 
-    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+    final var compiled = pack.userData().get(CBPackageType.class);
+    checkPackagesMatch(pack, compiled);
+
+    final var protoBelongings =
+      compiled.protocolVersionsForType(compiled.types().get("UnitType"));
+    assertEquals(1, protoBelongings.size());
+    assertEquals("Z", protoBelongings.get(0).owner().name());
   }
 
   @Test

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.fieldAccessorName;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
@@ -64,8 +65,8 @@ public final class CBCGDataClassMethodGeneration
         methodBuilder.addStatement(
           "if (!$T.equals(this.$N(), otherT.$N())) return false",
           Objects.class,
-          field.name,
-          field.name
+          fieldAccessorName(field.name),
+          fieldAccessorName(field.name)
         );
       }
     }
@@ -87,7 +88,7 @@ public final class CBCGDataClassMethodGeneration
       "return $T.hash($L)",
       Objects.class,
       fields.stream()
-        .map(f -> String.format("this.%s()", f.name))
+        .map(f -> String.format("this.%s()", fieldAccessorName(f.name)))
         .collect(Collectors.joining(","))
     );
     return methodBuilder.build();
@@ -96,7 +97,8 @@ public final class CBCGDataClassMethodGeneration
   public static MethodSpec createFieldAccessorMethod(
     final CBFieldType field)
   {
-    final var methodBuilder = MethodSpec.methodBuilder(field.name());
+    final var methodBuilder =
+      MethodSpec.methodBuilder(fieldAccessorName(field.name()));
     methodBuilder.addModifiers(PUBLIC);
     methodBuilder.returns(CBCGJavaTypeExpressions.evaluateTypeExpression(field.type()));
     methodBuilder.addStatement("return this.$L", field.name());

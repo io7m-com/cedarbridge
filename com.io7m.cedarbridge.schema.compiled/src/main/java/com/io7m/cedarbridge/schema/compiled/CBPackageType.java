@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * A compiled package.
@@ -48,4 +49,23 @@ public interface CBPackageType
    */
 
   Map<String, CBProtocolDeclarationType> protocols();
+
+  /**
+   * Find all protocol versions to which the given type belongs.
+   *
+   * @param type The type
+   *
+   * @return The protocol versions
+   */
+
+  default List<CBProtocolVersionDeclarationType> protocolVersionsForType(
+    final CBTypeDeclarationType type)
+  {
+    return this.protocols()
+      .values()
+      .stream()
+      .flatMap(proto -> proto.versions().values().stream())
+      .filter(version -> version.types().contains(type))
+      .collect(Collectors.toList());
+  }
 }

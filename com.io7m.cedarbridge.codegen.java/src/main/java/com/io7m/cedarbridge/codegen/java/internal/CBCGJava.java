@@ -17,6 +17,8 @@
 package com.io7m.cedarbridge.codegen.java.internal;
 
 import com.io7m.cedarbridge.codegen.java.internal.data_classes.CBCGDataClassGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolClassGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedClassGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.serializer_factories.CBCGJavaSerializerFactoryGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.serializers.CBCGJavaSerializerGenerator;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
@@ -52,6 +54,27 @@ public final class CBCGJava implements CBSPICodeGeneratorType
 
     final var resultBuilder =
       CBSPICodeGeneratorResult.builder();
+
+    final var protos = pack.protocols();
+    for (final var entry : protos.entrySet()) {
+      final var proto = entry.getValue();
+
+      final var wroteProto =
+        new CBCGProtocolClassGenerator()
+          .execute(this.configuration, proto);
+
+      LOG.debug("generate: {}", wroteProto);
+      resultBuilder.addCreatedFiles(wroteProto);
+
+      for (final var version : proto.versions().values()) {
+        final var wroteData =
+          new CBCGProtocolVersionedClassGenerator()
+            .execute(this.configuration, version);
+
+        LOG.debug("generate: {}", wroteData);
+        resultBuilder.addCreatedFiles(wroteData);
+      }
+    }
 
     final var types = pack.types();
     for (final var entry : types.entrySet()) {

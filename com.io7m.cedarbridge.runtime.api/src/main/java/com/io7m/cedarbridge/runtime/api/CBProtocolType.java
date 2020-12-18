@@ -17,10 +17,14 @@
 package com.io7m.cedarbridge.runtime.api;
 
 /**
- * The base type of all serializable values.
+ * The base type of all protocols.
  */
 
-public interface CBSerializableType
+public interface CBProtocolType
 {
+  /**
+   * @return The name of the protocol
+   */
 
+  String protocolName();
 }

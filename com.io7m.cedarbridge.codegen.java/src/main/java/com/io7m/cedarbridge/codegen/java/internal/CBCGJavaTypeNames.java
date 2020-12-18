@@ -17,6 +17,8 @@
 package com.io7m.cedarbridge.codegen.java.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBExternalType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
 import com.squareup.javapoet.ClassName;
@@ -34,15 +36,33 @@ public final class CBCGJavaTypeNames
   }
 
   public static ClassName protocolClassNameOf(
-    final CBTypeDeclarationType type)
+    final CBProtocolDeclarationType proto)
   {
-    if (type instanceof CBExternalType) {
-      return ClassName.get(
-        ((CBExternalType) type).externalPackage(),
-        ((CBExternalType) type).externalType()
-      );
-    }
-    return ClassName.get(type.owner().name(), type.name());
+    final var ownerPack = proto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format(
+        "Protocol%sType",
+        proto.name()
+      )
+    );
+  }
+
+  public static ClassName protocolClassNameOf(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var ownerProto = proto.owner();
+    final var ownerPack = ownerProto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format(
+        "Protocol%sv%sType",
+        ownerProto.name(),
+        proto.version()
+      )
+    );
   }
 
   public static ClassName dataClassNameOf(
@@ -107,7 +127,6 @@ public final class CBCGJavaTypeNames
     return ParameterizedTypeName.get(className, typeArray);
   }
 
-
   public static ClassName dataClassNameOfCase(
     final CBVariantCaseType caseV)
   {
@@ -116,10 +135,10 @@ public final class CBCGJavaTypeNames
     final var typeParameters =
       type.parameters();
     return ClassName.get(
-        type.owner().name(),
-        type.name(),
-        caseV.name()
-      );
+      type.owner().name(),
+      type.name(),
+      caseV.name()
+    );
   }
 
   public static ClassName serializerClassNameOf(
@@ -144,5 +163,23 @@ public final class CBCGJavaTypeNames
     final CBExternalType decl)
   {
     return ClassName.get(decl.externalPackage(), decl.externalType());
+  }
+
+  private static String toTitleCase(
+    final String input)
+  {
+    final var text =
+      input.toLowerCase();
+    final var initial =
+      text.charAt(0);
+    final var cString =
+      String.format("%s", Character.valueOf(initial)).toUpperCase();
+    return String.format("%s%s", cString, input.substring(1));
+  }
+
+  public static String fieldAccessorName(
+    final String name)
+  {
+    return String.format("field%s", toTitleCase(name));
   }
 }

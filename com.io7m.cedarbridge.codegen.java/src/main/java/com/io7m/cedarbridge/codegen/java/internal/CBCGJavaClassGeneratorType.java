@@ -18,14 +18,13 @@ package com.io7m.cedarbridge.codegen.java.internal;
 
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
-import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 
 import java.nio.file.Path;
 
-public interface CBCGJavaClassGeneratorType
+public interface CBCGJavaClassGeneratorType<T>
 {
   Path execute(
     CBSPICodeGeneratorConfiguration configuration,
-    CBTypeDeclarationType type)
+    T type)
     throws CBSPICodeGeneratorException;
 }

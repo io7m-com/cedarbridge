@@ -14,13 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.runtime.api;
-
 /**
- * The base type of all serializable values.
+ * Cedarbridge message protocol (Java code generator [Internal classes])
  */
 
-public interface CBSerializableType
-{
+@Version("1.0.0")
+package com.io7m.cedarbridge.codegen.java.internal.protocols;
 
-}
+import org.osgi.annotation.versioning.Version;

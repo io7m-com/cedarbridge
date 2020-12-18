@@ -23,6 +23,7 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.schema.compiled.CBFieldType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBRecordType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
@@ -51,7 +52,7 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
 public final class CBCGDataClassGenerator
-  implements CBCGJavaClassGeneratorType
+  implements CBCGJavaClassGeneratorType<CBTypeDeclarationType>
 {
   public CBCGDataClassGenerator()
   {
@@ -91,7 +92,8 @@ public final class CBCGDataClassGenerator
           Optional.of(superInterface),
           OptionalInt.of(variantIndex),
           caseV.fields(),
-          typeParameters
+          typeParameters,
+          type.owner().protocolVersionsForType(type)
         );
 
       containerBuilder.addType(innerClass);
@@ -105,12 +107,16 @@ public final class CBCGDataClassGenerator
     final ClassName className,
     final CBRecordType type)
   {
+    final var protocols =
+      type.owner().protocolVersionsForType(type);
+
     return createRecordClass(
       className,
       Optional.empty(),
       OptionalInt.empty(),
       type.fields(),
-      type.parameters()
+      type.parameters(),
+      protocols
     );
   }
 
@@ -119,7 +125,8 @@ public final class CBCGDataClassGenerator
     final Optional<TypeName> containerInterface,
     final OptionalInt variantIndex,
     final List<CBFieldType> fieldList,
-    final List<CBTypeParameterType> parameters)
+    final List<CBTypeParameterType> parameters,
+    final List<CBProtocolVersionDeclarationType> protocols)
   {
     final var fields =
       fieldList
@@ -145,6 +152,12 @@ public final class CBCGDataClassGenerator
     final var classBuilder = TypeSpec.classBuilder(className);
     classBuilder.addModifiers(FINAL, PUBLIC);
     classBuilder.addSuperinterface(CBSerializableType.class);
+
+    for (final var protocol : protocols) {
+      classBuilder.addSuperinterface(
+        CBCGJavaTypeNames.protocolClassNameOf(protocol)
+      );
+    }
 
     if (containerInterface.isPresent()) {
       classBuilder.addModifiers(STATIC);

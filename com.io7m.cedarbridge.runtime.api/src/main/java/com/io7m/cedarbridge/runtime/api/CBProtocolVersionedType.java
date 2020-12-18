@@ -16,11 +16,17 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.math.BigInteger;
+
 /**
- * The base type of all serializable values.
+ * The base type of all versioned protocols.
  */
 
-public interface CBSerializableType
+public interface CBProtocolVersionedType extends CBProtocolType
 {
+  /**
+   * @return The version of the protocol
+   */
 
+  BigInteger protocolVersion();
 }

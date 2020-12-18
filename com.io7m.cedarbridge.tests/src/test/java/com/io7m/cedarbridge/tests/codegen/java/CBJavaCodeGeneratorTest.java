@@ -28,6 +28,7 @@ import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
+import com.io7m.cedarbridge.tests.CBFakePackage;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import com.sun.source.util.JavacTask;
 import org.junit.jupiter.api.BeforeEach;
@@ -349,6 +350,26 @@ public final class CBJavaCodeGeneratorTest
     throws Exception
   {
     final var pack = this.check("basicNoImport.cbs");
+    assertEquals(0, this.errors.size());
+
+    final var result =
+      this.codeGen.createGenerator(
+        CBSPICodeGeneratorConfiguration.builder()
+          .setOutputDirectory(this.directory)
+          .build()
+      ).execute(pack);
+
+    compileJava(result.createdFiles());
+  }
+
+  @Test
+  public void testBasic()
+    throws Exception
+  {
+    this.loader.register(new CBFakePackage("x.y.z"));
+    this.loader.register(CBCore.get());
+
+    final var pack = this.check("basic.cbs");
     assertEquals(0, this.errors.size());
 
     final var result =

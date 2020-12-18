@@ -41,7 +41,7 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public final class CBCGJavaSerializerFactoryGenerator
-  implements CBCGJavaClassGeneratorType
+  implements CBCGJavaClassGeneratorType<CBTypeDeclarationType>
 {
   public CBCGJavaSerializerFactoryGenerator()
   {

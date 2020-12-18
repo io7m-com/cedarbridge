@@ -54,7 +54,7 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public final class CBCGJavaSerializerGenerator
-  implements CBCGJavaClassGeneratorType
+  implements CBCGJavaClassGeneratorType<CBTypeDeclarationType>
 {
   public CBCGJavaSerializerGenerator()
   {
