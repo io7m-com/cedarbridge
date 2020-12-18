@@ -9,3 +9,7 @@
 (record T
   [field x (P U)]
   [field y U])
+
+(protocol Q
+  [version 0 T]
+  [version 1 U])

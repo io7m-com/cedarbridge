@@ -17,8 +17,10 @@
 package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.errors.CBExceptionTracker;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBinderType;
@@ -62,40 +64,61 @@ public final class CBBinder implements CBBinderType
     final List<CBASTTypeDeclarationType> types)
     throws CBBindFailedException
   {
-    var failed = false;
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var type : types) {
       try (var subContext = context.openBindingScope()) {
         try {
           new CBTypeDeclarationBinder().bind(subContext, type);
         } catch (final CBBindFailedException e) {
-          failed = true;
+          exceptions.addException(e);
         }
       }
     }
-    if (failed) {
-      throw new CBBindFailedException();
-    }
+    exceptions.throwIfNecessary();
   }
 
   private static void collectTopLevelBindings(
     final CBBinderContextType context,
-    final List<CBASTTypeDeclarationType> types)
+    final List<CBASTTypeDeclarationType> types,
+    final List<CBASTProtocolDeclaration> protocols)
     throws CBBindFailedException
   {
-    var failed = false;
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var typeV : types) {
       final var name = typeV.name();
       try {
         final var binding = context.bindType(typeV);
         name.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
     }
-
-    if (failed) {
-      throw new CBBindFailedException();
+    for (final var proto : protocols) {
+      final var name = proto.name();
+      try {
+        final var binding = context.bindProtocol(proto);
+        name.userData().put(CBBindingType.class, binding);
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
     }
+    exceptions.throwIfNecessary();
+  }
+
+  private static void bindProtoDeclarations(
+    final CBBinderContextType context,
+    final List<CBASTProtocolDeclaration> protos)
+    throws CBBindFailedException
+  {
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    for (final var proto : protos) {
+      try {
+        new CBProtocolDeclarationBinder().bind(context, proto);
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
+    }
+    exceptions.throwIfNecessary();
   }
 
   @Override
@@ -114,6 +137,14 @@ public final class CBBinder implements CBBinderType
     final var contextMain = context.current();
     this.processImports(contextMain);
     this.processTypes(contextMain);
+    this.processProtocols(contextMain);
+  }
+
+  private void processProtocols(
+    final CBBinderContextType context)
+    throws CBBindFailedException
+  {
+    bindProtoDeclarations(context, this.parsedPackage.protocols());
   }
 
   private void processTypes(
@@ -121,7 +152,7 @@ public final class CBBinder implements CBBinderType
     throws CBBindFailedException
   {
     final var types = this.parsedPackage.types();
-    collectTopLevelBindings(context, types);
+    collectTopLevelBindings(context, types, this.parsedPackage.protocols());
     bindTypeDeclarations(context, types);
   }
 
@@ -129,19 +160,15 @@ public final class CBBinder implements CBBinderType
     final CBBinderContextType context)
     throws CBBindFailedException
   {
-    var failed = false;
-
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var importV : this.parsedPackage.imports()) {
       try {
         new CBImportBinder().bind(context, importV);
       } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
     }
-
-    if (failed) {
-      throw new CBBindFailedException();
-    }
+    exceptions.throwIfNecessary();
   }
 
   @Override

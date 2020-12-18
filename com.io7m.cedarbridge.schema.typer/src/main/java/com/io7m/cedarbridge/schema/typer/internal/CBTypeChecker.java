@@ -94,6 +94,13 @@ public final class CBTypeChecker implements CBTypeCheckerType
         tracker.addException(e);
       }
     }
+    for (final var proto : this.packageV.protocols()) {
+      try {
+        new CBTypeProtocolChecker().check(current, proto);
+      } catch (final CBTypeCheckFailedException e) {
+        tracker.addException(e);
+      }
+    }
     tracker.throwIfNecessary();
   }
 

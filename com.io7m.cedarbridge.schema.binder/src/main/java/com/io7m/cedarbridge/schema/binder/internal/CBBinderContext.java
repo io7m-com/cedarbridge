@@ -18,9 +18,12 @@ package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalFieldName;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolVersionDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
@@ -104,6 +107,8 @@ public final class CBBinderContext
     private final Map<String, CBBindingLocalType> typeBindings;
     private final Map<String, CBBindingLocalType> fieldBindings;
     private final Map<String, CBBindingLocalType> caseBindings;
+    private final Map<String, CBBindingLocalProtocolDeclaration> protoBindings;
+    private final Map<BigInteger, CBBindingLocalProtocolVersionDeclaration> protoVersionBindings;
 
     Context(
       final CBBinderContext inRoot,
@@ -118,6 +123,10 @@ public final class CBBinderContext
       this.fieldBindings =
         new HashMap<>();
       this.caseBindings =
+        new HashMap<>();
+      this.protoBindings =
+        new HashMap<>();
+      this.protoVersionBindings =
         new HashMap<>();
     }
 
@@ -260,6 +269,21 @@ public final class CBBinderContext
       return null;
     }
 
+    private CBBindingLocalType findProtoBinding(
+      final String name)
+    {
+      Objects.requireNonNull(name, "name");
+
+      final var existing = this.protoBindings.get(name);
+      if (existing != null) {
+        return existing;
+      }
+      if (this.parent != null) {
+        return this.parent.findTypeBinding(name);
+      }
+      return null;
+    }
+
     private CBBindingLocalType findFieldBinding(
       final String name)
     {
@@ -286,6 +310,22 @@ public final class CBBinderContext
       }
       if (this.parent != null) {
         return this.parent.findCaseBinding(name);
+      }
+      return null;
+    }
+
+    private CBBindingLocalProtocolVersionDeclaration findVersionBinding(
+      final BigInteger version)
+    {
+      Objects.requireNonNull(version, "version");
+
+      final var existing =
+        this.protoVersionBindings.get(version);
+      if (existing != null) {
+        return existing;
+      }
+      if (this.parent != null) {
+        return this.parent.findVersionBinding(version);
       }
       return null;
     }
@@ -319,6 +359,38 @@ public final class CBBinderContext
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.typeBindings.put(name, binding);
+      return binding;
+    }
+
+    @Override
+    public CBBindingLocalType bindProtocol(
+      final CBASTProtocolDeclaration proto)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(proto, "proto");
+
+      final var lexical = proto.lexical();
+      final var name = proto.name().text();
+      final var existing = this.findProtoBinding(name);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          name
+        );
+      }
+
+      final var binding =
+        CBBindingLocalProtocolDeclaration.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setName(name)
+          .setProtocol(proto)
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.protoBindings.put(name, binding);
       return binding;
     }
 
@@ -457,6 +529,38 @@ public final class CBBinderContext
     public String currentPackage()
     {
       return this.root.packageName;
+    }
+
+    @Override
+    public CBBindingLocalType bindProtocolVersion(
+      final BigInteger version,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(version, "version");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findVersionBinding(version);
+      if (existing != null) {
+        throw this.failedWithOther(
+          lexical,
+          existing.lexical(),
+          "errorBindingConflict",
+          version
+        );
+      }
+
+      final var binding =
+        CBBindingLocalProtocolVersionDeclaration.builder()
+          .setLexical(lexical)
+          .setId(this.root.idPool)
+          .setVersion(version)
+          .setName(version.toString())
+          .build();
+
+      this.root.idPool = this.root.idPool.add(BigInteger.ONE);
+      this.protoVersionBindings.put(version, binding);
+      return binding;
     }
   }
 }

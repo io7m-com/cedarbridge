@@ -15,4 +15,7 @@
   <entry key="errorTypeArgumentsIncorrect"><![CDATA[Incorrect number of arguments to type expression.
   Type expression {0} takes {1} argument(s), but {2} were provided.]]></entry>
 
+  <entry key="errorTypeProtocolKind0"><![CDATA[Types within a protocol are not allowed to have parameters.
+  Type {0} takes {1} argument(s).]]></entry>
+
 </properties>

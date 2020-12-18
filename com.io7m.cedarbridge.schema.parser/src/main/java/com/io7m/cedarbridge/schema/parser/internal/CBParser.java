@@ -22,6 +22,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.api.CBParserType;
@@ -61,6 +62,15 @@ public final class CBParser implements CBParserType
     return declarations.stream()
       .filter(i -> i instanceof CBASTTypeDeclarationType)
       .map(x -> (CBASTTypeDeclarationType) x)
+      .collect(Collectors.toList());
+  }
+
+  private static List<CBASTProtocolDeclaration> findProtocols(
+    final List<CBASTDeclarationType> declarations)
+  {
+    return declarations.stream()
+      .filter(i -> i instanceof CBASTProtocolDeclaration)
+      .map(x -> (CBASTProtocolDeclaration) x)
       .collect(Collectors.toList());
   }
 
@@ -136,11 +146,14 @@ public final class CBParser implements CBParserType
       findImports(declarations);
     final var types =
       findTypes(declarations);
+    final var protocols =
+      findProtocols(declarations);
 
     return CBASTPackage.builder()
       .setName(name.name())
       .setImports(imports)
       .setTypes(types)
+      .setProtocols(protocols)
       .build();
   }
 

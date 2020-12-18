@@ -19,43 +19,27 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
- * A package.
+ * The type of protocol declarations.
  */
 
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBASTPackageType
+public interface CBASTProtocolDeclarationType extends CBASTDeclarationType
 {
-  @Value.Default
-  default CBASTMutableUserData userData()
+  CBASTTypeName name();
+
+  List<CBASTProtocolVersion> versions();
+
+  @ImmutablesStyleType
+  @Value.Immutable
+  interface CBASTProtocolVersionType extends CBASTElementType
   {
-    return new CBASTMutableUserData();
+    BigInteger version();
+
+    List<CBASTTypeName> types();
   }
-
-  /**
-   * @return The name of the package
-   */
-
-  CBASTPackageName name();
-
-  /**
-   * @return The packages imported by this package
-   */
-
-  List<CBASTImport> imports();
-
-  /**
-   * @return The type declarations in the package
-   */
-
-  List<CBASTTypeDeclarationType> types();
-
-  /**
-   * @return The protocol declarations in the package
-   */
-
-  List<CBASTProtocolDeclaration> protocols();
 }

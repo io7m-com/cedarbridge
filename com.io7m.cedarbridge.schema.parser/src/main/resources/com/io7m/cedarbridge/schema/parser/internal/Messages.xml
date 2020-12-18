@@ -27,6 +27,8 @@
   <entry key="errorPackageNameMissing">No package name was declared.</entry>
   <entry key="errorPackageNameMultiple">Multiple package names were declared.</entry>
   <entry key="errorPackageShortNameInvalid">Invalid short package name.</entry>
+  <entry key="errorProtocolInvalidDeclaration">Invalid protocol declaration.</entry>
+  <entry key="errorProtocolVersionInvalidDeclaration">Invalid protocol version declaration.</entry>
   <entry key="errorRecordInvalidDeclaration">Invalid record declaration.</entry>
   <entry key="errorRecordInvalidName">Invalid record name.</entry>
   <entry key="errorRecordInvalidTypeParameter">Invalid type parameter.</entry>
@@ -52,6 +54,8 @@
   <entry key="objectPackage">Package declaration</entry>
   <entry key="objectPackageName">Package name</entry>
   <entry key="objectPackageShortName">Package short name</entry>
+  <entry key="objectProtocolDeclaration">Protocol declaration</entry>
+  <entry key="objectProtocolVersion">Protocol version declaration</entry>
   <entry key="objectRecordDeclaration">Record declaration</entry>
   <entry key="objectRecordMember">Record member</entry>
   <entry key="objectRecordName">Record name</entry>

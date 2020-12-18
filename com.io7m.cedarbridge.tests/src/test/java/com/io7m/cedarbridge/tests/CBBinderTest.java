@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
@@ -157,6 +158,18 @@ public final class CBBinderTest
   }
 
   @Test
+  public void testDuplicateProtocol0()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindDuplicateProto0.cbs");
+    });
+
+    assertEquals("errorBindingConflict", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
   public void testDuplicateField0()
     throws Exception
   {
@@ -268,6 +281,30 @@ public final class CBBinderTest
   }
 
   @Test
+  public void testProto0()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindProto0.cbs");
+    });
+
+    assertEquals("errorBindingMissing", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProto1()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindProto1.cbs");
+    });
+
+    assertEquals("errorBindingConflict", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
   public void testOK0()
     throws Exception
   {
@@ -277,6 +314,8 @@ public final class CBBinderTest
 
     final var types = pack.types();
     assertEquals(3, types.size());
+    final var protos = pack.protocols();
+    assertEquals(1, protos.size());
 
     {
       final var t = (CBASTTypeRecord) types.get(0);
@@ -324,6 +363,17 @@ public final class CBBinderTest
 
       final var f1 = tf.get(1);
       this.checkHaveNotSeenBefore(f1.name());
+    }
+
+    {
+      final var t = (CBASTProtocolDeclaration) protos.get(0);
+      this.checkHaveNotSeenBefore(t.name());
+
+      final var v0 = t.versions().get(0);
+      assertEquals(0, v0.version().longValue());
+
+      final var t0 = v0.types().get(0);
+      this.checkHaveSeenBefore(t0);
     }
 
     assertEquals(0, this.errors.size());

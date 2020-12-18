@@ -37,5 +37,4 @@ public interface CBTyperContextType extends AutoCloseable
     LexicalPosition<URI> lexicalOther,
     String errorCode,
     Object... arguments);
-
 }

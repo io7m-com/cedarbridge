@@ -65,6 +65,10 @@ public final class CBDeclarationParser
         return new CBVariantParser()
           .parse(context, expression);
       }
+      case "protocol": {
+        return new CBProtocolParser()
+          .parse(context, expression);
+      }
       default: {
         throw context.failed(expression, "errorDeclarationUnrecognized");
       }
@@ -83,7 +87,8 @@ public final class CBDeclarationParser
         "<package-decl>",
         "<import-decl>",
         "<record-decl>",
-        "<variant-decl>"
+        "<variant-decl>",
+        "<protocol-decl>"
       );
 
     try (var subContext =

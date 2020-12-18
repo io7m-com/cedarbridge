@@ -22,7 +22,7 @@ import org.immutables.value.Value;
 import java.util.List;
 
 /**
- * The  type of type declarations.
+ * The type of type declarations.
  */
 
 public interface CBASTTypeDeclarationType extends CBASTDeclarationType

@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.binder.api;
 
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.immutables.styles.ImmutablesStyleType;
@@ -74,6 +75,28 @@ public interface CBBindingType extends LexicalType<URI>
     interface CBBindingLocalTypeDeclarationType extends CBBindingLocalType
     {
       CBASTTypeDeclarationType type();
+    }
+
+    /**
+     * The binding names a protocol declaration.
+     */
+
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalProtocolDeclarationType extends CBBindingLocalType
+    {
+      CBASTProtocolDeclaration protocol();
+    }
+
+    /**
+     * The binding names a protocol version.
+     */
+
+    @ImmutablesStyleType
+    @Value.Immutable
+    interface CBBindingLocalProtocolVersionDeclarationType extends CBBindingLocalType
+    {
+      BigInteger version();
     }
 
     /**

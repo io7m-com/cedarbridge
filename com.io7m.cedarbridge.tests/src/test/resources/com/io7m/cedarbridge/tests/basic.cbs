@@ -27,3 +27,7 @@
   [parameter K]
   [parameter V]
   [field entries (List [Pair K V])])
+
+(protocol Z
+  [version 0
+    UnitType])

@@ -696,4 +696,33 @@ public final class CBTypeCheckerTest
 
     checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
   }
+
+  @Test
+  public void testOk0()
+    throws Exception
+  {
+    this.loader.register(new CBFakePackage("x.y.z"));
+
+    final var pack = this.check("basic.cbs");
+    assertEquals(0, this.errors.size());
+
+    final var types = pack.types();
+    assertEquals(5, types.size());
+    final var protos = pack.protocols();
+    assertEquals(1, protos.size());
+
+    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+  }
+
+  @Test
+  public void testErrorProto0()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorProtoType0.cbs");
+    });
+
+    assertEquals("errorTypeProtocolKind0", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
 }

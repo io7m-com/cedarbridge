@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.binder.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
@@ -23,6 +24,7 @@ import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.jlexing.core.LexicalPosition;
 
+import java.math.BigInteger;
 import java.net.URI;
 
 public interface CBBinderContextType extends AutoCloseable
@@ -56,6 +58,10 @@ public interface CBBinderContextType extends AutoCloseable
     CBASTTypeDeclarationType type)
     throws CBBindFailedException;
 
+  CBBindingLocalType bindProtocol(
+    CBASTProtocolDeclaration proto)
+    throws CBBindFailedException;
+
   CBBindingLocalType bindTypeParameter(
     String text,
     LexicalPosition<URI> lexical)
@@ -82,4 +88,9 @@ public interface CBBinderContextType extends AutoCloseable
     throws CBBindFailedException;
 
   String currentPackage();
+
+  CBBindingLocalType bindProtocolVersion(
+    BigInteger version,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
 }
