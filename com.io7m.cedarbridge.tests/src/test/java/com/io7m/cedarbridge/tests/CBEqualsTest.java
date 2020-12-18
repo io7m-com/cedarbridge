@@ -22,6 +22,28 @@ import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorResult;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorDescription;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorResult;
+import com.io7m.cedarbridge.errors.CBError;
+import com.io7m.cedarbridge.runtime.api.CBByteArray;
+import com.io7m.cedarbridge.runtime.api.CBFloat16;
+import com.io7m.cedarbridge.runtime.api.CBFloat32;
+import com.io7m.cedarbridge.runtime.api.CBFloat64;
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned16;
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned32;
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned64;
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned8;
+import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned16;
+import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned32;
+import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned64;
+import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned8;
+import com.io7m.cedarbridge.runtime.api.CBList;
+import com.io7m.cedarbridge.runtime.api.CBMap;
+import com.io7m.cedarbridge.runtime.api.CBMapEntry;
+import com.io7m.cedarbridge.runtime.api.CBNone;
+import com.io7m.cedarbridge.runtime.api.CBQualifiedTypeName;
+import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
+import com.io7m.cedarbridge.runtime.api.CBSome;
+import com.io7m.cedarbridge.runtime.api.CBString;
+import com.io7m.cedarbridge.runtime.api.CBTypeArgument;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
@@ -29,18 +51,27 @@ import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageShortName;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
+import com.io7m.cedarbridge.schema.ast.CBASTVariantCaseName;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalFieldName;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolVersionDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilation;
+import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
+import com.io7m.cedarbridge.version.CBVersion;
 import nl.jqno.equalsverifier.EqualsVerifier;
 import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DynamicTest;
@@ -50,6 +81,16 @@ import java.util.stream.Stream;
 
 public final class CBEqualsTest
 {
+  private static final CBTypeArgument TYPE_ARGUMENT_0 =
+    CBTypeArgument.builder()
+      .setTarget(CBQualifiedTypeName.of("x.y", "T"))
+      .build();
+
+  private static final CBTypeArgument TYPE_ARGUMENT_1 =
+    CBTypeArgument.builder()
+      .setTarget(CBQualifiedTypeName.of("x.y", "U"))
+      .build();
+
   private static DynamicTest toTest(
     final Class<?> clazz)
   {
@@ -58,6 +99,10 @@ public final class CBEqualsTest
       () -> {
         EqualsVerifier.forClass(clazz)
           .suppress(Warning.NULL_FIELDS)
+          .withPrefabValues(
+            CBTypeArgument.class,
+            TYPE_ARGUMENT_0,
+            TYPE_ARGUMENT_1)
           .verify();
       }
     );
@@ -74,24 +119,55 @@ public final class CBEqualsTest
       CBASTPackageDeclaration.class,
       CBASTPackageName.class,
       CBASTPackageShortName.class,
+      CBASTProtocolDeclaration.class,
+      CBASTProtocolVersion.class,
       CBASTTypeApplication.class,
       CBASTTypeName.class,
       CBASTTypeNamed.class,
       CBASTTypeParameterName.class,
       CBASTTypeRecord.class,
       CBASTTypeVariant.class,
+      CBASTTypeVariantCase.class,
+      CBASTVariantCaseName.class,
       CBBindingExternal.class,
       CBBindingLocalFieldName.class,
+      CBBindingLocalProtocolDeclaration.class,
+      CBBindingLocalProtocolVersionDeclaration.class,
       CBBindingLocalTypeDeclaration.class,
       CBBindingLocalTypeParameter.class,
       CBBindingLocalVariantCase.class,
+      CBByteArray.class,
       CBCodeGeneratorConfiguration.class,
       CBCodeGeneratorDescription.class,
       CBCodeGeneratorResult.class,
+      CBError.class,
+      CBFloat16.class,
+      CBFloat32.class,
+      CBFloat64.class,
+      CBIntegerSigned16.class,
+      CBIntegerSigned32.class,
+      CBIntegerSigned64.class,
+      CBIntegerSigned8.class,
+      CBIntegerUnsigned16.class,
+      CBIntegerUnsigned32.class,
+      CBIntegerUnsigned64.class,
+      CBIntegerUnsigned8.class,
+      CBList.class,
+      CBMap.class,
+      CBMapEntry.class,
+      CBNone.class,
+      CBQualifiedTypeName.class,
       CBSPICodeGeneratorConfiguration.class,
       CBSPICodeGeneratorDescription.class,
       CBSPICodeGeneratorResult.class,
-      CBTypeAssignment.class
+      CBSchemaCompilation.class,
+      CBSchemaCompilerConfiguration.class,
+      CBSerializerCollection.class,
+      CBSome.class,
+      CBString.class,
+      CBTypeArgument.class,
+      CBTypeAssignment.class,
+      CBVersion.class
     ).map(CBEqualsTest::toTest);
   }
 }
