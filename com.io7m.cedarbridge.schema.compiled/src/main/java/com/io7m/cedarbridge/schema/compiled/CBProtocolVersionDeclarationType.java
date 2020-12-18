@@ -16,41 +16,30 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
+import java.math.BigInteger;
+import java.util.List;
 
-public interface CBPackageBuilderType
+/**
+ * The type of protocol version declarations.
+ */
+
+public interface CBProtocolVersionDeclarationType
 {
-  CBTypeDeclarationBuilderType createExternalType(
-    String externalPackageName,
-    String externalName,
-    String name);
+  /**
+   * @return The declaration that owns this declaration
+   */
 
-  CBRecordBuilderType createRecord(
-    String name);
+  CBProtocolDeclarationType owner();
 
-  CBRecordBuilderType findRecord(
-    String name);
+  /**
+   * @return The version number
+   */
 
-  CBVariantBuilderType createVariant(
-    String name);
+  BigInteger version();
 
-  CBVariantBuilderType findVariant(
-    String name);
+  /**
+   * @return The types in this version
+   */
 
-  CBTypeDeclarationBuilderType findType(
-    String name);
-
-  CBTypeExprNamedType referenceType(
-    String name);
-
-  CBTypeExprNamedType referenceExternalType(
-    CBTypeDeclarationType typeDeclaration);
-
-  CBPackageType build();
-
-  CBPackageBuilderType addImport(
-    CBPackageType imported);
-
-  CBProtocolBuilderType createProtocol(
-    String name);
+  List<CBTypeDeclarationType> types();
 }

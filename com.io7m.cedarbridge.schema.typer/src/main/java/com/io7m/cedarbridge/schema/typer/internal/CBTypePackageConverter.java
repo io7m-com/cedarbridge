@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.typer.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
@@ -164,6 +165,23 @@ public final class CBTypePackageConverter
     return record;
   }
 
+  private static void buildProto(
+    final CBPackageBuilderType builder,
+    final CBASTProtocolDeclaration protoDecl)
+  {
+    final var protoBuilder =
+      builder.createProtocol(protoDecl.name().text());
+
+    for (final var version : protoDecl.versions()) {
+      final var versionBuilder =
+        protoBuilder.createVersion(version.version());
+
+      for (final var type : version.types()) {
+        versionBuilder.addType(builder.referenceType(type.text()));
+      }
+    }
+  }
+
   /**
    * Build a compiled package from the given AST. This assumes that all
    * binding analysis and type checking has been completed, and that the
@@ -205,6 +223,10 @@ public final class CBTypePackageConverter
       } else {
         throw new UnreachableCodeException();
       }
+    }
+
+    for (final var protoDecl : pack.protocols()) {
+      buildProto(packBuilder, protoDecl);
     }
 
     return packBuilder.build();

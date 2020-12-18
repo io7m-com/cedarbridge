@@ -42,4 +42,10 @@ public interface CBPackageType
    */
 
   Map<String, CBTypeDeclarationType> types();
+
+  /**
+   * @return The protocols declared within this package
+   */
+
+  Map<String, CBProtocolDeclarationType> protocols();
 }

@@ -14,32 +14,37 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.tests;
+package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 
-import java.util.ArrayList;
+import java.math.BigInteger;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public final class CBFakePackage implements CBPackageType
+public final class CBProtocolDeclaration implements CBProtocolDeclarationType
 {
-  public final List<CBPackageType> imports;
-  public final Map<String, CBTypeDeclarationType> types;
   private final String name;
-  private final HashMap<String, CBProtocolDeclarationType> protos;
+  private final Map<BigInteger, CBProtocolVersionDeclarationType> versions;
+  private final Map<BigInteger, CBProtocolVersionDeclarationType> versionsRead;
+  private CBPackage owner;
 
-  public CBFakePackage(
+  CBProtocolDeclaration(
     final String inName)
   {
-    this.name = Objects.requireNonNull(inName, "name");
-    this.imports = new ArrayList<>();
-    this.types = new HashMap<>();
-    this.protos = new HashMap<>();
+    this.name = Objects.requireNonNull(inName, "inName");
+    this.versions = new HashMap<>();
+    this.versionsRead = Collections.unmodifiableMap(this.versions);
+  }
+
+  @Override
+  public CBPackageType owner()
+  {
+    return this.owner;
   }
 
   @Override
@@ -49,27 +54,21 @@ public final class CBFakePackage implements CBPackageType
   }
 
   @Override
-  public List<CBPackageType> imports()
+  public Map<BigInteger, CBProtocolVersionDeclarationType> versions()
   {
-    return this.imports;
+    return this.versionsRead;
   }
 
-  @Override
-  public Map<String, CBTypeDeclarationType> types()
+  public void setOwner(
+    final CBPackage newOwner)
   {
-    return this.types;
+    this.owner = Objects.requireNonNull(newOwner, "cbPackage");
   }
 
-  @Override
-  public Map<String, CBProtocolDeclarationType> protocols()
+  public void addVersion(
+    final CBProtocolVersionDeclaration version)
   {
-    return this.protos;
-  }
-
-  public void addType(
-    final CBFakeRecord t)
-  {
-    t.setOwner(this);
-    this.types.put(t.name(), t);
+    Objects.requireNonNull(version, "version");
+    this.versions.put(version.version(), version);
   }
 }

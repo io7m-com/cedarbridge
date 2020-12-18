@@ -23,6 +23,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
@@ -135,6 +136,30 @@ public final class CBTypeCheckerTest
         checkFieldsMatch(srcFields, tarFields);
       } else {
         throw new UnreachableCodeException();
+      }
+    }
+
+    final var srcProtos = srcPack.protocols();
+    final var tarProtos = tarPack.protocols();
+    for (var index = 0; index < srcProtos.size(); ++index) {
+      final var srcProto = srcProtos.get(index);
+      final var tarProto = tarProtos.get(srcProto.name().text());
+      assertEquals(srcProto.name().text(), tarProto.name());
+
+      for (var vIndex = 0; vIndex < srcProto.versions().size(); ++vIndex) {
+        final var srcV =
+          srcProto.versions().get(vIndex);
+        final var tarV =
+          tarProto.versions().get(srcV.version());
+        assertEquals(srcV.version(), tarV.version());
+
+        final var srcVT = srcV.types();
+        final var tarVT = tarV.types();
+        for (var tIndex = 0; tIndex < srcVT.size(); ++tIndex) {
+          final var srcT = srcVT.get(tIndex);
+          final var tarT = tarVT.get(tIndex);
+          assertEquals(srcT.text(), tarT.name());
+        }
       }
     }
   }

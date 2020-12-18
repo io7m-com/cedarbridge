@@ -18,6 +18,8 @@ package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBPackageBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolBuilderType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBRecordBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
@@ -30,7 +32,10 @@ import com.io7m.cedarbridge.schema.names.CBPackageNames;
 import com.io7m.cedarbridge.schema.names.CBTypeNames;
 import com.io7m.cedarbridge.schema.names.CBTypeParameterNames;
 import com.io7m.cedarbridge.schema.names.CBVariantCaseNames;
+import com.io7m.jaffirm.core.PreconditionViolationException;
+import com.io7m.jaffirm.core.Preconditions;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -44,7 +49,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   private final String packageName;
   private final Map<String, CBTypeDeclarationBuilderType> typeBuilders;
   private final CBPackage packageNow;
-  private final boolean done;
+  private boolean done;
+  private final HashMap<String, ProtocolBuilder> protoBuilders;
 
   public CBPackageBuilder(
     final String inPackageName)
@@ -53,7 +59,12 @@ public final class CBPackageBuilder implements CBPackageBuilderType
       Objects.requireNonNull(inPackageName, "packageName");
 
     this.typeBuilders = new HashMap<>();
-    this.packageNow = new CBPackage(this.packageName);
+    this.protoBuilders = new HashMap<>();
+    try {
+      this.packageNow = new CBPackage(this.packageName);
+    } catch (final PreconditionViolationException e) {
+      throw new IllegalArgumentException(e);
+    }
     this.done = false;
   }
 
@@ -218,6 +229,7 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   public CBPackageType build()
   {
     this.checkNotDone();
+    this.done = true;
     return this.packageNow;
   }
 
@@ -228,6 +240,80 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     this.checkNotDone();
     this.packageNow.addImport(Objects.requireNonNull(imported, "imported"));
     return this;
+  }
+
+  @Override
+  public CBProtocolBuilderType createProtocol(
+    final String name)
+  {
+    Objects.requireNonNull(name, "name");
+
+    this.checkNotDone();
+    CBTypeNames.INSTANCE.checkValid(name);
+
+    if (this.protoBuilders.containsKey(name)) {
+      throw new IllegalArgumentException(
+        String.format("Protocol name %s already used", name)
+      );
+    }
+
+    final var builder = new ProtocolBuilder(name);
+    this.protoBuilders.put(name, builder);
+    this.packageNow.addProtocol(builder.protocol);
+    return builder;
+  }
+
+  private final class ProtocolBuilder
+    implements CBProtocolBuilderType
+  {
+    private final CBProtocolDeclaration protocol;
+
+    ProtocolBuilder(
+      final String inName)
+    {
+      this.protocol = new CBProtocolDeclaration(inName);
+    }
+
+    @Override
+    public CBProtocolVersionBuilderType createVersion(
+      final BigInteger version)
+    {
+      if (this.protocol.versions().containsKey(version)) {
+        throw new IllegalArgumentException(
+          String.format("Protocol version %s already exists", version)
+        );
+      }
+
+      final var builder = new ProtocolVersionBuilder(this.protocol, version);
+      this.protocol.addVersion(builder.version);
+      return builder;
+    }
+  }
+
+  private final class ProtocolVersionBuilder
+    implements CBProtocolVersionBuilderType
+  {
+    private final CBProtocolVersionDeclaration version;
+
+    ProtocolVersionBuilder(
+      final CBProtocolDeclaration protocol,
+      final BigInteger inVersion)
+    {
+      this.version = new CBProtocolVersionDeclaration(protocol, inVersion);
+    }
+
+    @Override
+    public void addType(
+      final CBTypeExprNamedType type)
+    {
+      Preconditions.checkPreconditionV(
+        type.declaration().arity() == 0,
+        "Type arity %d must be zero",
+        Integer.valueOf(type.declaration().arity())
+      );
+
+      this.version.addType(type);
+    }
   }
 
   private final class RecordBuilder implements CBRecordBuilderType
@@ -492,7 +578,9 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(parameterName, this.external.arity());
+      final var parameter = new CBTypeParameter(
+        parameterName,
+        this.external.arity());
       this.external.addTypeParameter(parameter);
       return parameter;
     }

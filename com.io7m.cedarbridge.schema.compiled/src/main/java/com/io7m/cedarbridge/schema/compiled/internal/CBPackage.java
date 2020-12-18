@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.names.CBPackageNames;
 import com.io7m.jaffirm.core.Preconditions;
@@ -35,6 +36,8 @@ public final class CBPackage implements CBPackageType
   private final List<CBPackageType> importsRead;
   private final Map<String, CBTypeDeclarationType> types;
   private final Map<String, CBTypeDeclarationType> typesRead;
+  private final Map<String, CBProtocolDeclarationType> protosRead;
+  private final Map<String, CBProtocolDeclarationType> protos;
 
   public CBPackage(
     final String inName)
@@ -42,8 +45,10 @@ public final class CBPackage implements CBPackageType
     this.name = Objects.requireNonNull(inName, "name");
     this.imports = new ArrayList<>();
     this.types = new HashMap<>();
+    this.protos = new HashMap<>();
     this.importsRead = Collections.unmodifiableList(this.imports);
     this.typesRead = Collections.unmodifiableMap(this.types);
+    this.protosRead = Collections.unmodifiableMap(this.protos);
 
     Preconditions.checkPreconditionV(
       inName,
@@ -58,6 +63,19 @@ public final class CBPackage implements CBPackageType
     this.imports.add(
       Objects.requireNonNull(imported, "imported")
     );
+  }
+
+  public void addProtocol(
+    final CBProtocolDeclaration protocol)
+  {
+    final var rName = protocol.name();
+    Preconditions.checkPreconditionV(
+      !this.protos.containsKey(rName),
+      "A protocol named %s must not already exist!",
+      rName
+    );
+    this.protos.put(rName, protocol);
+    protocol.setOwner(this);
   }
 
   public void addRecord(
@@ -115,5 +133,11 @@ public final class CBPackage implements CBPackageType
   public Map<String, CBTypeDeclarationType> types()
   {
     return this.typesRead;
+  }
+
+  @Override
+  public Map<String, CBProtocolDeclarationType> protocols()
+  {
+    return this.protosRead;
   }
 }

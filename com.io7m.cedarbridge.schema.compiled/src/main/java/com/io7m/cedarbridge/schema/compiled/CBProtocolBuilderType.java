@@ -16,41 +16,22 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
-import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
+import java.math.BigInteger;
 
-public interface CBPackageBuilderType
+/**
+ * A builder for protocols.
+ */
+
+public interface CBProtocolBuilderType
 {
-  CBTypeDeclarationBuilderType createExternalType(
-    String externalPackageName,
-    String externalName,
-    String name);
+  /**
+   * Create a new protocol version.
+   *
+   * @param version The version number
+   *
+   * @return The builder
+   */
 
-  CBRecordBuilderType createRecord(
-    String name);
-
-  CBRecordBuilderType findRecord(
-    String name);
-
-  CBVariantBuilderType createVariant(
-    String name);
-
-  CBVariantBuilderType findVariant(
-    String name);
-
-  CBTypeDeclarationBuilderType findType(
-    String name);
-
-  CBTypeExprNamedType referenceType(
-    String name);
-
-  CBTypeExprNamedType referenceExternalType(
-    CBTypeDeclarationType typeDeclaration);
-
-  CBPackageType build();
-
-  CBPackageBuilderType addImport(
-    CBPackageType imported);
-
-  CBProtocolBuilderType createProtocol(
-    String name);
+  CBProtocolVersionBuilderType createVersion(
+    BigInteger version);
 }

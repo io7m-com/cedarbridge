@@ -33,6 +33,18 @@ public final class CBCGJavaTypeNames
 
   }
 
+  public static ClassName protocolClassNameOf(
+    final CBTypeDeclarationType type)
+  {
+    if (type instanceof CBExternalType) {
+      return ClassName.get(
+        ((CBExternalType) type).externalPackage(),
+        ((CBExternalType) type).externalType()
+      );
+    }
+    return ClassName.get(type.owner().name(), type.name());
+  }
+
   public static ClassName dataClassNameOf(
     final CBTypeDeclarationType type)
   {

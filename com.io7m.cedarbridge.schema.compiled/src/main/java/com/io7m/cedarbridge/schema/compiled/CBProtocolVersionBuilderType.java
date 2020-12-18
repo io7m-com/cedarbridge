@@ -18,39 +18,17 @@ package com.io7m.cedarbridge.schema.compiled;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
-public interface CBPackageBuilderType
+/**
+ * A builder of protocol versions.
+ */
+
+public interface CBProtocolVersionBuilderType
 {
-  CBTypeDeclarationBuilderType createExternalType(
-    String externalPackageName,
-    String externalName,
-    String name);
+  /**
+   * Add a named type to the builder.
+   *
+   * @param type The type
+   */
 
-  CBRecordBuilderType createRecord(
-    String name);
-
-  CBRecordBuilderType findRecord(
-    String name);
-
-  CBVariantBuilderType createVariant(
-    String name);
-
-  CBVariantBuilderType findVariant(
-    String name);
-
-  CBTypeDeclarationBuilderType findType(
-    String name);
-
-  CBTypeExprNamedType referenceType(
-    String name);
-
-  CBTypeExprNamedType referenceExternalType(
-    CBTypeDeclarationType typeDeclaration);
-
-  CBPackageType build();
-
-  CBPackageBuilderType addImport(
-    CBPackageType imported);
-
-  CBProtocolBuilderType createProtocol(
-    String name);
+  void addType(CBTypeExprNamedType type);
 }
