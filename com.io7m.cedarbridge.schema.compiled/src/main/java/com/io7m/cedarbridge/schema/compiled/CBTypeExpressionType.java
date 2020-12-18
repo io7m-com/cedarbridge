@@ -22,12 +22,32 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * The type of type expressions.
+ */
+
 public interface CBTypeExpressionType extends Formattable
 {
+  /**
+   * Determine if the given type parameter occurs in the type expression.
+   *
+   * @param parameter The type parameter
+   *
+   * @return {@code true} if {@code parameter} occurs in this expression
+   */
+
   boolean contains(CBTypeParameterType parameter);
+
+  /**
+   * A type parameter expression.
+   */
 
   interface CBTypeExprParameterType extends CBTypeExpressionType
   {
+    /**
+     * @return The type parameter
+     */
+
     CBTypeParameterType parameter();
 
     @Override
@@ -48,8 +68,16 @@ public interface CBTypeExpressionType extends Formattable
     }
   }
 
+  /**
+   * A named type.
+   */
+
   interface CBTypeExprNamedType extends CBTypeExpressionType
   {
+    /**
+     * @return The target type declaration
+     */
+
     CBTypeDeclarationType declaration();
 
     @Override
@@ -71,9 +99,21 @@ public interface CBTypeExpressionType extends Formattable
     }
   }
 
+  /**
+   * A type application.
+   */
+
   interface CBTypeExprApplicationType extends CBTypeExpressionType
   {
+    /**
+     * @return The target type
+     */
+
     CBTypeExprNamedType target();
+
+    /**
+     * @return The type expression arguments
+     */
 
     List<CBTypeExpressionType> arguments();
 
