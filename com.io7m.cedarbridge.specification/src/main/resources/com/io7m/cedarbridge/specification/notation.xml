@@ -40,7 +40,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="S-Expressions">
+  <Subsection title="S-Expressions" id="d1cd60f0-8880-4754-964f-5b0489947c59">
     <Paragraph>
       The <Term type="package">Cedarbridge</Term> language uses <Term type="term">s-expressions</Term> as the base for
       all syntax. An s-expression is described by the following EBNF grammar:

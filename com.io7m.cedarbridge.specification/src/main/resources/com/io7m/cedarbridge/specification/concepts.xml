@@ -21,6 +21,19 @@
     </Paragraph>
   </Subsection>
 
+  <Subsection title="Compilation Units" id="d6ca89b3-5144-4012-b451-6a9f1571e0de">
+    <Paragraph>
+      The text of a <Term type="package">Cedarbridge</Term> schema is a combination of the texts of separate
+      <Term type="term">compilation units</Term>, where a <Term type="term">compilation unit</Term> typically
+      corresponds to a file in the operating system under
+      which the compiler is running.
+    </Paragraph>
+    <Paragraph>
+      <Term type="term">Compilation units</Term> consist of a series of <Link
+      target="d1cd60f0-8880-4754-964f-5b0489947c59">s-expressions</Link> separated by whitespace.
+    </Paragraph>
+  </Subsection>
+
   <Subsection title="Schema Context" id="10d2a555-2bea-4eb1-9fa7-9614b382b051">
     <Paragraph>
       This specification makes references to a <Term type="term">schema context</Term>. The
