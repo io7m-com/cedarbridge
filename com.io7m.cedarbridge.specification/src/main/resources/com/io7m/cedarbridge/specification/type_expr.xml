@@ -28,7 +28,8 @@
       evaluation of a <Term type="term">type constructor</Term> that can take zero or more type parameters.
       <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link> and
       <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> statements declare new
-      type constructors.
+      type constructors. <Term type="term">Evaluation</Term> of type expressions implicitly occurs as part of
+      type-checking during compilation.
     </Paragraph>
     <Paragraph>
       Types are categorized by <Term type="term">kind</Term>; a type constructor that takes
