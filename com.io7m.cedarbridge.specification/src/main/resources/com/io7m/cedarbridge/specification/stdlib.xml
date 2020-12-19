@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         tableOfContentsDepth="1"
+         title="Standard Library">
+  <xi:include href="p-cedarbridge.xml"/>
+</Section>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         id="337610e0-ac40-492b-97f8-76dcefdf13b2"
+         title="variant">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">variant</Term>
+      - Declare a variant type
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">variant</Term> statement declares a new variant type.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax">
+    <FormalItem title="Variant Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/006_variant.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph>
+      A <Term type="statement">variant</Term> statement, if present, <Term type="term">MUST</Term> occur with
+      a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
+      In practical terms, this means that <Term type="statement">variant</Term> statements <Term type="term">MUST</Term> appear
+      <Term type="term">after</Term> the <Link target="e4b13719-3c30-404c-b729-f429724f90b7">package</Link> statement
+      in a given compilation unit.
+    </Paragraph>
+    <Paragraph>
+      A <Term type="statement">variant</Term> statement is a <Term type="term">type declaration</Term>.
+    </Paragraph>
+    <Paragraph>
+      The statement <Term type="expression">(variant T ...)</Term> introduces a new <Term type="term">type name</Term>
+      <Term type="expression">T</Term>
+      within the current package in the schema context. Type names are unique within a package; it is an error for
+      two or more <Term type="term">type declarations</Term> to name the same type.
+    </Paragraph>
+    <Paragraph>
+      The names of <Term type="term">cases</Term> declared using <Term type="term">case declarations</Term> within
+      a <Term type="statement">variant</Term> statement are unique within that variant type. It is an error for two
+      or more <Term type="term">cases</Term> within a variant to have the same name.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">cases</Term> within a variant type is significant; changing the
+      order of <Term type="statement">case</Term> declarations will change the semantics and serialized form of
+      values of the variant type.
+    </Paragraph>
+    <Paragraph>
+      The names of <Term type="term">type parameters</Term> declared using <Term type="term">parameter
+      declarations</Term> within  a <Term type="statement">variant</Term> statement are unique within that variant
+      type. It is an error for two or more <Term type="term">type parameters</Term> within a variant to have the same
+      name.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">type parameters</Term> with respect to other
+      <Term type="term">type parameters</Term> within a variant type is significant; changing
+      the order of <Term type="statement">parameter</Term> declarations will change the semantics
+      and serialized form of values of the variant type. The declaration order of
+      <Term type="term">type parameters</Term> with respect to <Term type="statement">case</Term> declarations
+      is not significant.
+    </Paragraph>
+    <Paragraph>
+      The precise type rules for variant type declarations are described in the
+      <Link target="a579aa5e-34ee-44f5-8ad9-89d612d6b716">typing rules</Link> section for type expressions.
+    </Paragraph>
+    <Paragraph>
+      For a given field <Term type="expression">(field x t)</Term> within a <Term type="term">case</Term>
+      declaration, the <Link target="32bb1b7b-6033-4a4c-94fc-78dc78448837">type expression</Link> <Term
+      type="expression">t</Term> must have kind <Term type="expression">*</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statement declares a parameterized <Term type="expression">Option</Term> type:
+    </Paragraph>
+    <FormalItem title="Option Example">
+      <Verbatim><![CDATA[(variant Option
+  (parameter A)
+  (case None)
+  (case Some (field x A)))]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The following type declarations are equivalent:
+    </Paragraph>
+    <FormalItem title="Equivalent Example">
+      <Verbatim><![CDATA[
+(variant T
+  (parameter A)
+  (case C [field x A]))
+
+(variant T
+  (case C [field x A])
+  (parameter A))
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+</Section>

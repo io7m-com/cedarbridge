@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
@@ -31,11 +32,15 @@ import com.io7m.jlexing.core.LexicalPositions;
 import com.io7m.jsx.api.parser.JSXParserException;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 public final class CBParser implements CBParserType
 {
@@ -87,12 +92,20 @@ public final class CBParser implements CBParserType
   public CBASTPackage execute()
     throws CBParseFailedException
   {
-    final var declParser =
-      new CBDeclarationParser();
     final var context =
       new CBParseContext(this.strings, this.source, this.errors);
     final var declarations =
       new ArrayList<CBASTDeclarationType>();
+
+    var language =
+      CBASTLanguage.builder()
+        .setLexical(LexicalPositions.zero())
+        .setLanguage("cedarbridge")
+        .setMajor(BigInteger.ONE)
+        .setMinor(BigInteger.ZERO)
+        .build();
+
+    boolean tooLateForLanguage = false;
 
     while (true) {
       try {
@@ -102,41 +115,51 @@ public final class CBParser implements CBParserType
           break;
         }
 
-        final var expression =
-          expressionOpt.get();
+        final var expression = expressionOpt.get();
         try {
+          final var declParser =
+            new CBDeclarationParser(tooLateForLanguage);
           final var declaration =
             declParser.parse(context.current(), expression);
 
+          if (declaration instanceof CBASTLanguage) {
+            language = (CBASTLanguage) declaration;
+          }
+
+          tooLateForLanguage = true;
           declarations.add(declaration);
         } catch (final CBParseFailedException e) {
-          // Ignored!
+          if (e.fatality() == IS_FATAL) {
+            break;
+          }
         }
       } catch (final JSXParserException e) {
         context.current().failed(
           e.lexical(),
+          IS_NOT_FATAL,
           e,
           "errorSExpressionInvalid"
         );
       } catch (final IOException e) {
-        context.current().failed(
+        throw context.current().failed(
           LexicalPositions.zeroWithFile(this.source.source()),
+          IS_FATAL,
           e,
           "errorIO"
         );
-        throw new CBParseFailedException();
       }
     }
 
     if (context.current().errorCount() > 0) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
-    return this.processDeclarations(context.current(), declarations);
+    return this.processDeclarations(context.current(), language, declarations);
   }
 
   private CBASTPackage processDeclarations(
     final CBParseContextType context,
+    final CBASTLanguage language,
     final List<CBASTDeclarationType> declarations)
     throws CBParseFailedException
   {
@@ -151,6 +174,7 @@ public final class CBParser implements CBParserType
 
     return CBASTPackage.builder()
       .setName(name.name())
+      .setLanguage(language)
       .setImports(imports)
       .setTypes(types)
       .setProtocols(protocols)
@@ -171,6 +195,7 @@ public final class CBParser implements CBParserType
     if (names.isEmpty()) {
       throw context.failed(
         LexicalPositions.zeroWithFile(this.source.source()),
+        IS_NOT_FATAL,
         "errorPackageNameMissing"
       );
     }
@@ -178,6 +203,7 @@ public final class CBParser implements CBParserType
     if (names.size() > 1) {
       throw context.failed(
         names.get(0).lexical(),
+        IS_NOT_FATAL,
         "errorPackageNameMultiple"
       );
     }

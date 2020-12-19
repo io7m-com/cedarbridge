@@ -24,6 +24,9 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+
 /**
  * A parser for declarations.
  */
@@ -31,24 +34,34 @@ import java.util.List;
 public final class CBDeclarationParser
   implements CBElementParserType<CBASTDeclarationType>
 {
-  public CBDeclarationParser()
-  {
+  private final boolean tooLateForLanguage;
 
+  public CBDeclarationParser(
+    final boolean inTooLateForLanguage)
+  {
+    this.tooLateForLanguage = inTooLateForLanguage;
   }
 
-  private static CBASTDeclarationType parseDeclaration(
+  private CBASTDeclarationType parseDeclaration(
     final CBParseContextType context,
     final SExpressionListType expression)
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
-      throw context.failed(expression, "errorDeclarationInvalid");
+      throw context.failed(expression, IS_NOT_FATAL, "errorDeclarationInvalid");
     }
 
     final var keyword =
       context.checkExpressionIs(expression.get(0), SExpressionSymbolType.class);
 
     switch (keyword.text()) {
+      case "language": {
+        if (this.tooLateForLanguage) {
+          throw context.failed(expression, IS_FATAL, "errorLanguageFirst");
+        }
+        return new CBLanguageParser()
+          .parse(context, expression);
+      }
       case "package": {
         return new CBPackageDeclarationParser()
           .parse(context, expression);
@@ -70,7 +83,10 @@ public final class CBDeclarationParser
           .parse(context, expression);
       }
       default: {
-        throw context.failed(expression, "errorDeclarationUnrecognized");
+        throw context.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorDeclarationUnrecognized");
       }
     }
   }
@@ -82,18 +98,30 @@ public final class CBDeclarationParser
     throws CBParseFailedException
   {
     final var expectingKind = "objectDeclaration";
-    final var expectingShapes =
-      List.of(
+
+    final List<String> expectingShapes;
+    if (this.tooLateForLanguage) {
+      expectingShapes = List.of(
         "<package-decl>",
         "<import-decl>",
         "<record-decl>",
         "<variant-decl>",
         "<protocol-decl>"
       );
+    } else {
+      expectingShapes = List.of(
+        "<package-decl>",
+        "<import-decl>",
+        "<record-decl>",
+        "<variant-decl>",
+        "<protocol-decl>",
+        "<language-decl>"
+      );
+    }
 
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
-      return parseDeclaration(
+      return this.parseDeclaration(
         subContext,
         subContext.checkExpressionIs(expression, SExpressionListType.class));
     }

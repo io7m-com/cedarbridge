@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         tableOfContentsDepth="1"
+         title="Statements">
+  <xi:include href="st-language.xml"/>
+  <xi:include href="st-package.xml"/>
+  <xi:include href="st-import.xml"/>
+  <xi:include href="st-record.xml"/>
+  <xi:include href="st-variant.xml"/>
+  <xi:include href="st-protocol.xml"/>
+</Section>

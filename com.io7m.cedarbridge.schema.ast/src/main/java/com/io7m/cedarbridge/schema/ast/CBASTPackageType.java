@@ -42,6 +42,12 @@ public interface CBASTPackageType
   CBASTPackageName name();
 
   /**
+   * @return The package language
+   */
+
+  CBASTLanguage language();
+
+  /**
    * @return The packages imported by this package
    */
 

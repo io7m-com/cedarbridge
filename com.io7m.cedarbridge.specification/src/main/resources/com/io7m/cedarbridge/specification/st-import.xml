@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         id="fe7dd6a3-2fc1-4aab-88a7-cb074ee4a4a7"
+         title="import">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">import</Term>
+      - Import a <Link target="8a1db50d-0fe8-4dff-ab57-7e1495b0b65e">package</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">import</Term> statement imports a package for use in the current package.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax">
+    <FormalItem title="Import Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/004_import.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph>
+      An <Term type="statement">import</Term> statement <Term type="expression">(import p q)</Term>
+      makes the type declarations in package <Term type="package">p</Term> visible via qualification using
+      the <Term type="term">short name</Term> <Term type="expression">q</Term>. For example, if a type
+      <Term type="constant">T</Term> was declared in <Term type="package">p</Term>, it can be used in a type
+      declaration in the current package by referring to the type as <Term type="expression">q:T</Term>. Formally,
+      a package <Term type="package">s</Term> <Term type="term">imports</Term> a package
+      <Term type="package">t</Term> if <Term type="package">s</Term> contains an
+      <Term type="expression">(import t x)</Term> statement, for any <Term type="expression">x</Term>.
+    </Paragraph>
+    <Paragraph>
+      It is an error for two <Term type="statement">import</Term> statements to use the same
+      <Term type="term">short name</Term>.
+    </Paragraph>
+    <Paragraph>
+      It is an error for any package to import itself directly or indirectly. That is, the graph of packages
+      produced by packages importing other packages must be free of cycles. More formally, it is an error for
+      any of the following conditions to be true:
+    </Paragraph>
+    <FormalItem title="Package Import Cycles">
+      <ListUnordered>
+        <Item>
+          The package <Term type="package">p</Term> <Term type="term">imports</Term> <Term type="package">p</Term>.
+        </Item>
+        <Item>
+          There is a sequence of packages <Term type="package">d</Term>, <Term type="package">d₀</Term>,
+          <Term type="package">d₁</Term>, ..., <Term type="package">dₙ</Term> such that <Term type="package">d</Term>
+          <Term type="term">imports</Term> <Term type="package">d₀</Term>, and for all <Term type="expression">m</Term>
+          where <Term type="expression">0 &lt;= m &lt; n, dₘ</Term> <Term type="term">imports</Term>
+          <Term type="package">d₍ₘ₊₁₎</Term>, and <Term type="package">dₙ</Term>
+          <Term type="term">imports</Term> <Term type="package">d</Term>.
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph>
+      An <Term type="statement">import</Term> statement, if present, <Term type="term">MUST</Term> occur with
+      a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
+      In practical terms, this means that <Term type="statement">import</Term> statements <Term type="term">MUST</Term> appear
+      <Term type="term">after</Term> the <Link target="e4b13719-3c30-404c-b729-f429724f90b7">package</Link> statement
+      in a given compilation unit.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statement imports a package named
+      <Term type="package">com.io7m.cedarbridge</Term> and makes it accessible as <Term type="expression">cb</Term>:
+    </Paragraph>
+    <FormalItem title="Package Example">
+      <Verbatim><![CDATA[(import com.io7m.cedarbridge cb)]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+</Section>

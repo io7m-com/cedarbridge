@@ -13,6 +13,9 @@
   <entry key="errorParseBasic"><![CDATA[{0}:{1}:{2}: {3}
 {4}]]></entry>
 
+  <entry key="errorLanguageFirst">A language statement must be the first statement in a compilation unit, if present.</entry>
+  <entry key="errorLanguageBadName">Unrecognized language name.</entry>
+  <entry key="errorLanguageBadVersion">Unrecognized or invalid language version.</entry>
   <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
   <entry key="errorDeclarationUnrecognized">Unrecognized package-level declaration.</entry>
   <entry key="errorEmptyTypeApplication">Empty type application.</entry>
@@ -51,6 +54,7 @@
   <entry key="objectField">Field</entry>
   <entry key="objectFieldName">Field name</entry>
   <entry key="objectImport">Import declaration</entry>
+  <entry key="objectLanguage">Language declaration</entry>
   <entry key="objectPackage">Package declaration</entry>
   <entry key="objectPackageName">Package name</entry>
   <entry key="objectPackageShortName">Package short name</entry>

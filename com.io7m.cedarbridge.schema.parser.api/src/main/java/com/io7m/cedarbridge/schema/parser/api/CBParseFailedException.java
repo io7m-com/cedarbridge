@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.parser.api;
 
+import java.util.Objects;
+
 /**
  * Parsing failed.
  */
@@ -23,11 +25,44 @@ package com.io7m.cedarbridge.schema.parser.api;
 public final class CBParseFailedException extends Exception
 {
   /**
-   * Construct an exception.
+   * An indication of whether or not the exception is fatal.
    */
 
-  public CBParseFailedException()
+  public enum Fatal
   {
+    /**
+     * The exception is fatal.
+     */
 
+    IS_FATAL,
+
+    /**
+     * The exception is not fatal.
+     */
+
+    IS_NOT_FATAL
+  }
+
+  private final Fatal fatality;
+
+  /**
+   * Construct an exception.
+   *
+   * @param inFatality The degree of fatality
+   */
+
+  public CBParseFailedException(
+    final Fatal inFatality)
+  {
+    this.fatality = Objects.requireNonNull(inFatality, "fatality");
+  }
+
+  /**
+   * @return The fatality of the exception
+   */
+
+  public Fatal fatality()
+  {
+    return this.fatality;
   }
 }

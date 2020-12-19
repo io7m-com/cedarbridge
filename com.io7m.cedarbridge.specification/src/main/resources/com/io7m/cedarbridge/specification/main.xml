@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Document xmlns="urn:com.io7m.structural:7:0"
+          xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          tableOfContentsDepth="1">
+
+  <Metadata>
+    <dc:title>Cedarbridge Language Specification ${project.version}</dc:title>
+    <dc:identifier>c3312787-3be5-430d-a78c-cdd66e271a2b</dc:identifier>
+    <dc:description>Specification for the Cedarbridge language.</dc:description>
+    <dc:source>https://www.io7m.com/software/cedarbridge/</dc:source>
+    <dc:date>2020-12-18</dc:date>
+  </Metadata>
+
+  <xi:include href="notation.xml"/>
+  <xi:include href="concepts.xml"/>
+  <xi:include href="statements.xml"/>
+  <xi:include href="type_expr.xml"/>
+  <xi:include href="stdlib.xml"/>
+
+</Document>

@@ -1,0 +1,2 @@
+type_name =
+  [A-Z] , { [a-z0-9A-Z] } ;

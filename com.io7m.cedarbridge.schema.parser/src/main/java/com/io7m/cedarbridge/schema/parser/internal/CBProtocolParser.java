@@ -28,6 +28,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 
 /**
@@ -42,26 +43,6 @@ public final class CBProtocolParser
 
   }
 
-  @Override
-  public CBASTProtocolDeclaration parse(
-    final CBParseContextType context,
-    final SExpressionType expression)
-    throws CBParseFailedException
-  {
-    final var expectingKind =
-      "objectProtocolDeclaration";
-    final var expectingShapes =
-      List.of("(protocol <type-name-decl> <version-decl>...)");
-
-    try (var subContext =
-           context.openExpectingOneOf(expectingKind, expectingShapes)) {
-      return parseProtocol(
-        subContext,
-        subContext.checkExpressionIs(expression, SExpressionListType.class)
-      );
-    }
-  }
-
   private static CBASTProtocolDeclaration parseProtocol(
     final CBParseContextType context,
     final SExpressionListType expression)
@@ -70,7 +51,10 @@ public final class CBProtocolParser
     final var items = new ArrayList<CBASTProtocolVersion>();
 
     if (expression.size() < 2) {
-      throw context.failed(expression, "errorProtocolInvalidDeclaration");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorProtocolInvalidDeclaration");
     }
 
     context.checkExpressionIsKeyword(
@@ -90,7 +74,7 @@ public final class CBProtocolParser
     }
 
     if (context.errorCount() > errorsThen) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
     return CBASTProtocolDeclaration.builder()
@@ -127,7 +111,10 @@ public final class CBProtocolParser
     throws CBParseFailedException
   {
     if (expression.size() < 2) {
-      throw context.failed(expression, "errorProtocolVersionInvalidDeclaration");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorProtocolVersionInvalidDeclaration");
     }
 
     final var number =
@@ -148,11 +135,11 @@ public final class CBProtocolParser
       versionNumber = new BigInteger(number.text());
     } catch (final NumberFormatException e) {
       throw context.failed(
-        expression, "errorProtocolVersionInvalidDeclaration", e);
+        expression, IS_NOT_FATAL, "errorProtocolVersionInvalidDeclaration", e);
     }
 
     if (context.errorCount() > errorsThen) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
     return CBASTProtocolVersion.builder()
@@ -160,5 +147,25 @@ public final class CBProtocolParser
       .setTypes(items)
       .setLexical(expression.get(1).lexical())
       .build();
+  }
+
+  @Override
+  public CBASTProtocolDeclaration parse(
+    final CBParseContextType context,
+    final SExpressionType expression)
+    throws CBParseFailedException
+  {
+    final var expectingKind =
+      "objectProtocolDeclaration";
+    final var expectingShapes =
+      List.of("(protocol <type-name-decl> <version-decl>...)");
+
+    try (var subContext =
+           context.openExpectingOneOf(expectingKind, expectingShapes)) {
+      return parseProtocol(
+        subContext,
+        subContext.checkExpressionIs(expression, SExpressionListType.class)
+      );
+    }
   }
 }

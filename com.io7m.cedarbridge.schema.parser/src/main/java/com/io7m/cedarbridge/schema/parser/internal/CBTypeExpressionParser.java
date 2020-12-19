@@ -27,6 +27,8 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+
 /**
  * A parser for type expressions.
  */
@@ -81,10 +83,15 @@ public final class CBTypeExpressionParser
 
         throw subContext.failed(
           expression,
+          IS_NOT_FATAL,
           "errorTypePathInvalid"
         );
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypePathInvalid", e);
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorTypePathInvalid",
+          e);
       }
     }
   }
@@ -111,7 +118,10 @@ public final class CBTypeExpressionParser
           context, (SExpressionListType) expression);
       }
 
-      throw subContext.failed(expression, "errorUnexpectedExpressionForm");
+      throw subContext.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorUnexpectedExpressionForm");
     }
   }
 
@@ -133,7 +143,10 @@ public final class CBTypeExpressionParser
           .setLexical(expression.lexical());
 
       if (expression.size() == 0) {
-        throw subContext.failed(expression, "errorEmptyTypeApplication");
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorEmptyTypeApplication");
       }
 
       builder.setTarget(

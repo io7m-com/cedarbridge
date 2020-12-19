@@ -26,6 +26,8 @@ import com.io7m.jsx.SExpressionType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+
 /**
  * A parser for variant case declarations.
  */
@@ -46,7 +48,10 @@ public final class CBVariantCaseParser
     final var items = new ArrayList<>();
 
     if (expression.size() < 2) {
-      throw context.failed(expression, "errorVariantCaseInvalidDeclaration");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorVariantCaseInvalidDeclaration");
     }
 
     context.checkExpressionIsKeyword(
@@ -72,7 +77,7 @@ public final class CBVariantCaseParser
     }
 
     if (context.errorCount() > errorsThen) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
     return CBASTTypeVariantCase.builder()

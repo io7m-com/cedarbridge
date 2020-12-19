@@ -1,0 +1,14 @@
+type_parameter_name =
+  [A-Z] , { [A-Z0-9_] } ;
+
+field_name =
+  [a-z] , { [a-zA-Z0-9] } ;
+
+field_declaration =
+  "(" , "field" , field_name , type_expression , ")" ;
+
+type_parameter_declaration =
+  "(" , "parameter" , type_parameter_name , ")" ;
+
+record_declaration =
+  "(" , "record" , type_name , { field_declaration | type_parameter_declaration } , ")" ;

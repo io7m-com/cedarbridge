@@ -1,0 +1,11 @@
+type_parameter_name =
+  [A-Z] , { [A-Z0-9_] } ;
+
+case_name =
+  [A-Z] , { [a-zA-Z0-9] } ;
+
+case_declaration =
+  "(" , "case" , case_name , { field_declaration } , ")" ;
+
+variant_declaration =
+  "(" , "variant" , type_name , { case_declaration | type_parameter_declaration } , ")" ;

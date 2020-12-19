@@ -28,6 +28,7 @@ import com.io7m.jsx.SExpressionType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
 
@@ -56,7 +57,10 @@ public final class CBRecordParser
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       if (expression.size() != 2) {
-        throw subContext.failed(expression, "errorRecordInvalidTypeParameter");
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorRecordInvalidTypeParameter");
       }
 
       return parseTypeParameterName(subContext, expression.get(1));
@@ -71,7 +75,10 @@ public final class CBRecordParser
     final var items = new ArrayList<>();
 
     if (expression.size() < 2) {
-      throw context.failed(expression, "errorRecordInvalidDeclaration");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorRecordInvalidDeclaration");
     }
 
     context.checkExpressionIsKeyword(
@@ -91,7 +98,7 @@ public final class CBRecordParser
     }
 
     if (context.errorCount() > errorsThen) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
     final var fields =
@@ -135,7 +142,10 @@ public final class CBRecordParser
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
-      throw context.failed(expression, "errorRecordUnrecognizedMember");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorRecordUnrecognizedMember");
     }
 
     final var start =
@@ -147,7 +157,10 @@ public final class CBRecordParser
       case "field":
         return new CBFieldParser().parse(context, expression);
       default:
-        throw context.failed(expression, "errorRecordUnrecognizedMember");
+        throw context.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorRecordUnrecognizedMember");
     }
   }
 

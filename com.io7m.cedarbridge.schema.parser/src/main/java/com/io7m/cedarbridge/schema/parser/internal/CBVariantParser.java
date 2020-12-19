@@ -28,6 +28,7 @@ import com.io7m.jsx.SExpressionType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
 
@@ -56,7 +57,10 @@ public final class CBVariantParser
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       if (expression.size() != 2) {
-        throw subContext.failed(expression, "errorVariantInvalidTypeParameter");
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorVariantInvalidTypeParameter");
       }
 
       return parseTypeParameterName(subContext, expression.get(1));
@@ -71,7 +75,10 @@ public final class CBVariantParser
     final var items = new ArrayList<>();
 
     if (expression.size() < 2) {
-      throw context.failed(expression, "errorVariantInvalidDeclaration");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorVariantInvalidDeclaration");
     }
 
     context.checkExpressionIsKeyword(
@@ -91,7 +98,7 @@ public final class CBVariantParser
     }
 
     if (context.errorCount() > errorsThen) {
-      throw new CBParseFailedException();
+      throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
     final var parameters =
@@ -135,7 +142,10 @@ public final class CBVariantParser
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
-      throw context.failed(expression, "errorVariantUnrecognizedMember");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        "errorVariantUnrecognizedMember");
     }
 
     final var start =
@@ -147,7 +157,10 @@ public final class CBVariantParser
       case "case":
         return new CBVariantCaseParser().parse(context, expression);
       default:
-        throw context.failed(expression, "errorVariantUnrecognizedMember");
+        throw context.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorVariantUnrecognizedMember");
     }
   }
 

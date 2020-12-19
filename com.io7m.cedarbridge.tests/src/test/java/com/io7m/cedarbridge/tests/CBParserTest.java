@@ -178,6 +178,126 @@ public final class CBParserTest
     }
   }
 
+  @Test
+  public void testLanguageNotFirst0()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageNotFirst0.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageFirst",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageNotFirst1()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageNotFirst1.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageFirst",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageUnrecognized0()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageUnrecognized.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageBadName",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageUnrecognizedVersion0()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageUnrecognizedVersion0.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageBadVersion",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageUnrecognizedVersion1()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageUnrecognizedVersion1.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageBadVersion",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageUnrecognizedVersion2()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageUnrecognizedVersion2.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageBadVersion",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageUnrecognizedVersion3()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageUnrecognizedVersion3.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorLanguageBadVersion",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testLanguageBroken0()
+    throws Exception
+  {
+    try (var stream = this.stream("errorLanguageBroken.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals(
+          "errorDeclarationInvalid",
+          this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
   private CBParserType parser(
     final InputStream stream)
   {

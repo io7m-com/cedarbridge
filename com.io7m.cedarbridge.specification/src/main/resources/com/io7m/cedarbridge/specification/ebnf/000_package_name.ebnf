@@ -1,0 +1,5 @@
+package_name_segment =
+  [a-z] , { [a-z0-9_] } ;
+
+package_name =
+  package_name_segment , { "." , package_name_segment } ;

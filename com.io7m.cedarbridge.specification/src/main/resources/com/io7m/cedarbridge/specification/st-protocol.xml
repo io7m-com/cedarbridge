@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         id="62659b04-0cc9-4e75-a396-bc6963442fb3"
+         title="protocol">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">protocol</Term>
+      - Declare a protocol
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">protocol</Term> statement declares a new protocol.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax">
+    <FormalItem title="Protocol Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/007_protocol.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph>
+      A <Term type="statement">protocol</Term> statement, if present, <Term type="term">MUST</Term> occur with
+      a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
+      In practical terms, this means that <Term type="statement">protocol</Term> statements <Term type="term">MUST</Term> appear
+      <Term type="term">after</Term> the <Link target="e4b13719-3c30-404c-b729-f429724f90b7">package</Link> statement
+      in a given compilation unit.
+    </Paragraph>
+    <Paragraph>
+      The statement <Term type="expression">(protocol T ...)</Term> introduces a new <Term type="term">protocol
+      name</Term> <Term type="expression">T</Term> within the current package in the schema context. Protocol names
+      are unique within a package; it is an error for two or more <Term type="term">protocol declarations</Term> to
+      name the same protocol.
+    </Paragraph>
+    <Paragraph>
+      A protocol statement declares a contiguous ordered set of <Term type="term">versions</Term>, with each
+      <Term type="term">version</Term> naming a set of <Link target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link>
+      that are included within that version. The intersections of the sets of types between versions are allowed to
+      be non-empty. That is, for versions <Term type="expression">v</Term> and <Term type="expression">w</Term>,
+      if <Term type="expression">P(v)</Term> is the set of types in version <Term type="expression">v</Term> and
+      <Term type="expression">P(w)</Term> is the set of types in version <Term type="expression">w</Term>, then
+      it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
+    </Paragraph>
+  </Subsection>
+</Section>

@@ -47,21 +47,25 @@ public interface CBParseContextType extends AutoCloseable
 
   CBParseFailedException failed(
     SExpressionType expression,
+    CBParseFailedException.Fatal fatality,
     String errorCode,
     Exception e);
 
   CBParseFailedException failed(
     SExpressionType expression,
+    CBParseFailedException.Fatal fatality,
     String errorCode);
 
   int errorCount();
 
   CBParseFailedException failed(
     LexicalPosition<URI> lexical,
+    CBParseFailedException.Fatal fatality,
     Exception exception,
     String errorCode);
 
   CBParseFailedException failed(
     LexicalPosition<URI> lexical,
+    CBParseFailedException.Fatal fatality,
     String errorCode);
 }

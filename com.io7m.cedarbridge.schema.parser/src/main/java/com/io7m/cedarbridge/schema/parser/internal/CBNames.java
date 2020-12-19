@@ -27,6 +27,8 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+
 public final class CBNames
 {
   private CBNames()
@@ -51,7 +53,11 @@ public final class CBNames
       try {
         return CBASTNames.fieldName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorFieldNameInvalid", e);
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorFieldNameInvalid",
+          e);
       }
     }
   }
@@ -73,7 +79,11 @@ public final class CBNames
       try {
         return CBASTNames.typeParameterName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeParameterNameInvalid", e);
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorTypeParameterNameInvalid",
+          e);
       }
     }
   }
@@ -95,7 +105,11 @@ public final class CBNames
       try {
         return CBASTNames.typeName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorTypeNameInvalid", e);
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorTypeNameInvalid",
+          e);
       }
     }
   }
@@ -117,7 +131,11 @@ public final class CBNames
       try {
         return CBASTNames.variantCaseName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(expression, "errorVariantCaseNameInvalid", e);
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorVariantCaseNameInvalid",
+          e);
       }
     }
   }

@@ -31,6 +31,8 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal;
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 public final class CBParseContext
 {
@@ -110,7 +112,10 @@ public final class CBParseContext
       throws CBParseFailedException
     {
       if (!clazz.isInstance(expression)) {
-        throw this.failed(expression, "errorUnexpectedExpressionForm");
+        throw this.failed(
+          expression,
+          IS_NOT_FATAL,
+          "errorUnexpectedExpressionForm");
       }
       return clazz.cast(expression);
     }
@@ -125,20 +130,22 @@ public final class CBParseContext
       if (expression instanceof SExpressionSymbolType) {
         final var symbol = (SExpressionSymbolType) expression;
         if (!Objects.equals(symbol.text(), name)) {
-          throw this.failed(expression, errorCode);
+          throw this.failed(expression, IS_NOT_FATAL, errorCode);
         }
         return symbol;
       }
-      throw this.failed(expression, errorCode);
+      throw this.failed(expression, IS_NOT_FATAL, errorCode);
     }
 
     @Override
     public CBParseFailedException failed(
       final SExpressionType expression,
+      final Fatal fatal,
       final String errorCode,
       final Exception e)
     {
       Objects.requireNonNull(expression, "expression");
+      Objects.requireNonNull(fatal, "fatal");
       Objects.requireNonNull(errorCode, "messageId");
 
       final var lexical =
@@ -169,25 +176,26 @@ public final class CBParseContext
           .setErrorCode(errorCode)
           .setException(Objects.requireNonNullElseGet(
             e,
-            CBParseFailedException::new))
+            () -> new CBParseFailedException(fatal)))
           .setLexical(lexical)
           .setMessage(text)
           .setSeverity(ERROR)
           .build();
 
       this.root.errorConsumer.accept(errorValue);
-      return new CBParseFailedException();
+      return new CBParseFailedException(fatal);
     }
 
 
     @Override
     public CBParseFailedException failed(
       final SExpressionType expression,
+      final Fatal fatal,
       final String errorCode)
     {
       Objects.requireNonNull(expression, "expression");
       Objects.requireNonNull(errorCode, "messageId");
-      return this.failed(expression, errorCode, null);
+      return this.failed(expression, fatal, errorCode, null);
     }
 
     @Override
@@ -199,9 +207,14 @@ public final class CBParseContext
     @Override
     public CBParseFailedException failed(
       final LexicalPosition<URI> lexical,
+      final Fatal fatal,
       final Exception exception,
       final String errorCode)
     {
+      Objects.requireNonNull(lexical, "lexical");
+      Objects.requireNonNull(fatal, "fatal");
+      Objects.requireNonNull(errorCode, "errorCode");
+
       final var error =
         this.root.strings.format(errorCode);
       final var context =
@@ -222,22 +235,28 @@ public final class CBParseContext
           .setErrorCode(errorCode)
           .setException(Objects.requireNonNullElseGet(
             exception,
-            CBParseFailedException::new))
+            () -> new CBParseFailedException(fatal)))
           .setLexical(lexical)
           .setMessage(text)
           .setSeverity(ERROR)
           .build();
 
       this.root.errorConsumer.accept(errorValue);
-      return new CBParseFailedException();
+      return new CBParseFailedException(fatal);
     }
 
     @Override
     public CBParseFailedException failed(
       final LexicalPosition<URI> lexical,
+      final Fatal fatal,
       final String errorCode)
     {
-      return this.failed(lexical, new CBParseFailedException(), errorCode);
+      return this.failed(
+        lexical,
+        fatal,
+        new CBParseFailedException(fatal),
+        errorCode
+      );
     }
   }
 }

@@ -27,6 +27,8 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
 
+import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+
 /**
  * A parser for import declarations.
  */
@@ -50,7 +52,7 @@ public final class CBImportParser
     throws CBParseFailedException
   {
     if (list.size() != 3) {
-      throw context.failed(list, "errorImportInvalid");
+      throw context.failed(list, IS_NOT_FATAL, "errorImportInvalid");
     }
 
     context.checkExpressionIsKeyword(
@@ -79,7 +81,11 @@ public final class CBImportParser
       try {
         return CBASTNames.shortPackageName(packShort, packShort.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(packShort, "errorPackageShortNameInvalid", e);
+        throw subContext.failed(
+          packShort,
+          IS_NOT_FATAL,
+          "errorPackageShortNameInvalid",
+          e);
       }
     }
   }
@@ -95,7 +101,11 @@ public final class CBImportParser
       try {
         return CBASTNames.packageName(packName, packName.text());
       } catch (final IllegalArgumentException e) {
-        throw subContext.failed(packName, "errorPackageNameInvalid", e);
+        throw subContext.failed(
+          packName,
+          IS_NOT_FATAL,
+          "errorPackageNameInvalid",
+          e);
       }
     }
   }
