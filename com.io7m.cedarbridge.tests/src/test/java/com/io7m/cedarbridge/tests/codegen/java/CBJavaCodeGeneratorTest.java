@@ -36,25 +36,28 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaFileObject;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
 import java.math.BigInteger;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Set;
+import java.util.jar.JarFile;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
-import static javax.tools.JavaFileObject.Kind.SOURCE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -70,6 +73,7 @@ public final class CBJavaCodeGeneratorTest
   private CBExpressionSources sources;
   private ArrayList<CBError> errors;
   private Path directory;
+  private Path moduleDirectory;
   private CBFakeLoader loader;
   private HashMap<BigInteger, CBBindingLocalType> bindings;
   private CBCGJavaFactory codeGen;
@@ -84,7 +88,6 @@ public final class CBJavaCodeGeneratorTest
       ToolProvider.getSystemJavaCompiler();
 
     try (var fileManager = tool.getStandardFileManager(listener, ROOT, UTF_8)) {
-
       final var compileFiles =
         new ArrayList<SimpleJavaFileObject>(createdFiles.size());
       for (final var created : createdFiles) {
@@ -101,7 +104,7 @@ public final class CBJavaCodeGeneratorTest
           this.directory.toAbsolutePath().toString()
         );
 
-      final JavacTask task =
+      final var task =
         (JavacTask) tool.getTask(
           null,
           fileManager,
@@ -114,6 +117,50 @@ public final class CBJavaCodeGeneratorTest
       assertTrue(
         task.call().booleanValue(),
         "Compilation of all files must succeed");
+    }
+
+    this.createModule();
+  }
+
+  private void createModule()
+    throws IOException
+  {
+    final var moduleFile = this.moduleDirectory.resolve("module.jar");
+    LOG.debug("creating module {}", moduleFile);
+
+    final var metaInf = this.directory.resolve("META-INF");
+    Files.createDirectories(metaInf);
+    final var manifest = metaInf.resolve("MANIFEST.MF");
+
+    try (var out = Files.newBufferedWriter(manifest)) {
+      out.append("Manifest-Version: 1.0");
+      out.newLine();
+      out.append("Automatic-Module-Name: com.io7m.cedarbridge.tests.generated");
+      out.newLine();
+    }
+
+    try (var output = new ZipOutputStream(
+      new BufferedOutputStream(Files.newOutputStream(moduleFile)))) {
+      try (var pathStream = Files.walk(this.directory)) {
+        pathStream.map(p -> this.directory.relativize(p))
+          .forEach(path -> {
+            try {
+              final var inputFile = this.directory.resolve(path);
+              if (Files.isRegularFile(inputFile)) {
+                final var entry = new ZipEntry(path.toString());
+                output.putNextEntry(entry);
+                try (var stream = Files.newInputStream(inputFile)) {
+                  stream.transferTo(output);
+                }
+                output.closeEntry();
+              }
+            } catch (final IOException e) {
+              throw new UncheckedIOException(e);
+            }
+          });
+      }
+      output.finish();
+      output.flush();
     }
   }
 
@@ -167,12 +214,35 @@ public final class CBJavaCodeGeneratorTest
     this.errors = new ArrayList<>();
     this.bindings = new HashMap<>();
     this.directory = CBTestDirectories.createTempDirectory();
+    this.moduleDirectory = CBTestDirectories.createTempDirectory();
     this.sources = new CBExpressionSources();
     this.parsers = new CBParserFactory();
     this.binders = new CBBinderFactory();
     this.loader = new CBFakeLoader();
     this.typeCheckers = new CBTypeCheckerFactory();
     this.codeGen = new CBCGJavaFactory();
+  }
+
+  private ClassLoader loadClasses()
+  {
+    final var finder =
+      ModuleFinder.of(this.moduleDirectory);
+    final var parent =
+      ModuleLayer.boot();
+
+    final var configuration =
+      parent.configuration()
+        .resolve(
+          finder,
+          ModuleFinder.of(),
+          Set.of("com.io7m.cedarbridge.tests.generated")
+        );
+
+    final var systemClassLoader =
+      ClassLoader.getSystemClassLoader();
+    final var layer =
+      parent.defineModulesWithOneLoader(configuration, systemClassLoader);
+    return layer.findLoader("com.io7m.cedarbridge.tests.generated");
   }
 
   @Test
@@ -189,7 +259,12 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
   }
 
   @Test
@@ -206,7 +281,15 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
   }
 
   @Test
@@ -223,7 +306,12 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
   }
 
   @Test
@@ -240,7 +328,18 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
+    loader.loadClass("x.y.z.V");
+    loader.loadClass("x.y.z.VSerializer");
+    loader.loadClass("x.y.z.VSerializerFactory");
   }
 
   @Test
@@ -257,7 +356,18 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
+    loader.loadClass("x.y.z.V");
+    loader.loadClass("x.y.z.VSerializer");
+    loader.loadClass("x.y.z.VSerializerFactory");
   }
 
   @Test
@@ -274,7 +384,12 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
   }
 
   @Test
@@ -291,7 +406,15 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
   }
 
   @Test
@@ -308,7 +431,12 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
   }
 
   @Test
@@ -325,7 +453,18 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
+    loader.loadClass("x.y.z.V");
+    loader.loadClass("x.y.z.VSerializer");
+    loader.loadClass("x.y.z.VSerializerFactory");
   }
 
   @Test
@@ -342,7 +481,18 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.T");
+    loader.loadClass("x.y.z.TSerializer");
+    loader.loadClass("x.y.z.TSerializerFactory");
+    loader.loadClass("x.y.z.U");
+    loader.loadClass("x.y.z.USerializer");
+    loader.loadClass("x.y.z.USerializerFactory");
+    loader.loadClass("x.y.z.V");
+    loader.loadClass("x.y.z.VSerializer");
+    loader.loadClass("x.y.z.VSerializerFactory");
   }
   
   @Test
@@ -359,7 +509,24 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("com.io7m.cedarbridge.Option");
+    loader.loadClass("com.io7m.cedarbridge.OptionSerializer");
+    loader.loadClass("com.io7m.cedarbridge.OptionSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.List");
+    loader.loadClass("com.io7m.cedarbridge.ListSerializer");
+    loader.loadClass("com.io7m.cedarbridge.ListSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.Unit");
+    loader.loadClass("com.io7m.cedarbridge.UnitSerializer");
+    loader.loadClass("com.io7m.cedarbridge.UnitSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.Map");
+    loader.loadClass("com.io7m.cedarbridge.MapSerializer");
+    loader.loadClass("com.io7m.cedarbridge.MapSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.Pair");
+    loader.loadClass("com.io7m.cedarbridge.PairSerializer");
+    loader.loadClass("com.io7m.cedarbridge.PairSerializerFactory");
   }
 
   @Test
@@ -379,7 +546,26 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("com.io7m.cedarbridge.ProtocolZType");
+    loader.loadClass("com.io7m.cedarbridge.ProtocolZv0Type");
+    loader.loadClass("com.io7m.cedarbridge.Option");
+    loader.loadClass("com.io7m.cedarbridge.OptionSerializer");
+    loader.loadClass("com.io7m.cedarbridge.OptionSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.List");
+    loader.loadClass("com.io7m.cedarbridge.ListSerializer");
+    loader.loadClass("com.io7m.cedarbridge.ListSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.UnitType");
+    loader.loadClass("com.io7m.cedarbridge.UnitTypeSerializer");
+    loader.loadClass("com.io7m.cedarbridge.UnitTypeSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.Map");
+    loader.loadClass("com.io7m.cedarbridge.MapSerializer");
+    loader.loadClass("com.io7m.cedarbridge.MapSerializerFactory");
+    loader.loadClass("com.io7m.cedarbridge.Pair");
+    loader.loadClass("com.io7m.cedarbridge.PairSerializer");
+    loader.loadClass("com.io7m.cedarbridge.PairSerializerFactory");
   }
 
   @Test
@@ -398,7 +584,12 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
+    this.compileJava(result.createdFiles());
+
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.Mix");
+    loader.loadClass("x.y.z.MixSerializer");
+    loader.loadClass("x.y.z.MixSerializerFactory");
   }
 
   @Test
@@ -417,56 +608,17 @@ public final class CBJavaCodeGeneratorTest
           .build()
       ).execute(pack);
 
-    compileJava(result.createdFiles());
-  }
+    this.compileJava(result.createdFiles());
 
-  private static final class SourceFile
-    extends SimpleJavaFileObject
-  {
-    private final Path path;
-
-    SourceFile(final Path inPath)
-    {
-      super(inPath.toUri(), SOURCE);
-      this.path = Objects.requireNonNull(inPath, "path");
-    }
-
-    @Override
-    public CharSequence getCharContent(
-      final boolean ignoreEncodingErrors)
-      throws IOException
-    {
-      return Files.readString(this.path, UTF_8);
-    }
-  }
-
-  private static final class Diagnostics
-    implements DiagnosticListener<JavaFileObject>
-  {
-    Diagnostics()
-    {
-
-    }
-
-    @Override
-    public void report(
-      final Diagnostic<? extends JavaFileObject> diagnostic)
-    {
-      final URI sourceURI;
-      if (diagnostic.getSource() != null) {
-        sourceURI = diagnostic.getSource().toUri();
-      } else {
-        sourceURI = URI.create("urn:unavailable");
-      }
-
-      LOG.error(
-        "{}: {}:{}:{}: {}",
-        diagnostic.getCode(),
-        sourceURI,
-        Long.valueOf(diagnostic.getLineNumber()),
-        Long.valueOf(diagnostic.getColumnNumber()),
-        diagnostic.getMessage(ROOT)
-      );
-    }
+    final var loader = this.loadClasses();
+    loader.loadClass("x.y.z.Q");
+    loader.loadClass("x.y.z.QSerializer");
+    loader.loadClass("x.y.z.QSerializerFactory");
+    loader.loadClass("x.y.z.List");
+    loader.loadClass("x.y.z.ListSerializer");
+    loader.loadClass("x.y.z.ListSerializerFactory");
+    loader.loadClass("x.y.z.Z");
+    loader.loadClass("x.y.z.ZSerializer");
+    loader.loadClass("x.y.z.ZSerializerFactory");
   }
 }
