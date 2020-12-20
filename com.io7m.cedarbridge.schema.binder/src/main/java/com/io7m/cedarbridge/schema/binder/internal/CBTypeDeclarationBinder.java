@@ -28,6 +28,11 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.binder.internal.CBBinder.SPEC_SEMANTICS_RECORD;
+import static com.io7m.cedarbridge.schema.binder.internal.CBBinder.SPEC_SEMANTICS_VARIANT;
 
 public final class CBTypeDeclarationBinder
   implements CBElementBinderType<CBASTTypeDeclarationType>
@@ -53,6 +58,7 @@ public final class CBTypeDeclarationBinder
 
   private static void bindTypeParameters(
     final CBBinderContextType context,
+    final Optional<UUID> specSection,
     final List<CBASTTypeParameterName> parameters)
     throws CBBindFailedException
   {
@@ -60,7 +66,12 @@ public final class CBTypeDeclarationBinder
     for (final var parameter : parameters) {
       try {
         final var binding =
-          context.bindTypeParameter(parameter.text(), parameter.lexical());
+          context.bindTypeParameter(
+            specSection,
+            parameter.text(),
+            parameter.lexical()
+          );
+
         parameter.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
         failed = true;
@@ -76,7 +87,7 @@ public final class CBTypeDeclarationBinder
     final CBASTTypeRecord item)
     throws CBBindFailedException
   {
-    bindTypeParameters(context, item.parameters());
+    bindTypeParameters(context, SPEC_SEMANTICS_RECORD, item.parameters());
     bindFields(context, item.fields());
   }
 
@@ -90,7 +101,7 @@ public final class CBTypeDeclarationBinder
       try {
         final var name = field.name();
         final var binding =
-          context.bindField(name.text(), name.lexical());
+          context.bindField(SPEC_SEMANTICS_RECORD, name.text(), name.lexical());
         name.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
         failed = true;
@@ -113,7 +124,7 @@ public final class CBTypeDeclarationBinder
     final CBASTTypeVariant item)
     throws CBBindFailedException
   {
-    bindTypeParameters(context, item.parameters());
+    bindTypeParameters(context, SPEC_SEMANTICS_VARIANT, item.parameters());
     bindVariantCases(context, item.cases());
   }
 
@@ -127,7 +138,11 @@ public final class CBTypeDeclarationBinder
       try {
         final var name = caseV.name();
         final var binding =
-          context.bindVariantCase(name.text(), name.lexical());
+          context.bindVariantCase(
+            SPEC_SEMANTICS_VARIANT,
+            name.text(),
+            name.lexical()
+          );
         caseV.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
         failed = true;

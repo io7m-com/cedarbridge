@@ -18,7 +18,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="1f9b69fc-7b95-4007-8bd1-6715b07fd69a">
     <FormalItem title="Protocol Syntax">
       <Verbatim>
         <xi:include href="ebnf/007_protocol.ebnf"
@@ -27,7 +27,7 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Semantics">
+  <Subsection title="Semantics" id="3db896a5-bad2-4b08-9154-b48943f6f5a3">
     <Paragraph>
       A <Term type="statement">protocol</Term> statement, if present, <Term type="term">MUST</Term> occur with
       a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
@@ -41,7 +41,7 @@
       are unique within a package; it is an error for two or more <Term type="term">protocol declarations</Term> to
       name the same protocol.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="404f0595-a150-4baf-b98b-37109250d8bd">
       A protocol statement declares a contiguous ordered set of <Term type="term">versions</Term>, with each
       <Term type="term">version</Term> naming a set of <Link target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link>
       that are included within that version. The intersections of the sets of types between versions are allowed to
@@ -49,6 +49,9 @@
       if <Term type="expression">P(v)</Term> is the set of types in version <Term type="expression">v</Term> and
       <Term type="expression">P(w)</Term> is the set of types in version <Term type="expression">w</Term>, then
       it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
+    </Paragraph>
+    <Paragraph id="15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a">
+      Each type named in each protocol <Term type="term">version</Term> must have kind <Term type="expression">*</Term>.
     </Paragraph>
     <Paragraph>
       The declaration order of <Term type="term">types</Term> within a <Term type="term">version</Term> is significant;

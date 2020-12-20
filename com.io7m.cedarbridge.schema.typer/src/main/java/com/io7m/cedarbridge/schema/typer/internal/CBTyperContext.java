@@ -18,6 +18,8 @@ package com.io7m.cedarbridge.schema.typer.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
+import com.io7m.cedarbridge.schema.names.CBSpecificationLocation;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
@@ -25,6 +27,8 @@ import com.io7m.jlexing.core.LexicalPosition;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
@@ -35,13 +39,16 @@ public final class CBTyperContext
   private final CBStringsType strings;
   private final Consumer<CBError> errorConsumer;
   private final CBExpressionLineLogType lineLog;
+  private final CBASTLanguage language;
   private int errors;
 
   public CBTyperContext(
     final CBStringsType inStrings,
     final CBExpressionLineLogType inLineLog,
+    final CBASTLanguage inLanguage,
     final Consumer<CBError> inErrorConsumer)
   {
+    this.language = Objects.requireNonNull(inLanguage, "inLanguage");
     Objects.requireNonNull(inErrorConsumer, "errorConsumer");
 
     this.lineLog =
@@ -86,12 +93,25 @@ public final class CBTyperContext
       }
     }
 
+    private URI quoteSpec(
+      final UUID uuid)
+    {
+      final var language = this.root.language;
+      return CBSpecificationLocation.quoteSpec(
+        language.major().intValueExact(),
+        language.minor().intValueExact(),
+        uuid
+      );
+    }
+
     @Override
     public CBTypeCheckFailedException failed(
+      final Optional<UUID> specSection,
       final LexicalPosition<URI> lexical,
       final String errorCode,
       final Object... arguments)
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(lexical, "lexical");
       Objects.requireNonNull(errorCode, "errorCode");
 
@@ -100,8 +120,19 @@ public final class CBTyperContext
       final var context =
         this.root.lineLog.contextualize(lexical).orElse("");
 
-      final var text =
-        this.root.strings.format(
+      final String text;
+      if (specSection.isPresent()) {
+        text = this.root.strings.format(
+          "errorTypeWithSpec",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          this.quoteSpec(specSection.get()),
+          context
+        );
+      } else {
+        text = this.root.strings.format(
           "errorType",
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
@@ -109,6 +140,7 @@ public final class CBTyperContext
           error,
           context
         );
+      }
 
       final var errorValue =
         CBError.builder()
@@ -123,49 +155,5 @@ public final class CBTyperContext
       return new CBTypeCheckFailedException();
     }
 
-    @Override
-    public CBTypeCheckFailedException failedWithOther(
-      final LexicalPosition<URI> lexical,
-      final LexicalPosition<URI> lexicalOther,
-      final String errorCode,
-      final Object... arguments)
-    {
-      Objects.requireNonNull(lexical, "lexical");
-      Objects.requireNonNull(lexicalOther, "lexicalOther");
-      Objects.requireNonNull(errorCode, "errorCode");
-
-      final var error =
-        this.root.strings.format(errorCode, arguments);
-      final var context =
-        this.root.lineLog.contextualize(lexical).orElse("");
-      final var contextOther =
-        this.root.lineLog.contextualize(lexicalOther).orElse("");
-
-      final var text =
-        this.root.strings.format(
-          "errorTypeWithOther",
-          lexical.file().orElse(URI.create("urn:unspecified")),
-          Integer.valueOf(lexical.line()),
-          Integer.valueOf(lexical.column()),
-          error,
-          context,
-          lexicalOther.file().orElse(URI.create("urn:unspecified")),
-          Integer.valueOf(lexicalOther.line()),
-          Integer.valueOf(lexicalOther.column()),
-          contextOther
-        );
-
-      final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(new CBTypeCheckFailedException())
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
-
-      this.root.errorConsumer.accept(errorValue);
-      return new CBTypeCheckFailedException();
-    }
   }
 }

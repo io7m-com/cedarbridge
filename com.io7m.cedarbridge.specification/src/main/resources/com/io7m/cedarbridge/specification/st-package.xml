@@ -18,7 +18,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="af42a8a2-c98d-4b5d-92ca-46406a5ddbbe">
     <FormalItem title="Package Syntax">
       <Verbatim>
         <xi:include href="ebnf/002_package.ebnf"
@@ -34,7 +34,7 @@
       sets the <Term type="term">current package</Term> of the schema context to <Term type="package">p</Term>. There
       can be at most one <Term type="term">current package</Term> in the schema context at any given time.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="881f56d2-f2cf-413a-9bc0-b1a40b11c52a">
       If the <Term type="statement">package</Term> statement is evaluated when the schema context already has a
       <Term type="term">current package</Term>, the statement is rejected with an error.
     </Paragraph>
@@ -43,7 +43,7 @@
       r</Term>, where <Term type="package">r</Term> is already defined within the schema context, the statement is
       rejected with an error.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="3423cdfb-1bc8-4c4c-a270-bbfde7fbc853">
       The package named by a <Term type="statement">package</Term> statement is <Term type="term">defined</Term>
       iff the compilation of all subsequent statements in the compilation unit succeeds. Once a package is
       <Term type="term">defined</Term>, it becomes accessible to other packages via the use of

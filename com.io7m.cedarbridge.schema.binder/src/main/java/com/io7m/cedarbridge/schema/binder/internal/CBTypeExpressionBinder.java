@@ -27,10 +27,17 @@ import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
 public final class CBTypeExpressionBinder
   implements CBElementBinderType<CBASTTypeExpressionType>
 {
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("ff59ecee-af8c-42e3-8aa0-5ea348c69b6d");
+
   public CBTypeExpressionBinder()
   {
 
@@ -96,7 +103,7 @@ public final class CBTypeExpressionBinder
   {
     final var name = item.name();
     final var binding =
-      context.checkTypeBinding(name.text(), name.lexical());
+      context.checkTypeBinding(SPEC_SECTION, name.text(), name.lexical());
 
     item.userData().put(CBBindingType.class, binding);
   }
@@ -110,7 +117,11 @@ public final class CBTypeExpressionBinder
     final var name =
       item.name();
     final var packageV =
-      context.checkPackageBinding(packageName.text(), packageName.lexical());
+      context.checkPackageBinding(
+        SPEC_SECTION,
+        packageName.text(),
+        packageName.lexical()
+      );
     final var packageTypes =
       packageV.types();
     final var typeV =
@@ -118,6 +129,7 @@ public final class CBTypeExpressionBinder
 
     if (typeV == null) {
       throw context.failed(
+        SPEC_SECTION,
         name.lexical(),
         "errorTypeMissing",
         name.text(),

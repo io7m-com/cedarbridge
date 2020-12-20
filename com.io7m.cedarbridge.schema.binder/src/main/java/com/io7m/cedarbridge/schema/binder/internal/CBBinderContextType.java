@@ -26,6 +26,8 @@ import com.io7m.jlexing.core.LexicalPosition;
 
 import java.math.BigInteger;
 import java.net.URI;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface CBBinderContextType extends AutoCloseable
 {
@@ -38,51 +40,61 @@ public interface CBBinderContextType extends AutoCloseable
     throws CBBindFailedException;
 
   void registerPackage(
+    Optional<UUID> specSection,
     LexicalPosition<URI> lexical,
     String text,
     CBPackageType packageV)
     throws CBBindFailedException;
 
   CBBindFailedException failed(
+    Optional<UUID> specSection,
     LexicalPosition<URI> lexical,
     String errorCode,
     Object... arguments);
 
   CBBindFailedException failedWithOther(
+    Optional<UUID> specSection,
     LexicalPosition<URI> lexical,
     LexicalPosition<URI> lexicalOther,
     String errorCode,
     Object... arguments);
 
   CBBindingLocalType bindType(
+    Optional<UUID> specSection,
     CBASTTypeDeclarationType type)
     throws CBBindFailedException;
 
   CBBindingLocalType bindProtocol(
+    Optional<UUID> specSection,
     CBASTProtocolDeclaration proto)
     throws CBBindFailedException;
 
   CBBindingLocalType bindTypeParameter(
+    Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
   CBBindingLocalType bindField(
+    Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
   CBBindingLocalType checkTypeBinding(
+    Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
   CBBindingLocalType bindVariantCase(
+    Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
   CBPackageType checkPackageBinding(
+    Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
@@ -90,6 +102,7 @@ public interface CBBinderContextType extends AutoCloseable
   String currentPackage();
 
   CBBindingLocalType bindProtocolVersion(
+    Optional<UUID> specSection,
     BigInteger version,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;

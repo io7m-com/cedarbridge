@@ -27,13 +27,20 @@ import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeDeclarationType;
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeParameterType;
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
-public final class CBTypeExpressionChecker implements CBElementCheckerType<CBASTTypeExpressionType>
+public final class CBTypeExpressionChecker
+  implements CBElementCheckerType<CBASTTypeExpressionType>
 {
+  private static final Optional<UUID> SPEC_SECTION_APPLICATION =
+    uuid("2168e18e-88d5-4434-9a9e-07f489c836c7");
+
   public CBTypeExpressionChecker()
   {
 
@@ -148,6 +155,7 @@ public final class CBTypeExpressionChecker implements CBElementCheckerType<CBAST
 
         if (subExpressionAssignment.arity() != 0) {
           throw context.failed(
+            SPEC_SECTION_APPLICATION,
             subExpression.lexical(),
             "errorTypeArgumentsIncorrect",
             String.format("%s", subExpression),
@@ -164,6 +172,7 @@ public final class CBTypeExpressionChecker implements CBElementCheckerType<CBAST
     final int argumentCount = arguments.size();
     if (targetArity.arity() < argumentCount) {
       throw context.failed(
+        SPEC_SECTION_APPLICATION,
         targetExpression.lexical(),
         "errorTypeArgumentsIncorrect",
         String.format("%s", targetExpression),

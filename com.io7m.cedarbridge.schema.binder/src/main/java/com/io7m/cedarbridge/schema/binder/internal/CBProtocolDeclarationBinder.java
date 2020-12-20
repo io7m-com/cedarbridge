@@ -24,11 +24,18 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 
 import java.math.BigInteger;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TreeSet;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
 public final class CBProtocolDeclarationBinder
   implements CBElementBinderType<CBASTProtocolDeclaration>
 {
+  private static final Optional<UUID> SPEC_SECTION_VERSION_CONTIGUOUS =
+    uuid("404f0595-a150-4baf-b98b-37109250d8bd");
+
   public CBProtocolDeclarationBinder()
   {
 
@@ -63,6 +70,7 @@ public final class CBProtocolDeclarationBinder
         if (!numbers.contains(current)) {
           exceptions.addException(
             context.failed(
+              SPEC_SECTION_VERSION_CONTIGUOUS,
               item.lexical(),
               "errorProtocolVersionMissing",
               min,
@@ -85,11 +93,19 @@ public final class CBProtocolDeclarationBinder
     version.userData()
       .put(
         CBBindingType.class,
-        context.bindProtocolVersion(version.version(), version.lexical()));
+        context.bindProtocolVersion(
+          SPEC_SECTION_VERSION_CONTIGUOUS,
+          version.version(),
+          version.lexical())
+      );
 
     for (final var type : version.types()) {
       final var binding =
-        context.checkTypeBinding(type.text(), type.lexical());
+        context.checkTypeBinding(
+          SPEC_SECTION_VERSION_CONTIGUOUS,
+          type.text(),
+          type.lexical()
+        );
       type.userData().put(CBBindingType.class, binding);
     }
   }

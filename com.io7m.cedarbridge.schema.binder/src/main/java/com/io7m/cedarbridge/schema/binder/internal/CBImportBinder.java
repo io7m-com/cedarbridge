@@ -23,8 +23,16 @@ import com.io7m.cedarbridge.schema.loader.api.CBLoadFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
+
 public final class CBImportBinder implements CBElementBinderType<CBASTImport>
 {
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("5fda7c00-0000-4674-8b8c-440fa936e81b");
+
   private static final Logger LOG =
     LoggerFactory.getLogger(CBImportBinder.class);
 
@@ -46,11 +54,19 @@ public final class CBImportBinder implements CBElementBinderType<CBASTImport>
     try {
       final var packageV =
         loader.load(context.currentPackage(), longName);
-      context.registerPackage(item.lexical(), shortName, packageV);
+
+      context.registerPackage(
+        SPEC_SECTION,
+        item.lexical(),
+        shortName,
+        packageV
+      );
+
       item.userData().put(CBPackageType.class, packageV);
     } catch (final CBLoadFailedException e) {
       LOG.debug("failed to load package {}: ", longName, e);
       throw context.failed(
+        SPEC_SECTION,
         item.lexical(),
         "errorPackageUnavailable",
         longName

@@ -23,7 +23,9 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
@@ -48,19 +50,40 @@ public final class CBDeclarationParser
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
-      throw context.failed(expression, IS_NOT_FATAL, "errorDeclarationInvalid");
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        Optional.empty(),
+        "errorDeclarationInvalid"
+      );
     }
 
     final var keyword =
-      context.checkExpressionIs(expression.get(0), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(0),
+        Optional.empty(),
+        SExpressionSymbolType.class
+      );
 
     switch (keyword.text()) {
       case "language": {
         if (this.tooLateForLanguage) {
-          throw context.failed(expression, IS_FATAL, "errorLanguageFirst");
+          throw context.failed(
+            expression,
+            IS_FATAL,
+            uuid("e03347f6-a042-452c-b34b-eeb6514ee26e"),
+            "errorLanguageFirst"
+          );
         }
-        return new CBLanguageParser()
-          .parse(context, expression);
+
+        final var language =
+          new CBLanguageParser().parse(context, expression);
+
+        context.setLanguageVersion(
+          language.major().intValueExact(),
+          language.minor().intValueExact()
+        );
+        return language;
       }
       case "package": {
         return new CBPackageDeclarationParser()
@@ -86,6 +109,7 @@ public final class CBDeclarationParser
         throw context.failed(
           expression,
           IS_NOT_FATAL,
+          Optional.empty(),
           "errorDeclarationUnrecognized");
       }
     }
@@ -123,7 +147,11 @@ public final class CBDeclarationParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return this.parseDeclaration(
         subContext,
-        subContext.checkExpressionIs(expression, SExpressionListType.class));
+        subContext.checkExpressionIs(
+          expression,
+          Optional.empty(),
+          SExpressionListType.class)
+      );
     }
   }
 }

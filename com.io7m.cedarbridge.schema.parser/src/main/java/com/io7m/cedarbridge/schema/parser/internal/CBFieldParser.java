@@ -22,11 +22,17 @@ import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 public final class CBFieldParser implements CBElementParserType<CBASTField>
 {
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("b43940c3-038f-4330-971f-ac76d56d5fad");
+
   public CBFieldParser()
   {
 
@@ -45,7 +51,12 @@ public final class CBFieldParser implements CBElementParserType<CBASTField>
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       if (expression.size() != 3) {
-        throw subContext.failed(expression, IS_NOT_FATAL, "errorFieldInvalid");
+        throw subContext.failed(
+          expression,
+          IS_NOT_FATAL,
+          SPEC_SECTION,
+          "errorFieldInvalid"
+        );
       }
 
       final var name =
@@ -69,7 +80,10 @@ public final class CBFieldParser implements CBElementParserType<CBASTField>
   {
     return parseField(
       context,
-      context.checkExpressionIs(expression, SExpressionListType.class)
+      context.checkExpressionIs(
+        expression,
+        SPEC_SECTION,
+        SExpressionListType.class)
     );
   }
 }

@@ -10,8 +10,19 @@
   Expected:
     {6}]]></entry>
 
+  <entry key="errorParseWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+{4}
+  Object:        {5}
+  Specification: {6}
+  Expected:
+    {7}]]></entry>
+
   <entry key="errorParseBasic"><![CDATA[{0}:{1}:{2}: {3}
 {4}]]></entry>
+
+  <entry key="errorParseBasicWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+  Specification: {4}
+{5}]]></entry>
 
   <entry key="errorLanguageFirst">A language statement must be the first statement in a compilation unit, if present.</entry>
   <entry key="errorLanguageBadName">Unrecognized language name.</entry>

@@ -18,7 +18,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="5740d88d-b9c3-4046-ab74-34d350ff4903">
     <FormalItem title="Import Syntax">
       <Verbatim>
         <xi:include href="ebnf/004_import.ebnf"
@@ -27,7 +27,7 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Semantics">
+  <Subsection title="Semantics" id="5fda7c00-0000-4674-8b8c-440fa936e81b">
     <Paragraph>
       An <Term type="statement">import</Term> statement <Term type="expression">(import p q)</Term>
       makes the type declarations in package <Term type="package">p</Term> visible via qualification using

@@ -26,10 +26,17 @@ import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
 public final class CBTypeProtocolChecker
   implements CBElementCheckerType<CBASTProtocolDeclaration>
 {
+  private static final Optional<UUID> SPEC_SECTION_KIND_0 =
+    uuid("15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a");
+
   public CBTypeProtocolChecker()
   {
 
@@ -69,6 +76,7 @@ public final class CBTypeProtocolChecker
 
         if (typeAssignment.arity() != 0) {
           throw context.failed(
+            SPEC_SECTION_KIND_0,
             type.lexical(),
             "errorTypeProtocolKind0",
             targetType.name().text(),

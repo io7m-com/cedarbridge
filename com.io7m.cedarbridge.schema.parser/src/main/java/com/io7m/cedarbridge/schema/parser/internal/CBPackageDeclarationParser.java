@@ -25,7 +25,10 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 /**
@@ -37,8 +40,12 @@ public final class CBPackageDeclarationParser
 {
   private static final String EXPECTING_KIND =
     "objectPackage";
+
   private static final List<String> EXPECTING_SHAPES =
     List.of("(package <package-name>)");
+
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("af42a8a2-c98d-4b5d-92ca-46406a5ddbbe");
 
   public CBPackageDeclarationParser()
   {
@@ -51,13 +58,27 @@ public final class CBPackageDeclarationParser
     throws CBParseFailedException
   {
     if (list.size() != 2) {
-      throw context.failed(list, IS_NOT_FATAL, "errorPackageInvalid");
+      throw context.failed(
+        list,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorPackageInvalid"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      list.get(0), "package", "errorPackageKeyword");
+      list.get(0),
+      SPEC_SECTION,
+      "package",
+      "errorPackageKeyword"
+    );
+
     final var packName =
-      context.checkExpressionIs(list.get(1), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        list.get(1),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
 
     return CBASTPackageDeclaration.builder()
       .setLexical(list.lexical())
@@ -79,6 +100,7 @@ public final class CBPackageDeclarationParser
         throw subContext.failed(
           packName,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorPackageNameInvalid",
           e);
       }
@@ -93,9 +115,13 @@ public final class CBPackageDeclarationParser
   {
     try (var subContext =
            context.openExpectingOneOf(EXPECTING_KIND, EXPECTING_SHAPES)) {
-      final var list =
-        subContext.checkExpressionIs(expression, SExpressionListType.class);
-      return parsePackage(subContext, list);
+      return parsePackage(
+        subContext,
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class)
+      );
     }
   }
 }

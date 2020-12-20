@@ -14,36 +14,25 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.typer.internal;
+package com.io7m.cedarbridge.schema.names;
 
-import com.io7m.cedarbridge.strings.api.CBAbstractStrings;
-import com.io7m.cedarbridge.strings.api.CBStringsType;
+import java.util.Optional;
+import java.util.UUID;
 
-import java.util.ResourceBundle;
+/**
+ * Convenience functions for UUIDs.
+ */
 
-public final class CBTyperStrings extends CBAbstractStrings
+public final class CBUUIDs
 {
-  private CBTyperStrings(
-    final ResourceBundle inResources)
+  private CBUUIDs()
   {
-    super(inResources);
+
   }
 
-  public static CBStringsType create()
+  public static Optional<UUID> uuid(
+    final String text)
   {
-    return new CBTyperStrings(
-      ofXML(
-        CBTyperStrings.class.getResourceAsStream(
-        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml"))
-    );
-  }
-
-  @Override
-  public String toString()
-  {
-    return String.format(
-      "[CBTyperStrings 0x%s]",
-      Long.toUnsignedString(System.identityHashCode(this), 16)
-    );
+    return Optional.of(UUID.fromString(text));
   }
 }

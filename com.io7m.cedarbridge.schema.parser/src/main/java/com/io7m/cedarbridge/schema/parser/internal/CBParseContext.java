@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.names.CBSpecificationLocation;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
@@ -28,6 +29,8 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
@@ -41,6 +44,8 @@ public final class CBParseContext
   private final Consumer<CBError> errorConsumer;
   private final CBExpressionLineLogType lines;
   private int errors;
+  private int languageMajor;
+  private int languageMinor;
 
   public CBParseContext(
     final CBStringsType inStrings,
@@ -61,6 +66,9 @@ public final class CBParseContext
 
     this.stack = new LinkedList<>();
     this.stack.push(new Context(this, "?", List.of("?")));
+
+    this.languageMajor = 1;
+    this.languageMinor = 0;
   }
 
   public CBParseContextType current()
@@ -106,8 +114,18 @@ public final class CBParseContext
     }
 
     @Override
+    public void setLanguageVersion(
+      final int major,
+      final int minor)
+    {
+      this.root.languageMajor = major;
+      this.root.languageMinor = minor;
+    }
+
+    @Override
     public <T extends SExpressionType> T checkExpressionIs(
       final SExpressionType expression,
+      final Optional<UUID> specSection,
       final Class<T> clazz)
       throws CBParseFailedException
     {
@@ -115,6 +133,7 @@ public final class CBParseContext
         throw this.failed(
           expression,
           IS_NOT_FATAL,
+          specSection,
           "errorUnexpectedExpressionForm");
       }
       return clazz.cast(expression);
@@ -123,6 +142,7 @@ public final class CBParseContext
     @Override
     public SExpressionSymbolType checkExpressionIsKeyword(
       final SExpressionType expression,
+      final Optional<UUID> specSection,
       final String name,
       final String errorCode)
       throws CBParseFailedException
@@ -130,22 +150,24 @@ public final class CBParseContext
       if (expression instanceof SExpressionSymbolType) {
         final var symbol = (SExpressionSymbolType) expression;
         if (!Objects.equals(symbol.text(), name)) {
-          throw this.failed(expression, IS_NOT_FATAL, errorCode);
+          throw this.failed(expression, IS_NOT_FATAL, specSection, errorCode);
         }
         return symbol;
       }
-      throw this.failed(expression, IS_NOT_FATAL, errorCode);
+      throw this.failed(expression, IS_NOT_FATAL, specSection, errorCode);
     }
 
     @Override
     public CBParseFailedException failed(
       final SExpressionType expression,
       final Fatal fatal,
+      final Optional<UUID> specSection,
       final String errorCode,
       final Exception e)
     {
       Objects.requireNonNull(expression, "expression");
       Objects.requireNonNull(fatal, "fatal");
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(errorCode, "messageId");
 
       final var lexical =
@@ -159,8 +181,25 @@ public final class CBParseContext
       final var context =
         this.root.lines.contextualize(lexical).orElse("");
 
-      final var text =
-        this.root.strings.format(
+      final String text;
+      if (specSection.isPresent()) {
+        text = this.root.strings.format(
+          "errorParseWithSpec",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          context,
+          expectedKindTranslated,
+          CBSpecificationLocation.quoteSpec(
+            this.root.languageMajor,
+            this.root.languageMinor,
+            specSection.get()
+          ),
+          expectedPattern
+        );
+      } else {
+        text = this.root.strings.format(
           "errorParse",
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
@@ -170,6 +209,7 @@ public final class CBParseContext
           expectedKindTranslated,
           expectedPattern
         );
+      }
 
       final var errorValue =
         CBError.builder()
@@ -191,11 +231,13 @@ public final class CBParseContext
     public CBParseFailedException failed(
       final SExpressionType expression,
       final Fatal fatal,
+      final Optional<UUID> specSection,
       final String errorCode)
     {
       Objects.requireNonNull(expression, "expression");
       Objects.requireNonNull(errorCode, "messageId");
-      return this.failed(expression, fatal, errorCode, null);
+      Objects.requireNonNull(specSection, "specSection");
+      return this.failed(expression, fatal, specSection, errorCode, null);
     }
 
     @Override
@@ -208,11 +250,13 @@ public final class CBParseContext
     public CBParseFailedException failed(
       final LexicalPosition<URI> lexical,
       final Fatal fatal,
+      final Optional<UUID> specSection,
       final Exception exception,
       final String errorCode)
     {
       Objects.requireNonNull(lexical, "lexical");
       Objects.requireNonNull(fatal, "fatal");
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(errorCode, "errorCode");
 
       final var error =
@@ -220,8 +264,23 @@ public final class CBParseContext
       final var context =
         this.root.lines.contextualize(lexical).orElse("");
 
-      final var text =
-        this.root.strings.format(
+      final String text;
+      if (specSection.isPresent()) {
+        text = this.root.strings.format(
+          "errorParseBasicWithSpec",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          CBSpecificationLocation.quoteSpec(
+            this.root.languageMajor,
+            this.root.languageMinor,
+            specSection.get()
+          ),
+          context
+        );
+      } else {
+        text = this.root.strings.format(
           "errorParseBasic",
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
@@ -229,6 +288,8 @@ public final class CBParseContext
           error,
           context
         );
+      }
+
 
       final var errorValue =
         CBError.builder()
@@ -249,11 +310,13 @@ public final class CBParseContext
     public CBParseFailedException failed(
       final LexicalPosition<URI> lexical,
       final Fatal fatal,
+      final Optional<UUID> specSection,
       final String errorCode)
     {
       return this.failed(
         lexical,
         fatal,
+        specSection,
         new CBParseFailedException(fatal),
         errorCode
       );

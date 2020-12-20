@@ -27,7 +27,10 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
@@ -39,6 +42,9 @@ import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParam
 public final class CBRecordParser
   implements CBElementParserType<CBASTTypeRecord>
 {
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("b43940c3-038f-4330-971f-ac76d56d5fad");
+
   public CBRecordParser()
   {
 
@@ -60,9 +66,10 @@ public final class CBRecordParser
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
-          "errorRecordInvalidTypeParameter");
+          SPEC_SECTION,
+          "errorRecordInvalidTypeParameter"
+        );
       }
-
       return parseTypeParameterName(subContext, expression.get(1));
     }
   }
@@ -78,13 +85,25 @@ public final class CBRecordParser
       throw context.failed(
         expression,
         IS_NOT_FATAL,
-        "errorRecordInvalidDeclaration");
+        SPEC_SECTION,
+        "errorRecordInvalidDeclaration"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      expression.get(0), "record", "errorRecordKeyword");
+      expression.get(0),
+      SPEC_SECTION,
+      "record",
+      "errorRecordKeyword"
+    );
+
     final var typeName =
-      context.checkExpressionIs(expression.get(1), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(1),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
+
     final var name =
       parseTypeName(context, typeName);
 
@@ -131,7 +150,10 @@ public final class CBRecordParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return parseRecordMemberActual(
         subContext,
-        subContext.checkExpressionIs(subExpression, SExpressionListType.class)
+        subContext.checkExpressionIs(
+          subExpression,
+          SPEC_SECTION,
+          SExpressionListType.class)
       );
     }
   }
@@ -145,11 +167,17 @@ public final class CBRecordParser
       throw context.failed(
         expression,
         IS_NOT_FATAL,
-        "errorRecordUnrecognizedMember");
+        SPEC_SECTION,
+        "errorRecordUnrecognizedMember"
+      );
     }
 
     final var start =
-      context.checkExpressionIs(expression.get(0), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(0),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
 
     switch (start.text()) {
       case "parameter":
@@ -160,7 +188,9 @@ public final class CBRecordParser
         throw context.failed(
           expression,
           IS_NOT_FATAL,
-          "errorRecordUnrecognizedMember");
+          SPEC_SECTION,
+          "errorRecordUnrecognizedMember"
+        );
     }
   }
 
@@ -179,7 +209,10 @@ public final class CBRecordParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return parseRecord(
         subContext,
-        subContext.checkExpressionIs(expression, SExpressionListType.class)
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class)
       );
     }
   }

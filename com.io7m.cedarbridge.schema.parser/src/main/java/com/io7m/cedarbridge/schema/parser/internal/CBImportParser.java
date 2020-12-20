@@ -26,7 +26,10 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 /**
@@ -41,6 +44,9 @@ public final class CBImportParser
   private static final List<String> EXPECTING_SHAPES =
     List.of("(import <package-name> <package-short-name>)");
 
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("5740d88d-b9c3-4046-ab74-34d350ff4903");
+
   public CBImportParser()
   {
 
@@ -52,16 +58,29 @@ public final class CBImportParser
     throws CBParseFailedException
   {
     if (list.size() != 3) {
-      throw context.failed(list, IS_NOT_FATAL, "errorImportInvalid");
+      throw context.failed(
+        list,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorImportInvalid"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      list.get(0), "import", "errorImportKeyword");
+      list.get(0), SPEC_SECTION, "import", "errorImportKeyword");
 
     final var packName =
-      context.checkExpressionIs(list.get(1), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        list.get(1),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
     final var packShort =
-      context.checkExpressionIs(list.get(2), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        list.get(2),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
 
     return CBASTImport.builder()
       .setLexical(list.lexical())
@@ -84,6 +103,7 @@ public final class CBImportParser
         throw subContext.failed(
           packShort,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorPackageShortNameInvalid",
           e);
       }
@@ -104,6 +124,7 @@ public final class CBImportParser
         throw subContext.failed(
           packName,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorPackageNameInvalid",
           e);
       }
@@ -120,7 +141,11 @@ public final class CBImportParser
     try (var subContext =
            context.openExpectingOneOf(EXPECTING_KIND, EXPECTING_SHAPES)) {
       final var list =
-        subContext.checkExpressionIs(expression, SExpressionListType.class);
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class
+        );
       return parseImport(subContext, list);
     }
   }

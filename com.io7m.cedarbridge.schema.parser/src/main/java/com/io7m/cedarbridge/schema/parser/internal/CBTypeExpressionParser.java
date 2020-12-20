@@ -26,7 +26,10 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 /**
@@ -36,6 +39,9 @@ import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fata
 public final class CBTypeExpressionParser
   implements CBElementParserType<CBASTTypeExpressionType>
 {
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("b77ecee0-9add-4182-b3c5-f1d0a75ecfd9");
+
   public CBTypeExpressionParser()
   {
 
@@ -84,12 +90,14 @@ public final class CBTypeExpressionParser
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorTypePathInvalid"
         );
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorTypePathInvalid",
           e);
       }
@@ -121,6 +129,7 @@ public final class CBTypeExpressionParser
       throw subContext.failed(
         expression,
         IS_NOT_FATAL,
+        SPEC_SECTION,
         "errorUnexpectedExpressionForm");
     }
   }
@@ -146,6 +155,7 @@ public final class CBTypeExpressionParser
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION,
           "errorEmptyTypeApplication");
       }
 
@@ -154,6 +164,7 @@ public final class CBTypeExpressionParser
           subContext,
           subContext.checkExpressionIs(
             expression.get(0),
+            SPEC_SECTION,
             SExpressionSymbolType.class))
       );
 

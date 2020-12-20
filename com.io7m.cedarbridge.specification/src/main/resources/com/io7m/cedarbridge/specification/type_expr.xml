@@ -12,7 +12,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="b77ecee0-9add-4182-b3c5-f1d0a75ecfd9">
     <FormalItem title="Type Expression Syntax">
       <Verbatim>
         <xi:include href="ebnf/008_type_expr.ebnf"
@@ -21,7 +21,7 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Semantics">
+  <Subsection title="Semantics" id="ff59ecee-af8c-42e3-8aa0-5ea348c69b6d">
     <Paragraph>
       A <Term type="term">type expression</Term> is an expression that, when <Term type="term">evaluated</Term>,
       yields a <Term type="term">type</Term>. The evaluation of type expressions, ultimately, terminates in the
@@ -38,7 +38,7 @@
       the kind: A type constructor with kind <Term type="expression">* → * -> * -> *</Term> applied to three
       arguments has kind <Term type="expression">*</Term>.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="66f4a794-7697-4e69-82d5-27066d403f3d">
       The <Term type="term">partial application</Term> of type constructors is not supported: It is an error
       if the number of arguments supplied to a type constructor does not match the number of declared parameters
       for the type constructor.
@@ -82,7 +82,7 @@
       </Verbatim>
     </FormalItem>
 
-    <Paragraph>
+    <Paragraph id="2168e18e-88d5-4434-9a9e-07f489c836c7">
       The application of a type constructor <Term type="expression">f</Term> that takes <Term type="expression">n-1</Term>
       parameters to <Term type="expression">n-1</Term> type expressions (each of kind <Term type="expression">*</Term>)
       is well-formed:

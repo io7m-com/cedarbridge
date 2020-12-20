@@ -27,10 +27,19 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
 public final class CBTypeDeclarationChecker
   implements CBElementCheckerType<CBASTTypeDeclarationType>
 {
+  private static final Optional<UUID> SPEC_SECTION_RECORD_FIELD_KIND_0 =
+    uuid("06c63d66-019b-420a-809c-98ed41c3cfb2");
+  private static final Optional<UUID> SPEC_SECTION_VARIANT_FIELD_KIND_0 =
+    uuid("9d1d4d2e-bee3-43eb-90db-0e75e40ce882");
+
   public CBTypeDeclarationChecker()
   {
 
@@ -57,11 +66,12 @@ public final class CBTypeDeclarationChecker
     final CBASTTypeRecord decl)
     throws CBTypeCheckFailedException
   {
-    checkFields(context, decl.fields());
+    checkFields(context, SPEC_SECTION_RECORD_FIELD_KIND_0, decl.fields());
   }
 
   private static void checkFields(
     final CBTyperContextType context,
+    final Optional<UUID> specSection,
     final List<CBASTField> fields)
     throws CBTypeCheckFailedException
   {
@@ -75,6 +85,7 @@ public final class CBTypeDeclarationChecker
 
         if (typeAssignment.arity() != 0) {
           throw context.failed(
+            specSection,
             field.type().lexical(),
             "errorTypeArgumentsIncorrect",
             String.format("%s", field.type()),
@@ -97,7 +108,7 @@ public final class CBTypeDeclarationChecker
     final var tracker = new CBExceptionTracker<CBTypeCheckFailedException>();
     for (final var caseV : decl.cases()) {
       try {
-        checkFields(context, caseV.fields());
+        checkFields(context, SPEC_SECTION_VARIANT_FIELD_KIND_0, caseV.fields());
       } catch (final CBTypeCheckFailedException e) {
         tracker.addException(e);
       }

@@ -69,10 +69,14 @@ public final class CBTypeChecker implements CBTypeCheckerType
     throws CBTypeCheckFailedException
   {
     final var context =
-      new CBTyperContext(this.strings, this.lineLog, this.errors);
-    final var current =
-      context.current();
+      new CBTyperContext(
+        this.strings,
+        this.lineLog,
+        this.packageV.language(),
+        this.errors
+      );
 
+    final var current = context.current();
     this.processTopLevelDeclarations();
     this.processDeclarations(current);
 

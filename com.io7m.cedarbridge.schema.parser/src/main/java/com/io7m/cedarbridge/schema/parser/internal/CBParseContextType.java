@@ -23,6 +23,8 @@ import com.io7m.jsx.SExpressionType;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface CBParseContextType extends AutoCloseable
 {
@@ -34,13 +36,20 @@ public interface CBParseContextType extends AutoCloseable
   void close()
     throws CBParseFailedException;
 
+  void setLanguageVersion(
+    int major,
+    int minor
+  );
+
   <T extends SExpressionType> T checkExpressionIs(
     SExpressionType expression,
+    Optional<UUID> specSection,
     Class<T> clazz)
     throws CBParseFailedException;
 
   SExpressionSymbolType checkExpressionIsKeyword(
     SExpressionType expression,
+    Optional<UUID> specSection,
     String name,
     String errorCode)
     throws CBParseFailedException;
@@ -48,12 +57,14 @@ public interface CBParseContextType extends AutoCloseable
   CBParseFailedException failed(
     SExpressionType expression,
     CBParseFailedException.Fatal fatality,
+    Optional<UUID> specSection,
     String errorCode,
     Exception e);
 
   CBParseFailedException failed(
     SExpressionType expression,
     CBParseFailedException.Fatal fatality,
+    Optional<UUID> specSection,
     String errorCode);
 
   int errorCount();
@@ -61,11 +72,13 @@ public interface CBParseContextType extends AutoCloseable
   CBParseFailedException failed(
     LexicalPosition<URI> lexical,
     CBParseFailedException.Fatal fatality,
+    Optional<UUID> specSection,
     Exception exception,
     String errorCode);
 
   CBParseFailedException failed(
     LexicalPosition<URI> lexical,
     CBParseFailedException.Fatal fatality,
+    Optional<UUID> specSection,
     String errorCode);
 }

@@ -18,7 +18,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="9c9c589e-4cc0-457f-8f3d-4d475b2763a3">
     <FormalItem title="Variant Syntax">
       <Verbatim>
         <xi:include href="ebnf/006_variant.ebnf"
@@ -27,7 +27,7 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Semantics">
+  <Subsection title="Semantics" id="17e2eaa4-f6ca-4a18-bd37-3f8e1be17247">
     <Paragraph>
       A <Term type="statement">variant</Term> statement, if present, <Term type="term">MUST</Term> occur with
       a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
@@ -72,7 +72,7 @@
       The precise type rules for variant type declarations are described in the
       <Link target="a579aa5e-34ee-44f5-8ad9-89d612d6b716">typing rules</Link> section for type expressions.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="9d1d4d2e-bee3-43eb-90db-0e75e40ce882">
       For a given field <Term type="expression">(field x t)</Term> within a <Term type="term">case</Term>
       declaration, the <Link target="32bb1b7b-6033-4a4c-94fc-78dc78448837">type expression</Link> <Term
       type="expression">t</Term> must have kind <Term type="expression">*</Term>.

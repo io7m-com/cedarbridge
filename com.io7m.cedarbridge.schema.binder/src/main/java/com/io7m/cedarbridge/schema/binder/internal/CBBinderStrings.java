@@ -42,7 +42,7 @@ public final class CBBinderStrings extends CBAbstractStrings
   public String toString()
   {
     return String.format(
-      "[CBParserStrings 0x%s]",
+      "[CBBinderStrings 0x%s]",
       Long.toUnsignedString(System.identityHashCode(this), 16)
     );
   }

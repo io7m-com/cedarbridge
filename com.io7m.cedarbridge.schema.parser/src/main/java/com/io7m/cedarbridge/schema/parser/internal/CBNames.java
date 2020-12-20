@@ -26,11 +26,23 @@ import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 public final class CBNames
 {
+  private static final Optional<UUID> SPEC_SECTION_FIELD_NAME =
+    uuid("b43940c3-038f-4330-971f-ac76d56d5fad");
+  private static final Optional<UUID> SPEC_SECTION_TYPE_PARAMETER_NAME =
+    uuid("b43940c3-038f-4330-971f-ac76d56d5fad");
+  private static final Optional<UUID> SPEC_SECTION_TYPE_NAME =
+    uuid("6f6e50ac-83e9-4454-9329-149e8ca97cb8");
+  private static final Optional<UUID> SPEC_SECTION_VARIANT_CASE_NAME =
+    uuid("9c9c589e-4cc0-457f-8f3d-4d475b2763a3");
+
   private CBNames()
   {
 
@@ -49,13 +61,19 @@ public final class CBNames
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION_FIELD_NAME,
+          SExpressionSymbolType.class
+        );
+
       try {
         return CBASTNames.fieldName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION_FIELD_NAME,
           "errorFieldNameInvalid",
           e);
       }
@@ -75,15 +93,21 @@ public final class CBNames
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION_TYPE_PARAMETER_NAME,
+          SExpressionSymbolType.class
+        );
       try {
         return CBASTNames.typeParameterName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION_TYPE_PARAMETER_NAME,
           "errorTypeParameterNameInvalid",
-          e);
+          e
+        );
       }
     }
   }
@@ -101,15 +125,22 @@ public final class CBNames
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION_TYPE_NAME,
+          SExpressionSymbolType.class
+        );
+
       try {
         return CBASTNames.typeName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION_TYPE_NAME,
           "errorTypeNameInvalid",
-          e);
+          e
+        );
       }
     }
   }
@@ -127,15 +158,21 @@ public final class CBNames
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       final var symbol =
-        subContext.checkExpressionIs(expression, SExpressionSymbolType.class);
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION_VARIANT_CASE_NAME,
+          SExpressionSymbolType.class
+        );
       try {
         return CBASTNames.variantCaseName(expression, symbol.text());
       } catch (final IllegalArgumentException e) {
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
+          SPEC_SECTION_VARIANT_CASE_NAME,
           "errorVariantCaseNameInvalid",
-          e);
+          e
+        );
       }
     }
   }

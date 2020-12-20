@@ -14,36 +14,42 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.typer.internal;
+package com.io7m.cedarbridge.schema.names;
 
-import com.io7m.cedarbridge.strings.api.CBAbstractStrings;
-import com.io7m.cedarbridge.strings.api.CBStringsType;
+import java.net.URI;
+import java.util.UUID;
 
-import java.util.ResourceBundle;
+/**
+ * Functions to quote language specifications.
+ */
 
-public final class CBTyperStrings extends CBAbstractStrings
+public final class CBSpecificationLocation
 {
-  private CBTyperStrings(
-    final ResourceBundle inResources)
+  private CBSpecificationLocation()
   {
-    super(inResources);
+
   }
 
-  public static CBStringsType create()
-  {
-    return new CBTyperStrings(
-      ofXML(
-        CBTyperStrings.class.getResourceAsStream(
-        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml"))
-    );
-  }
+  /**
+   * Quote the specification for language version {@code (major, minor)} at
+   * section {@code id}.
+   *
+   * @param major The language major version
+   * @param minor The language minor version
+   * @param id    The section id
+   *
+   * @return A URI for the section
+   */
 
-  @Override
-  public String toString()
+  public static URI quoteSpec(
+    final int major,
+    final int minor,
+    final UUID id)
   {
-    return String.format(
-      "[CBTyperStrings 0x%s]",
-      Long.toUnsignedString(System.identityHashCode(this), 16)
-    );
+    return URI.create(
+      String.format(
+        "https://www.io7m.com/software/cedarbridge/specification/index.xhtml#id_%s",
+        id
+      ));
   }
 }

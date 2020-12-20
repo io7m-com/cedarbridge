@@ -19,7 +19,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="5ce707c0-0cfe-4085-86db-1e5968049b92">
     <FormalItem title="Language Syntax">
       <Verbatim>
         <xi:include href="ebnf/003_language.ebnf"
@@ -33,20 +33,20 @@
       A <Term type="statement">language</Term> statement, if present, <Term type="term">MUST</Term> be the first
       statement in a compilation unit.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="e03347f6-a042-452c-b34b-eeb6514ee26e">
       The <Term type="statement">language</Term> statement can appear at most once in a compilation unit.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="9835ba13-ffc3-44ac-90df-1e3e5cc120fa">
       If a <Term type="statement">language</Term> statement names an unrecognized language, parsing of the
       compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
       unit ignored.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="a028f13d-dc6f-4fd5-872b-dfa41318ebe4">
       If a <Term type="statement">language</Term> statement names an unrecognized language major version, parsing of the
       compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
       unit ignored.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="34c52233-ee42-4dec-99ac-9997d7cd4bbe">
       If a <Term type="statement">language</Term> statement names an unrecognized language minor version, parsing of the
       compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
       unit ignored.

@@ -7,10 +7,20 @@
   <entry key="errorBind"><![CDATA[{0}:{1}:{2}: {3}
 {4}]]></entry>
 
+  <entry key="errorBindWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+  Specification: {4}
+{5}]]></entry>
+
   <entry key="errorBindWithOther"><![CDATA[{0}:{1}:{2}: {3}
 {4}
   See {5}:{6}:{7}:
 {8}]]></entry>
+
+  <entry key="errorBindWithSpecWithOther"><![CDATA[{0}:{1}:{2}: {3}
+  Specification: {4}
+{5}
+  See {6}:{7}:{8}:
+{9}]]></entry>
 
   <entry key="errorTypeMissing">Type "{0}" is not present in package "{1}".</entry>
   <entry key="errorPackageUnavailable">Package "{0}" is unavailable.</entry>

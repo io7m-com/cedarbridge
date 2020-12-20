@@ -18,7 +18,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Syntax">
+  <Subsection title="Syntax" id="b43940c3-038f-4330-971f-ac76d56d5fad">
     <FormalItem title="Record Syntax">
       <Verbatim>
         <xi:include href="ebnf/005_record.ebnf"
@@ -27,7 +27,7 @@
     </FormalItem>
   </Subsection>
 
-  <Subsection title="Semantics">
+  <Subsection title="Semantics" id="1cf38aec-7544-4b5e-a5ac-bb01567ffe77">
     <Paragraph>
       A <Term type="statement">record</Term> statement, if present, <Term type="term">MUST</Term> occur with
       a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
@@ -72,7 +72,7 @@
       The precise type rules for record type declarations are described in the
       <Link target="a579aa5e-34ee-44f5-8ad9-89d612d6b716">typing rules</Link> section for type expressions.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="06c63d66-019b-420a-809c-98ed41c3cfb2">
       For a given field <Term type="expression">(field x t)</Term>, the <Link
       target="32bb1b7b-6033-4a4c-94fc-78dc78448837">type expression</Link> <Term type="expression">t</Term>
       must have kind <Term type="expression">*</Term>.

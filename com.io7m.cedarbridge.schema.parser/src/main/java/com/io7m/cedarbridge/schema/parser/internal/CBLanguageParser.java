@@ -25,7 +25,10 @@ import com.io7m.jsx.SExpressionType;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
 
 /**
@@ -41,6 +44,15 @@ public final class CBLanguageParser
   private static final List<String> EXPECTING_SHAPES =
     List.of("(language <language-name> <language-major> <language-minor>)");
 
+  private static final Optional<UUID> SPEC_SECTION_LANGUAGE_NAME =
+    uuid("9835ba13-ffc3-44ac-90df-1e3e5cc120fa");
+  private static final Optional<UUID> SPEC_SECTION_VERSION_MAJOR =
+    uuid("a028f13d-dc6f-4fd5-872b-dfa41318ebe4");
+  private static final Optional<UUID> SPEC_SECTION_VERSION_MINOR =
+    uuid("34c52233-ee42-4dec-99ac-9997d7cd4bbe");
+  private static final Optional<UUID> SPEC_SECTION =
+    uuid("5ce707c0-0cfe-4085-86db-1e5968049b92");
+
   public CBLanguageParser()
   {
 
@@ -52,53 +64,89 @@ public final class CBLanguageParser
     throws CBParseFailedException
   {
     if (list.size() != 4) {
-      throw context.failed(list, IS_FATAL, "errorDeclarationInvalid");
+      throw context.failed(
+        list,
+        IS_FATAL,
+        SPEC_SECTION,
+        "errorDeclarationInvalid"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      list.get(0), "language", "errorLanguageKeyword");
+      list.get(0), SPEC_SECTION, "language", "errorLanguageKeyword");
 
     final var langName =
       context.checkExpressionIs(
         list.get(1),
+        SPEC_SECTION_LANGUAGE_NAME,
         SExpressionSymbolType.class
       ).text();
 
     final var langMajorText =
       context.checkExpressionIs(
         list.get(2),
+        SPEC_SECTION_VERSION_MAJOR,
         SExpressionSymbolType.class
       ).text();
 
     final var langMinorText =
       context.checkExpressionIs(
         list.get(3),
+        SPEC_SECTION_VERSION_MINOR,
         SExpressionSymbolType.class
       ).text();
 
     if (!Objects.equals(langName, "cedarbridge")) {
-      throw context.failed(list.get(1), IS_FATAL, "errorLanguageBadName");
+      throw context.failed(
+        list.get(1),
+        IS_FATAL,
+        SPEC_SECTION_LANGUAGE_NAME,
+        "errorLanguageBadName"
+      );
     }
 
     final BigInteger langMajor;
     try {
       langMajor = new BigInteger(langMajorText);
     } catch (final Exception e) {
-      throw context.failed(list.get(2), IS_FATAL, "errorLanguageBadVersion", e);
+      throw context.failed(
+        list.get(2),
+        IS_FATAL,
+        SPEC_SECTION_VERSION_MAJOR,
+        "errorLanguageBadVersion",
+        e
+      );
     }
 
     final BigInteger langMinor;
     try {
       langMinor = new BigInteger(langMinorText);
     } catch (final Exception e) {
-      throw context.failed(list.get(3), IS_FATAL, "errorLanguageBadVersion", e);
+      throw context.failed(
+        list.get(3),
+        IS_FATAL,
+        SPEC_SECTION_VERSION_MINOR,
+        "errorLanguageBadVersion",
+        e
+      );
     }
 
     if (!Objects.equals(langMajor, BigInteger.ONE)) {
-      throw context.failed(list.get(2), IS_FATAL, "errorLanguageBadVersion");
+      throw context.failed(
+        list.get(2),
+        IS_FATAL,
+        SPEC_SECTION_VERSION_MAJOR,
+        "errorLanguageBadVersion"
+      );
     }
+
     if (!Objects.equals(langMinor, BigInteger.ZERO)) {
-      throw context.failed(list.get(3), IS_FATAL, "errorLanguageBadVersion");
+      throw context.failed(
+        list.get(3),
+        IS_FATAL,
+        SPEC_SECTION_VERSION_MINOR,
+        "errorLanguageBadVersion"
+      );
     }
 
     return CBASTLanguage.builder()
@@ -117,9 +165,13 @@ public final class CBLanguageParser
   {
     try (var subContext =
            context.openExpectingOneOf(EXPECTING_KIND, EXPECTING_SHAPES)) {
-      final var list =
-        subContext.checkExpressionIs(expression, SExpressionListType.class);
-      return parseLanguage(subContext, list);
+      return parseLanguage(
+        subContext,
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class
+        ));
     }
   }
 }

@@ -36,14 +36,24 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
 public final class CBParser implements CBParserType
 {
+  private static final Optional<UUID> SPEC_SECTION_S_EXPRESSION =
+    uuid("d1cd60f0-8880-4754-964f-5b0489947c59");
+  private static final Optional<UUID> SPEC_SECTION_PACKAGE_NAME_MULTIPLE =
+    uuid("881f56d2-f2cf-413a-9bc0-b1a40b11c52a");
+  private static final Optional<UUID> SPEC_SECTION_PACKAGE_NAME_MISSING =
+    uuid("3423cdfb-1bc8-4c4c-a270-bbfde7fbc853");
+
   private final Consumer<CBError> errors;
   private final CBStringsType strings;
   private final CBExpressionSourceType source;
@@ -137,6 +147,7 @@ public final class CBParser implements CBParserType
         context.current().failed(
           e.lexical(),
           IS_NOT_FATAL,
+          SPEC_SECTION_S_EXPRESSION,
           e,
           "errorSExpressionInvalid"
         );
@@ -144,6 +155,7 @@ public final class CBParser implements CBParserType
         throw context.current().failed(
           LexicalPositions.zeroWithFile(this.source.source()),
           IS_FATAL,
+          Optional.empty(),
           e,
           "errorIO"
         );
@@ -196,6 +208,7 @@ public final class CBParser implements CBParserType
       throw context.failed(
         LexicalPositions.zeroWithFile(this.source.source()),
         IS_NOT_FATAL,
+        SPEC_SECTION_PACKAGE_NAME_MISSING,
         "errorPackageNameMissing"
       );
     }
@@ -204,6 +217,7 @@ public final class CBParser implements CBParserType
       throw context.failed(
         names.get(0).lexical(),
         IS_NOT_FATAL,
+        SPEC_SECTION_PACKAGE_NAME_MULTIPLE,
         "errorPackageNameMultiple"
       );
     }

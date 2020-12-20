@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.binder.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
@@ -29,6 +30,7 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
+import com.io7m.cedarbridge.schema.names.CBSpecificationLocation;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
 
@@ -38,6 +40,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
@@ -53,6 +57,7 @@ public final class CBBinderContext
   private final HashMap<String, LexicalPosition<URI>> packagesByShortNameImports;
   private final CBLoaderType loader;
   private final String packageName;
+  private final CBASTLanguage language;
   private BigInteger idPool;
   private int errors;
 
@@ -61,10 +66,14 @@ public final class CBBinderContext
     final CBLoaderType inLoader,
     final CBExpressionLineLogType inLineLog,
     final Consumer<CBError> inErrorConsumer,
-    final String inPackageName)
+    final String inPackageName,
+    final CBASTLanguage inLanguage)
   {
     this.packageName =
       Objects.requireNonNull(inPackageName, "inPackageName");
+    this.language =
+      Objects.requireNonNull(inLanguage, "inLanguage");
+
     Objects.requireNonNull(inErrorConsumer, "errorConsumer");
 
     this.loader =
@@ -154,6 +163,7 @@ public final class CBBinderContext
 
     @Override
     public void registerPackage(
+      final Optional<UUID> specSection,
       final LexicalPosition<URI> lexical,
       final String text,
       final CBPackageType packageV)
@@ -161,6 +171,7 @@ public final class CBBinderContext
     {
       if (this.root.packagesByShortName.containsKey(text)) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           this.root.packagesByShortNameImports.get(text),
           "errorPackageShortNameUsed",
@@ -174,10 +185,12 @@ public final class CBBinderContext
 
     @Override
     public CBBindFailedException failed(
+      final Optional<UUID> specSection,
       final LexicalPosition<URI> lexical,
       final String errorCode,
       final Object... arguments)
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(lexical, "lexical");
       Objects.requireNonNull(errorCode, "errorCode");
 
@@ -186,8 +199,19 @@ public final class CBBinderContext
       final var context =
         this.root.lineLog.contextualize(lexical).orElse("");
 
-      final var text =
-        this.root.strings.format(
+      final String text;
+      if (specSection.isPresent()) {
+        text = this.root.strings.format(
+          "errorBindWithSpec",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          this.quoteSpec(specSection.get()),
+          context
+        );
+      } else {
+        text = this.root.strings.format(
           "errorBind",
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
@@ -195,6 +219,7 @@ public final class CBBinderContext
           error,
           context
         );
+      }
 
       final var errorValue =
         CBError.builder()
@@ -209,13 +234,26 @@ public final class CBBinderContext
       return new CBBindFailedException();
     }
 
+    private URI quoteSpec(
+      final UUID uuid)
+    {
+      final var language = this.root.language;
+      return CBSpecificationLocation.quoteSpec(
+        language.major().intValueExact(),
+        language.minor().intValueExact(),
+        uuid
+      );
+    }
+
     @Override
     public CBBindFailedException failedWithOther(
+      final Optional<UUID> specSection,
       final LexicalPosition<URI> lexical,
       final LexicalPosition<URI> lexicalOther,
       final String errorCode,
       final Object... arguments)
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(lexical, "lexical");
       Objects.requireNonNull(lexicalOther, "lexicalOther");
       Objects.requireNonNull(errorCode, "errorCode");
@@ -227,8 +265,23 @@ public final class CBBinderContext
       final var contextOther =
         this.root.lineLog.contextualize(lexicalOther).orElse("");
 
-      final var text =
-        this.root.strings.format(
+      final String text;
+      if (specSection.isPresent()) {
+        text = this.root.strings.format(
+          "errorBindWithSpecWithOther",
+          lexical.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexical.line()),
+          Integer.valueOf(lexical.column()),
+          error,
+          this.quoteSpec(specSection.get()),
+          context,
+          lexicalOther.file().orElse(URI.create("urn:unspecified")),
+          Integer.valueOf(lexicalOther.line()),
+          Integer.valueOf(lexicalOther.column()),
+          contextOther
+        );
+      } else {
+        text = this.root.strings.format(
           "errorBindWithOther",
           lexical.file().orElse(URI.create("urn:unspecified")),
           Integer.valueOf(lexical.line()),
@@ -240,6 +293,7 @@ public final class CBBinderContext
           Integer.valueOf(lexicalOther.column()),
           contextOther
         );
+      }
 
       final var errorValue =
         CBError.builder()
@@ -332,9 +386,11 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindType(
+      final Optional<UUID> specSection,
       final CBASTTypeDeclarationType type)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(type, "type");
 
       final var lexical = type.lexical();
@@ -342,6 +398,7 @@ public final class CBBinderContext
       final var existing = this.findTypeBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",
@@ -364,9 +421,11 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindProtocol(
+      final Optional<UUID> specSection,
       final CBASTProtocolDeclaration proto)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(proto, "proto");
 
       final var lexical = proto.lexical();
@@ -374,6 +433,7 @@ public final class CBBinderContext
       final var existing = this.findProtoBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",
@@ -396,16 +456,19 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindTypeParameter(
+      final Optional<UUID> specSection,
       final String name,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(name, "name");
       Objects.requireNonNull(lexical, "lexical");
 
       final var existing = this.findTypeBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",
@@ -427,16 +490,19 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindField(
+      final Optional<UUID> specSection,
       final String name,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(name, "name");
       Objects.requireNonNull(lexical, "lexical");
 
       final var existing = this.findFieldBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",
@@ -458,13 +524,19 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType checkTypeBinding(
+      final Optional<UUID> specSection,
       final String text,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(text, "text");
+      Objects.requireNonNull(lexical, "lexical");
+
       final var existing = this.findTypeBinding(text);
       if (existing == null) {
         throw this.failed(
+          specSection,
           lexical,
           "errorBindingMissing",
           text
@@ -475,16 +547,19 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindVariantCase(
+      final Optional<UUID> specSection,
       final String name,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(name, "name");
       Objects.requireNonNull(lexical, "lexical");
 
       final var existing = this.findCaseBinding(name);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",
@@ -506,16 +581,19 @@ public final class CBBinderContext
 
     @Override
     public CBPackageType checkPackageBinding(
+      final Optional<UUID> specSection,
       final String text,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(text, "text");
       Objects.requireNonNull(lexical, "lexical");
 
       final var pack = this.root.packagesByShortName.get(text);
       if (pack == null) {
         throw this.failed(
+          specSection,
           lexical,
           "errorPackageUnavailable",
           text
@@ -533,16 +611,19 @@ public final class CBBinderContext
 
     @Override
     public CBBindingLocalType bindProtocolVersion(
+      final Optional<UUID> specSection,
       final BigInteger version,
       final LexicalPosition<URI> lexical)
       throws CBBindFailedException
     {
+      Objects.requireNonNull(specSection, "specSection");
       Objects.requireNonNull(version, "version");
       Objects.requireNonNull(lexical, "lexical");
 
       final var existing = this.findVersionBinding(version);
       if (existing != null) {
         throw this.failedWithOther(
+          specSection,
           lexical,
           existing.lexical(),
           "errorBindingConflict",

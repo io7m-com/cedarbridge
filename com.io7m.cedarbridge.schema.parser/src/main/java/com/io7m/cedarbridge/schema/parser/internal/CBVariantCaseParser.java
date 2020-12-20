@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
+import static com.io7m.cedarbridge.schema.parser.internal.CBVariantParser.SPEC_SECTION;
 
 /**
  * A parser for variant case declarations.
@@ -51,13 +52,25 @@ public final class CBVariantCaseParser
       throw context.failed(
         expression,
         IS_NOT_FATAL,
-        "errorVariantCaseInvalidDeclaration");
+        SPEC_SECTION,
+        "errorVariantCaseInvalidDeclaration"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      expression.get(0), "case", "errorVariantCaseKeyword");
+      expression.get(0),
+      SPEC_SECTION,
+      "case",
+      "errorVariantCaseKeyword"
+    );
+
     final var typeName =
-      context.checkExpressionIs(expression.get(1), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(1),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
+
     final var name =
       CBNames.parseVariantCaseName(context, typeName);
 
@@ -68,7 +81,10 @@ public final class CBVariantCaseParser
         items.add(
           new CBFieldParser().parse(
             context,
-            context.checkExpressionIs(subExpr, SExpressionListType.class)
+            context.checkExpressionIs(
+              subExpr,
+              SPEC_SECTION,
+              SExpressionListType.class)
           )
         );
       } catch (final CBParseFailedException e) {
@@ -103,7 +119,10 @@ public final class CBVariantCaseParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return parseVariantCase(
         subContext,
-        subContext.checkExpressionIs(expression, SExpressionListType.class)
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class)
       );
     }
   }

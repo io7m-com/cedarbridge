@@ -27,7 +27,10 @@ import com.io7m.jsx.SExpressionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParameterName;
@@ -39,6 +42,13 @@ import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeParam
 public final class CBVariantParser
   implements CBElementParserType<CBASTTypeVariant>
 {
+  /**
+   * The syntax section for variants.
+   */
+
+  public static final Optional<UUID> SPEC_SECTION =
+    uuid("9c9c589e-4cc0-457f-8f3d-4d475b2763a3");
+
   public CBVariantParser()
   {
 
@@ -60,7 +70,9 @@ public final class CBVariantParser
         throw subContext.failed(
           expression,
           IS_NOT_FATAL,
-          "errorVariantInvalidTypeParameter");
+          SPEC_SECTION,
+          "errorVariantInvalidTypeParameter"
+        );
       }
 
       return parseTypeParameterName(subContext, expression.get(1));
@@ -78,13 +90,25 @@ public final class CBVariantParser
       throw context.failed(
         expression,
         IS_NOT_FATAL,
-        "errorVariantInvalidDeclaration");
+        SPEC_SECTION,
+        "errorVariantInvalidDeclaration"
+      );
     }
 
     context.checkExpressionIsKeyword(
-      expression.get(0), "variant", "errorVariantKeyword");
+      expression.get(0),
+      SPEC_SECTION,
+      "variant",
+      "errorVariantKeyword"
+    );
+
     final var typeName =
-      context.checkExpressionIs(expression.get(1), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(1),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
+
     final var name =
       parseTypeName(context, typeName);
 
@@ -131,7 +155,10 @@ public final class CBVariantParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return parseVariantMemberActual(
         subContext,
-        subContext.checkExpressionIs(subExpression, SExpressionListType.class)
+        subContext.checkExpressionIs(
+          subExpression,
+          SPEC_SECTION,
+          SExpressionListType.class)
       );
     }
   }
@@ -145,11 +172,17 @@ public final class CBVariantParser
       throw context.failed(
         expression,
         IS_NOT_FATAL,
-        "errorVariantUnrecognizedMember");
+        SPEC_SECTION,
+        "errorVariantUnrecognizedMember"
+      );
     }
 
     final var start =
-      context.checkExpressionIs(expression.get(0), SExpressionSymbolType.class);
+      context.checkExpressionIs(
+        expression.get(0),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
 
     switch (start.text()) {
       case "parameter":
@@ -160,7 +193,9 @@ public final class CBVariantParser
         throw context.failed(
           expression,
           IS_NOT_FATAL,
-          "errorVariantUnrecognizedMember");
+          SPEC_SECTION,
+          "errorVariantUnrecognizedMember"
+        );
     }
   }
 
@@ -179,7 +214,10 @@ public final class CBVariantParser
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
       return parseVariant(
         subContext,
-        subContext.checkExpressionIs(expression, SExpressionListType.class)
+        subContext.checkExpressionIs(
+          expression,
+          SPEC_SECTION,
+          SExpressionListType.class)
       );
     }
   }
