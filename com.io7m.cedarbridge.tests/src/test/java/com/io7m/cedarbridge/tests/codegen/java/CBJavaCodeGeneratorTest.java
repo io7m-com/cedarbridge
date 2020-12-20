@@ -147,7 +147,7 @@ public final class CBJavaCodeGeneratorTest
             try {
               final var inputFile = this.directory.resolve(path);
               if (Files.isRegularFile(inputFile)) {
-                final var entry = new ZipEntry(path.toString());
+                final var entry = new ZipEntry(path.toString().replace("\\", "/"));
                 output.putNextEntry(entry);
                 try (var stream = Files.newInputStream(inputFile)) {
                   stream.transferTo(output);
