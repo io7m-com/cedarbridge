@@ -51,4 +51,37 @@
       it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
     </Paragraph>
   </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statements declare a simple <Term type="term">Echo</Term> protocol with two versions:
+    </Paragraph>
+    <FormalItem title="Protocol Example">
+      <Verbatim><![CDATA[
+(import com.io7m.cedarbridge cb)
+
+(record Hello
+  [field name cb:String])
+
+(record Hello2
+  [field name cb:String]
+  [field id   cb:IntegerUnsigned32])
+
+(record Speak
+  [field message cb:String])
+
+(record Goodbye)
+
+(protocol Echo
+  [version 1
+    Hello
+    Speak
+    Goodbye]
+  [version 2
+    Hello2
+    Speak
+    Goodbye])
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
 </Section>

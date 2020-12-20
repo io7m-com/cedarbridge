@@ -58,7 +58,7 @@
       The following statement declares that the compilation unit is written in <Term type="term">Cedarbridge</Term>
       <Term type="constant">1.0</Term>:
     </Paragraph>
-    <FormalItem title="Package Example">
+    <FormalItem title="Language Example">
       <Verbatim><![CDATA[(language cedarbridge 1 0)]]></Verbatim>
     </FormalItem>
   </Subsection>

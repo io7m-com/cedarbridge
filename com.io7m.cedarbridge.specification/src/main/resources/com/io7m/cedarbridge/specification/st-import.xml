@@ -76,7 +76,7 @@
       The following statement imports a package named
       <Term type="package">com.io7m.cedarbridge</Term> and makes it accessible as <Term type="expression">cb</Term>:
     </Paragraph>
-    <FormalItem title="Package Example">
+    <FormalItem title="Import Example">
       <Verbatim><![CDATA[(import com.io7m.cedarbridge cb)]]></Verbatim>
     </FormalItem>
   </Subsection>

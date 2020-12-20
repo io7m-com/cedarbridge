@@ -84,7 +84,7 @@
       The following statement declares a parameterized <Term type="expression">Pair</Term> type
       with two fields:
     </Paragraph>
-    <FormalItem title="Package Example">
+    <FormalItem title="Record Example">
       <Verbatim><![CDATA[(record Pair
   (parameter A)
   (parameter B)
