@@ -30,6 +30,7 @@ import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
+import com.io7m.cedarbridge.tests.CBZip;
 import com.sun.source.util.JavacTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -139,29 +140,7 @@ public final class CBJavaCodeGeneratorTest
       out.newLine();
     }
 
-    try (var output = new ZipOutputStream(
-      new BufferedOutputStream(Files.newOutputStream(moduleFile)))) {
-      try (var pathStream = Files.walk(this.directory)) {
-        pathStream.map(p -> this.directory.relativize(p))
-          .forEach(path -> {
-            try {
-              final var inputFile = this.directory.resolve(path);
-              if (Files.isRegularFile(inputFile)) {
-                final var entry = new ZipEntry(path.toString().replace("\\", "/"));
-                output.putNextEntry(entry);
-                try (var stream = Files.newInputStream(inputFile)) {
-                  stream.transferTo(output);
-                }
-                output.closeEntry();
-              }
-            } catch (final IOException e) {
-              throw new UncheckedIOException(e);
-            }
-          });
-      }
-      output.finish();
-      output.flush();
-    }
+    CBZip.create(moduleFile, this.directory);
   }
 
   private CBASTPackage parse(
