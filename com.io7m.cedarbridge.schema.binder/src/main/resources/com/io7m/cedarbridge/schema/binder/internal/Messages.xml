@@ -17,5 +17,10 @@
   <entry key="errorPackageShortNameUsed">Package short name "{0}" has already been defined.</entry>
   <entry key="errorBindingConflict">Name "{0}" has already been defined.</entry>
   <entry key="errorBindingMissing">Name "{0}" is not defined or is not in scope.</entry>
+  <entry key="errorProtocolVersionMissing"><![CDATA[The range of protocol versions is not contiguous.
+  Minimum: {0}
+  Maximum: {1}
+  Missing: {2} (Only one missing value is shown)
+]]></entry>
 
 </properties>

@@ -50,6 +50,17 @@
       <Term type="expression">P(w)</Term> is the set of types in version <Term type="expression">w</Term>, then
       it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
     </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">types</Term> within a <Term type="term">version</Term> is significant;
+      changing the order of <Term type="statement">type</Term> declarations will change the semantics and serialized
+      form of the protocol.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">versions</Term> within a <Term type="term">protocol</Term> is
+      NOT significant; changing the order of <Term type="statement">version</Term> declarations will not change the
+      semantics or serialized form of the protocol as the declarations are expected to be internally ordered by their
+      declared version number.
+    </Paragraph>
   </Subsection>
 
   <Subsection title="Example">

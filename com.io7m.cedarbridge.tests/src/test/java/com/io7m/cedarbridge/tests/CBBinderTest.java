@@ -305,6 +305,18 @@ public final class CBBinderTest
   }
 
   @Test
+  public void testProto2()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindProto2.cbs");
+    });
+
+    assertEquals("errorProtocolVersionMissing", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
   public void testOK0()
     throws Exception
   {

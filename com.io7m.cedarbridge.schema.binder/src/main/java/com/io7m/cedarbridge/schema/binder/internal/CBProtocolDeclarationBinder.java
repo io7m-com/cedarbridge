@@ -22,7 +22,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 
+import java.math.BigInteger;
 import java.util.Objects;
+import java.util.TreeSet;
 
 public final class CBProtocolDeclarationBinder
   implements CBElementBinderType<CBASTProtocolDeclaration>
@@ -40,13 +42,37 @@ public final class CBProtocolDeclarationBinder
     final var exceptions = new CBExceptionTracker<CBBindFailedException>();
 
     try (var subContext = context.openBindingScope()) {
+      final var numbers = new TreeSet<BigInteger>();
       for (final var version : item.versions()) {
         try {
           bindVersionDeclaration(subContext, version);
         } catch (final CBBindFailedException e) {
           exceptions.addException(e);
         }
+        numbers.add(version.version());
       }
+
+      final var min =
+        numbers.stream().min(BigInteger::compareTo).orElseThrow();
+      final var max =
+        numbers.stream().max(BigInteger::compareTo).orElseThrow();
+
+      for (var current = min;
+           current.compareTo(max) <= 0;
+           current = current.add(BigInteger.ONE)) {
+        if (!numbers.contains(current)) {
+          exceptions.addException(
+            context.failed(
+              item.lexical(),
+              "errorProtocolVersionMissing",
+              min,
+              max,
+              current
+            ));
+          break;
+        }
+      }
+
       exceptions.throwIfNecessary();
     }
   }
