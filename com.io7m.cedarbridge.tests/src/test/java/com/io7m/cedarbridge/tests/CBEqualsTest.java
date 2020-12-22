@@ -44,6 +44,9 @@ import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
 import com.io7m.cedarbridge.runtime.api.CBSome;
 import com.io7m.cedarbridge.runtime.api.CBString;
 import com.io7m.cedarbridge.runtime.api.CBTypeArgument;
+import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolAvailable;
+import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
+import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolUse;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTFieldName;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
@@ -140,6 +143,9 @@ public final class CBEqualsTest
       CBCodeGeneratorConfiguration.class,
       CBCodeGeneratorDescription.class,
       CBCodeGeneratorResult.class,
+      CBContainerProtocolAvailable.class,
+      CBContainerProtocolResponse.class,
+      CBContainerProtocolUse.class,
       CBError.class,
       CBFloat16.class,
       CBFloat32.class,
