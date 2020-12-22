@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.codegen.java.internal;
 
+import com.io7m.cedarbridge.schema.compiled.CBExternalName;
 import com.io7m.cedarbridge.schema.compiled.CBExternalType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
@@ -35,21 +36,18 @@ public final class CBCGJavaTypeNames
 
   }
 
-  public static ClassName protocolClassNameOf(
+  public static ClassName protoInterfaceNameOf(
     final CBProtocolDeclarationType proto)
   {
     final var ownerPack = proto.owner();
 
     return ClassName.get(
       ownerPack.name(),
-      String.format(
-        "Protocol%sType",
-        proto.name()
-      )
+      String.format("Protocol%sType", proto.name())
     );
   }
 
-  public static ClassName protocolClassNameOf(
+  public static ClassName protoVersionedInterfaceNameOf(
     final CBProtocolVersionDeclarationType proto)
   {
     final var ownerProto = proto.owner();
@@ -68,13 +66,11 @@ public final class CBCGJavaTypeNames
   public static ClassName dataClassNameOf(
     final CBTypeDeclarationType type)
   {
-    if (type instanceof CBExternalType) {
-      return ClassName.get(
-        ((CBExternalType) type).externalPackage(),
-        ((CBExternalType) type).externalType()
-      );
-    }
-    return ClassName.get(type.owner().name(), type.name());
+    final var externalName = externalNameOf(type);
+    return ClassName.get(
+      externalName.externalPackage(),
+      externalName.externalName()
+    );
   }
 
   public static TypeName dataTypeNameOf(
@@ -82,8 +78,13 @@ public final class CBCGJavaTypeNames
   {
     final var typeParameters =
       type.parameters();
+    final var externalName =
+      externalNameOf(type);
     final var className =
-      ClassName.get(type.owner().name(), type.name());
+      ClassName.get(
+        externalName.externalPackage(),
+        externalName.externalName()
+      );
 
     if (typeParameters.isEmpty()) {
       return className;
@@ -106,10 +107,13 @@ public final class CBCGJavaTypeNames
       caseV.owner();
     final var typeParameters =
       type.parameters();
+    final var externalName =
+      externalNameOf(type);
+
     final var className =
       ClassName.get(
-        type.owner().name(),
-        type.name(),
+        externalName.externalPackage(),
+        externalName.externalName(),
         caseV.name()
       );
 
@@ -132,37 +136,93 @@ public final class CBCGJavaTypeNames
   {
     final var type =
       caseV.owner();
+    final var externalName =
+      externalNameOf(type);
     final var typeParameters =
       type.parameters();
+
     return ClassName.get(
-      type.owner().name(),
-      type.name(),
+      externalName.externalPackage(),
+      externalName.externalName(),
       caseV.name()
+    );
+  }
+
+  public static ClassName protoSerializerClassNameOf(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var ownerProto = proto.owner();
+    final var ownerPack = ownerProto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format(
+        "Protocol%sv%sSerializer",
+        ownerProto.name(),
+        proto.version()
+      )
+    );
+  }
+
+  public static ClassName protoSerializerFactoryClassNameOf(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var ownerProto = proto.owner();
+    final var ownerPack = ownerProto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format(
+        "Protocol%sv%sSerializerFactory",
+        ownerProto.name(),
+        proto.version()
+      )
     );
   }
 
   public static ClassName serializerClassNameOf(
     final CBTypeDeclarationType type)
   {
+    final var externalName = externalNameOf(type);
     return ClassName.get(
-      type.owner().name(),
-      String.format("%sSerializer", type.name())
+      externalName.externalPackage(),
+      String.format("%sSerializer", externalName.externalName())
     );
   }
 
   public static ClassName serializerFactoryClassNameOf(
     final CBTypeDeclarationType type)
   {
+    final var externalName = externalNameOf(type);
     return ClassName.get(
-      type.owner().name(),
-      String.format("%sSerializerFactory", type.name())
+      externalName.externalPackage(),
+      String.format("%sSerializerFactory", externalName.externalName())
     );
   }
 
-  public static TypeName externalNameOf(
+  public static CBExternalName externalNameOf(
+    final CBTypeDeclarationType type)
+  {
+    if (type instanceof CBExternalType) {
+      return type.external().get();
+    }
+
+    return type.external().orElse(
+      CBExternalName.builder()
+        .setExternalPackage(type.owner().name())
+        .setExternalName(type.name())
+        .build()
+    );
+  }
+
+  public static TypeName externalTypeNameOf(
     final CBExternalType decl)
   {
-    return ClassName.get(decl.externalPackage(), decl.externalType());
+    final var externalName = externalNameOf(decl);
+    return ClassName.get(
+      externalName.externalPackage(),
+      externalName.externalName()
+    );
   }
 
   private static String toTitleCase(

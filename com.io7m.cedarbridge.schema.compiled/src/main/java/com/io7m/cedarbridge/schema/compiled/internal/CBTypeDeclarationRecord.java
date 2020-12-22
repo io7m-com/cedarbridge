@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.compiled.internal;
 
+import com.io7m.cedarbridge.schema.compiled.CBExternalName;
 import com.io7m.cedarbridge.schema.compiled.CBFieldType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBRecordType;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class CBTypeDeclarationRecord implements CBRecordType
 {
@@ -36,16 +38,20 @@ public final class CBTypeDeclarationRecord implements CBRecordType
   private final List<CBTypeParameterType> parametersRead;
   private final List<CBTypeParameterType> parameters;
   private CBPackageType owner;
+  private Optional<CBExternalName> externalName;
 
   public CBTypeDeclarationRecord(
     final String inName)
   {
     this.name =
       Objects.requireNonNull(inName, "name");
+
     this.fields =
       new ArrayList<>();
     this.parameters =
       new ArrayList<>();
+    this.externalName =
+      Optional.empty();
 
     Preconditions.checkPreconditionV(
       inName,
@@ -107,6 +113,18 @@ public final class CBTypeDeclarationRecord implements CBRecordType
     field.setOwner(this);
   }
 
+  public void setExternalName(
+    final String newExternalPackage,
+    final String newExternalName)
+  {
+    this.externalName = Optional.of(
+      CBExternalName.builder()
+        .setExternalPackage(newExternalPackage)
+        .setExternalName(newExternalName)
+        .build()
+    );
+  }
+
   @Override
   public List<CBFieldType> fields()
   {
@@ -129,6 +147,12 @@ public final class CBTypeDeclarationRecord implements CBRecordType
   public List<CBTypeParameterType> parameters()
   {
     return this.parametersRead;
+  }
+
+  @Override
+  public Optional<CBExternalName> external()
+  {
+    return this.externalName;
   }
 
   public void setOwner(

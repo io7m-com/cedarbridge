@@ -62,6 +62,7 @@ public final class CBCore
 
     {
       final var option = builder.createVariant("Option");
+      option.setExternalName(externalPackageName, "CBOptionType");
       option.addTypeParameter("T");
       option.createCase("None");
       final var some = option.createCase("Some");

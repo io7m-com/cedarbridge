@@ -17,8 +17,10 @@
 package com.io7m.cedarbridge.codegen.java.internal;
 
 import com.io7m.cedarbridge.codegen.java.internal.data_classes.CBCGDataClassGenerator;
-import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolClassGenerator;
-import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedClassGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolInterfaceGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedInterfaceGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedSerializerClassGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedSerializerFactoryClassGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.serializer_factories.CBCGJavaSerializerFactoryGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.serializers.CBCGJavaSerializerGenerator;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
@@ -60,19 +62,30 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       final var proto = entry.getValue();
 
       final var wroteProto =
-        new CBCGProtocolClassGenerator()
+        new CBCGProtocolInterfaceGenerator()
           .execute(this.configuration, proto);
 
       LOG.debug("generate: {}", wroteProto);
       resultBuilder.addCreatedFiles(wroteProto);
 
       for (final var version : proto.versions().values()) {
-        final var wroteData =
-          new CBCGProtocolVersionedClassGenerator()
+        final var wroteInterface =
+          new CBCGProtocolVersionedInterfaceGenerator()
+            .execute(this.configuration, version);
+        final var wroteSerializer =
+          new CBCGProtocolVersionedSerializerClassGenerator()
+            .execute(this.configuration, version);
+        final var wroteSerializerFactory =
+          new CBCGProtocolVersionedSerializerFactoryClassGenerator()
             .execute(this.configuration, version);
 
-        LOG.debug("generate: {}", wroteData);
-        resultBuilder.addCreatedFiles(wroteData);
+        LOG.debug("generate: {}", wroteInterface);
+        LOG.debug("generate: {}", wroteSerializer);
+        LOG.debug("generate: {}", wroteSerializerFactory);
+
+        resultBuilder.addCreatedFiles(wroteInterface);
+        resultBuilder.addCreatedFiles(wroteSerializer);
+        resultBuilder.addCreatedFiles(wroteSerializerFactory);
       }
     }
 

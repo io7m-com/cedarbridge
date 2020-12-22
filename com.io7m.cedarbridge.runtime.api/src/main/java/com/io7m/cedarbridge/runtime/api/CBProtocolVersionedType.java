@@ -22,7 +22,8 @@ import java.math.BigInteger;
  * The base type of all versioned protocols.
  */
 
-public interface CBProtocolVersionedType extends CBProtocolType
+public interface CBProtocolVersionedType
+  extends CBProtocolType, CBSerializableType
 {
   /**
    * @return The version of the protocol

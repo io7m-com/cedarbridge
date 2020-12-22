@@ -103,7 +103,7 @@ public final class CBCGJavaTypeExpressions
       return CBCGJavaTypeNames.dataClassNameOf(decl);
     }
     if (decl instanceof CBExternalType) {
-      return CBCGJavaTypeNames.externalNameOf((CBExternalType) decl);
+      return CBCGJavaTypeNames.externalTypeNameOf((CBExternalType) decl);
     }
     throw new UnreachableCodeException();
   }

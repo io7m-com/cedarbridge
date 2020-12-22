@@ -23,15 +23,5 @@ package com.io7m.cedarbridge.schema.compiled;
 
 public interface CBExternalType extends CBTypeDeclarationType
 {
-  /**
-   * @return The name of the external type package
-   */
 
-  String externalPackage();
-
-  /**
-   * @return The name of the external type
-   */
-
-  String externalType();
 }

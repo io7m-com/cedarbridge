@@ -108,6 +108,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   public CBRecordBuilderType createRecord(
     final String name)
   {
+    Objects.requireNonNull(name, "name");
+
     this.checkNotDone();
 
     CBTypeNames.INSTANCE.checkValid(name);
@@ -148,6 +150,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   public CBVariantBuilderType createVariant(
     final String name)
   {
+    Objects.requireNonNull(name, "name");
+
     this.checkNotDone();
 
     CBTypeNames.INSTANCE.checkValid(name);
@@ -363,6 +367,14 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     }
 
     @Override
+    public void setExternalName(
+      final String externalPackageName,
+      final String name)
+    {
+      this.record.setExternalName(externalPackageName, name);
+    }
+
+    @Override
     public CBPackageBuilderType ownerPackage()
     {
       CBPackageBuilder.this.checkNotDone();
@@ -440,6 +452,14 @@ public final class CBPackageBuilder implements CBPackageBuilderType
       final var parameter = new CBTypeParameter(name, this.variant.arity());
       this.variant.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setExternalName(
+      final String externalPackageName,
+      final String name)
+    {
+      this.variant.setExternalName(externalPackageName, name);
     }
 
     @Override
@@ -530,7 +550,10 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         Objects.requireNonNull(inName, "name");
       this.external =
         new CBTypeDeclarationExternal(
-          this.name, externalPackage, externalType);
+          this.name,
+          externalPackage,
+          externalType
+        );
     }
 
     @Override
@@ -583,6 +606,14 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         this.external.arity());
       this.external.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setExternalName(
+      final String externalPackageName,
+      final String externalName)
+    {
+      throw new UnsupportedOperationException();
     }
   }
 }

@@ -44,13 +44,13 @@ public abstract class CBAbstractSerializerFactory<T extends CBSerializableType>
     Objects.requireNonNull(directory, "directory");
     Objects.requireNonNull(arguments, "arguments");
 
-    checkArgumentCount(
-      this.typeName().packageName(),
-      this.typeName().typeName(),
-      arguments.size(),
-      this.typeParameters().size()
-    );
+    final var qName = this.typeName();
+    final var packageName = qName.packageName();
+    final var qTypeName = qName.typeName();
+    final var expectedCount = this.typeParameters().size();
+    final var receivedCount = arguments.size();
 
+    checkArgumentCount(packageName, qTypeName, expectedCount, receivedCount);
     return this.createActual(directory, arguments);
   }
 

@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.tests;
 
+import com.io7m.cedarbridge.schema.compiled.CBExternalName;
 import com.io7m.cedarbridge.schema.compiled.CBFieldType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBRecordType;
@@ -23,6 +24,7 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class CBFakeRecord implements CBRecordType
 {
@@ -66,6 +68,12 @@ public final class CBFakeRecord implements CBRecordType
   public List<CBTypeParameterType> parameters()
   {
     return List.of();
+  }
+
+  @Override
+  public Optional<CBExternalName> external()
+  {
+    return Optional.empty();
   }
 
   @Override

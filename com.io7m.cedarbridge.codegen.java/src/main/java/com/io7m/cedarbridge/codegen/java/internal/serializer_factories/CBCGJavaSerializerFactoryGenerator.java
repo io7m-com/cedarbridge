@@ -33,9 +33,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
 
-import static com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions.createTypeVariables;
 import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.dataTypeNameOf;
 import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.serializerFactoryClassNameOf;
+import static com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions.createTypeVariables;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;

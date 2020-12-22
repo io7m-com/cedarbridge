@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.compiled.internal;
 
+import com.io7m.cedarbridge.schema.compiled.CBExternalName;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class CBTypeDeclarationVariant implements CBVariantType
 {
@@ -36,6 +38,7 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   private final List<CBTypeParameterType> parametersRead;
   private final List<CBTypeParameterType> parameters;
   private CBPackageType owner;
+  private Optional<CBExternalName> externalName;
 
   public CBTypeDeclarationVariant(
     final String inName)
@@ -53,6 +56,8 @@ public final class CBTypeDeclarationVariant implements CBVariantType
       new ArrayList<>();
     this.parameters =
       new ArrayList<>();
+    this.externalName =
+      Optional.empty();
 
     this.casesRead =
       Collections.unmodifiableList(this.cases);
@@ -108,6 +113,18 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     caseV.setOwner(this);
   }
 
+  public void setExternalName(
+    final String newExternalPackage,
+    final String newExternalName)
+  {
+    this.externalName = Optional.of(
+      CBExternalName.builder()
+        .setExternalPackage(newExternalPackage)
+        .setExternalName(newExternalName)
+        .build()
+    );
+  }
+
   @Override
   public List<CBVariantCaseType> cases()
   {
@@ -130,6 +147,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   public List<CBTypeParameterType> parameters()
   {
     return this.parametersRead;
+  }
+
+  @Override
+  public Optional<CBExternalName> external()
+  {
+    return this.externalName;
   }
 
   public void setOwner(

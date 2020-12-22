@@ -230,6 +230,11 @@
         <artifactId>com.io7m.xstructural.cmdline</artifactId>
         <version>${com.io7m.xstructural.version}</version>
       </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>3.5.13</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

@@ -29,13 +29,13 @@ public final class CBIntegerUnsigned64Serializer
     final CBSerializationContextType context,
     final CBIntegerUnsigned64 value)
   {
-    context.writeS64(value.value());
+    context.writeU64(value.value());
   }
 
   @Override
   public CBIntegerUnsigned64 deserialize(
     final CBSerializationContextType context)
   {
-    return CBIntegerUnsigned64.of(context.readS64());
+    return CBIntegerUnsigned64.of(context.readU64());
   }
 }

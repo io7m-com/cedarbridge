@@ -38,4 +38,10 @@ public final class CBListSerializers<T extends CBSerializableType>
         elementType.arguments()
       ));
   }
+
+  @Override
+  public List<String> typeParameters()
+  {
+    return List.of("T");
+  }
 }

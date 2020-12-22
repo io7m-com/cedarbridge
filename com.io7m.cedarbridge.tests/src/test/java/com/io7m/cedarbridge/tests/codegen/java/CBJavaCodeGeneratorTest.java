@@ -16,496 +16,281 @@
 
 package com.io7m.cedarbridge.tests.codegen.java;
 
-import com.io7m.cedarbridge.codegen.java.CBCGJavaFactory;
-import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
-import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
-import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
-import com.io7m.cedarbridge.schema.ast.CBASTPackage;
-import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
-import com.io7m.cedarbridge.schema.compiled.CBPackageType;
+import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned32;
+import com.io7m.cedarbridge.runtime.api.CBSerializableType;
+import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
+import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
+import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
+import com.io7m.cedarbridge.runtime.api.CBSerializerType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
-import com.io7m.cedarbridge.schema.parser.CBParserFactory;
-import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
+import com.io7m.cedarbridge.tests.CBFakeSerializerDirectory;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
-import com.io7m.cedarbridge.tests.CBZip;
-import com.sun.source.util.JavacTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mockito.internal.verification.Times;
 
-import javax.tools.SimpleJavaFileObject;
-import javax.tools.ToolProvider;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
-import java.math.BigInteger;
-import java.nio.file.Files;
+import java.nio.ByteBuffer;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-import java.util.jar.JarFile;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Locale.ROOT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 
 public final class CBJavaCodeGeneratorTest
 {
-  private static final Logger LOG =
-    LoggerFactory.getLogger(CBJavaCodeGeneratorTest.class);
-
-  private CBExpressionSourceType source;
-  private CBBinderFactory binders;
-  private CBParserFactory parsers;
-  private CBTypeCheckerFactory typeCheckers;
-  private CBExpressionSources sources;
-  private ArrayList<CBError> errors;
   private Path directory;
   private Path moduleDirectory;
   private CBFakeLoader loader;
-  private HashMap<BigInteger, CBBindingLocalType> bindings;
-  private CBCGJavaFactory codeGen;
-
-  private void compileJava(
-    final List<Path> createdFiles)
-    throws IOException
-  {
-    final var listener =
-      new Diagnostics();
-    final var tool =
-      ToolProvider.getSystemJavaCompiler();
-
-    try (var fileManager = tool.getStandardFileManager(listener, ROOT, UTF_8)) {
-      final var compileFiles =
-        new ArrayList<SimpleJavaFileObject>(createdFiles.size());
-      for (final var created : createdFiles) {
-        LOG.info("compile {}", created.toUri());
-        compileFiles.add(new SourceFile(created));
-      }
-
-      final var compileArguments =
-        List.of(
-          "-Werror",
-          "-Xdiags:verbose",
-          "-Xlint:unchecked",
-          "-d",
-          this.directory.toAbsolutePath().toString()
-        );
-
-      final var task =
-        (JavacTask) tool.getTask(
-          null,
-          fileManager,
-          listener,
-          compileArguments,
-          null,
-          compileFiles
-        );
-
-      assertTrue(
-        task.call().booleanValue(),
-        "Compilation of all files must succeed");
-    }
-
-    this.createModule();
-  }
-
-  private void createModule()
-    throws IOException
-  {
-    final var moduleFile = this.moduleDirectory.resolve("module.jar");
-    LOG.debug("creating module {}", moduleFile);
-
-    final var metaInf = this.directory.resolve("META-INF");
-    Files.createDirectories(metaInf);
-    final var manifest = metaInf.resolve("MANIFEST.MF");
-
-    try (var out = Files.newBufferedWriter(manifest)) {
-      out.append("Manifest-Version: 1.0");
-      out.newLine();
-      out.append("Automatic-Module-Name: com.io7m.cedarbridge.tests.generated");
-      out.newLine();
-    }
-
-    CBZip.create(moduleFile, this.directory);
-  }
-
-  private CBASTPackage parse(
-    final String name)
-    throws Exception
-  {
-    final var path =
-      CBTestDirectories.resourceOf(
-        CBJavaCodeGeneratorTest.class,
-        this.directory,
-        name);
-    this.source =
-      this.sources.create(path.toUri(), Files.newInputStream(path));
-    try (var parser =
-           this.parsers.createParser(this::addError, this.source)) {
-      return parser.execute();
-    }
-  }
-
-  private CBPackageType check(
-    final String name)
-    throws Exception
-  {
-    final var parsedPackage = this.parse(name);
-    try (var binder =
-           this.binders.createBinder(
-             this.loader, this::addError, this.source, parsedPackage)) {
-      binder.execute();
-      try (var checker =
-             this.typeCheckers.createTypeChecker(
-               this::addError, this.source, parsedPackage)) {
-        checker.execute();
-        return parsedPackage.userData()
-          .get(CBPackageType.class);
-      }
-    }
-  }
-
-  private void addError(
-    final CBError error)
-  {
-    LOG.error("{}", error.message());
-    this.errors.add(error);
-  }
+  private CBSerializationContextType context;
+  private CBFakeSerializerDirectory serializers;
+  private CBJavaCompilation compiled;
 
   @BeforeEach
   public void setup()
     throws IOException
   {
-    this.errors = new ArrayList<>();
-    this.bindings = new HashMap<>();
-    this.directory = CBTestDirectories.createTempDirectory();
-    this.moduleDirectory = CBTestDirectories.createTempDirectory();
-    this.sources = new CBExpressionSources();
-    this.parsers = new CBParserFactory();
-    this.binders = new CBBinderFactory();
-    this.loader = new CBFakeLoader();
-    this.typeCheckers = new CBTypeCheckerFactory();
-    this.codeGen = new CBCGJavaFactory();
+    this.directory =
+      CBTestDirectories.createTempDirectory();
+    this.moduleDirectory =
+      CBTestDirectories.createTempDirectory();
+    this.loader =
+      new CBFakeLoader();
+    this.context =
+      mock(CBSerializationContextType.class);
+    this.serializers =
+      new CBFakeSerializerDirectory();
   }
 
-  private ClassLoader loadClasses()
+  private void compile(
+    final String name)
+    throws Exception
   {
-    final var finder =
-      ModuleFinder.of(this.moduleDirectory);
-    final var parent =
-      ModuleLayer.boot();
-
-    final var configuration =
-      parent.configuration()
-        .resolve(
-          finder,
-          ModuleFinder.of(),
-          Set.of("com.io7m.cedarbridge.tests.generated")
-        );
-
-    final var systemClassLoader =
-      ClassLoader.getSystemClassLoader();
-    final var layer =
-      parent.defineModulesWithOneLoader(configuration, systemClassLoader);
-    return layer.findLoader("com.io7m.cedarbridge.tests.generated");
+    this.compiled =
+      CBJavaCompilation.compile(
+        this.loader,
+        this.directory,
+        this.moduleDirectory,
+        name
+      );
   }
 
   @Test
   public void testRecordOk0()
     throws Exception
   {
-    final var pack = this.check("typeRecordOk0.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeRecordOk0.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory"
+    );
 
-    this.compileJava(result.createdFiles());
+    final var tsfc = loader.loadClass("x.y.z.TSerializerFactory");
+    final var tsf = instantiateFactory(tsfc);
+    final var ts = tsf.create(this.serializers, List.of());
+    ts.deserialize(this.context);
+    verifyNoInteractions(this.context);
+  }
 
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
+  private ClassLoader loadClasses(
+    final String... classes)
+    throws Exception
+  {
+    final ClassLoader loader = this.compiled.classLoader();
+    for (final var clazz : classes) {
+      loader.loadClass(clazz);
+    }
+    return loader;
+  }
+
+  private static CBSerializerFactoryType<?> instantiateFactory(
+    final Class<?> tsfc)
+    throws Exception
+  {
+    return (CBSerializerFactoryType<?>) tsfc.getConstructor().newInstance();
   }
 
   @Test
   public void testRecordOk1()
     throws Exception
   {
-    final var pack = this.check("typeRecordOk1.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeRecordOk1.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory"
+    );
   }
 
   @Test
   public void testRecordOk2()
     throws Exception
   {
-    final var pack = this.check("typeRecordOk2.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeRecordOk2.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory"
+    );
   }
 
   @Test
   public void testRecordOk3()
     throws Exception
   {
-    final var pack = this.check("typeRecordOk3.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeRecordOk3.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
-    loader.loadClass("x.y.z.V");
-    loader.loadClass("x.y.z.VSerializer");
-    loader.loadClass("x.y.z.VSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory",
+      "x.y.z.V",
+      "x.y.z.VSerializer",
+      "x.y.z.VSerializerFactory"
+    );
   }
 
   @Test
   public void testRecordOk4()
     throws Exception
   {
-    final var pack = this.check("typeRecordOk4.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeRecordOk4.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
-    loader.loadClass("x.y.z.V");
-    loader.loadClass("x.y.z.VSerializer");
-    loader.loadClass("x.y.z.VSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory",
+      "x.y.z.V",
+      "x.y.z.VSerializer",
+      "x.y.z.VSerializerFactory"
+    );
   }
 
   @Test
   public void testVariantOk0()
     throws Exception
   {
-    final var pack = this.check("typeVariantOk0.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeVariantOk0.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory"
+    );
   }
 
   @Test
   public void testVariantOk1()
     throws Exception
   {
-    final var pack = this.check("typeVariantOk1.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeVariantOk1.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory"
+    );
   }
 
   @Test
   public void testVariantOk2()
     throws Exception
   {
-    final var pack = this.check("typeVariantOk2.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeVariantOk2.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory"
+    );
   }
 
   @Test
   public void testVariantOk3()
     throws Exception
   {
-    final var pack = this.check("typeVariantOk3.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeVariantOk3.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
-    loader.loadClass("x.y.z.V");
-    loader.loadClass("x.y.z.VSerializer");
-    loader.loadClass("x.y.z.VSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory",
+      "x.y.z.V",
+      "x.y.z.VSerializer",
+      "x.y.z.VSerializerFactory"
+    );
   }
 
   @Test
   public void testVariantOk4()
     throws Exception
   {
-    final var pack = this.check("typeVariantOk4.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("typeVariantOk4.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.T");
-    loader.loadClass("x.y.z.TSerializer");
-    loader.loadClass("x.y.z.TSerializerFactory");
-    loader.loadClass("x.y.z.U");
-    loader.loadClass("x.y.z.USerializer");
-    loader.loadClass("x.y.z.USerializerFactory");
-    loader.loadClass("x.y.z.V");
-    loader.loadClass("x.y.z.VSerializer");
-    loader.loadClass("x.y.z.VSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.T",
+      "x.y.z.TSerializer",
+      "x.y.z.TSerializerFactory",
+      "x.y.z.U",
+      "x.y.z.USerializer",
+      "x.y.z.USerializerFactory",
+      "x.y.z.V",
+      "x.y.z.VSerializer",
+      "x.y.z.VSerializerFactory"
+    );
   }
-  
+
   @Test
   public void testBasic0()
     throws Exception
   {
-    final var pack = this.check("basicNoImport.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("basicNoImport.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("com.io7m.cedarbridge.Option");
-    loader.loadClass("com.io7m.cedarbridge.OptionSerializer");
-    loader.loadClass("com.io7m.cedarbridge.OptionSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.List");
-    loader.loadClass("com.io7m.cedarbridge.ListSerializer");
-    loader.loadClass("com.io7m.cedarbridge.ListSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.Unit");
-    loader.loadClass("com.io7m.cedarbridge.UnitSerializer");
-    loader.loadClass("com.io7m.cedarbridge.UnitSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.Map");
-    loader.loadClass("com.io7m.cedarbridge.MapSerializer");
-    loader.loadClass("com.io7m.cedarbridge.MapSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.Pair");
-    loader.loadClass("com.io7m.cedarbridge.PairSerializer");
-    loader.loadClass("com.io7m.cedarbridge.PairSerializerFactory");
+    final var loader = this.loadClasses(
+      "com.io7m.cedarbridge.Option",
+      "com.io7m.cedarbridge.OptionSerializer",
+      "com.io7m.cedarbridge.OptionSerializerFactory",
+      "com.io7m.cedarbridge.List",
+      "com.io7m.cedarbridge.ListSerializer",
+      "com.io7m.cedarbridge.ListSerializerFactory",
+      "com.io7m.cedarbridge.Unit",
+      "com.io7m.cedarbridge.UnitSerializer",
+      "com.io7m.cedarbridge.UnitSerializerFactory",
+      "com.io7m.cedarbridge.Map",
+      "com.io7m.cedarbridge.MapSerializer",
+      "com.io7m.cedarbridge.MapSerializerFactory",
+      "com.io7m.cedarbridge.Pair",
+      "com.io7m.cedarbridge.PairSerializer",
+      "com.io7m.cedarbridge.PairSerializerFactory"
+    );
   }
 
   @Test
@@ -515,36 +300,29 @@ public final class CBJavaCodeGeneratorTest
     this.loader.register(new CBFakePackage("x.y.z"));
     this.loader.register(CBCore.get());
 
-    final var pack = this.check("basic.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("basic.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("com.io7m.cedarbridge.ProtocolZType");
-    loader.loadClass("com.io7m.cedarbridge.ProtocolZv0Type");
-    loader.loadClass("com.io7m.cedarbridge.Option");
-    loader.loadClass("com.io7m.cedarbridge.OptionSerializer");
-    loader.loadClass("com.io7m.cedarbridge.OptionSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.List");
-    loader.loadClass("com.io7m.cedarbridge.ListSerializer");
-    loader.loadClass("com.io7m.cedarbridge.ListSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.UnitType");
-    loader.loadClass("com.io7m.cedarbridge.UnitTypeSerializer");
-    loader.loadClass("com.io7m.cedarbridge.UnitTypeSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.Map");
-    loader.loadClass("com.io7m.cedarbridge.MapSerializer");
-    loader.loadClass("com.io7m.cedarbridge.MapSerializerFactory");
-    loader.loadClass("com.io7m.cedarbridge.Pair");
-    loader.loadClass("com.io7m.cedarbridge.PairSerializer");
-    loader.loadClass("com.io7m.cedarbridge.PairSerializerFactory");
+    final var loader = this.loadClasses(
+      "com.io7m.cedarbridge.List",
+      "com.io7m.cedarbridge.ListSerializer",
+      "com.io7m.cedarbridge.ListSerializerFactory",
+      "com.io7m.cedarbridge.Map",
+      "com.io7m.cedarbridge.MapSerializer",
+      "com.io7m.cedarbridge.MapSerializerFactory",
+      "com.io7m.cedarbridge.Option",
+      "com.io7m.cedarbridge.OptionSerializer",
+      "com.io7m.cedarbridge.OptionSerializerFactory",
+      "com.io7m.cedarbridge.Pair",
+      "com.io7m.cedarbridge.PairSerializer",
+      "com.io7m.cedarbridge.PairSerializerFactory",
+      "com.io7m.cedarbridge.ProtocolZType",
+      "com.io7m.cedarbridge.ProtocolZv0Serializer",
+      "com.io7m.cedarbridge.ProtocolZv0SerializerFactory",
+      "com.io7m.cedarbridge.ProtocolZv0Type",
+      "com.io7m.cedarbridge.UnitType",
+      "com.io7m.cedarbridge.UnitTypeSerializer",
+      "com.io7m.cedarbridge.UnitTypeSerializerFactory"
+    );
   }
 
   @Test
@@ -553,22 +331,13 @@ public final class CBJavaCodeGeneratorTest
   {
     this.loader.register(CBCore.get());
 
-    final var pack = this.check("basicWithCore.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("basicWithCore.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
-
-    this.compileJava(result.createdFiles());
-
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.Mix");
-    loader.loadClass("x.y.z.MixSerializer");
-    loader.loadClass("x.y.z.MixSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.y.z.Mix",
+      "x.y.z.MixSerializer",
+      "x.y.z.MixSerializerFactory"
+    );
   }
 
   @Test
@@ -577,27 +346,381 @@ public final class CBJavaCodeGeneratorTest
   {
     this.loader.register(CBCore.get());
 
-    final var pack = this.check("basicType3.cbs");
-    assertEquals(0, this.errors.size());
+    this.compile("basicType3.cbs");
 
-    final var result =
-      this.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(this.directory)
-          .build()
-      ).execute(pack);
+    final var loader = this.loadClasses(
+      "x.y.z.Q",
+      "x.y.z.QSerializer",
+      "x.y.z.QSerializerFactory",
+      "x.y.z.List",
+      "x.y.z.ListSerializer",
+      "x.y.z.ListSerializerFactory",
+      "x.y.z.Z",
+      "x.y.z.ZSerializer",
+      "x.y.z.ZSerializerFactory"
+    );
+  }
 
-    this.compileJava(result.createdFiles());
+  @Test
+  public void testCodegenUnit()
+    throws Exception
+  {
+    this.compile("codegenUnit.cbs");
 
-    final var loader = this.loadClasses();
-    loader.loadClass("x.y.z.Q");
-    loader.loadClass("x.y.z.QSerializer");
-    loader.loadClass("x.y.z.QSerializerFactory");
-    loader.loadClass("x.y.z.List");
-    loader.loadClass("x.y.z.ListSerializer");
-    loader.loadClass("x.y.z.ListSerializerFactory");
-    loader.loadClass("x.y.z.Z");
-    loader.loadClass("x.y.z.ZSerializer");
-    loader.loadClass("x.y.z.ZSerializerFactory");
+    final var loader = this.loadClasses(
+      "x.Unit",
+      "x.UnitSerializer",
+      "x.UnitSerializerFactory"
+    );
+
+    final var f =
+      this.createFactory(loader, "x.UnitSerializerFactory");
+
+    assertThrows(IllegalArgumentException.class, () -> {
+      f.deserialize(this.context);
+    });
+
+    verify(this.context, new Times(1)).readVariantIndex();
+  }
+
+  @Test
+  public void testCodegenIntVec0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenIntVec0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.IntVec",
+      "x.IntVecSerializer",
+      "x.IntVecSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.IntVecSerializerFactory");
+
+    when(Integer.valueOf(this.context.readS8()))
+      .thenReturn(Integer.valueOf(8));
+    when(Integer.valueOf(this.context.readS16()))
+      .thenReturn(Integer.valueOf(16));
+    when(Integer.valueOf(this.context.readS32()))
+      .thenReturn(Integer.valueOf(32));
+    when(Long.valueOf(this.context.readS64()))
+      .thenReturn(Long.valueOf(64L));
+    when(Integer.valueOf(this.context.readU8()))
+      .thenReturn(Integer.valueOf(80));
+    when(Integer.valueOf(this.context.readU16()))
+      .thenReturn(Integer.valueOf(160));
+    when(Integer.valueOf(this.context.readU32()))
+      .thenReturn(Integer.valueOf(320));
+    when(Long.valueOf(this.context.readU64()))
+      .thenReturn(Long.valueOf(640L));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeS8(8L);
+    verify(this.context).writeS16(16L);
+    verify(this.context).writeS32(32L);
+    verify(this.context).writeS64(64L);
+    verify(this.context).writeU8(80L);
+    verify(this.context).writeU16(160L);
+    verify(this.context).writeU32(320L);
+    verify(this.context).writeU64(640L);
+    verify(this.context, new Times(1)).readS8();
+    verify(this.context, new Times(1)).readS16();
+    verify(this.context, new Times(1)).readS32();
+    verify(this.context, new Times(1)).readS64();
+    verify(this.context, new Times(1)).readU8();
+    verify(this.context, new Times(1)).readU16();
+    verify(this.context, new Times(1)).readU32();
+    verify(this.context, new Times(1)).readU64();
+  }
+
+  @Test
+  public void testCodegenFloatVec0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenFloatVec0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.FloatVec",
+      "x.FloatVecSerializer",
+      "x.FloatVecSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.FloatVecSerializerFactory");
+
+    when(Double.valueOf(this.context.readF16()))
+      .thenReturn(Double.valueOf(16.0));
+    when(Double.valueOf(this.context.readF32()))
+      .thenReturn(Double.valueOf(32.0));
+    when(Double.valueOf(this.context.readF64()))
+      .thenReturn(Double.valueOf(64.0));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeF16(16.0);
+    verify(this.context).writeF32(32.0);
+    verify(this.context).writeF64(64.0);
+    verify(this.context, new Times(1)).readF16();
+    verify(this.context, new Times(1)).readF32();
+    verify(this.context, new Times(1)).readF64();
+  }
+
+  @Test
+  public void testCodegenData0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenMap0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readSequenceLength()))
+      .thenReturn(Integer.valueOf(5));
+
+    when(Integer.valueOf(this.context.readS32()))
+      .thenReturn(Integer.valueOf(10_0))
+      .thenReturn(Integer.valueOf(20_0))
+      .thenReturn(Integer.valueOf(10_1))
+      .thenReturn(Integer.valueOf(20_1))
+      .thenReturn(Integer.valueOf(10_2))
+      .thenReturn(Integer.valueOf(20_2))
+      .thenReturn(Integer.valueOf(10_3))
+      .thenReturn(Integer.valueOf(20_3))
+      .thenReturn(Integer.valueOf(10_4))
+      .thenReturn(Integer.valueOf(20_4));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeSequenceLength(5);
+    verify(this.context).writeS32(10_0L);
+    verify(this.context).writeS32(20_0L);
+    verify(this.context).writeS32(10_1L);
+    verify(this.context).writeS32(20_1L);
+    verify(this.context).writeS32(10_2L);
+    verify(this.context).writeS32(20_2L);
+    verify(this.context).writeS32(10_3L);
+    verify(this.context).writeS32(20_3L);
+    verify(this.context).writeS32(10_4L);
+    verify(this.context).writeS32(20_4L);
+  }
+
+  @Test
+  public void testCodegenList0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenList0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readSequenceLength()))
+      .thenReturn(Integer.valueOf(5));
+
+    when(Integer.valueOf(this.context.readS32()))
+      .thenReturn(Integer.valueOf(100_0))
+      .thenReturn(Integer.valueOf(100_1))
+      .thenReturn(Integer.valueOf(100_2))
+      .thenReturn(Integer.valueOf(100_3))
+      .thenReturn(Integer.valueOf(100_4));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeSequenceLength(5);
+    verify(this.context).writeS32(100_0L);
+    verify(this.context).writeS32(100_1L);
+    verify(this.context).writeS32(100_2L);
+    verify(this.context).writeS32(100_3L);
+    verify(this.context).writeS32(100_4L);
+  }
+
+  @Test
+  public void testCodegenOption0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenOption0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(0));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeVariantIndex(0);
+  }
+
+  @Test
+  public void testCodegenOption1()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenOption0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(1));
+    when(Integer.valueOf(this.context.readS32()))
+      .thenReturn(Integer.valueOf(1000));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeVariantIndex(1);
+    verify(this.context).writeS32(1000L);
+  }
+
+  @Test
+  public void testCodegenOption2()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenOption0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(2));
+
+    {
+      final var ex =
+        assertThrows(IllegalStateException.class, () -> {
+          f.deserialize(this.context);
+        });
+      assertTrue(ex.getMessage().contains("Unrecognized variant index: 2"));
+    }
+  }
+
+  @Test
+  public void testCodegenByteArray0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenByteArray0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(this.context.readByteArray())
+      .thenReturn(ByteBuffer.wrap("A ByteArray".getBytes(UTF_8)));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context)
+      .writeByteArray(ByteBuffer.wrap("A ByteArray".getBytes(UTF_8)));
+  }
+
+  @Test
+  public void testCodegenString0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenString0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(this.context.readUTF8()).thenReturn("A String");
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeUTF8("A String");
+  }
+
+  private void registerSerializers(
+    final CBSerializerCollection serializers)
+  {
+    for (final var s : serializers.serializers()) {
+      this.serializers.addSerializer(s);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private <T extends CBSerializableType> CBSerializerType<T> createFactory(
+    final ClassLoader loader,
+    final String name)
+    throws Exception
+  {
+    final var ffc = loader.loadClass(name);
+    final var ff = instantiateFactory(ffc);
+    assertEquals(0, ff.typeParameters().size());
+    return (CBSerializerType<T>) ff.create(this.serializers, List.of());
   }
 }

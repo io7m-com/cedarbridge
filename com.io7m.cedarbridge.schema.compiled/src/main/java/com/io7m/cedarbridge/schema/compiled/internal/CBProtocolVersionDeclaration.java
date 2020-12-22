@@ -18,7 +18,6 @@ package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -31,8 +30,8 @@ import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeEx
 public final class CBProtocolVersionDeclaration
   implements CBProtocolVersionDeclarationType
 {
-  private final List<CBTypeDeclarationType> typesRead;
-  private List<CBTypeDeclarationType> types;
+  private final List<CBTypeExprNamedType> typesRead;
+  private List<CBTypeExprNamedType> types;
   private final BigInteger version;
   private final CBProtocolDeclarationType owner;
 
@@ -63,7 +62,7 @@ public final class CBProtocolVersionDeclaration
   }
 
   @Override
-  public List<CBTypeDeclarationType> types()
+  public List<CBTypeExprNamedType> types()
   {
     return this.typesRead;
   }
@@ -71,6 +70,6 @@ public final class CBProtocolVersionDeclaration
   public void addType(
     final CBTypeExprNamedType type)
   {
-    this.types.add(type.declaration());
+    this.types.add(type);
   }
 }

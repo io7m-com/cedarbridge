@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.compiled;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -66,4 +67,10 @@ public interface CBTypeDeclarationType
         CBTypeParameterType::name,
         Function.identity()));
   }
+
+  /**
+   * @return The external name, if any
+   */
+
+  Optional<CBExternalName> external();
 }

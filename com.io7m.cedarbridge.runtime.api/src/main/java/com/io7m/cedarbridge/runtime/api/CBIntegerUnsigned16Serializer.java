@@ -29,13 +29,13 @@ public final class CBIntegerUnsigned16Serializer
     final CBSerializationContextType context,
     final CBIntegerUnsigned16 value)
   {
-    context.writeS16(value.value());
+    context.writeU16(value.value());
   }
 
   @Override
   public CBIntegerUnsigned16 deserialize(
     final CBSerializationContextType context)
   {
-    return CBIntegerUnsigned16.of(context.readS16());
+    return CBIntegerUnsigned16.of(context.readU16());
   }
 }

@@ -54,6 +54,7 @@ public final class CBTypeArguments
       message.append("  Expected: ");
       message.append(receivedCount);
       message.append(" parameters");
+      message.append(lineSeparator);
       message.append("  Received: ");
       message.append(expectedCount);
       message.append(" parameters");

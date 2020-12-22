@@ -64,8 +64,7 @@ public interface CBPackageType
     return this.protocols()
       .values()
       .stream()
-      .flatMap(proto -> proto.versions().values().stream())
-      .filter(version -> version.types().contains(type))
+      .flatMap(proto -> proto.protocolVersionsForType(type).stream())
       .collect(Collectors.toList());
   }
 }

@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.compiled.internal;
 
+import com.io7m.cedarbridge.schema.compiled.CBExternalName;
 import com.io7m.cedarbridge.schema.compiled.CBExternalType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public final class CBTypeDeclarationExternal implements CBExternalType
 {
@@ -35,6 +37,7 @@ public final class CBTypeDeclarationExternal implements CBExternalType
   private final List<CBTypeParameterType> parametersRead;
   private final String externalPackage;
   private final String externalType;
+  private final Optional<CBExternalName> externalName;
   private CBPackageType owner;
 
   public CBTypeDeclarationExternal(
@@ -71,6 +74,14 @@ public final class CBTypeDeclarationExternal implements CBExternalType
 
     this.parametersRead =
       Collections.unmodifiableList(this.parameters);
+
+    this.externalName =
+      Optional.of(
+        CBExternalName.builder()
+          .setExternalPackage(this.externalPackage)
+          .setExternalName(this.externalType)
+          .build()
+      );
   }
 
   public void addTypeParameter(
@@ -120,21 +131,15 @@ public final class CBTypeDeclarationExternal implements CBExternalType
     return this.parametersRead;
   }
 
+  @Override
+  public Optional<CBExternalName> external()
+  {
+    return this.externalName;
+  }
+
   public void setOwner(
     final CBPackage newOwner)
   {
     this.owner = Objects.requireNonNull(newOwner, "cbPackage");
-  }
-
-  @Override
-  public String externalPackage()
-  {
-    return this.externalPackage;
-  }
-
-  @Override
-  public String externalType()
-  {
-    return this.externalType;
   }
 }

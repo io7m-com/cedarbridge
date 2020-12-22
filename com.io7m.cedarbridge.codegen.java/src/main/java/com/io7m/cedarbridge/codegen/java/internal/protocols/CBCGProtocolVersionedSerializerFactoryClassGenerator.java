@@ -20,40 +20,36 @@ import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaClassGeneratorType;
 import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
-import com.io7m.cedarbridge.runtime.api.CBProtocolVersionedType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerFactoryType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
+import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Path;
 import java.util.Objects;
 
+import static com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation.CBCGSerializerInstantiations.generateInstantiationMethodForProtocol;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.lang.model.element.Modifier.DEFAULT;
+import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-public final class CBCGProtocolVersionedClassGenerator
+public final class CBCGProtocolVersionedSerializerFactoryClassGenerator
   implements CBCGJavaClassGeneratorType<CBProtocolVersionDeclarationType>
 {
-  public CBCGProtocolVersionedClassGenerator()
+  public CBCGProtocolVersionedSerializerFactoryClassGenerator()
   {
 
   }
 
-  private static MethodSpec createVersionMethod(
+  private static MethodSpec createConstructor(
     final CBProtocolVersionDeclarationType proto)
   {
-    return MethodSpec.methodBuilder("protocolVersion")
-      .addModifiers(DEFAULT, PUBLIC)
-      .addAnnotation(Override.class)
-      .returns(BigInteger.class)
-      .addStatement(
-        "return new $T($S)",
-        BigInteger.class,
-        proto.version().toString())
+    return MethodSpec.constructorBuilder()
+      .addModifiers(PUBLIC)
       .build();
   }
 
@@ -69,13 +65,19 @@ public final class CBCGProtocolVersionedClassGenerator
     final var owner = proto.owner();
     final var pack = owner.owner();
     final var className =
-      CBCGJavaTypeNames.protocolClassNameOf(proto);
+      CBCGJavaTypeNames.protoSerializerFactoryClassNameOf(proto);
 
-    final var classBuilder = TypeSpec.interfaceBuilder(className);
-    classBuilder.addSuperinterface(CBCGJavaTypeNames.protocolClassNameOf(owner));
-    classBuilder.addSuperinterface(CBProtocolVersionedType.class);
-    classBuilder.addModifiers(PUBLIC);
-    classBuilder.addMethod(createVersionMethod(proto));
+    final var parameterizedSuperinterface =
+      ParameterizedTypeName.get(
+        ClassName.get(CBProtocolSerializerFactoryType.class),
+        CBCGJavaTypeNames.protoVersionedInterfaceNameOf(proto)
+      );
+
+    final var classBuilder = TypeSpec.classBuilder(className);
+    classBuilder.addModifiers(PUBLIC, FINAL);
+    classBuilder.addSuperinterface(parameterizedSuperinterface);
+    classBuilder.addMethod(createConstructor(proto));
+    classBuilder.addMethod(generateInstantiationMethodForProtocol(proto));
     classBuilder.addJavadoc(
       "Protocol {@code $L.$L}, version {@code $L}.",
       pack.name(),

@@ -1,0 +1,8 @@
+(package x)
+
+(import com.io7m.cedarbridge cb)
+
+(record FloatVec
+  [field f16 cb:Float16]
+  [field f32 cb:Float32]
+  [field f64 cb:Float64])

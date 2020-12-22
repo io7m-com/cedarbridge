@@ -17,8 +17,8 @@
 package com.io7m.cedarbridge.codegen.java.internal.data_classes;
 
 import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaClassGeneratorType;
-import com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions;
 import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
+import com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.runtime.api.CBSerializableType;
@@ -75,6 +75,14 @@ public final class CBCGDataClassGenerator
 
     containerBuilder.addTypeVariables(typeVariables);
 
+    final var protocols =
+      type.owner().protocolVersionsForType(type);
+
+    for (final var protocol : protocols) {
+      containerBuilder.addSuperinterface(
+        CBCGJavaTypeNames.protoVersionedInterfaceNameOf(protocol));
+    }
+
     final TypeName superInterface;
     if (typeVariables.isEmpty()) {
       superInterface = className;
@@ -93,7 +101,7 @@ public final class CBCGDataClassGenerator
           OptionalInt.of(variantIndex),
           caseV.fields(),
           typeParameters,
-          type.owner().protocolVersionsForType(type)
+          protocols
         );
 
       containerBuilder.addType(innerClass);
@@ -155,7 +163,7 @@ public final class CBCGDataClassGenerator
 
     for (final var protocol : protocols) {
       classBuilder.addSuperinterface(
-        CBCGJavaTypeNames.protocolClassNameOf(protocol)
+        CBCGJavaTypeNames.protoVersionedInterfaceNameOf(protocol)
       );
     }
 

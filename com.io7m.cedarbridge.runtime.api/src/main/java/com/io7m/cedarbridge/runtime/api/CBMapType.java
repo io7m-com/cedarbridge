@@ -24,6 +24,7 @@ import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
@@ -41,11 +42,16 @@ public interface CBMapType<K extends CBSerializableType, V extends CBSerializabl
     final int precision)
   {
     try {
-      formatter.out().append('[');
-      for (final var entry : this.values().entrySet()) {
-        formatter.format("(%s, %s)", entry.getKey(), entry.getValue());
-      }
-      formatter.out().append(']');
+      final var out = formatter.out();
+      out.append('[');
+      out.append(
+        this.values()
+          .entrySet()
+          .stream()
+          .map(x -> String.format("(%s %s)", x.getKey(), x.getValue()))
+          .collect(Collectors.joining(" "))
+      );
+      out.append(']');
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }

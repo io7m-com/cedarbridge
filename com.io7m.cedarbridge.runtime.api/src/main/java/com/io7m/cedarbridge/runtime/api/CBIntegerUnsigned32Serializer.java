@@ -29,13 +29,13 @@ public final class CBIntegerUnsigned32Serializer
     final CBSerializationContextType context,
     final CBIntegerUnsigned32 value)
   {
-    context.writeS32(value.value());
+    context.writeU32(value.value());
   }
 
   @Override
   public CBIntegerUnsigned32 deserialize(
     final CBSerializationContextType context)
   {
-    return CBIntegerUnsigned32.of(Integer.toUnsignedLong(context.readS32()));
+    return CBIntegerUnsigned32.of(Integer.toUnsignedLong(context.readU32()));
   }
 }

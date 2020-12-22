@@ -16,14 +16,16 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
+import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.java.internal.bindings.CBCGJavaNamePool;
 import com.io7m.cedarbridge.codegen.java.internal.bindings.CBCGJavaProgramOrder;
 import com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions;
-import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
+import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerType;
 import com.io7m.cedarbridge.runtime.api.CBQualifiedTypeName;
 import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerType;
 import com.io7m.cedarbridge.runtime.api.CBTypeArgument;
+import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBRecordType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
@@ -48,6 +50,7 @@ import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeEx
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PROTECTED;
+import static javax.lang.model.element.Modifier.PUBLIC;
 
 public final class CBCGSerializerInstantiations
 {
@@ -66,6 +69,36 @@ public final class CBCGSerializerInstantiations
       return generateInstantiationMethodForVariant((CBVariantType) type);
     }
     throw new UnreachableCodeException();
+  }
+
+  public static MethodSpec generateInstantiationMethodForProtocol(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var returnType =
+      ParameterizedTypeName.get(
+        ClassName.get(CBProtocolSerializerType.class),
+        CBCGJavaTypeNames.protoVersionedInterfaceNameOf(proto)
+      );
+
+    final var method = MethodSpec.methodBuilder("create");
+    method.addAnnotation(Override.class);
+    method.addModifiers(PUBLIC, FINAL);
+    method.addParameter(
+      CBSerializerDirectoryType.class,
+      "directory",
+      FINAL
+    );
+    method.returns(returnType);
+
+    final var ops =
+      generateInstantiationStatementsForProtocol(
+        new CBCGJavaProgramOrder(),
+        new CBCGJavaNamePool(),
+        proto
+      );
+
+    ops.stream().sorted().forEach(op -> method.addCode(op.serialize()));
+    return method.build();
   }
 
   private static MethodSpec generateInstantiationMethodForVariant(
@@ -136,6 +169,54 @@ public final class CBCGSerializerInstantiations
 
     ops.stream().sorted().forEach(op -> method.addCode(op.serialize()));
     return method.build();
+  }
+
+  public static List<CBCGSerializerInstantiationOperationType> generateInstantiationStatementsForProtocol(
+    final CBCGJavaProgramOrder lines,
+    final CBCGJavaNamePool names,
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var operations =
+      new ArrayList<CBCGSerializerInstantiationOperationType>();
+    final var typeArguments =
+      new HashMap<CBTypeExpressionType, OpBuildTypeArgumentType>();
+
+    for (final var type : proto.types()) {
+      buildTypeArguments(names, lines, typeArguments, type);
+    }
+
+    typeArguments.values()
+      .stream()
+      .sorted()
+      .forEach(operations::add);
+
+    final var serializerFetches =
+      new HashMap<CBTypeExpressionType, OpFetchSerializerType>();
+
+    for (final var type : proto.types()) {
+      fetchSerializerForNamed(
+        names,
+        lines,
+        typeArguments,
+        serializerFetches,
+        type
+      );
+    }
+
+    serializerFetches.values()
+      .stream()
+      .sorted()
+      .forEach(operations::add);
+
+    operations.add(
+      generateConstructorForProtocol(
+        lines,
+        serializerFetches,
+        proto
+      )
+    );
+
+    return operations;
   }
 
   public static List<CBCGSerializerInstantiationOperationType> generateInstantiationStatementsForRecord(
@@ -291,6 +372,25 @@ public final class CBCGSerializerInstantiations
       lines.next(),
       record.arity(),
       CBCGJavaTypeNames.serializerClassNameOf(record),
+      fetches
+    );
+  }
+
+  private static CBCGSerializerInstantiationOperationType generateConstructorForProtocol(
+    final CBCGJavaProgramOrder lines,
+    final Map<CBTypeExpressionType, OpFetchSerializerType> serializerFetches,
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var fetches =
+      proto.types()
+        .stream()
+        .map(serializerFetches::get)
+        .collect(Collectors.toList());
+
+    return new OpCallSerializerConstructor(
+      lines.next(),
+      0,
+      CBCGJavaTypeNames.protoSerializerClassNameOf(proto),
       fetches
     );
   }

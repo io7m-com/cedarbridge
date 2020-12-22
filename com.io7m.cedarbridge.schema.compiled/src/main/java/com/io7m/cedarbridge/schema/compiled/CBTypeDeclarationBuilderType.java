@@ -31,4 +31,8 @@ public interface CBTypeDeclarationBuilderType
 
   CBTypeParameterType addTypeParameter(
     String name);
+
+  void setExternalName(
+    String externalPackageName,
+    String cbOption);
 }

@@ -29,13 +29,13 @@ public final class CBIntegerUnsigned8Serializer
     final CBSerializationContextType context,
     final CBIntegerUnsigned8 value)
   {
-    context.writeS8(value.value());
+    context.writeU8(value.value());
   }
 
   @Override
   public CBIntegerUnsigned8 deserialize(
     final CBSerializationContextType context)
   {
-    return CBIntegerUnsigned8.of(context.readS8());
+    return CBIntegerUnsigned8.of(context.readU8());
   }
 }

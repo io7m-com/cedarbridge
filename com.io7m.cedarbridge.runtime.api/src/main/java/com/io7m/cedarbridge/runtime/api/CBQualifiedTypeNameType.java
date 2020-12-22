@@ -19,13 +19,35 @@ package com.io7m.cedarbridge.runtime.api;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Formattable;
+import java.util.Formatter;
+
 @ImmutablesStyleType
 @Value.Immutable
-public interface CBQualifiedTypeNameType
+public interface CBQualifiedTypeNameType extends Formattable
 {
   @Value.Parameter
   String packageName();
 
   @Value.Parameter
   String typeName();
+
+  @Override
+  default void formatTo(
+    final Formatter formatter,
+    final int flags,
+    final int width,
+    final int precision)
+  {
+    try {
+      final var out = formatter.out();
+      out.append(this.packageName());
+      out.append(":");
+      out.append(this.typeName());
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 }

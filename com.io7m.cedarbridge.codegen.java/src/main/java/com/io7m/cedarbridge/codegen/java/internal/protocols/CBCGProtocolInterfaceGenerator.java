@@ -34,10 +34,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.DEFAULT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
-public final class CBCGProtocolClassGenerator
+public final class CBCGProtocolInterfaceGenerator
   implements CBCGJavaClassGeneratorType<CBProtocolDeclarationType>
 {
-  public CBCGProtocolClassGenerator()
+  public CBCGProtocolInterfaceGenerator()
   {
 
   }
@@ -67,7 +67,7 @@ public final class CBCGProtocolClassGenerator
     Objects.requireNonNull(proto, "proto");
 
     final var pack = proto.owner();
-    final var className = CBCGJavaTypeNames.protocolClassNameOf(proto);
+    final var className = CBCGJavaTypeNames.protoInterfaceNameOf(proto);
 
     final var classBuilder = TypeSpec.interfaceBuilder(className);
     classBuilder.addSuperinterface(CBProtocolType.class);

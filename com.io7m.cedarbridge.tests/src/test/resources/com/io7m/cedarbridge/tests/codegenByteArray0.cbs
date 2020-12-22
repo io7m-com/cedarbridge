@@ -1,0 +1,6 @@
+(package x)
+
+(import com.io7m.cedarbridge cb)
+
+(record Data
+  [field ba cb:ByteArray])

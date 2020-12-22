@@ -158,7 +158,7 @@ public final class CBTypeCheckerTest
         for (var tIndex = 0; tIndex < srcVT.size(); ++tIndex) {
           final var srcT = srcVT.get(tIndex);
           final var tarT = tarVT.get(tIndex);
-          assertEquals(srcT.text(), tarT.name());
+          assertEquals(srcT.text(), tarT.declaration().name());
         }
       }
     }

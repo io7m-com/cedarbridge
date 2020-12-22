@@ -18,6 +18,9 @@ package com.io7m.cedarbridge.schema.compiled;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Objects;
+
+import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
 /**
  * The type of protocol version declarations.
@@ -41,5 +44,19 @@ public interface CBProtocolVersionDeclarationType
    * @return The types in this version
    */
 
-  List<CBTypeDeclarationType> types();
+  List<CBTypeExprNamedType> types();
+
+  /**
+   * @param type The type
+   *
+   * @return {@code true} if the version contains {@code type}
+   */
+
+  default boolean containsType(
+    final CBTypeDeclarationType type)
+  {
+    return this.types()
+      .stream()
+      .anyMatch(name -> Objects.equals(name.declaration(), type));
+  }
 }

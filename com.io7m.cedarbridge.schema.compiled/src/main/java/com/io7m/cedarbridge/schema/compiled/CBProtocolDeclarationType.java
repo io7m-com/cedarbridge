@@ -17,7 +17,9 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * The base type of protocol declarations.
@@ -42,4 +44,22 @@ public interface CBProtocolDeclarationType
    */
 
   Map<BigInteger, CBProtocolVersionDeclarationType> versions();
+
+  /**
+   * Find all protocol versions to which the given type belongs.
+   *
+   * @param type The type
+   *
+   * @return The protocol versions
+   */
+
+  default List<CBProtocolVersionDeclarationType> protocolVersionsForType(
+    final CBTypeDeclarationType type)
+  {
+    return this.versions()
+      .values()
+      .stream()
+      .filter(version -> version.containsType(type))
+      .collect(Collectors.toList());
+  }
 }

@@ -42,4 +42,10 @@ public final class CBMapSerializers<K extends CBSerializableType, V extends CBSe
 
     return new CBMapSerializer<>(entrySerializer);
   }
+
+  @Override
+  public List<String> typeParameters()
+  {
+    return List.of("K", "V");
+  }
 }

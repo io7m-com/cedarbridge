@@ -24,6 +24,7 @@ import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
@@ -41,11 +42,15 @@ public interface CBListType<T extends CBSerializableType>
     final int precision)
   {
     try {
-      formatter.out().append('[');
-      for (final var value : this.values()) {
-        formatter.format("%s", value);
-      }
-      formatter.out().append(']');
+      final var out = formatter.out();
+      out.append('[');
+      out.append(
+        this.values()
+          .stream()
+          .map(x -> String.format("%s", x))
+          .collect(Collectors.joining(" "))
+      );
+      out.append(']');
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }
