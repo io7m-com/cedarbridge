@@ -67,7 +67,7 @@ public final class CBCommandCompile extends CLPAbstractCommand
   @Parameter(
     names = "--language",
     required = true,
-    description = "The language name use to select a code generator"
+    description = "The language name used to select a code generator"
   )
   private String languageName;
 
