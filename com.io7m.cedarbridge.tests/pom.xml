@@ -83,10 +83,19 @@
       <artifactId>com.io7m.cedarbridge.runtime.container_protocol</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.runtime.bssio</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.io7m.jsx</groupId>
       <artifactId>com.io7m.jsx.parser</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.jbssio</groupId>
+      <artifactId>com.io7m.jbssio.vanilla</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>

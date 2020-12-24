@@ -35,6 +35,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -87,6 +88,7 @@ public final class CBCGJavaSerializers
     final var method =
       MethodSpec.methodBuilder(String.format("deserialize%s", caseV.name()));
     method.addModifiers(PRIVATE);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.returns(dataTypeNameOfCase(caseV));
 
@@ -101,6 +103,7 @@ public final class CBCGJavaSerializers
       calls.stream()
         .filter(op -> op instanceof OpCallType)
         .map(OpCallType.class::cast)
+        .sorted()
         .map(OpCallType::javaLocalName)
         .map(n -> CodeBlock.of("$L", n))
         .collect(CodeBlock.joining(","));
@@ -129,6 +132,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("deserialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.returns(CBCGJavaTypeNames.protoVersionedInterfaceNameOf(proto));
 
@@ -192,6 +196,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("deserialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.returns(dataTypeNameOf(type));
 
@@ -240,6 +245,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("deserialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.returns(dataTypeNameOf(type));
 
@@ -330,6 +336,7 @@ public final class CBCGJavaSerializers
     final var method =
       MethodSpec.methodBuilder(String.format("serialize%s", caseV.name()));
     method.addModifiers(PRIVATE);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.addParameter(dataTypeNameOfCase(caseV), "value", FINAL);
 
@@ -363,6 +370,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("serialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.addParameter(
       CBCGJavaTypeNames.protoVersionedInterfaceNameOf(proto),
@@ -403,6 +411,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("serialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.addParameter(dataTypeNameOf(type), "value", FINAL);
 
@@ -437,6 +446,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.methodBuilder("serialize");
     method.addAnnotation(Override.class);
     method.addModifiers(PUBLIC);
+    method.addException(IOException.class);
     method.addParameter(CBSerializationContextType.class, "context", FINAL);
     method.addParameter(dataTypeNameOf(type), "value", FINAL);
 

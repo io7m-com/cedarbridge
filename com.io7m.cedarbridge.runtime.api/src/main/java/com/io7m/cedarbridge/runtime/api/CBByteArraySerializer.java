@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBByteArraySerializer
   extends CBAbstractSerializer<CBByteArray>
 {
@@ -28,6 +30,7 @@ public final class CBByteArraySerializer
   public void serialize(
     final CBSerializationContextType context,
     final CBByteArray value)
+    throws IOException
   {
     context.writeByteArray(value.value());
   }
@@ -35,6 +38,7 @@ public final class CBByteArraySerializer
   @Override
   public CBByteArray deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     return CBByteArray.of(context.readByteArray());
   }

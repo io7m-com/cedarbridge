@@ -1,0 +1,41 @@
+[package com.io7m.cedarbridge.examples.pastebin]
+
+[import com.io7m.cedarbridge cb]
+
+[record PasteID
+  [field msb cb:IntegerUnsigned64]
+  [field lsb cb:IntegerUnsigned64]]
+
+[record PasteCreate
+  [field key cb:String]
+  [field text cb:String]]
+
+[record PasteCreated
+  [field id PasteID]]
+
+[record PasteDelete
+  [field pasteId PasteID]
+  [field key cb:String]]
+
+[record PasteDeleted
+  [field id PasteID]]
+
+[record PasteGet
+  [field id PasteID]]
+
+[record PasteGetResult
+  [field id PasteID]
+  [field text cb:String]]
+
+[record Error
+  [field message cb:String]]
+
+[protocol Paste
+  [version 1
+    PasteCreate
+    PasteCreated
+    PasteDelete
+    PasteDeleted
+    PasteGet
+    PasteGetResult
+    Error]]

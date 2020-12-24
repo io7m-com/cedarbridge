@@ -20,10 +20,9 @@ import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaClassGeneratorType;
 import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
-import com.io7m.cedarbridge.runtime.api.CBProtocolType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
@@ -31,7 +30,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.lang.model.element.Modifier.DEFAULT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public final class CBCGProtocolInterfaceGenerator
@@ -42,37 +40,23 @@ public final class CBCGProtocolInterfaceGenerator
 
   }
 
-  private static MethodSpec createNameMethod(
-    final CBProtocolDeclarationType proto)
-  {
-    final var pack = proto.owner();
-
-    return MethodSpec.methodBuilder("protocolName")
-      .addModifiers(DEFAULT, PUBLIC)
-      .addAnnotation(Override.class)
-      .returns(String.class)
-      .addStatement(
-        "return $S",
-        String.format("%s.%s", pack.name(), proto.name()))
-      .build();
-  }
-
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBProtocolDeclarationType proto)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(proto, "proto");
 
     final var pack = proto.owner();
     final var className = CBCGJavaTypeNames.protoInterfaceNameOf(proto);
 
     final var classBuilder = TypeSpec.interfaceBuilder(className);
-    classBuilder.addSuperinterface(CBProtocolType.class);
+    classBuilder.addSuperinterface(CBProtocolMessageType.class);
     classBuilder.addModifiers(PUBLIC);
-    classBuilder.addMethod(createNameMethod(proto));
     classBuilder.addJavadoc(
       "Protocol {@code $L.$L}",
       pack.name(),

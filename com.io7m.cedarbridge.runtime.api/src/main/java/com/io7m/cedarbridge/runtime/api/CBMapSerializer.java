@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -36,6 +37,7 @@ public final class CBMapSerializer<K extends CBSerializableType, V extends CBSer
   public void serialize(
     final CBSerializationContextType context,
     final CBMap<K, V> value)
+    throws IOException
   {
     final Map<K, V> map = value.values();
     context.writeSequenceLength(map.size());
@@ -51,6 +53,7 @@ public final class CBMapSerializer<K extends CBSerializableType, V extends CBSer
   @Override
   public CBMap<K, V> deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     final var count = context.readSequenceLength();
 

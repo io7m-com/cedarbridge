@@ -16,52 +16,71 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public interface CBSerializationContextOutputType
 {
+  void flush()
+    throws IOException;
+
   void writeSequenceLength(
-    int size);
+    int size)
+    throws IOException;
 
   void writeVariantIndex(
-    int x);
+    int x)
+    throws IOException;
 
   void writeS64(
-    long x);
+    long x)
+    throws IOException;
 
   void writeS32(
-    long x);
+    long x)
+    throws IOException;
 
   void writeS16(
-    long x);
+    long x)
+    throws IOException;
 
   void writeS8(
-    long x);
+    long x)
+    throws IOException;
 
   void writeU64(
-    long x);
+    long x)
+    throws IOException;
 
   void writeU32(
-    long x);
+    long x)
+    throws IOException;
 
   void writeU16(
-    long x);
+    long x)
+    throws IOException;
 
   void writeU8(
-    long x);
+    long x)
+    throws IOException;
 
   void writeF64(
-    double x);
+    double x)
+    throws IOException;
 
   void writeF32(
-    double x);
+    double x)
+    throws IOException;
 
   void writeF16(
-    double x);
+    double x)
+    throws IOException;
 
   void writeByteArray(
-    ByteBuffer x);
+    ByteBuffer x)
+    throws IOException;
 
   void writeUTF8(
-    String x);
+    String x)
+    throws IOException;
 }

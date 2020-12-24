@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBIntegerUnsigned32Serializer
   extends CBAbstractSerializer<CBIntegerUnsigned32>
 {
@@ -28,6 +30,7 @@ public final class CBIntegerUnsigned32Serializer
   public void serialize(
     final CBSerializationContextType context,
     final CBIntegerUnsigned32 value)
+    throws IOException
   {
     context.writeU32(value.value());
   }
@@ -35,7 +38,8 @@ public final class CBIntegerUnsigned32Serializer
   @Override
   public CBIntegerUnsigned32 deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
-    return CBIntegerUnsigned32.of(Integer.toUnsignedLong(context.readU32()));
+    return CBIntegerUnsigned32.of(context.readU32());
   }
 }

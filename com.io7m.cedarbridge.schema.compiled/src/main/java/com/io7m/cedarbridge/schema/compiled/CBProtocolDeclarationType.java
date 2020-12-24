@@ -16,10 +16,16 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * The base type of protocol declarations.
@@ -61,5 +67,21 @@ public interface CBProtocolDeclarationType
       .stream()
       .filter(version -> version.containsType(type))
       .collect(Collectors.toList());
+  }
+
+  /**
+   * @return The unique ID of the protocol
+   */
+
+  default UUID id()
+  {
+    try (var stream = new ByteArrayOutputStream()) {
+      stream.writeBytes(this.owner().name().getBytes(UTF_8));
+      stream.write((int) ':');
+      stream.write(this.name().getBytes(UTF_8));
+      return UUID.nameUUIDFromBytes(stream.toByteArray());
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 }

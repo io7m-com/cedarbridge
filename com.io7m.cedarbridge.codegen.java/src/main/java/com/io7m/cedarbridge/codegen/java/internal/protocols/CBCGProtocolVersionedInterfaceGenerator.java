@@ -20,19 +20,15 @@ import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaClassGeneratorType;
 import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
-import com.io7m.cedarbridge.runtime.api.CBProtocolVersionedType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.nio.file.Path;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.lang.model.element.Modifier.DEFAULT;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 public final class CBCGProtocolVersionedInterfaceGenerator
@@ -43,27 +39,15 @@ public final class CBCGProtocolVersionedInterfaceGenerator
 
   }
 
-  private static MethodSpec createVersionMethod(
-    final CBProtocolVersionDeclarationType proto)
-  {
-    return MethodSpec.methodBuilder("protocolVersion")
-      .addModifiers(DEFAULT, PUBLIC)
-      .addAnnotation(Override.class)
-      .returns(BigInteger.class)
-      .addStatement(
-        "return new $T($S)",
-        BigInteger.class,
-        proto.version().toString())
-      .build();
-  }
-
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBProtocolVersionDeclarationType proto)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(proto, "proto");
 
     final var owner = proto.owner();
@@ -73,9 +57,7 @@ public final class CBCGProtocolVersionedInterfaceGenerator
 
     final var classBuilder = TypeSpec.interfaceBuilder(className);
     classBuilder.addSuperinterface(CBCGJavaTypeNames.protoInterfaceNameOf(owner));
-    classBuilder.addSuperinterface(CBProtocolVersionedType.class);
     classBuilder.addModifiers(PUBLIC);
-    classBuilder.addMethod(createVersionMethod(proto));
     classBuilder.addJavadoc(
       "Protocol {@code $L.$L}, version {@code $L}.",
       pack.name(),

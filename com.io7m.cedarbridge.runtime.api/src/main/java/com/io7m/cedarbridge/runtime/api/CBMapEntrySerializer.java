@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public final class CBMapEntrySerializer<K extends CBSerializableType, V extends CBSerializableType>
@@ -38,6 +39,7 @@ public final class CBMapEntrySerializer<K extends CBSerializableType, V extends 
   public void serialize(
     final CBSerializationContextType context,
     final CBMapEntry<K, V> value)
+    throws IOException
   {
     this.keySerializer.serialize(context, value.key());
     this.valueSerializer.serialize(context, value.value());
@@ -46,6 +48,7 @@ public final class CBMapEntrySerializer<K extends CBSerializableType, V extends 
   @Override
   public CBMapEntry<K, V> deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     final var key = this.keySerializer.deserialize(context);
     final var val = this.valueSerializer.deserialize(context);

@@ -18,6 +18,10 @@ package com.io7m.cedarbridge.runtime.api;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
 /**
  * A serializer factory for protocols.
  *
@@ -25,8 +29,26 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 
 @ProviderType
-public interface CBProtocolSerializerFactoryType<T extends CBProtocolVersionedType>
+public interface CBProtocolSerializerFactoryType<T extends CBProtocolMessageType>
 {
+  /**
+   * @return The unique ID of the protocol
+   */
+
+  UUID id();
+
+  /**
+   * @return The version of the protocol implemented by this serializer
+   */
+
+  long version();
+
+  /**
+   * @return The base class of serialized messages
+   */
+
+  Class<T> serializes();
+
   /**
    * Create a new serializer.
    *
@@ -37,4 +59,66 @@ public interface CBProtocolSerializerFactoryType<T extends CBProtocolVersionedTy
 
   CBProtocolSerializerType<T> create(
     CBSerializerDirectoryType directory);
+
+  /**
+   * If this serializer factory has version {@code version} then return it.
+   * Otherwise, return nothing.
+   *
+   * @param version The protocol version
+   * @param <U>     The type of protocol messages
+   *
+   * @return This, or nothing
+   */
+
+  @SuppressWarnings("unchecked")
+  default <U extends T> Optional<CBProtocolSerializerFactoryType<U>> matches(
+    final long version)
+  {
+    if (this.version() == version) {
+      return Optional.of((CBProtocolSerializerFactoryType<U>) this);
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * If this serializer factory has version {@code version} and serializes
+   * messages of type {@code clazz}, then return it. Otherwise, return nothing.
+   *
+   * @param version The protocol version
+   * @param clazz   The type of protocol messages
+   * @param <U>     The type of protocol messages
+   *
+   * @return This, or nothing
+   */
+
+  @SuppressWarnings("unchecked")
+  default <U extends T> Optional<CBProtocolSerializerFactoryType<U>> matches(
+    final long version,
+    final Class<U> clazz)
+  {
+    if (Objects.equals(clazz, this.serializes()) && this.version() == version) {
+      return Optional.of((CBProtocolSerializerFactoryType<U>) this);
+    }
+    return Optional.empty();
+  }
+
+  /**
+   * If this serializer factory serializes messages of type {@code clazz}, then
+   * return it. Otherwise, return nothing.
+   *
+   * @param clazz The type of protocol messages
+   * @param <U>   The type of protocol messages
+   *
+   * @return This, or nothing
+   */
+
+  @SuppressWarnings("unchecked")
+  default <U extends T> Optional<CBProtocolSerializerFactoryType<U>> matches(
+    final Class<U> clazz)
+  {
+    if (Objects.equals(clazz, this.serializes())) {
+      return Optional.of((CBProtocolSerializerFactoryType<U>) this);
+    }
+    return Optional.empty();
+  }
 }

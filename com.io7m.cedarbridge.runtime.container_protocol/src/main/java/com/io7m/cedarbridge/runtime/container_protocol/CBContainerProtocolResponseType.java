@@ -19,6 +19,8 @@ package com.io7m.cedarbridge.runtime.container_protocol;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 /**
  * A response to a {@link CBContainerProtocolUseType} message. If {@code ok}
  * is {@code false}, the client should expect to be disconnected immediately.
@@ -39,4 +41,18 @@ public interface CBContainerProtocolResponseType
    */
 
   String message();
+
+  /**
+   * Check preconditions for the type.
+   */
+
+  @Value.Check
+  default void checkPreconditions()
+  {
+    final var encoded = this.message().getBytes(UTF_8);
+    if (encoded.length > 244) {
+      throw new IllegalArgumentException(
+        "Message too long; must be < 244 bytes");
+    }
+  }
 }

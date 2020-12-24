@@ -60,10 +60,12 @@ public final class CBCGJavaSerializerFactoryGenerator
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBTypeDeclarationType type)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(type, "type");
 
     final var pack = type.owner();
@@ -95,6 +97,7 @@ public final class CBCGJavaSerializerFactoryGenerator
         .addMethod(constructor)
         .addMethod(CBCGSerializerInstantiations.generateInstantiationMethod(type))
         .build();
+
 
     final var javaFile =
       JavaFile.builder(pack.name(), classDefinition)

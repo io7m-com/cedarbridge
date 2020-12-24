@@ -25,6 +25,7 @@ public interface CBCGJavaClassGeneratorType<T>
 {
   Path execute(
     CBSPICodeGeneratorConfiguration configuration,
+    String packageName,
     T type)
     throws CBSPICodeGeneratorException;
 }

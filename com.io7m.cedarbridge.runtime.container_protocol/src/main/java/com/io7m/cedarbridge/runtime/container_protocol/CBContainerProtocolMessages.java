@@ -218,6 +218,15 @@ public final class CBContainerProtocolMessages
   }
 
   /**
+   * @return The size of a response message
+   */
+
+  public static int sizeResponse()
+  {
+    return 256;
+  }
+
+  /**
    * Serialize a "response" message.
    *
    * @param message The message
@@ -228,15 +237,58 @@ public final class CBContainerProtocolMessages
   public static ByteBuffer serializeResponse(
     final CBContainerProtocolResponse message)
   {
-    final var textBytes =
-      message.message().getBytes(UTF_8);
-
-    final var buffer = ByteBuffer.allocate(textBytes.length + 12);
+    final var textBytes = message.message().getBytes(UTF_8);
+    final var buffer = ByteBuffer.allocate(sizeResponse());
     buffer.order(BIG_ENDIAN);
     buffer.putInt(0x43420002);
     buffer.putInt(message.ok() ? 1 : 0);
     buffer.putInt(textBytes.length);
     buffer.put(textBytes);
+
+    while (buffer.remaining() != 0) {
+      buffer.put((byte) 0x0);
+    }
+
+    if (buffer.remaining() != 0) {
+      throw new IllegalStateException("Buffer has remaining space");
+    }
+
+    buffer.flip();
+    return buffer;
+  }
+
+  /**
+   * Serialize a "response" message.
+   *
+   * @param message The message
+   *
+   * @return A serialized message
+   */
+
+  public static byte[] serializeResponseAsBytes(
+    final CBContainerProtocolResponse message)
+  {
+    return serializeResponse(message).array();
+  }
+
+  /**
+   * Serialize a "use" message.
+   *
+   * @param message The message
+   *
+   * @return A serialized message
+   */
+
+  public static ByteBuffer serializeUse(
+    final CBContainerProtocolUse message)
+  {
+    final var buffer = ByteBuffer.allocate(sizeUse());
+    buffer.order(BIG_ENDIAN);
+    buffer.putInt(0x43420001);
+    buffer.putInt(Math.toIntExact(message.containerProtocolVersion()));
+    buffer.putLong(message.applicationProtocolId().getMostSignificantBits());
+    buffer.putLong(message.applicationProtocolId().getLeastSignificantBits());
+    buffer.putLong(message.applicationProtocolVersion());
 
     if (buffer.remaining() != 0) {
       throw new IllegalStateException("Buffer has remaining space");
@@ -254,23 +306,19 @@ public final class CBContainerProtocolMessages
    * @return A serialized message
    */
 
-  public static ByteBuffer serializeUse(
+  public static byte[] serializeUseAsBytes(
     final CBContainerProtocolUse message)
   {
-    final var buffer = ByteBuffer.allocate(32);
-    buffer.order(BIG_ENDIAN);
-    buffer.putInt(0x43420001);
-    buffer.putInt(Math.toIntExact(message.containerProtocolVersion()));
-    buffer.putLong(message.applicationProtocolId().getMostSignificantBits());
-    buffer.putLong(message.applicationProtocolId().getLeastSignificantBits());
-    buffer.putLong(message.applicationProtocolVersion());
+    return serializeUse(message).array();
+  }
 
-    if (buffer.remaining() != 0) {
-      throw new IllegalStateException("Buffer has remaining space");
-    }
+  /**
+   * @return The size of a "use" message
+   */
 
-    buffer.flip();
-    return buffer;
+  public static int sizeUse()
+  {
+    return 32;
   }
 
   /**
@@ -284,7 +332,7 @@ public final class CBContainerProtocolMessages
   public static ByteBuffer serializeAvailable(
     final CBContainerProtocolAvailable message)
   {
-    final var buffer = ByteBuffer.allocate(48);
+    final var buffer = ByteBuffer.allocate(sizeAvailable());
     buffer.order(BIG_ENDIAN);
     buffer.putInt(0x43420000);
     buffer.putInt(Math.toIntExact(message.containerProtocolMinimumVersion()));
@@ -301,5 +349,28 @@ public final class CBContainerProtocolMessages
 
     buffer.flip();
     return buffer;
+  }
+
+  /**
+   * @return The size of an "available" message
+   */
+
+  public static int sizeAvailable()
+  {
+    return 48;
+  }
+
+  /**
+   * Serialize an "available" message.
+   *
+   * @param message The message
+   *
+   * @return A serialized message
+   */
+
+  public static byte[] serializeAvailableAsBytes(
+    final CBContainerProtocolAvailable message)
+  {
+    return serializeAvailable(message).array();
   }
 }

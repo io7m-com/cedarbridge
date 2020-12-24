@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBStringSerializer extends CBAbstractSerializer<CBString>
 {
   public CBStringSerializer()
@@ -27,6 +29,7 @@ public final class CBStringSerializer extends CBAbstractSerializer<CBString>
   public void serialize(
     final CBSerializationContextType context,
     final CBString value)
+    throws IOException
   {
     context.writeUTF8(value.value());
   }
@@ -34,6 +37,7 @@ public final class CBStringSerializer extends CBAbstractSerializer<CBString>
   @Override
   public CBString deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     return CBString.of(context.readUTF8());
   }

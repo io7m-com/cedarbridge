@@ -14,6 +14,9 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+import com.io7m.cedarbridge.runtime.api.CBCoreSerializersService;
+import com.io7m.cedarbridge.runtime.api.CBSerializerCollectionServiceType;
+
 /**
  * Cedarbridge message protocol (Runtime API)
  */
@@ -24,6 +27,9 @@ module com.io7m.cedarbridge.runtime.api
   requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
+
+  provides CBSerializerCollectionServiceType
+    with CBCoreSerializersService;
 
   exports com.io7m.cedarbridge.runtime.api;
 }

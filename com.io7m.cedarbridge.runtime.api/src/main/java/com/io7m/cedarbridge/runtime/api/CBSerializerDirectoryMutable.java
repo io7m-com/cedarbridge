@@ -14,36 +14,60 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.tests;
-
-import com.io7m.cedarbridge.runtime.api.CBQualifiedTypeName;
-import com.io7m.cedarbridge.runtime.api.CBSerializableType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerType;
-import com.io7m.cedarbridge.runtime.api.CBTypeArgument;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+package com.io7m.cedarbridge.runtime.api;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public final class CBFakeSerializerDirectory
+/**
+ * A mutable serializer directory.
+ */
+
+public final class CBSerializerDirectoryMutable
   implements CBSerializerDirectoryType
 {
-  private static final Logger LOG =
-    LoggerFactory.getLogger(CBFakeSerializerDirectory.class);
-
   private final HashMap<CBQualifiedTypeName, CBSerializerFactoryType<?>> serializerFactories;
   private final HashMap<Instantiation, CBSerializerType<?>> serializers;
 
-  public CBFakeSerializerDirectory()
+  /**
+   * Construct a serializer directory.
+   */
+
+  public CBSerializerDirectoryMutable()
   {
     this.serializerFactories = new HashMap<>();
     this.serializers = new HashMap<>();
   }
+
+  /**
+   * Add all serializers in the collection to the directory. This is equivalent
+   * to calling {@link #addSerializer(CBSerializerFactoryType)} to every member
+   * of the collection in order, accumulating the exceptions and then raising
+   * an exception at the end if any exceptions were raised.
+   *
+   * @param collection The collection
+   */
+
+  public void addCollection(
+    final CBSerializerCollection collection)
+  {
+    final var exceptions = new ExceptionTracker<IllegalStateException>();
+    for (final var serializer : collection.serializers()) {
+      try {
+        this.addSerializer(serializer);
+      } catch (final IllegalStateException e) {
+        exceptions.addException(e);
+      }
+    }
+    exceptions.throwIfNecessary();
+  }
+
+  /**
+   * Add the serializer to the directory.
+   *
+   * @param serializer The serializer
+   */
 
   public void addSerializer(
     final CBSerializerFactoryType<?> serializer)
@@ -67,14 +91,6 @@ public final class CBFakeSerializerDirectory
     Objects.requireNonNull(typeName, "typeName");
     Objects.requireNonNull(arguments, "arguments");
 
-    LOG.debug(
-      "serializerFor: {} {}",
-      String.format("%s", typeName),
-      arguments.stream()
-        .map(x -> String.format("%s", x))
-        .collect(Collectors.toList())
-    );
-
     final var instantiation = new Instantiation(typeName, arguments);
     final var result = this.serializers.get(instantiation);
     if (result == null) {
@@ -94,7 +110,37 @@ public final class CBFakeSerializerDirectory
     return (CBSerializerType<T>) result;
   }
 
-  private final class Instantiation
+  private static final class ExceptionTracker<T extends Exception>
+  {
+    private T exception;
+
+    ExceptionTracker()
+    {
+
+    }
+
+    public void addException(
+      final T nextException)
+    {
+      Objects.requireNonNull(nextException, "exception");
+
+      if (this.exception == null) {
+        this.exception = nextException;
+      } else {
+        this.exception.addSuppressed(nextException);
+      }
+    }
+
+    public void throwIfNecessary()
+      throws T
+    {
+      if (this.exception != null) {
+        throw this.exception;
+      }
+    }
+  }
+
+  private static final class Instantiation
   {
     private final CBQualifiedTypeName typeName;
     private final List<CBTypeArgument> arguments;

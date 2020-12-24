@@ -14,17 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.runtime.api;
+package com.io7m.cedarbridge.tests.runtime.api;
 
-/**
- * The base type of all protocols.
- */
+import com.io7m.cedarbridge.runtime.api.CBMapEntry;
+import org.junit.jupiter.api.Test;
 
-public interface CBProtocolType
+import static com.io7m.cedarbridge.runtime.api.CBCore.string;
+import static com.io7m.cedarbridge.runtime.api.CBCore.unsigned32;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public final class CBMapEntryTest
 {
-  /**
-   * @return The name of the protocol
-   */
-
-  String protocolName();
+  @Test
+  public void testFormat()
+  {
+    assertEquals(
+      "(k0 23)",
+      String.format("%s", CBMapEntry.of(string("k0"), unsigned32(23)))
+    );
+  }
 }

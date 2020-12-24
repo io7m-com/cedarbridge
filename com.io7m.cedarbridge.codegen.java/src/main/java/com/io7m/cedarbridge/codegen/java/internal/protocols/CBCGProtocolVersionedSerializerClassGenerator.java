@@ -47,10 +47,12 @@ public final class CBCGProtocolVersionedSerializerClassGenerator
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBProtocolVersionDeclarationType proto)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(proto, "proto");
 
     final var owner = proto.owner();
@@ -85,10 +87,10 @@ public final class CBCGProtocolVersionedSerializerClassGenerator
     );
     classBuilder.addMethod(constructor);
     classBuilder.addFields(fields);
-    classBuilder.addMethod(CBCGJavaSerializers.createDeserializeMethodProtocol(
-      proto));
-    classBuilder.addMethod(CBCGJavaSerializers.createSerializeMethodProtocol(
-      proto));
+    classBuilder.addMethod(
+      CBCGJavaSerializers.createDeserializeMethodProtocol(proto));
+    classBuilder.addMethod(
+      CBCGJavaSerializers.createSerializeMethodProtocol(proto));
     classBuilder.addMethods(deserializeMethods);
     classBuilder.addMethods(serializeMethods);
 

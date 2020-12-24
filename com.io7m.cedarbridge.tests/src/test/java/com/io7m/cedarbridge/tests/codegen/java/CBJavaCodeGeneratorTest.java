@@ -17,16 +17,15 @@
 package com.io7m.cedarbridge.tests.codegen.java;
 
 import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
-import com.io7m.cedarbridge.runtime.api.CBIntegerSigned32;
 import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
+import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
-import com.io7m.cedarbridge.tests.CBFakeSerializerDirectory;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,7 +51,7 @@ public final class CBJavaCodeGeneratorTest
   private Path moduleDirectory;
   private CBFakeLoader loader;
   private CBSerializationContextType context;
-  private CBFakeSerializerDirectory serializers;
+  private CBSerializerDirectoryMutable serializers;
   private CBJavaCompilation compiled;
 
   @BeforeEach
@@ -68,7 +67,7 @@ public final class CBJavaCodeGeneratorTest
     this.context =
       mock(CBSerializationContextType.class);
     this.serializers =
-      new CBFakeSerializerDirectory();
+      new CBSerializerDirectoryMutable();
   }
 
   private void compile(
@@ -315,6 +314,7 @@ public final class CBJavaCodeGeneratorTest
       "com.io7m.cedarbridge.Pair",
       "com.io7m.cedarbridge.PairSerializer",
       "com.io7m.cedarbridge.PairSerializerFactory",
+      "com.io7m.cedarbridge.ProtocolZ",
       "com.io7m.cedarbridge.ProtocolZType",
       "com.io7m.cedarbridge.ProtocolZv0Serializer",
       "com.io7m.cedarbridge.ProtocolZv0SerializerFactory",
@@ -413,8 +413,8 @@ public final class CBJavaCodeGeneratorTest
       .thenReturn(Integer.valueOf(80));
     when(Integer.valueOf(this.context.readU16()))
       .thenReturn(Integer.valueOf(160));
-    when(Integer.valueOf(this.context.readU32()))
-      .thenReturn(Integer.valueOf(320));
+    when(Long.valueOf(this.context.readU32()))
+      .thenReturn(Long.valueOf(320));
     when(Long.valueOf(this.context.readU64()))
       .thenReturn(Long.valueOf(640L));
 

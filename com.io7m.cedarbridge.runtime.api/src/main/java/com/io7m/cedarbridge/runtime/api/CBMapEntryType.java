@@ -40,6 +40,6 @@ public interface CBMapEntryType<K extends CBSerializableType, V extends CBSerial
     final int width,
     final int precision)
   {
-    formatter.format("(%s, %s)", this.key(), this.value());
+    formatter.format("(%s %s)", this.key(), this.value());
   }
 }

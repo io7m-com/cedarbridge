@@ -16,7 +16,9 @@
 
 package com.io7m.cedarbridge.codegen.java.internal;
 
+import com.io7m.cedarbridge.codegen.java.internal.collections.CBCGJavaSerializerCollectionGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.data_classes.CBCGDataClassGenerator;
+import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolInterfaceGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedInterfaceGenerator;
 import com.io7m.cedarbridge.codegen.java.internal.protocols.CBCGProtocolVersionedSerializerClassGenerator;
@@ -61,23 +63,28 @@ public final class CBCGJava implements CBSPICodeGeneratorType
     for (final var entry : protos.entrySet()) {
       final var proto = entry.getValue();
 
-      final var wroteProto =
+      final var wroteProtoInterface =
         new CBCGProtocolInterfaceGenerator()
-          .execute(this.configuration, proto);
+          .execute(this.configuration, pack.name(), proto);
+      final var wroteProto =
+        new CBCGProtocolGenerator()
+          .execute(this.configuration, pack.name(), proto);
 
+      LOG.debug("generate: {}", wroteProtoInterface);
       LOG.debug("generate: {}", wroteProto);
+      resultBuilder.addCreatedFiles(wroteProtoInterface);
       resultBuilder.addCreatedFiles(wroteProto);
 
       for (final var version : proto.versions().values()) {
         final var wroteInterface =
           new CBCGProtocolVersionedInterfaceGenerator()
-            .execute(this.configuration, version);
+            .execute(this.configuration, pack.name(), version);
         final var wroteSerializer =
           new CBCGProtocolVersionedSerializerClassGenerator()
-            .execute(this.configuration, version);
+            .execute(this.configuration, pack.name(), version);
         final var wroteSerializerFactory =
           new CBCGProtocolVersionedSerializerFactoryClassGenerator()
-            .execute(this.configuration, version);
+            .execute(this.configuration, pack.name(), version);
 
         LOG.debug("generate: {}", wroteInterface);
         LOG.debug("generate: {}", wroteSerializer);
@@ -89,19 +96,27 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       }
     }
 
-    final var types = pack.types();
+    final var types =
+      pack.types();
+
+    final var wroteCollection =
+      new CBCGJavaSerializerCollectionGenerator()
+        .execute(this.configuration, pack.name(), types.values());
+    LOG.debug("generate: {}", wroteCollection);
+    resultBuilder.addCreatedFiles(wroteCollection);
+
     for (final var entry : types.entrySet()) {
       final var type =
         entry.getValue();
       final var wroteData =
         new CBCGDataClassGenerator()
-          .execute(this.configuration, type);
+          .execute(this.configuration, pack.name(), type);
       final var wroteSerializer =
         new CBCGJavaSerializerGenerator()
-          .execute(this.configuration, type);
+          .execute(this.configuration, pack.name(), type);
       final var wroteSerializerFactory =
         new CBCGJavaSerializerFactoryGenerator()
-          .execute(this.configuration, type);
+          .execute(this.configuration, pack.name(), type);
 
       LOG.debug("generate: {}", wroteData);
       LOG.debug("generate: {}", wroteSerializer);

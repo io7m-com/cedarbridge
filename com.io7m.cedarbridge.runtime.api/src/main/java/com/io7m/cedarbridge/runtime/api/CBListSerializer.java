@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -35,6 +36,7 @@ public final class CBListSerializer<T extends CBSerializableType>
   public void serialize(
     final CBSerializationContextType context,
     final CBList<T> value)
+    throws IOException
   {
     context.begin("items");
 
@@ -54,6 +56,7 @@ public final class CBListSerializer<T extends CBSerializableType>
   @Override
   public CBList<T> deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     context.begin("items");
 

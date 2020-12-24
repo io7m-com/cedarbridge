@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBIntegerUnsigned8Serializer
   extends CBAbstractSerializer<CBIntegerUnsigned8>
 {
@@ -28,6 +30,7 @@ public final class CBIntegerUnsigned8Serializer
   public void serialize(
     final CBSerializationContextType context,
     final CBIntegerUnsigned8 value)
+    throws IOException
   {
     context.writeU8(value.value());
   }
@@ -35,6 +38,7 @@ public final class CBIntegerUnsigned8Serializer
   @Override
   public CBIntegerUnsigned8 deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     return CBIntegerUnsigned8.of(context.readU8());
   }

@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public final class CBOptionSerializer<T extends CBSerializableType>
@@ -34,6 +35,7 @@ public final class CBOptionSerializer<T extends CBSerializableType>
   public void serialize(
     final CBSerializationContextType context,
     final CBOptionType<T> value)
+    throws IOException
   {
     if (value instanceof CBSome) {
       this.serializeSome(context, (CBSome<T>) value);
@@ -51,6 +53,7 @@ public final class CBOptionSerializer<T extends CBSerializableType>
   private void serializeNone(
     final CBSerializationContextType context,
     final CBNone<T> value)
+    throws IOException
   {
     context.writeVariantIndex(CBNone.VARIANT_INDEX);
   }
@@ -58,6 +61,7 @@ public final class CBOptionSerializer<T extends CBSerializableType>
   private void serializeSome(
     final CBSerializationContextType context,
     final CBSome<T> value)
+    throws IOException
   {
     context.writeVariantIndex(CBSome.VARIANT_INDEX);
     this.itemSerializer.serialize(context, value.value());
@@ -66,6 +70,7 @@ public final class CBOptionSerializer<T extends CBSerializableType>
   @Override
   public CBOptionType<T> deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     final var index = context.readVariantIndex();
     switch (index) {
@@ -84,6 +89,7 @@ public final class CBOptionSerializer<T extends CBSerializableType>
 
   private CBOptionType<T> deserializeSome(
     final CBSerializationContextType context)
+    throws IOException
   {
     final var v0000 = this.itemSerializer.deserialize(context);
     return CBSome.of(v0000);

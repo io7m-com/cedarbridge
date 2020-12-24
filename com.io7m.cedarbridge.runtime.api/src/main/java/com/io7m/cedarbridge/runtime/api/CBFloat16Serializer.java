@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBFloat16Serializer extends CBAbstractSerializer<CBFloat16>
 {
   public CBFloat16Serializer()
@@ -27,6 +29,7 @@ public final class CBFloat16Serializer extends CBAbstractSerializer<CBFloat16>
   public void serialize(
     final CBSerializationContextType context,
     final CBFloat16 value)
+    throws IOException
   {
     context.writeF16(value.value());
   }
@@ -34,6 +37,7 @@ public final class CBFloat16Serializer extends CBAbstractSerializer<CBFloat16>
   @Override
   public CBFloat16 deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     return CBFloat16.of(context.readF16());
   }

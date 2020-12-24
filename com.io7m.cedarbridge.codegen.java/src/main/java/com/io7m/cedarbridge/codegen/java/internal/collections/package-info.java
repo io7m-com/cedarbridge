@@ -14,20 +14,11 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.runtime.api;
-
-import java.math.BigInteger;
-
 /**
- * The base type of all versioned protocols.
+ * Cedarbridge message protocol (Java code generator [Internal classes])
  */
 
-public interface CBProtocolVersionedType
-  extends CBProtocolType, CBSerializableType
-{
-  /**
-   * @return The version of the protocol
-   */
+@Version("1.0.0")
+package com.io7m.cedarbridge.codegen.java.internal.collections;
 
-  BigInteger protocolVersion();
-}
+import org.osgi.annotation.versioning.Version;

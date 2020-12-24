@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
+
 public final class CBIntegerSigned32Serializer
   extends CBAbstractSerializer<CBIntegerSigned32>
 {
@@ -28,6 +30,7 @@ public final class CBIntegerSigned32Serializer
   public void serialize(
     final CBSerializationContextType context,
     final CBIntegerSigned32 value)
+    throws IOException
   {
     context.writeS32(value.value());
   }
@@ -35,6 +38,7 @@ public final class CBIntegerSigned32Serializer
   @Override
   public CBIntegerSigned32 deserialize(
     final CBSerializationContextType context)
+    throws IOException
   {
     return CBIntegerSigned32.of(context.readS32());
   }

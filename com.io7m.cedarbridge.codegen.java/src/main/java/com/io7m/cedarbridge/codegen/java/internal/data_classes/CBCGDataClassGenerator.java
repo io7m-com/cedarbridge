@@ -202,10 +202,12 @@ public final class CBCGDataClassGenerator
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBTypeDeclarationType type)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(type, "type");
 
     final var pack = type.owner();

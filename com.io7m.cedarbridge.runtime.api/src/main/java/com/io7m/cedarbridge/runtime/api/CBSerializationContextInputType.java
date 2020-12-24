@@ -16,37 +16,53 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 public interface CBSerializationContextInputType
 {
-  int readSequenceLength();
+  int readSequenceLength()
+    throws IOException;
 
-  int readVariantIndex();
+  int readVariantIndex()
+    throws IOException;
 
-  long readS64();
+  long readS64()
+    throws IOException;
 
-  int readS32();
+  int readS32()
+    throws IOException;
 
-  int readS16();
+  int readS16()
+    throws IOException;
 
-  int readS8();
+  int readS8()
+    throws IOException;
 
-  long readU64();
+  long readU64()
+    throws IOException;
 
-  int readU32();
+  long readU32()
+    throws IOException;
 
-  int readU16();
+  int readU16()
+    throws IOException;
 
-  int readU8();
+  int readU8()
+    throws IOException;
 
-  double readF64();
+  double readF64()
+    throws IOException;
 
-  double readF32();
+  double readF32()
+    throws IOException;
 
-  double readF16();
+  double readF16()
+    throws IOException;
 
-  ByteBuffer readByteArray();
+  ByteBuffer readByteArray()
+    throws IOException;
 
-  String readUTF8();
+  String readUTF8()
+    throws IOException;
 }

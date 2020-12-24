@@ -18,6 +18,8 @@ package com.io7m.cedarbridge.runtime.api;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+import java.io.IOException;
+
 /**
  * A serializer for protocols.
  *
@@ -25,18 +27,21 @@ import org.osgi.annotation.versioning.ProviderType;
  */
 
 @ProviderType
-public interface CBProtocolSerializerType<T extends CBProtocolVersionedType>
+public interface CBProtocolSerializerType<T extends CBProtocolMessageType>
 {
   /**
    * Serialize a value of the given type.
    *
    * @param context The serialization context
    * @param value   The value to be serialized
+   *
+   * @throws IOException On I/O errors
    */
 
   void serialize(
     CBSerializationContextType context,
-    T value);
+    T value)
+    throws IOException;
 
   /**
    * Deserialize a value of the given type.
@@ -44,8 +49,11 @@ public interface CBProtocolSerializerType<T extends CBProtocolVersionedType>
    * @param context The serialization context
    *
    * @return A deserialized value
+   *
+   * @throws IOException On I/O errors
    */
 
   T deserialize(
-    CBSerializationContextType context);
+    CBSerializationContextType context)
+    throws IOException;
 }

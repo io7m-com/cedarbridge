@@ -31,7 +31,9 @@ import com.squareup.javapoet.TypeSpec;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.UUID;
 
+import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.protoNameOf;
 import static com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation.CBCGSerializerInstantiations.generateInstantiationMethodForProtocol;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
@@ -53,13 +55,53 @@ public final class CBCGProtocolVersionedSerializerFactoryClassGenerator
       .build();
   }
 
+  private static MethodSpec generateIdMethod(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    return MethodSpec.methodBuilder("id")
+      .addModifiers(PUBLIC)
+      .addAnnotation(Override.class)
+      .returns(UUID.class)
+      .addStatement("return $T.id()", protoNameOf(proto.owner()))
+      .build();
+  }
+
+  private static MethodSpec generateVersionMethod(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    return MethodSpec.methodBuilder("version")
+      .addModifiers(PUBLIC)
+      .addAnnotation(Override.class)
+      .returns(long.class)
+      .addStatement("return $L", proto.version())
+      .build();
+  }
+
+  private static MethodSpec generateSerializesMethod(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var interfaceT =
+      CBCGJavaTypeNames.protoVersionedInterfaceNameOf(proto);
+    final var classT =
+      ParameterizedTypeName.get(ClassName.get(Class.class), interfaceT);
+
+    return MethodSpec.methodBuilder("serializes")
+      .addModifiers(PUBLIC)
+      .addAnnotation(Override.class)
+      .returns(classT)
+      .addStatement("return $T.class", interfaceT)
+      .build();
+  }
+
   @Override
   public Path execute(
     final CBSPICodeGeneratorConfiguration configuration,
+    final String packageName,
     final CBProtocolVersionDeclarationType proto)
     throws CBSPICodeGeneratorException
   {
     Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(packageName, "packageName");
     Objects.requireNonNull(proto, "proto");
 
     final var owner = proto.owner();
@@ -78,6 +120,9 @@ public final class CBCGProtocolVersionedSerializerFactoryClassGenerator
     classBuilder.addSuperinterface(parameterizedSuperinterface);
     classBuilder.addMethod(createConstructor(proto));
     classBuilder.addMethod(generateInstantiationMethodForProtocol(proto));
+    classBuilder.addMethod(generateIdMethod(proto));
+    classBuilder.addMethod(generateVersionMethod(proto));
+    classBuilder.addMethod(generateSerializesMethod(proto));
     classBuilder.addJavadoc(
       "Protocol {@code $L.$L}, version {@code $L}.",
       pack.name(),

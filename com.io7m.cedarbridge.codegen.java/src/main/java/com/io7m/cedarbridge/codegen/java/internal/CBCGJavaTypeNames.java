@@ -36,6 +36,17 @@ public final class CBCGJavaTypeNames
 
   }
 
+  public static ClassName protoNameOf(
+    final CBProtocolDeclarationType proto)
+  {
+    final var ownerPack = proto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format("Protocol%s", proto.name())
+    );
+  }
+
   public static ClassName protoInterfaceNameOf(
     final CBProtocolDeclarationType proto)
   {
@@ -241,5 +252,11 @@ public final class CBCGJavaTypeNames
     final String name)
   {
     return String.format("field%s", toTitleCase(name));
+  }
+
+  public static ClassName serializerCollectionClassNameOf(
+    final String packageName)
+  {
+    return ClassName.get(packageName, "Serializers");
   }
 }
