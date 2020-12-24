@@ -102,7 +102,12 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
       new InetSocketAddress("localhost", 32000);
 
     try (var socket = new Socket()) {
+      socket.setKeepAlive(true);
+      socket.setPerformancePreferences(0, 1, 0);
+      socket.setTcpNoDelay(true);
+      socket.setTrafficClass(0x02 | 0x10);
       socket.connect(localhost);
+
       LOG.info("[{}] connected", socket.getRemoteSocketAddress());
 
       final var input =

@@ -93,12 +93,18 @@ public final class CBExServer<M, P extends CBProtocolMessageType> implements
     final var localhost = new InetSocketAddress("localhost", port);
 
     try (var socket = new ServerSocket(port, 10, localhost.getAddress())) {
+      socket.setPerformancePreferences(0, 1, 0);
       socket.setSoTimeout(1_000);
 
       LOG.info("[{}] listen", socket.getLocalSocketAddress());
       while (true) {
         try {
           final var clientSocket = socket.accept();
+          clientSocket.setKeepAlive(true);
+          clientSocket.setPerformancePreferences(0, 1, 0);
+          clientSocket.setTcpNoDelay(true);
+          clientSocket.setTrafficClass(0x02 | 0x10);
+
           final var clientAddress =
             clientSocket.getRemoteSocketAddress();
 
