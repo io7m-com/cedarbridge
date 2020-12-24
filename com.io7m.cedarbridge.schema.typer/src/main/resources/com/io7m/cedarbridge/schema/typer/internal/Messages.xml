@@ -11,6 +11,8 @@
   Specification: {4}
 {5}]]></entry>
 
+  <entry key="errorTypeApplicationEmpty"><![CDATA[No arguments provided in application.]]></entry>
+
   <entry key="errorTypeArgumentsIncorrect"><![CDATA[Incorrect number of arguments to type expression.
   Type expression {0} takes {1} argument(s), but {2} were provided.]]></entry>
 

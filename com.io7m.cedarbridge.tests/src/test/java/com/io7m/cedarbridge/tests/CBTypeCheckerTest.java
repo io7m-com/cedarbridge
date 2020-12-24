@@ -552,6 +552,18 @@ public final class CBTypeCheckerTest
   }
 
   @Test
+  public void testError5()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorType5.cbs");
+    });
+
+    assertEquals("errorTypeApplicationEmpty", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
   public void testVariantOk0()
     throws Exception
   {

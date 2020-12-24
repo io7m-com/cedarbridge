@@ -141,6 +141,14 @@ public final class CBTypeExpressionChecker
     final var targetExpression = expression.target();
     checkExpression(context, targetExpression);
 
+    if (expression.arguments().isEmpty()) {
+      throw context.failed(
+        SPEC_SECTION_APPLICATION,
+        expression.lexical(),
+        "errorTypeApplicationEmpty"
+      );
+    }
+
     final var targetArity =
       targetExpression.userData().get(CBTypeAssignment.class);
 

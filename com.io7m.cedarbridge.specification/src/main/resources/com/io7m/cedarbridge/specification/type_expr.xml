@@ -93,6 +93,9 @@
                     parse="text"/>
       </Verbatim>
     </FormalItem>
+    <Paragraph>
+      The list of provided arguments must be non-empty.
+    </Paragraph>
   </Subsection>
 
   <Subsection title="Examples">
