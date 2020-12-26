@@ -1,9 +1,570 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Section xmlns:xi="http://www.w3.org/2001/XInclude"
-         tableOfContentsDepth="1"
-         xmlns="urn:com.io7m.structural:7:0"
-         title="CCBE - Cedarbridge Canonical Binary Encoding">
-  <xi:include href="bin-overview.xml"/>
-  <xi:include href="bin-base_types.xml"/>
+<Section xmlns="urn:com.io7m.structural:7:0"
+         title="CCBE">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">Cedarbridge</Term> language is defined without reference to any particular set of rules
+      for actually encoding values of the various user-defined types for transmission. This specification
+      section defines a <Term type="term">canonical</Term> format for binary encoding,
+      <Term type="term">CCBE</Term>, that all implementations are expected to be able to understand.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="term">CCBE</Term> is defined as following:
+      <ListOrdered>
+        <Item>
+          A simple <Term type="term">base type system</Term> with descriptions of how values of those types are
+          serialized to a binary format.
+        </Item>
+        <Item>
+          The rules for translating values in the <Term type="package">Cedarbridge</Term> language to the
+          <Term type="term">base type system</Term>.
+        </Item>
+      </ListOrdered>
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Bytes" id="d95e6103-77a1-4a14-9a87-96aac074599c">
+    <Paragraph>
+      A <Term type="term">byte</Term> is an eight-bit quantity with the individual bits written to the
+      <Term type="term">transmission medium</Term> in
+      decreasing order of significance. That is, the <Term type="term">most signficant bit</Term>
+      is written to the output <Term type="term">first</Term>, and the <Term type="term">least signficant bit</Term> is
+      written <Term type="term">last</Term>. When the individual bits of an <Term type="expression">N</Term>-bit value
+      are enumerated, it is to be understood that the <Term type="term">most signficant bit</Term> is numbered
+      <Term type="constant">0</Term> and the <Term type="term">least signficant bit</Term> is numbered
+      <Term type="expression">N-1</Term>. A <Term type="term">byte</Term> can therefore be described as the following
+      <Term type="term">product type</Term>:
+    </Paragraph>
+    <FormalItem title="Byte Type">
+      <Verbatim><![CDATA[
+Byte : (bit0 : 𝔹, bit1 : 𝔹, bit2 : 𝔹, bit3 : 𝔹, bit4 : 𝔹, bit5 : 𝔹, bit6 : 𝔹, bit7 : 𝔹)
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      For the purposes of specification, we assume the existence of a function
+      <Term type="function">bit(n, x) : ℕ → α → 𝔹</Term>
+      that, given an arbitrary input value <Term type="expression">x</Term> of type <Term type="expression">α</Term>,
+      returns the value of bit <Term type="expression">n</Term> of the input value according to the above ordering and
+      bit numbering rules. This is merely a notational aid and should be understood to be something that implementations
+      are actually required to implement.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Byte Sequences">
+    <Paragraph>
+      A <Term type="term">byte sequence</Term> is, unsuprisingly, a sequence of
+      <Link target="d95e6103-77a1-4a14-9a87-96aac074599c">bytes</Link>. The notation <Term type="expression">[]</Term>
+      denotes a sequence of length <Term type="constant">0</Term>, and the operator <Term type="expression">+</Term>
+      prepends a byte to a <Term type="term">byte sequence</Term>. The operator <Term type="expression">+</Term> is
+      right-associative, so <Term type="expression">x + y + z = x + (y + z)</Term>.
+    </Paragraph>
+    <FormalItem title="Byte Type">
+      <Verbatim><![CDATA[
+ByteSequence : *
+
+([]) : ByteSequence
+(+)  : Byte → ByteSequence → ByteSequence
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Base Types">
+    <Subsection title="CCBE" id="57d7a6f1-e12f-42e1-adab-79a7cd70efe0">
+      <Paragraph>
+        The kind <Term type="type">CCBE</Term> denotes the disjoint set of types present in the
+        encoding rules. The definition is as follows:
+      </Paragraph>
+      <FormalItem title="CCBE">
+        <Verbatim><![CDATA[
+CCBE = { S8, S16, S32, S64, U8, U16, U32, U64, F16, F32, F64, ByteArray }
+]]></Verbatim>
+      </FormalItem>
+      <Paragraph>
+        For each of the types in <Term type="type">CCBE</Term>, we describe a function
+        <Term type="expression">encode(x) : (τ : CCBE) → (α : τ) → ByteSequence</Term> (where
+        <Term type="expression">τ</Term> is an implicit parameter that can be inferred
+        from <Term type="expression">α</Term>).
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="S8" id="53b561f0-143b-49b5-aa2a-0104aa481f25">
+      <FormalItem title="Description">
+        <Verbatim>S8 : { e ∈ ℤ | e ≥ -128 ⋀ e ≤ 127 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">S8</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[-128, 127]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">S8</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="S8 Bytes">
+        <Verbatim><![CDATA[
+encode(S8, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+  in
+    byte0 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="S16" id="f224f22b-1fd6-48b0-80d0-393079b718f2">
+      <FormalItem title="Description">
+        <Verbatim>S16 : { e ∈ ℤ | e ≥ -32768 ⋀ e ≤ 32767 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">S16</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[-32768, 32767]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">S16</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="S16 Bytes">
+        <Verbatim><![CDATA[
+encode(S16, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+  in
+    byte0 + byte1 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="S32" id="8cbdf56d-8b6c-4015-9dee-ad7fa6f03017">
+      <FormalItem title="Description">
+        <Verbatim>S32 : { e ∈ ℤ | e ≥ -2147483648 ⋀ e ≤ 2147483647 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">S32</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[-2147483648, 2147483647]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">S32</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="S32 Bytes">
+        <Verbatim><![CDATA[
+encode(S32, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="S64" id="51c0726c-5e52-4f71-8461-047be9dbb205">
+      <FormalItem title="Description">
+        <Verbatim>S64 : { e ∈ ℤ | e ≥ -9223372036854775808 ⋀ e ≤ 9223372036854775807 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">S64</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[-9223372036854775808, 9223372036854775807]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">S64</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="S64 Bytes">
+        <Verbatim><![CDATA[
+encode(S64, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+    byte4 = (bit(32, x), bit(33, x), bit(34, x), bit(35, x), bit(36, x), bit(37, x), bit(38, x), bit(39, x))
+    byte5 = (bit(40, x), bit(41, x), bit(42, x), bit(43, x), bit(44, x), bit(45, x), bit(46, x), bit(47, x))
+    byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
+    byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="U8" id="4aa46f1b-e80d-4e4c-87b6-49d41c7b68a6">
+      <FormalItem title="Description">
+        <Verbatim>U8 : { e ∈ ℤ | e ≥ 0 ⋀ e ≤ 255 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">U8</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[0, 255]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">U8</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="U8 Bytes">
+        <Verbatim><![CDATA[
+encode(U8, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+  in
+    byte0 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="U16" id="76adc260-3c14-4631-87b4-39f703555e3b">
+      <FormalItem title="Description">
+        <Verbatim>U16 : { e ∈ ℤ | e ≥ 0 ⋀ e ≤ 65535 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">U16</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[0, 65535]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">U16</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="U16 Bytes">
+        <Verbatim><![CDATA[
+encode(U16, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+  in
+    byte0 + byte1 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="U32" id="ac6c99ce-4a6c-4824-bebe-83612709f9dd">
+      <FormalItem title="Description">
+        <Verbatim>U32 : { e ∈ ℤ | e ≥ 0 ⋀ e ≤ 4294967295 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">U32</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[0, 4294967295]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">U32</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="U32 Bytes">
+        <Verbatim><![CDATA[
+encode(U32, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="U64" id="aee3f45a-b3dc-4271-8e6c-78298cdd303b">
+      <FormalItem title="Description">
+        <Verbatim>U64 : { e ∈ ℤ | e ≥ 0 ⋀ e ≤ 18446744073709551615 }</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">U64</Term> type is an opaque type that can hold a value in the range
+        <Term type="expression">[0, 18446744073709551615]</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">U64</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="U64 Bytes">
+        <Verbatim><![CDATA[
+encode(U64, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+    byte4 = (bit(32, x), bit(33, x), bit(34, x), bit(35, x), bit(36, x), bit(37, x), bit(38, x), bit(39, x))
+    byte5 = (bit(40, x), bit(41, x), bit(42, x), bit(43, x), bit(44, x), bit(45, x), bit(46, x), bit(47, x))
+    byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
+    byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="F16" id="cf719e54-e5bc-4647-ab93-d95e402b1c4c">
+      <FormalItem title="Description">
+        <Verbatim>F16 : ℝ</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">F16</Term> type is an opaque type that can hold a value in the value
+        set of the <Term type="type">binary16</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">F16</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="F16 Bytes">
+        <Verbatim><![CDATA[
+encode(F16, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+  in
+    byte0 + byte1 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="F32" id="ebe53f14-2fee-4514-9338-b0029bfcf807">
+      <FormalItem title="Description">
+        <Verbatim>F32 : ℝ</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">F32</Term> type is an opaque type that can hold a value in the value
+        set of the <Term type="type">binary32</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">F32</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="F32 Bytes">
+        <Verbatim><![CDATA[
+encode(F32, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="F64" id="4f5c6cf4-0185-4009-bf48-043a0c09e7a4">
+      <FormalItem title="Description">
+        <Verbatim>F64 : ℝ</Verbatim>
+      </FormalItem>
+      <Paragraph>
+        The <Term type="type">F64</Term> type is an opaque type that can hold a value in the value
+        set of the <Term type="type">binary64</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">F64</Term> are encoded as follows:
+      </Paragraph>
+      <FormalItem title="F64 Bytes">
+        <Verbatim><![CDATA[
+encode(F64, x) =
+  let
+    byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
+    byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
+    byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
+    byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
+    byte4 = (bit(32, x), bit(33, x), bit(34, x), bit(35, x), bit(36, x), bit(37, x), bit(38, x), bit(39, x))
+    byte5 = (bit(40, x), bit(41, x), bit(42, x), bit(43, x), bit(44, x), bit(45, x), bit(46, x), bit(47, x))
+    byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
+    byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
+  in
+    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+]]></Verbatim>
+      </FormalItem>
+    </Subsection>
+
+    <Subsection title="ByteArray" id="3a668759-9cf7-4f67-80b2-88efce890edb">
+      <Paragraph>
+        The <Term type="type">ByteArray</Term> type is an opaque sequence of bytes. A value
+        <Term type="expression">b</Term> of type <Term type="type">ByteArray</Term> has a fixed length
+        <Term type="expression">n</Term> denoted <Term type="expression">length(b) : ℕ = n</Term>. The property
+        <Term type="expression">0 ≤ length(b) ≤ 4294967295</Term> always holds.
+        The byte at position <Term type="expression">m</Term> (where <Term type="expression">0 ≤ m &lt; n</Term>)
+        is denoted <Term type="expression">byte(m, b) : Byte</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">ByteArray</Term> are encoded as follows: For a value
+        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k + p + []</Term> is constructed, 
+        where <Term type="expression">k</Term> is the result of encoding <Term type="expression">length(x)</Term>
+        as if it were a value of type <Link target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and
+        <Term type="expression">p</Term> is simply <Term type="expression">byte(m, x)</Term> for all
+        <Term type="expression">m | 0 ≤ m &lt; length(x)</Term>.
+      </Paragraph>
+    </Subsection>
+
+    <Subsection title="List" id="4074017b-e246-4bc3-945f-56f73109f311">
+      <Paragraph>
+        The <Term type="type">List</Term> type is parameterized type describing a sequence of values. A value
+        <Term type="expression">x</Term> of type <Term type="type">List α</Term> has a fixed length
+        <Term type="expression">n</Term> denoted <Term type="expression">length(x) : ℕ = n</Term>. The property
+        <Term type="expression">0 ≤ length(b) ≤ 4294967295</Term> always holds.
+        The value at position <Term type="expression">m</Term> (where <Term type="expression">0 ≤ m &lt; n</Term>)
+        is denoted <Term type="expression">value(m, x) : α</Term>.
+      </Paragraph>
+      <Paragraph>
+        Values of type <Term type="type">List</Term> are encoded as follows: For a value
+        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k + p + []</Term> is constructed,
+        where <Term type="expression">k</Term> is the result of encoding <Term type="expression">length(x)</Term>
+        as if it were a value of type <Link target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and
+        <Term type="expression">p</Term> is the byte sequence obtained by concatenating the
+        results of encoding <Term type="expression">value(m, x)</Term> for all
+        <Term type="expression">m | 0 ≤ m &lt; length(x)</Term>.
+      </Paragraph>
+    </Subsection>
+  </Subsection>
+
+  <Subsection title="Encoding com.io7m.cedarbridge Types">
+    <Paragraph>
+      Most of the types declared in the <Link target="fd6629ea-ed28-4acb-8401-17c8814ef433">com.io7m.cedarbridge</Link>
+      package are designed to map directly to the types in
+      <Link target="57d7a6f1-e12f-42e1-adab-79a7cd70efe0">CCBE</Link>:
+    </Paragraph>
+    <FormalItem title="Cedarbridge ↔ CCBE">
+      <Table>
+        <Columns>
+          <Column>Cedarbridge</Column>
+          <Column>CCBE</Column>
+        </Columns>
+        <Row>
+          <Cell><Link target="e653cae8-f0b8-4767-96c1-c370397843f3">IntegerSigned8</Link></Cell>
+          <Cell><Link target="53b561f0-143b-49b5-aa2a-0104aa481f25">S8</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="34f11e2f-c489-4147-b167-71263b1d1bb1">IntegerSigned16</Link></Cell>
+          <Cell><Link target="f224f22b-1fd6-48b0-80d0-393079b718f2">S16</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="6f608a9a-1d0d-428a-a65b-17b73be35177">IntegerSigned32</Link></Cell>
+          <Cell><Link target="8cbdf56d-8b6c-4015-9dee-ad7fa6f03017">S32</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="d7c832e3-544e-4828-9e42-295efaa3ff4f">IntegerSigned64</Link></Cell>
+          <Cell><Link target="51c0726c-5e52-4f71-8461-047be9dbb205">S64</Link></Cell>
+        </Row>
+
+        <Row>
+          <Cell><Link target="a8c8be72-935e-470f-b394-3672d895fa20">IntegerUnsigned8</Link></Cell>
+          <Cell><Link target="4aa46f1b-e80d-4e4c-87b6-49d41c7b68a6">U8</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="1fcb12a8-03bf-45a5-93fd-6896bda180aa">IntegerUnsigned16</Link></Cell>
+          <Cell><Link target="76adc260-3c14-4631-87b4-39f703555e3b">U16</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="20ad364d-7608-4b92-a5e7-cbaa06e69412">IntegerUnsigned32</Link></Cell>
+          <Cell><Link target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="ad7ed763-9c10-4b7d-9471-7e0d78c09033">IntegerUnsigned64</Link></Cell>
+          <Cell><Link target="aee3f45a-b3dc-4271-8e6c-78298cdd303b">U64</Link></Cell>
+        </Row>
+
+        <Row>
+          <Cell><Link target="8ebd3337-82f6-4028-89eb-0a61fb42bde8">ByteArray</Link></Cell>
+          <Cell><Link target="3a668759-9cf7-4f67-80b2-88efce890edb">ByteArray</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="e70b0c3d-1a0f-45a8-9b2b-67d8464aedef">List</Link></Cell>
+          <Cell><Link target="4074017b-e246-4bc3-945f-56f73109f311">List</Link></Cell>
+        </Row>
+
+        <Row>
+          <Cell><Link target="47c52df9-d862-4aaa-9040-f0a9ae725932">Float16</Link></Cell>
+          <Cell><Link target="cf719e54-e5bc-4647-ab93-d95e402b1c4c">F16</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="e83e762a-b8c1-45c2-9024-b77085b8678c">Float32</Link></Cell>
+          <Cell><Link target="ebe53f14-2fee-4514-9338-b0029bfcf807">F32</Link></Cell>
+        </Row>
+        <Row>
+          <Cell><Link target="037e86d1-d215-4b86-a60f-e0f30d31398f">Float64</Link></Cell>
+          <Cell><Link target="4f5c6cf4-0185-4009-bf48-043a0c09e7a4">F64</Link></Cell>
+        </Row>
+      </Table>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="package">Cedarbridge</Term> <Link target="4cc29d61-b6c1-4dd5-be3c-b878e5ac2520">String</Link>
+      type is encoded as if it were a <Link target="3a668759-9cf7-4f67-80b2-88efce890edb">ByteArray</Link> after
+      having first converted the sequence of characters to a sequence of <LinkExternal
+      target="https://tools.ietf.org/html/rfc3629">UTF-8</LinkExternal> encoded bytes.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Encoding Record Types" id="f8acc6c1-31dc-48c3-898d-d9371e100f78">
+    <Paragraph>
+      A value of a <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link> type
+      <Term type="expression">r</Term> is encoded by concatenating the byte sequences produced by encoding
+      the <Term type="term">fields</Term> of <Term type="expression">r</Term> in the order that the fields
+      were declared in the type of <Term type="expression">r</Term>.
+    </Paragraph>
+    <Paragraph>
+      A <Term type="term">field</Term> <Term type="expression">f</Term> is encoded by encoding the value
+      of <Term type="expression">f</Term> as is appropriate for a
+      <Link target="f8acc6c1-31dc-48c3-898d-d9371e100f78">record type</Link>,
+      <Link target="b7d4ffba-fc3a-42a6-a381-92f00a7f117f">variant type</Link>, or
+      one of the <Link target="57d7a6f1-e12f-42e1-adab-79a7cd70efe0">base types</Link>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Encoding Variant Types" id="b7d4ffba-fc3a-42a6-a381-92f00a7f117f">
+    <Paragraph>
+      A value of a <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> type
+      <Term type="expression">r</Term> is encoded by first determining the <Term type="term">variant index</Term>
+      <Term type="expression">v</Term> of <Term type="expression">r</Term>. The <Term type="term">variant
+      index</Term> is the number of the <Link target="73e96204-7bee-4112-981f-52818d5216e2">case</Link> that was used
+      to construct <Term type="expression">r</Term>, assuming that cases are numbered in declaration order starting
+      at <Term type="constant">0</Term>. For the case <Term type="term">c</Term> that was used to
+      construct <Term type="expression">r</Term>, the byte sequence produced for <Term type="expression">r</Term>
+      is <Term type="expression">k + p + []</Term>, where <Term type="expression">k</Term> is the result of encoding
+      <Term type="expression">v</Term> as if it were a value of type <Link
+      target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and <Term type="expression">p</Term>
+      is the concatenation of the byte sequences produced by encoding the fields of
+      <Term type="expression">r</Term> in the order that the fields
+      were declared in the declaration of <Term type="expression">c</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Encoding Examples" id="a5b4c98a-5378-430d-882b-8fad538004a7">
+    <Paragraph>
+      The expression <Term type="expression">(Some 23) : [Option IntegerUnsigned32]</Term> is encoded
+      as the byte sequence <Term type="expression">0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x17</Term>. This encoding
+      comes from the fact that <Term type="expression">Option</Term> is a variant type,
+      <Term type="expression">Some</Term> is case number <Term type="constant">1</Term>, and the value
+      of the one and only field of <Term type="expression">Some</Term> is <Term type="expression">23 (0x17)</Term>.
+    </Paragraph>
+    <Paragraph>
+      The expression <Term type="expression">None : [Option IntegerUnsigned32]</Term> is encoded
+      as the byte sequence <Term type="expression">0x00 0x00 0x00 0x00</Term>. This encoding
+      comes from the fact that <Term type="expression">Option</Term> is a variant type,
+      <Term type="expression">None</Term> is case number <Term type="constant">0</Term>, and there
+      are no fields in the case.
+    </Paragraph>
+    <Paragraph>
+      Assuming the following type:
+    </Paragraph>
+    <FormalItem title="Vector3f">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge cb]
+
+[record Vector3f
+  [field x cb:Float32]
+  [field y cb:Float32]
+  [field z cb:Float32]]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The expression <Term type="expression">[Vector3f 17.0 199.0 1.00781238]</Term> is encoded as the byte
+      sequence <Term type="expression">0x41 0x88 0x00 0x00 0x43 0x47 0x00 0x00 0x3f 0x80 0xff 0xff</Term>. This
+      is simply three IEEE 754 <Term type="type">binary32</Term> values.
+    </Paragraph>
+    <Paragraph>
+      The string <Term type="expression">"hello"</Term> is encoded as the byte sequence
+      <Term type="expression">0x00 0x00 0x00 0x05 0x68 0x65 0x6c 0x6c 0x6f</Term>. This is the number of UTF-8
+      encoded bytes (<Term type="constant">5</Term>) followed by the UTF-8 encoded bytes of the string.
+    </Paragraph>
+    <Paragraph>
+      The expression <Term type="expression">[List 17038 27297 17288] : List IntegerSigned16</Term> is encoded
+      as the byte sequence <Term type="expression">0x00 0x00 0x00 0x03 0x42 0x8e 0x6a 0xa1 0x43 0x88</Term>. This
+      is the length of the list (<Term type="constant">3</Term>) followed by the encoded forms of
+      <Term type="expression">17038 (0x428e)</Term>, <Term type="expression">27297 (0x6aa1)</Term>,
+      and <Term type="expression">17288 (0x4388)</Term>, respectively.
+    </Paragraph>
+  </Subsection>
+
+  <Footnote id="d84fb879-fc70-4d6b-9f3e-12f91b41a197">
+    IEEE Standard for Floating-Point Arithmetic (IEEE 754), or equivalently <Term type="constant">ISO/IEC
+    60559:2020</Term>.
+  </Footnote>
+
 </Section>
