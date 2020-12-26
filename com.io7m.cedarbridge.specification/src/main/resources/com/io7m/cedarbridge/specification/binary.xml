@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         tableOfContentsDepth="1"
+         xmlns="urn:com.io7m.structural:7:0"
+         title="CCBE - Cedarbridge Canonical Binary Encoding">
+  <xi:include href="bin-overview.xml"/>
+  <xi:include href="bin-base_types.xml"/>
+</Section>

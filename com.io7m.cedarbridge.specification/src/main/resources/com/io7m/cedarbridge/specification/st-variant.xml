@@ -44,7 +44,7 @@
       within the current package in the schema context. Type names are unique within a package; it is an error for
       two or more <Term type="term">type declarations</Term> to name the same type.
     </Paragraph>
-    <Paragraph>
+    <Paragraph id="73e96204-7bee-4112-981f-52818d5216e2">
       The names of <Term type="term">cases</Term> declared using <Term type="term">case declarations</Term> within
       a <Term type="statement">variant</Term> statement are unique within that variant type. It is an error for two
       or more <Term type="term">cases</Term> within a variant to have the same name.

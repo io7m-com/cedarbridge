@@ -3,6 +3,7 @@
 <Section xmlns:xi="http://www.w3.org/2001/XInclude"
          xmlns="urn:com.io7m.structural:7:0"
          tableOfContentsDepth="1"
+         id="fd6629ea-ed28-4acb-8401-17c8814ef433"
          title="Package com.io7m.cedarbridge">
 
   <Subsection title="Overview">
@@ -11,7 +12,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerUnsigned8">
+  <Subsection title="IntegerUnsigned8" id="a8c8be72-935e-470f-b394-3672d895fa20">
     <FormalItem title="Description">
       <Verbatim>IntegerUnsigned8 : *</Verbatim>
     </FormalItem>
@@ -21,7 +22,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerUnsigned16">
+  <Subsection title="IntegerUnsigned16" id="1fcb12a8-03bf-45a5-93fd-6896bda180aa">
     <FormalItem title="Description">
       <Verbatim>IntegerUnsigned16 : *</Verbatim>
     </FormalItem>
@@ -31,7 +32,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerUnsigned32">
+  <Subsection title="IntegerUnsigned32" id="20ad364d-7608-4b92-a5e7-cbaa06e69412">
     <FormalItem title="Description">
       <Verbatim>IntegerUnsigned32 : *</Verbatim>
     </FormalItem>
@@ -41,7 +42,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerUnsigned64">
+  <Subsection title="IntegerUnsigned64" id="ad7ed763-9c10-4b7d-9471-7e0d78c09033">
     <FormalItem title="Description">
       <Verbatim>IntegerUnsigned64 : *</Verbatim>
     </FormalItem>
@@ -51,7 +52,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerSigned8">
+  <Subsection title="IntegerSigned8" id="e653cae8-f0b8-4767-96c1-c370397843f3">
     <FormalItem title="Description">
       <Verbatim>IntegerSigned8 : *</Verbatim>
     </FormalItem>
@@ -61,7 +62,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerSigned16">
+  <Subsection title="IntegerSigned16" id="34f11e2f-c489-4147-b167-71263b1d1bb1">
     <FormalItem title="Description">
       <Verbatim>IntegerSigned16 : *</Verbatim>
     </FormalItem>
@@ -71,7 +72,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerSigned32">
+  <Subsection title="IntegerSigned32" id="6f608a9a-1d0d-428a-a65b-17b73be35177">
     <FormalItem title="Description">
       <Verbatim>IntegerSigned32 : *</Verbatim>
     </FormalItem>
@@ -81,7 +82,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="IntegerSigned64">
+  <Subsection title="IntegerSigned64" id="d7c832e3-544e-4828-9e42-295efaa3ff4f">
     <FormalItem title="Description">
       <Verbatim>IntegerSigned64 : *</Verbatim>
     </FormalItem>
@@ -91,7 +92,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="String">
+  <Subsection title="String" id="4cc29d61-b6c1-4dd5-be3c-b878e5ac2520">
     <FormalItem title="Description">
       <Verbatim>String : *</Verbatim>
     </FormalItem>
@@ -101,7 +102,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="ByteArray">
+  <Subsection title="ByteArray" id="8ebd3337-82f6-4028-89eb-0a61fb42bde8">
     <FormalItem title="Description">
       <Verbatim>ByteArray : *</Verbatim>
     </FormalItem>
@@ -111,7 +112,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Float16">
+  <Subsection title="Float16" id="47c52df9-d862-4aaa-9040-f0a9ae725932">
     <FormalItem title="Description">
       <Verbatim>Float16 : *</Verbatim>
     </FormalItem>
@@ -121,7 +122,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Float32">
+  <Subsection title="Float32" id="e83e762a-b8c1-45c2-9024-b77085b8678c">
     <FormalItem title="Description">
       <Verbatim>Float32 : *</Verbatim>
     </FormalItem>
@@ -131,7 +132,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Float64">
+  <Subsection title="Float64" id="037e86d1-d215-4b86-a60f-e0f30d31398f">
     <FormalItem title="Description">
       <Verbatim>Float64 : *</Verbatim>
     </FormalItem>
@@ -141,7 +142,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="List">
+  <Subsection title="List" id="e70b0c3d-1a0f-45a8-9b2b-67d8464aedef">
     <FormalItem title="Description">
       <Verbatim>List : * → *</Verbatim>
     </FormalItem>
@@ -151,7 +152,7 @@
     </Paragraph>
   </Subsection>
 
-  <Subsection title="Option">
+  <Subsection title="Option" id="334274ef-06a0-4d20-8e01-ca1189a75c66">
     <FormalItem title="Description">
       <Verbatim>Option : * → *</Verbatim>
     </FormalItem>
