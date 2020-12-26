@@ -85,7 +85,9 @@ CCBE = { S8, S16, S32, S64, U8, U16, U32, U64, F16, F32, F64, ByteArray }
         For each of the types in <Term type="type">CCBE</Term>, we describe a function
         <Term type="expression">encode(x) : (τ : CCBE) → (α : τ) → ByteSequence</Term> (where
         <Term type="expression">τ</Term> is an implicit parameter that can be inferred
-        from <Term type="expression">α</Term>).
+        from <Term type="expression">α</Term>). The purpose of the <Term type="function">encode</Term>
+        function is to describe how to transform a value of a given type to a byte sequence that can
+        be written to the destination transmission medium.
       </Paragraph>
     </Subsection>
 
