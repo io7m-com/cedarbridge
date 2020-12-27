@@ -295,7 +295,8 @@ encode(U64, x) =
       </FormalItem>
       <Paragraph>
         The <Term type="type">F16</Term> type is an opaque type that can hold a value in the value
-        set of the <Term type="type">binary16</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+        set of the IEEE 754 <Term type="type">binary16</Term> <LinkFootnote
+        target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
       </Paragraph>
       <Paragraph>
         Values of type <Term type="type">F16</Term> are encoded as follows:
@@ -318,7 +319,8 @@ encode(F16, x) =
       </FormalItem>
       <Paragraph>
         The <Term type="type">F32</Term> type is an opaque type that can hold a value in the value
-        set of the <Term type="type">binary32</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+        set of the IEEE 754 <Term type="type">binary32</Term> <LinkFootnote
+        target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
       </Paragraph>
       <Paragraph>
         Values of type <Term type="type">F32</Term> are encoded as follows:
@@ -343,7 +345,8 @@ encode(F32, x) =
       </FormalItem>
       <Paragraph>
         The <Term type="type">F64</Term> type is an opaque type that can hold a value in the value
-        set of the <Term type="type">binary64</Term><LinkFootnote target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
+        set of the IEEE 754 <Term type="type">binary64</Term> <LinkFootnote
+        target="d84fb879-fc70-4d6b-9f3e-12f91b41a197"/> type.
       </Paragraph>
       <Paragraph>
         Values of type <Term type="type">F64</Term> are encoded as follows:
