@@ -52,7 +52,7 @@ public interface CBContainerProtocolResponseType
     final var encoded = this.message().getBytes(UTF_8);
     if (encoded.length > 244) {
       throw new IllegalArgumentException(
-        "Message too long; must be < 244 bytes");
+        "Message too long; must be <= 244 bytes");
     }
   }
 }

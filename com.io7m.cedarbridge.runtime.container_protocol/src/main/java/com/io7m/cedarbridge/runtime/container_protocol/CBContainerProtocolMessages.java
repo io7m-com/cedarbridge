@@ -83,6 +83,11 @@ public final class CBContainerProtocolMessages
     final var containerMax = data.getInt();
     final var reserved0 = data.getInt();
 
+    final var reserved1 = data.getInt();
+    final var reserved2 = data.getInt();
+    final var reserved3 = data.getInt();
+    final var reserved4 = data.getInt();
+
     final var appIdHigh = data.getLong();
     final var appIdLow = data.getLong();
     final var appId = new UUID(appIdHigh, appIdLow);
@@ -338,6 +343,12 @@ public final class CBContainerProtocolMessages
     buffer.putInt(Math.toIntExact(message.containerProtocolMinimumVersion()));
     buffer.putInt(Math.toIntExact(message.containerProtocolMaximumVersion()));
     buffer.putInt(0);
+
+    buffer.putInt(0);
+    buffer.putInt(0);
+    buffer.putInt(0);
+    buffer.putInt(0);
+
     buffer.putLong(message.applicationProtocolId().getMostSignificantBits());
     buffer.putLong(message.applicationProtocolId().getLeastSignificantBits());
     buffer.putLong(message.applicationProtocolMinimumVersion());
@@ -357,7 +368,7 @@ public final class CBContainerProtocolMessages
 
   public static int sizeAvailable()
   {
-    return 48;
+    return 64;
   }
 
   /**

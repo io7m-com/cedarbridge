@@ -19,5 +19,6 @@
   <xi:include href="type_expr.xml"/>
   <xi:include href="stdlib.xml"/>
   <xi:include href="binary.xml"/>
+  <xi:include href="container.xml"/>
 
 </Document>
