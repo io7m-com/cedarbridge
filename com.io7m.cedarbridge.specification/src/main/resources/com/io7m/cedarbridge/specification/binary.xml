@@ -59,7 +59,7 @@ Byte : (bit0 : 𝔹, bit1 : 𝔹, bit2 : 𝔹, bit3 : 𝔹, bit4 : 𝔹, bit5 : 
       <Link target="d95e6103-77a1-4a14-9a87-96aac074599c">bytes</Link>. The notation <Term type="expression">[]</Term>
       denotes a sequence of length <Term type="constant">0</Term>, and the operator <Term type="expression">+</Term>
       prepends a byte to a <Term type="term">byte sequence</Term>. The operator <Term type="expression">+</Term> is
-      right-associative, so <Term type="expression">x + y + z = x + (y + z)</Term>.
+      right-associative, so <Term type="expression">∀x y z. x + y + z = x + (y + z)</Term>.
     </Paragraph>
     <FormalItem title="Byte Type">
       <Verbatim><![CDATA[
@@ -375,7 +375,7 @@ encode(F64, x) =
         The <Term type="type">ByteArray</Term> type is an opaque sequence of bytes. A value
         <Term type="expression">b</Term> of type <Term type="type">ByteArray</Term> has a fixed length
         <Term type="expression">n</Term> denoted <Term type="expression">length(b) : ℕ = n</Term>. The property
-        <Term type="expression">0 ≤ length(b) ≤ 4294967295</Term> always holds.
+        <Term type="expression">∀x. 0 ≤ length(x) ≤ 4294967295</Term> always holds.
         The byte at position <Term type="expression">m</Term> (where <Term type="expression">0 ≤ m &lt; n</Term>)
         is denoted <Term type="expression">byte(m, b) : Byte</Term>.
       </Paragraph>
@@ -394,7 +394,7 @@ encode(F64, x) =
         The <Term type="type">List</Term> type is parameterized type describing a sequence of values. A value
         <Term type="expression">x</Term> of type <Term type="type">List α</Term> has a fixed length
         <Term type="expression">n</Term> denoted <Term type="expression">length(x) : ℕ = n</Term>. The property
-        <Term type="expression">0 ≤ length(b) ≤ 4294967295</Term> always holds.
+        <Term type="expression">∀x. 0 ≤ length(x) ≤ 4294967295</Term> always holds.
         The value at position <Term type="expression">m</Term> (where <Term type="expression">0 ≤ m &lt; n</Term>)
         is denoted <Term type="expression">value(m, x) : α</Term>.
       </Paragraph>
