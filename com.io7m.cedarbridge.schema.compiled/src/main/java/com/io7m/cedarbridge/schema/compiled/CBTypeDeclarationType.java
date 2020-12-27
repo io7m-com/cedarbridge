@@ -16,11 +16,17 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * The base type of type declarations.
@@ -73,4 +79,31 @@ public interface CBTypeDeclarationType
    */
 
   Optional<CBExternalName> external();
+
+  /**
+   * @return The unique ID of the type
+   */
+
+  UUID id();
+
+  /**
+   * @param type The "type" of type declaration (record, variant, etc)
+   *
+   * @return The unique ID of the type
+   */
+
+  default UUID idForType(
+    final String type)
+  {
+    try (var stream = new ByteArrayOutputStream()) {
+      stream.writeBytes(type.getBytes(UTF_8));
+      stream.write(':');
+      stream.writeBytes(this.owner().name().getBytes(UTF_8));
+      stream.write(':');
+      stream.write(this.name().getBytes(UTF_8));
+      return UUID.nameUUIDFromBytes(stream.toByteArray());
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 }

@@ -76,8 +76,9 @@ public interface CBProtocolDeclarationType
   default UUID id()
   {
     try (var stream = new ByteArrayOutputStream()) {
+      stream.writeBytes("protocol:".getBytes(UTF_8));
       stream.writeBytes(this.owner().name().getBytes(UTF_8));
-      stream.write((int) ':');
+      stream.write(':');
       stream.write(this.name().getBytes(UTF_8));
       return UUID.nameUUIDFromBytes(stream.toByteArray());
     } catch (final IOException e) {

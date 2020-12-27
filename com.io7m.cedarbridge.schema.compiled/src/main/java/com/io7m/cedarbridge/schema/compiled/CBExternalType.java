@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.UUID;
+
 /**
  * A type with externally-defined semantics. These are typically built-in
  * primitive types such as machine integers.
@@ -23,5 +25,13 @@ package com.io7m.cedarbridge.schema.compiled;
 
 public interface CBExternalType extends CBTypeDeclarationType
 {
+  /**
+   * @return The unique ID of the type
+   */
 
+  @Override
+  default UUID id()
+  {
+    return this.idForType("external");
+  }
 }

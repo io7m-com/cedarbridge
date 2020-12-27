@@ -483,7 +483,13 @@ public final class CBTypeCheckerTest
       assertEquals(0, ta.arity());
     }
 
-    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+    final var cpack = pack.userData().get(CBPackageType.class);
+    checkPackagesMatch(pack, cpack);
+
+    assertEquals(
+      "8cb88865-c48b-3e51-8b32-1614308ce64d",
+      cpack.types().get("V").id().toString()
+    );
   }
 
   @Test
@@ -731,7 +737,13 @@ public final class CBTypeCheckerTest
       assertEquals(0, ta.arity());
     }
 
-    checkPackagesMatch(pack, pack.userData().get(CBPackageType.class));
+    final var cpack = pack.userData().get(CBPackageType.class);
+    checkPackagesMatch(pack, cpack);
+
+    assertEquals(
+      "55c7e9c2-a861-3812-a89f-3ca50fad4247",
+      cpack.types().get("V").id().toString()
+    );
   }
 
   @Test

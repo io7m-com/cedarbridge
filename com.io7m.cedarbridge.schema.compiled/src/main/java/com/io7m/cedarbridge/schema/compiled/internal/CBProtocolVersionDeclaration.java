@@ -31,9 +31,9 @@ public final class CBProtocolVersionDeclaration
   implements CBProtocolVersionDeclarationType
 {
   private final List<CBTypeExprNamedType> typesRead;
-  private List<CBTypeExprNamedType> types;
   private final BigInteger version;
   private final CBProtocolDeclarationType owner;
+  private final List<CBTypeExprNamedType> types;
 
   public CBProtocolVersionDeclaration(
     final CBProtocolDeclarationType inOwner,

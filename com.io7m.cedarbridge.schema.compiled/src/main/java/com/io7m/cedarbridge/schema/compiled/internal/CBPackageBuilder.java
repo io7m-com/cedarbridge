@@ -49,8 +49,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   private final String packageName;
   private final Map<String, CBTypeDeclarationBuilderType> typeBuilders;
   private final CBPackage packageNow;
-  private boolean done;
   private final HashMap<String, ProtocolBuilder> protoBuilders;
+  private boolean done;
 
   public CBPackageBuilder(
     final String inPackageName)
