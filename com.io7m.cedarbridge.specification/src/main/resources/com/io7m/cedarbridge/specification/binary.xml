@@ -57,16 +57,16 @@ Byte : (bit0 : 𝔹, bit1 : 𝔹, bit2 : 𝔹, bit3 : 𝔹, bit4 : 𝔹, bit5 : 
     <Paragraph>
       A <Term type="term">byte sequence</Term> is, unsuprisingly, a sequence of
       <Link target="d95e6103-77a1-4a14-9a87-96aac074599c">bytes</Link>. The notation <Term type="expression">[]</Term>
-      denotes a sequence of length <Term type="constant">0</Term>, and the operator <Term type="expression">+</Term>
-      prepends a byte to a <Term type="term">byte sequence</Term>. The operator <Term type="expression">+</Term> is
-      right-associative, so <Term type="expression">∀x y z. x + y + z = x + (y + z)</Term>.
+      denotes a sequence of length <Term type="constant">0</Term>, and the operator <Term type="expression">⊕</Term>
+      prepends a byte to a <Term type="term">byte sequence</Term>. The operator <Term type="expression">⊕</Term> is
+      right-associative, so <Term type="expression">∀x y z. x ⊕ y ⊕ z = x ⊕ (y ⊕ z)</Term>.
     </Paragraph>
     <FormalItem title="Byte Type">
       <Verbatim><![CDATA[
 ByteSequence : *
 
 ([]) : ByteSequence
-(+)  : Byte → ByteSequence → ByteSequence
+(⊕)  : Byte → ByteSequence → ByteSequence
 ]]></Verbatim>
     </FormalItem>
   </Subsection>
@@ -109,7 +109,7 @@ encode(S8, x) =
   let
     byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
   in
-    byte0 + []
+    byte0 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -132,7 +132,7 @@ encode(S16, x) =
     byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
     byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
   in
-    byte0 + byte1 + []
+    byte0 ⊕ byte1 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -157,7 +157,7 @@ encode(S32, x) =
     byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
     byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
   in
-    byte0 + byte1 + byte2 + byte3 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -186,7 +186,7 @@ encode(S64, x) =
     byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
     byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
   in
-    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ byte4 ⊕ byte5 ⊕ byte6 ⊕ byte7 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -208,7 +208,7 @@ encode(U8, x) =
   let
     byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
   in
-    byte0 + []
+    byte0 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -231,7 +231,7 @@ encode(U16, x) =
     byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
     byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
   in
-    byte0 + byte1 + []
+    byte0 ⊕ byte1 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -256,7 +256,7 @@ encode(U32, x) =
     byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
     byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
   in
-    byte0 + byte1 + byte2 + byte3 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -285,7 +285,7 @@ encode(U64, x) =
     byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
     byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
   in
-    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ byte4 ⊕ byte5 ⊕ byte6 ⊕ byte7 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -309,7 +309,7 @@ encode(F16, x) =
     byte0 = (bit(0, x),  bit(1, x),  bit(2, x),  bit(3, x),  bit(4, x),  bit(5, x),  bit(6, x),  bit(7, x))
     byte1 = (bit(8, x),  bit(9, x),  bit(10, x), bit(11, x), bit(12, x), bit(13, x), bit(14, x), bit(15, x))
   in
-    byte0 + byte1 + []
+    byte0 ⊕ byte1 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -335,7 +335,7 @@ encode(F32, x) =
     byte2 = (bit(16, x), bit(17, x), bit(18, x), bit(19, x), bit(20, x), bit(21, x), bit(22, x), bit(23, x))
     byte3 = (bit(24, x), bit(25, x), bit(26, x), bit(27, x), bit(28, x), bit(29, x), bit(30, x), bit(31, x))
   in
-    byte0 + byte1 + byte2 + byte3 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -365,7 +365,7 @@ encode(F64, x) =
     byte6 = (bit(48, x), bit(49, x), bit(50, x), bit(51, x), bit(52, x), bit(53, x), bit(54, x), bit(55, x))
     byte7 = (bit(56, x), bit(57, x), bit(58, x), bit(59, x), bit(60, x), bit(61, x), bit(62, x), bit(63, x))
   in
-    byte0 + byte1 + byte2 + byte3 + byte4 + byte5 + byte6 + byte7 + []
+    byte0 ⊕ byte1 ⊕ byte2 ⊕ byte3 ⊕ byte4 ⊕ byte5 ⊕ byte6 ⊕ byte7 ⊕ []
 ]]></Verbatim>
       </FormalItem>
     </Subsection>
@@ -381,7 +381,7 @@ encode(F64, x) =
       </Paragraph>
       <Paragraph>
         Values of type <Term type="type">ByteArray</Term> are encoded as follows: For a value
-        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k + p + []</Term> is constructed, 
+        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k ⊕ p ⊕ []</Term> is constructed,
         where <Term type="expression">k</Term> is the result of encoding <Term type="expression">length(x)</Term>
         as if it were a value of type <Link target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and
         <Term type="expression">p</Term> is simply <Term type="expression">byte(m, x)</Term> for all
@@ -400,7 +400,7 @@ encode(F64, x) =
       </Paragraph>
       <Paragraph>
         Values of type <Term type="type">List</Term> are encoded as follows: For a value
-        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k + p + []</Term> is constructed,
+        <Term type="expression">x</Term>, a byte sequence <Term type="expression">k ⊕ p ⊕ []</Term> is constructed,
         where <Term type="expression">k</Term> is the result of encoding <Term type="expression">length(x)</Term>
         as if it were a value of type <Link target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and
         <Term type="expression">p</Term> is the byte sequence obtained by concatenating the
@@ -512,7 +512,7 @@ encode(F64, x) =
       to construct <Term type="expression">r</Term>, assuming that cases are numbered in declaration order starting
       at <Term type="constant">0</Term>. For the case <Term type="term">c</Term> that was used to
       construct <Term type="expression">r</Term>, the byte sequence produced for <Term type="expression">r</Term>
-      is <Term type="expression">k + p + []</Term>, where <Term type="expression">k</Term> is the result of encoding
+      is <Term type="expression">k ⊕ p ⊕ []</Term>, where <Term type="expression">k</Term> is the result of encoding
       <Term type="expression">v</Term> as if it were a value of type <Link
       target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and <Term type="expression">p</Term>
       is the concatenation of the byte sequences produced by encoding the fields of
