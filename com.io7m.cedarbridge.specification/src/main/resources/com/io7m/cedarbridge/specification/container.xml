@@ -70,7 +70,8 @@
       other if they can both speak <Term type="package">Cedarbridge</Term>. We instead use the
       <Term type="package">Cedarbridge</Term> language to document the basic structure of the messages, but assume
       that the protocol messages will be manually read, written, and parsed without necessarily using
-      <Term type="package">Cedarbridge</Term> compiler generated code.
+      <Term type="package">Cedarbridge</Term> compiler generated code. For this reason, the protocol does
+      <Term type="term">not</Term> use <Term type="package">Cedarbridge</Term>'s versioning facilities.
     </Paragraph>
   </Subsection>
 
@@ -116,7 +117,7 @@
     <Paragraph>
       The values of the <Term type="expression">reserved0</Term>, <Term type="expression">reserved1</Term>,
       <Term type="expression">reserved2</Term>, <Term type="expression">reserved3</Term>, and
-      <Term type="expression">reserved4</Term> MUST be <Term type="constant">0</Term>.
+      <Term type="expression">reserved4</Term> fields MUST be <Term type="constant">0</Term>.
     </Paragraph>
     <Paragraph>
       The <Term type="expression">appProtocolId</Term> specifies the bits of a
