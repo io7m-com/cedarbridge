@@ -10,4 +10,14 @@
       <a href="documentation/index.xhtml">XHTML - single page</a>
     </li>
   </ul>
+
+  <h3>Language specification</h3>
+  <ul>
+    <li>
+      <a href="specification/index-m.xhtml">XHTML - one page per section</a>
+    </li>
+    <li>
+      <a href="specification/index.xhtml">XHTML - single page</a>
+    </li>
+  </ul>
 </div>
