@@ -19,11 +19,23 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+/**
+ * A field appearing inside a record or a variant case.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBASTFieldType extends CBASTElementType
 {
+  /**
+   * @return The field name
+   */
+
   CBASTFieldName name();
+
+  /**
+   * @return The field type
+   */
 
   CBASTTypeExpressionType type();
 }

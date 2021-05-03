@@ -33,11 +33,23 @@ import java.util.stream.Collectors;
 
 public interface CBASTTypeExpressionType extends CBASTElementType, Formattable
 {
+  /**
+   * A named type.
+   */
+
   @ImmutablesStyleType
   @Value.Immutable
   interface CBASTTypeNamedType extends CBASTTypeExpressionType
   {
+    /**
+     * @return The package name qualification, if any
+     */
+
     Optional<CBASTPackageName> packageName();
+
+    /**
+     * @return The type name
+     */
 
     CBASTTypeName name();
 
@@ -63,11 +75,23 @@ public interface CBASTTypeExpressionType extends CBASTElementType, Formattable
     }
   }
 
+  /**
+   * A type application.
+   */
+
   @ImmutablesStyleType
   @Value.Immutable
   interface CBASTTypeApplicationType extends CBASTTypeExpressionType
   {
+    /**
+     * @return The target type
+     */
+
     CBASTTypeNamedType target();
+
+    /**
+     * @return The type arguments
+     */
 
     List<CBASTTypeExpressionType> arguments();
 

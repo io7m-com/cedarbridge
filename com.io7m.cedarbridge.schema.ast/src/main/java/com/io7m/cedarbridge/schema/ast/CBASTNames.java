@@ -20,6 +20,10 @@ import com.io7m.jlexing.core.LexicalType;
 
 import java.net.URI;
 
+/**
+ * Functions over AST names.
+ */
+
 public final class CBASTNames
 {
   private CBASTNames()

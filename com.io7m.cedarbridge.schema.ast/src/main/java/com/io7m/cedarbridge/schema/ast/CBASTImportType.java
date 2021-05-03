@@ -19,11 +19,23 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+/**
+ * A package import.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBASTImportType extends CBASTDeclarationType
 {
+  /**
+   * @return The target package
+   */
+
   CBASTPackageName target();
+
+  /**
+   * @return The short name to which the package will be referred
+   */
 
   CBASTPackageShortName shortName();
 }

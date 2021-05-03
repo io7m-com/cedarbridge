@@ -19,9 +19,17 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.jlexing.core.ImmutableStyleType;
 import org.immutables.value.Value;
 
+/**
+ * A package declaration.
+ */
+
 @ImmutableStyleType
 @Value.Immutable
 public interface CBASTPackageDeclarationType extends CBASTDeclarationType
 {
+  /**
+   * @return The package name
+   */
+
   CBASTPackageName name();
 }

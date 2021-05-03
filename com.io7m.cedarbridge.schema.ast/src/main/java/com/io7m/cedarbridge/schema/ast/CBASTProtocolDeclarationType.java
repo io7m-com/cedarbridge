@@ -30,15 +30,35 @@ import java.util.List;
 @Value.Immutable
 public interface CBASTProtocolDeclarationType extends CBASTDeclarationType
 {
+  /**
+   * @return The protocol name
+   */
+
   CBASTTypeName name();
 
+  /**
+   * @return The protocol versions
+   */
+
   List<CBASTProtocolVersion> versions();
+
+  /**
+   * A protocol version declaration.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBASTProtocolVersionType extends CBASTElementType
   {
+    /**
+     * @return The protocol version
+     */
+
     BigInteger version();
+
+    /**
+     * @return The protocol types
+     */
 
     List<CBASTTypeName> types();
   }

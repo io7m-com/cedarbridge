@@ -27,9 +27,21 @@ import java.util.List;
 
 public interface CBASTTypeDeclarationType extends CBASTDeclarationType
 {
+  /**
+   * @return The type name
+   */
+
   CBASTTypeName name();
 
+  /**
+   * @return The type parameters
+   */
+
   List<CBASTTypeParameterName> parameters();
+
+  /**
+   * A record declaration.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
@@ -41,8 +53,16 @@ public interface CBASTTypeDeclarationType extends CBASTDeclarationType
     @Override
     List<CBASTTypeParameterName> parameters();
 
+    /**
+     * @return The list of fields
+     */
+
     List<CBASTField> fields();
   }
+
+  /**
+   * A variant declaration.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
@@ -54,14 +74,30 @@ public interface CBASTTypeDeclarationType extends CBASTDeclarationType
     @Override
     List<CBASTTypeParameterName> parameters();
 
+    /**
+     * @return The list of cases
+     */
+
     List<CBASTTypeVariantCase> cases();
   }
+
+  /**
+   * A variant case declaration.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBASTTypeVariantCaseType extends CBASTDeclarationType
   {
+    /**
+     * @return The name of the variant case
+     */
+
     CBASTVariantCaseName name();
+
+    /**
+     * @return The list of fields
+     */
 
     List<CBASTField> fields();
   }

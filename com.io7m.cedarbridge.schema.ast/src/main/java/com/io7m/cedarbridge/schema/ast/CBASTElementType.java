@@ -28,6 +28,10 @@ import java.net.URI;
 
 public interface CBASTElementType extends LexicalType<URI>
 {
+  /**
+   * @return The user data associated with the element
+   */
+
   @Value.Default
   default CBASTMutableUserData userData()
   {
