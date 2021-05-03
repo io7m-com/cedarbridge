@@ -35,7 +35,7 @@ import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fata
 import static com.io7m.cedarbridge.schema.parser.internal.CBNames.parseTypeName;
 
 /**
- * A parser for variant declarations.
+ * A parser for protocol declarations.
  */
 
 public final class CBProtocolParser
@@ -43,6 +43,10 @@ public final class CBProtocolParser
 {
   private static final Optional<UUID> SPEC_SECTION =
     uuid("1f9b69fc-7b95-4007-8bd1-6715b07fd69a");
+
+  /**
+   * A parser for protocol declarations.
+   */
 
   public CBProtocolParser()
   {

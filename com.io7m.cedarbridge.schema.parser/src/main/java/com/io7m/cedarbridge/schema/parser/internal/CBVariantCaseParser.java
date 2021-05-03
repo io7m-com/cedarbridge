@@ -36,6 +36,10 @@ import static com.io7m.cedarbridge.schema.parser.internal.CBVariantParser.SPEC_S
 public final class CBVariantCaseParser
   implements CBElementParserType<CBASTTypeVariantCase>
 {
+  /**
+   * A parser for variant case declarations.
+   */
+
   public CBVariantCaseParser()
   {
 

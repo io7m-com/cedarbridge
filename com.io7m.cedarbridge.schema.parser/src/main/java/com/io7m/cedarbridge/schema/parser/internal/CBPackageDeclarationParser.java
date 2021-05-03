@@ -47,6 +47,10 @@ public final class CBPackageDeclarationParser
   private static final Optional<UUID> SPEC_SECTION =
     uuid("af42a8a2-c98d-4b5d-92ca-46406a5ddbbe");
 
+  /**
+   * A parser for package declarations.
+   */
+
   public CBPackageDeclarationParser()
   {
 

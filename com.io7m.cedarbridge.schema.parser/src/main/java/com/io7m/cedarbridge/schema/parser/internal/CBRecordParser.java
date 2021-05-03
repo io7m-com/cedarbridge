@@ -45,6 +45,10 @@ public final class CBRecordParser
   private static final Optional<UUID> SPEC_SECTION =
     uuid("b43940c3-038f-4330-971f-ac76d56d5fad");
 
+  /**
+   * A parser for record declarations.
+   */
+
   public CBRecordParser()
   {
 

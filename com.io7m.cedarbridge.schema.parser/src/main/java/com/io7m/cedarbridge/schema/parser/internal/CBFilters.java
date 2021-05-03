@@ -20,12 +20,26 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Convenient filters.
+ */
+
 public final class CBFilters
 {
   private CBFilters()
   {
 
   }
+
+  /**
+   * Retrieve all elements of class {@code clazz} from the given list.
+   *
+   * @param items The input list
+   * @param clazz The class
+   * @param <T>   The type of list elements
+   *
+   * @return The elements of class {@code clazz}
+   */
 
   public static <T> List<T> filter(
     final Collection<?> items,

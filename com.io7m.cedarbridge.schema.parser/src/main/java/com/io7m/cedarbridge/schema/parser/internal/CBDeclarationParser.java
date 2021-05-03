@@ -38,6 +38,13 @@ public final class CBDeclarationParser
 {
   private final boolean tooLateForLanguage;
 
+  /**
+   * A parser for declarations.
+   *
+   * @param inTooLateForLanguage {@code true} if it is too late for a language
+   *                             declaration to appear
+   */
+
   public CBDeclarationParser(
     final boolean inTooLateForLanguage)
   {

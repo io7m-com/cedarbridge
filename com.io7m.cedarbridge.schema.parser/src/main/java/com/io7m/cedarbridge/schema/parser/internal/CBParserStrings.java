@@ -21,6 +21,10 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 
 import java.util.ResourceBundle;
 
+/**
+ * Parser string resources.
+ */
+
 public final class CBParserStrings extends CBAbstractStrings
 {
   private CBParserStrings(
@@ -28,6 +32,12 @@ public final class CBParserStrings extends CBAbstractStrings
   {
     super(inResources);
   }
+
+  /**
+   * Create parser string resources.
+   *
+   * @return The string resources
+   */
 
   public static CBStringsType create()
   {

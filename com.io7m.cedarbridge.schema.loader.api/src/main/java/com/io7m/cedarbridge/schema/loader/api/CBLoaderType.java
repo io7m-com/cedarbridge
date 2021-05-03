@@ -26,8 +26,25 @@ import java.io.Closeable;
 
 public interface CBLoaderType extends Closeable
 {
+  /**
+   * Register a package, making it available for loading.
+   *
+   * @param pack The package
+   */
+
   void register(
     CBPackageType pack);
+
+  /**
+   * Load a package.
+   *
+   * @param from The requesting package
+   * @param name The target package
+   *
+   * @return A loaded package
+   *
+   * @throws CBLoadFailedException On errors
+   */
 
   CBPackageType load(
     String from,

@@ -42,6 +42,10 @@ public final class CBTypeExpressionParser
   private static final Optional<UUID> SPEC_SECTION =
     uuid("b77ecee0-9add-4182-b3c5-f1d0a75ecfd9");
 
+  /**
+   * A parser for type expressions.
+   */
+
   public CBTypeExpressionParser()
   {
 

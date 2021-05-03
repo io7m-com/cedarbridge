@@ -32,7 +32,7 @@ import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
 
 /**
- * A parser for import declarations.
+ * A parser for language declarations.
  */
 
 public final class CBLanguageParser
@@ -52,6 +52,10 @@ public final class CBLanguageParser
     uuid("34c52233-ee42-4dec-99ac-9997d7cd4bbe");
   private static final Optional<UUID> SPEC_SECTION =
     uuid("5ce707c0-0cfe-4085-86db-1e5968049b92");
+
+  /**
+   * A parser for language declarations.
+   */
 
   public CBLanguageParser()
   {

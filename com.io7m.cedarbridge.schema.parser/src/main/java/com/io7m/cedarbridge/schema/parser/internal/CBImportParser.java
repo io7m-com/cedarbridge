@@ -47,6 +47,10 @@ public final class CBImportParser
   private static final Optional<UUID> SPEC_SECTION =
     uuid("5740d88d-b9c3-4046-ab74-34d350ff4903");
 
+  /**
+   * A parser for import declarations.
+   */
+
   public CBImportParser()
   {
 

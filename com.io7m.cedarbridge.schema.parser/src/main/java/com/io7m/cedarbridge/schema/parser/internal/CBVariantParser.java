@@ -49,6 +49,10 @@ public final class CBVariantParser
   public static final Optional<UUID> SPEC_SECTION =
     uuid("9c9c589e-4cc0-457f-8f3d-4d475b2763a3");
 
+  /**
+   * A parser for variant declarations.
+   */
+
   public CBVariantParser()
   {
 

@@ -20,8 +20,25 @@ import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionType;
 
+/**
+ * The type of element parsers.
+ *
+ * @param <T> The precise type of AST element
+ */
+
 public interface CBElementParserType<T extends CBASTElementType>
 {
+  /**
+   * Parse an element.
+   *
+   * @param context    The context
+   * @param expression The expression
+   *
+   * @return A parsed element
+   *
+   * @throws CBParseFailedException On parse errors
+   */
+
   T parse(
     CBParseContextType context,
     SExpressionType expression)

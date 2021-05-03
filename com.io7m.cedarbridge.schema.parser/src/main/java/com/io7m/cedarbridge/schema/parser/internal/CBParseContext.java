@@ -37,6 +37,10 @@ import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
+/**
+ * The parse context implementation.
+ */
+
 public final class CBParseContext
 {
   private final LinkedList<Context> stack;
@@ -46,6 +50,14 @@ public final class CBParseContext
   private int errors;
   private int languageMajor;
   private int languageMinor;
+
+  /**
+   * The parse context implementation.
+   *
+   * @param inStrings       The string resources
+   * @param inErrorConsumer The error consumer
+   * @param inLines         The line log
+   */
 
   public CBParseContext(
     final CBStringsType inStrings,
@@ -70,6 +82,10 @@ public final class CBParseContext
     this.languageMajor = 1;
     this.languageMinor = 0;
   }
+
+  /**
+   * @return The current parse context
+   */
 
   public CBParseContextType current()
   {

@@ -32,6 +32,10 @@ import java.util.UUID;
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
+/**
+ * Functions over names.
+ */
+
 public final class CBNames
 {
   private static final Optional<UUID> SPEC_SECTION_FIELD_NAME =

@@ -29,6 +29,10 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * The binder factory implementation.
+ */
+
 public final class CBBinderFactory implements CBBinderFactoryType
 {
   private final CBStringsType strings;

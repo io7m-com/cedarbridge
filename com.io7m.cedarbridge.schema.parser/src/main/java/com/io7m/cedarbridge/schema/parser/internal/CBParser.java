@@ -45,6 +45,10 @@ import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_FATAL;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
+/**
+ * The default parser implementation.
+ */
+
 public final class CBParser implements CBParserType
 {
   private static final Optional<UUID> SPEC_SECTION_S_EXPRESSION =
@@ -57,6 +61,14 @@ public final class CBParser implements CBParserType
   private final Consumer<CBError> errors;
   private final CBStringsType strings;
   private final CBExpressionSourceType source;
+
+  /**
+   * The default parser implementation.
+   *
+   * @param inStrings The string resources
+   * @param inErrors  The error consumer
+   * @param inSource  The expression source
+   */
 
   public CBParser(
     final CBStringsType inStrings,
