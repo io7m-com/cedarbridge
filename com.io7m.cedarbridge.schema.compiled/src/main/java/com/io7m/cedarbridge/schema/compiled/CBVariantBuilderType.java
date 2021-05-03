@@ -16,8 +16,20 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+/**
+ * A builder of variant types.
+ */
+
 public interface CBVariantBuilderType extends CBTypeDeclarationBuilderType
 {
+  /**
+   * Create a new variant case.
+   *
+   * @param name The name of the case
+   *
+   * @return A case builder
+   */
+
   CBVariantCaseBuilderType createCase(String name);
 
   @Override

@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of float32 serializers.
+ */
+
 public final class CBFloat32Serializers
   extends CBAbstractSerializerFactory<CBFloat32>
 {
+  /**
+   * A factory of float32 serializers.
+   */
+
   public CBFloat32Serializers()
   {
     super("com.io7m.cedarbridge", "Float32");

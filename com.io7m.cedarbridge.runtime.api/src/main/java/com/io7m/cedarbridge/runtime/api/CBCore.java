@@ -27,11 +27,27 @@ public final class CBCore
 
   }
 
+  /**
+   * Construct a Float16.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBFloat16 float16(
     final double x)
   {
     return CBFloat16.of(x);
   }
+
+  /**
+   * Construct a Float32.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBFloat32 float32(
     final double x)
@@ -39,11 +55,27 @@ public final class CBCore
     return CBFloat32.of(x);
   }
 
+  /**
+   * Construct a Float64.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBFloat64 float64(
     final double x)
   {
     return CBFloat64.of(x);
   }
+
+  /**
+   * Construct an IntegerUnsigned64.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerUnsigned64 unsigned64(
     final long x)
@@ -51,11 +83,27 @@ public final class CBCore
     return CBIntegerUnsigned64.of(x);
   }
 
+  /**
+   * Construct an IntegerUnsigned32.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerUnsigned32 unsigned32(
     final long x)
   {
     return CBIntegerUnsigned32.of(x);
   }
+
+  /**
+   * Construct an IntegerUnsigned32.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerUnsigned32 unsigned32(
     final int x)
@@ -63,11 +111,27 @@ public final class CBCore
     return unsigned32(Integer.toUnsignedLong(x));
   }
 
+  /**
+   * Construct an IntegerUnsigned16.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerUnsigned16 unsigned16(
     final long x)
   {
     return unsigned16((int) x);
   }
+
+  /**
+   * Construct an IntegerUnsigned16.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerUnsigned16 unsigned16(
     final int x)
@@ -75,11 +139,27 @@ public final class CBCore
     return CBIntegerUnsigned16.of(x);
   }
 
+  /**
+   * Construct an IntegerUnsigned8.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerUnsigned8 unsigned8(
     final long x)
   {
     return unsigned8((int) x);
   }
+
+  /**
+   * Construct an IntegerUnsigned8.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerUnsigned8 unsigned8(
     final int x)
@@ -87,23 +167,55 @@ public final class CBCore
     return CBIntegerUnsigned8.of(x);
   }
 
+  /**
+   * Construct an IntegerSigned64.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerSigned64 signed64(
     final long x)
   {
     return CBIntegerSigned64.of(x);
   }
 
+  /**
+   * Construct an IntegerSigned32.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerSigned32 signed32(
     final long x)
   {
     return CBIntegerSigned32.of((int) x);
   }
 
+  /**
+   * Construct an IntegerSigned32.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerSigned32 signed32(
     final int x)
   {
-    return CBIntegerSigned32.of((int) x);
+    return CBIntegerSigned32.of(x);
   }
+
+  /**
+   * Construct an IntegerSigned16.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerSigned16 signed16(
     final long x)
@@ -111,11 +223,27 @@ public final class CBCore
     return signed16((int) x);
   }
 
+  /**
+   * Construct an IntegerSigned16.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerSigned16 signed16(
     final int x)
   {
     return CBIntegerSigned16.of(x);
   }
+
+  /**
+   * Construct an IntegerSigned8.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBIntegerSigned8 signed8(
     final long x)
@@ -123,11 +251,27 @@ public final class CBCore
     return signed8((int) x);
   }
 
+  /**
+   * Construct an IntegerSigned8.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
+
   public static CBIntegerSigned8 signed8(
     final int x)
   {
     return CBIntegerSigned8.of(x);
   }
+
+  /**
+   * Construct a String.
+   *
+   * @param x The value
+   *
+   * @return A value
+   */
 
   public static CBString string(
     final String x)

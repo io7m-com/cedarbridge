@@ -16,11 +16,28 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+/**
+ * A builder of variant cases.
+ */
+
 public interface CBVariantCaseBuilderType
 {
+  /**
+   * Create a new field within this variant case.
+   *
+   * @param name The field name
+   * @param type The type name
+   *
+   * @return A case builder
+   */
+
   CBVariantCaseBuilderType createField(
     String name,
     CBTypeExpressionType type);
+
+  /**
+   * @return The owner of this variant case
+   */
 
   CBVariantBuilderType owner();
 }

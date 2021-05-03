@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of byte array serializers.
+ */
+
 public final class CBByteArraySerializers
   extends CBAbstractSerializerFactory<CBByteArray>
 {
+  /**
+   * A factory of byte array serializers.
+   */
+
   public CBByteArraySerializers()
   {
     super("com.io7m.cedarbridge", "ByteArray");

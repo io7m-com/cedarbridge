@@ -24,11 +24,22 @@ import com.io7m.jaffirm.core.Preconditions;
 
 import java.util.Objects;
 
+/**
+ * A field.
+ */
+
 public final class CBField implements CBFieldType
 {
   private final String name;
   private final CBTypeExpressionType type;
   private CBFieldOwnerType owner;
+
+  /**
+   * Construct a field.
+   *
+   * @param inName The name
+   * @param inType The type
+   */
 
   public CBField(
     final String inName,
@@ -45,6 +56,12 @@ public final class CBField implements CBFieldType
       "Field name must be valid"
     );
   }
+
+  /**
+   * Set the field owner.
+   *
+   * @param newOwner The owner
+   */
 
   public void setOwner(
     final CBFieldOwnerType newOwner)

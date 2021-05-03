@@ -23,6 +23,12 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.runtime.api.CBTypeArguments.checkArgumentCount;
 
+/**
+ * A factory of serializers.
+ *
+ * @param <T> The type of serialized values
+ */
+
 @ProviderType
 public abstract class CBAbstractSerializerFactory<T extends CBSerializableType>
   implements CBSerializerFactoryType<T>

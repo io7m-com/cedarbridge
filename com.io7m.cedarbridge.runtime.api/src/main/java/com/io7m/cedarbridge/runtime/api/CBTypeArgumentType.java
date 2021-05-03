@@ -26,11 +26,23 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A type argument.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(copy = false)
 public interface CBTypeArgumentType extends Formattable
 {
+  /**
+   * @return The target type
+   */
+
   CBQualifiedTypeName target();
+
+  /**
+   * @return The type arguments
+   */
 
   List<CBTypeArgument> arguments();
 

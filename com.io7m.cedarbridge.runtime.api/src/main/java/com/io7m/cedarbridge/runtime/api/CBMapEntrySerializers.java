@@ -18,9 +18,20 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of map entry serializers.
+ *
+ * @param <K> The type of keys
+ * @param <V> The type of values
+ */
+
 public final class CBMapEntrySerializers<K extends CBSerializableType, V extends CBSerializableType>
   extends CBAbstractSerializerFactory<CBMapEntry<K, V>>
 {
+  /**
+   * A factory of map entry serializers.
+   */
+
   public CBMapEntrySerializers()
   {
     super("com.io7m.cedarbridge", "MapEntry");

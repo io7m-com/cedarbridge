@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of signed 64-bit integer values.
+ */
+
 public final class CBIntegerSigned64Serializer
   extends CBAbstractSerializer<CBIntegerSigned64>
 {
+  /**
+   * A serializer of signed 64-bit integer values.
+   */
+
   public CBIntegerSigned64Serializer()
   {
 

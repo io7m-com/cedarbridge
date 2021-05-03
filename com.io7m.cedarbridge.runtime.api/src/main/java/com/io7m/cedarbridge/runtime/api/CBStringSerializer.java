@@ -18,8 +18,16 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A string serializer.
+ */
+
 public final class CBStringSerializer extends CBAbstractSerializer<CBString>
 {
+  /**
+   * A string serializer.
+   */
+
   public CBStringSerializer()
   {
     super();

@@ -24,11 +24,19 @@ import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
 
+/**
+ * The type of UTF-8 strings.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBStringType
   extends Comparable<CBString>, Formattable, CBSerializableType
 {
+  /**
+   * @return The string value
+   */
+
   @Value.Parameter
   String value();
 

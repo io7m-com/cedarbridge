@@ -29,6 +29,16 @@ import java.util.UUID;
 
 public interface CBProtocolSerializerCollectionType<T extends CBProtocolMessageType>
 {
+  private static long minUnsigned(
+    final long x,
+    final long y)
+  {
+    if (Long.compareUnsigned(x, y) < 0) {
+      return x;
+    }
+    return y;
+  }
+
   /**
    * @return The protocol ID
    */
@@ -52,16 +62,6 @@ public interface CBProtocolSerializerCollectionType<T extends CBProtocolMessageT
    */
 
   List<CBProtocolSerializerFactoryType<T>> factories();
-
-  private static long minUnsigned(
-    final long x,
-    final long y)
-  {
-    if (Long.compareUnsigned(x, y) < 0) {
-      return x;
-    }
-    return y;
-  }
 
   /**
    * Find the serializer with the given type.

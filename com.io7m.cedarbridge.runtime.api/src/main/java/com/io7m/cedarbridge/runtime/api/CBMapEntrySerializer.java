@@ -19,11 +19,25 @@ package com.io7m.cedarbridge.runtime.api;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A serializer of map entries.
+ *
+ * @param <K> The type of keys
+ * @param <V> The type of values
+ */
+
 public final class CBMapEntrySerializer<K extends CBSerializableType, V extends CBSerializableType>
   extends CBAbstractSerializer<CBMapEntry<K, V>>
 {
   private final CBSerializerType<K> keySerializer;
   private final CBSerializerType<V> valueSerializer;
+
+  /**
+   * A serializer of map entries.
+   *
+   * @param inKeySerializer   The key serializer
+   * @param inValueSerializer The value serializer
+   */
 
   public CBMapEntrySerializer(
     final CBSerializerType<K> inKeySerializer,

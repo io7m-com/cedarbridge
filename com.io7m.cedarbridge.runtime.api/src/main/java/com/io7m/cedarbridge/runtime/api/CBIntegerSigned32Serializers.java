@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of 32-bit signed integer serializers.
+ */
+
 public final class CBIntegerSigned32Serializers
   extends CBAbstractSerializerFactory<CBIntegerSigned32>
 {
+  /**
+   * A factory of 32-bit signed integer serializers.
+   */
+
   public CBIntegerSigned32Serializers()
   {
     super("com.io7m.cedarbridge", "IntegerSigned32");

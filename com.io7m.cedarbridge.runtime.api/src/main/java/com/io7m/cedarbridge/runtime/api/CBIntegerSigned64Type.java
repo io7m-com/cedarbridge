@@ -23,11 +23,19 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
+/**
+ * The type of signed 64-bit integers.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBIntegerSigned64Type
   extends Comparable<CBIntegerSigned64>, CBIntegerType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   long value();
 

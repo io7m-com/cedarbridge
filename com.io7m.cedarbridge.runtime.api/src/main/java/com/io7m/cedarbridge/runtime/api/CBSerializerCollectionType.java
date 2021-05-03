@@ -24,6 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A collection of serializers.
+ */
+
 @ProviderType
 @ImmutablesStyleType
 @Value.Immutable
@@ -39,9 +43,21 @@ public interface CBSerializerCollectionType
     }
   }
 
+  /**
+   * @return The package name
+   */
+
   String packageName();
 
+  /**
+   * @return The serializers
+   */
+
   List<CBSerializerFactoryType<?>> serializers();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

@@ -29,6 +29,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A package declaration.
+ */
+
 public final class CBPackage implements CBPackageType
 {
   private final String name;
@@ -38,6 +42,12 @@ public final class CBPackage implements CBPackageType
   private final Map<String, CBTypeDeclarationType> typesRead;
   private final Map<String, CBProtocolDeclarationType> protosRead;
   private final Map<String, CBProtocolDeclarationType> protos;
+
+  /**
+   * Construct a package.
+   *
+   * @param inName The name
+   */
 
   public CBPackage(
     final String inName)
@@ -57,6 +67,12 @@ public final class CBPackage implements CBPackageType
     );
   }
 
+  /**
+   * Add an import to the package.
+   *
+   * @param imported The imported package
+   */
+
   public void addImport(
     final CBPackageType imported)
   {
@@ -64,6 +80,12 @@ public final class CBPackage implements CBPackageType
       Objects.requireNonNull(imported, "imported")
     );
   }
+
+  /**
+   * Add a protocol to the package.
+   *
+   * @param protocol The protocol
+   */
 
   public void addProtocol(
     final CBProtocolDeclaration protocol)
@@ -78,6 +100,12 @@ public final class CBPackage implements CBPackageType
     protocol.setOwner(this);
   }
 
+  /**
+   * Add a record to the package.
+   *
+   * @param record The record
+   */
+
   public void addRecord(
     final CBTypeDeclarationRecord record)
   {
@@ -91,6 +119,12 @@ public final class CBPackage implements CBPackageType
     record.setOwner(this);
   }
 
+  /**
+   * Add a variant to the package.
+   *
+   * @param variant The variant
+   */
+
   public void addVariant(
     final CBTypeDeclarationVariant variant)
   {
@@ -103,6 +137,12 @@ public final class CBPackage implements CBPackageType
     this.types.put(vName, variant);
     variant.setOwner(this);
   }
+
+  /**
+   * Add an external type to the package.
+   *
+   * @param external The external type
+   */
 
   public void addExternal(
     final CBTypeDeclarationExternal external)

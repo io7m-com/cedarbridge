@@ -18,6 +18,12 @@ package com.io7m.cedarbridge.runtime.api;
 
 import org.osgi.annotation.versioning.ProviderType;
 
+/**
+ * The base type of serializers.
+ *
+ * @param <T> The type of serialized values
+ */
+
 @ProviderType
 public abstract class CBAbstractSerializer<T extends CBSerializableType>
   implements CBSerializerType<T>

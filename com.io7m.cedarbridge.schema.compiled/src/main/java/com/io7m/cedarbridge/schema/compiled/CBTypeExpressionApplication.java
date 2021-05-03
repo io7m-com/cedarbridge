@@ -22,11 +22,22 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 
+/**
+ * An application of type arguments to a named type.
+ */
+
 public final class CBTypeExpressionApplication
   implements CBTypeExprApplicationType
 {
   private final CBTypeExprNamedType target;
   private final List<CBTypeExpressionType> arguments;
+
+  /**
+   * Construct an expression.
+   *
+   * @param inTarget    The target type
+   * @param inArguments The type arguments
+   */
 
   public CBTypeExpressionApplication(
     final CBTypeExprNamedType inTarget,

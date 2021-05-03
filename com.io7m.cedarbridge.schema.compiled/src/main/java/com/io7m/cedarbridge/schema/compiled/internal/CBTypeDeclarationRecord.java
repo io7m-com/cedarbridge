@@ -30,6 +30,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A record type declaration.
+ */
+
 public final class CBTypeDeclarationRecord implements CBRecordType
 {
   private final List<CBFieldType> fieldsRead;
@@ -39,6 +43,12 @@ public final class CBTypeDeclarationRecord implements CBRecordType
   private final List<CBTypeParameterType> parameters;
   private CBPackageType owner;
   private Optional<CBExternalName> externalName;
+
+  /**
+   * Construct a type declaration.
+   *
+   * @param inName The type name
+   */
 
   public CBTypeDeclarationRecord(
     final String inName)
@@ -64,6 +74,12 @@ public final class CBTypeDeclarationRecord implements CBRecordType
     this.parametersRead =
       Collections.unmodifiableList(this.parameters);
   }
+
+  /**
+   * Add a type parameter.
+   *
+   * @param parameter The parameter
+   */
 
   public void addTypeParameter(
     final CBTypeParameter parameter)
@@ -94,6 +110,12 @@ public final class CBTypeDeclarationRecord implements CBRecordType
     parameter.setOwner(this);
   }
 
+  /**
+   * Add a field.
+   *
+   * @param field The field
+   */
+
   public void addField(
     final CBField field)
   {
@@ -112,6 +134,13 @@ public final class CBTypeDeclarationRecord implements CBRecordType
     this.fields.add(field);
     field.setOwner(this);
   }
+
+  /**
+   * Set the external name.
+   *
+   * @param newExternalPackage The external package
+   * @param newExternalName    The external name
+   */
 
   public void setExternalName(
     final String newExternalPackage,
@@ -154,6 +183,12 @@ public final class CBTypeDeclarationRecord implements CBRecordType
   {
     return this.externalName;
   }
+
+  /**
+   * Set the owner.
+   *
+   * @param newOwner The new owner
+   */
 
   public void setOwner(
     final CBPackage newOwner)

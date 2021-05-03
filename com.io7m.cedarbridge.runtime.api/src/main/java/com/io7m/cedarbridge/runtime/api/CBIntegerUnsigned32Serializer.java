@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of 32-bit unsigned integers.
+ */
+
 public final class CBIntegerUnsigned32Serializer
   extends CBAbstractSerializer<CBIntegerUnsigned32>
 {
+  /**
+   * A serializer of 32-bit unsigned integers.
+   */
+
   public CBIntegerUnsigned32Serializer()
   {
 

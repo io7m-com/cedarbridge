@@ -23,15 +23,35 @@ import java.util.Formattable;
 import java.util.Formatter;
 import java.util.Optional;
 
+/**
+ * The option type.
+ *
+ * @param <T> The type of values
+ */
+
 public interface CBOptionType<T extends CBSerializableType>
   extends Formattable, CBSerializableType
 {
+  /**
+   * @return This value as a Java Optional
+   */
+
   Optional<T> asOptional();
+
+  /**
+   * The None case.
+   *
+   * @param <T> The type of values
+   */
 
   @ImmutablesStyleType
   @Value.Immutable(builder = false, copy = false)
   interface CBNoneType<T extends CBSerializableType> extends CBOptionType<T>
   {
+    /**
+     * The variant index.
+     */
+
     int VARIANT_INDEX = 0;
 
     @Override
@@ -51,11 +71,25 @@ public interface CBOptionType<T extends CBSerializableType>
     }
   }
 
+  /**
+   * The Some case.
+   *
+   * @param <T> The type of values
+   */
+
   @ImmutablesStyleType
   @Value.Immutable(builder = false, copy = false)
   interface CBSomeType<T extends CBSerializableType> extends CBOptionType<T>
   {
+    /**
+     * The variant index.
+     */
+
     int VARIANT_INDEX = 1;
+
+    /**
+     * @return The present value
+     */
 
     @Value.Parameter
     T value();

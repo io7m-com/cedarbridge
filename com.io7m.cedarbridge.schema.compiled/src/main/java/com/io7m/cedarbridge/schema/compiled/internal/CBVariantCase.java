@@ -28,12 +28,22 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A variant case.
+ */
+
 public final class CBVariantCase implements CBVariantCaseType
 {
   private final List<CBFieldType> fieldsRead;
   private final List<CBFieldType> fields;
   private final String name;
   private CBTypeDeclarationVariant owner;
+
+  /**
+   * Construct a case.
+   *
+   * @param inName The case name
+   */
 
   public CBVariantCase(
     final String inName)
@@ -52,6 +62,12 @@ public final class CBVariantCase implements CBVariantCaseType
     this.fieldsRead =
       Collections.unmodifiableList(this.fields);
   }
+
+  /**
+   * Add a field to the case.
+   *
+   * @param field The field
+   */
 
   public void addField(
     final CBField field)
@@ -89,6 +105,12 @@ public final class CBVariantCase implements CBVariantCaseType
   {
     return this.name;
   }
+
+  /**
+   * Set the owner of the variant case.
+   *
+   * @param newOwner The owner
+   */
 
   public void setOwner(
     final CBTypeDeclarationVariant newOwner)

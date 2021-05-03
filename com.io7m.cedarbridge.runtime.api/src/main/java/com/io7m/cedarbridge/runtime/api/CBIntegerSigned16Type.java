@@ -23,13 +23,25 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
+/**
+ * The type of signed 16-bit integers.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBIntegerSigned16Type
   extends Comparable<CBIntegerSigned16>, CBIntegerType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   int value();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

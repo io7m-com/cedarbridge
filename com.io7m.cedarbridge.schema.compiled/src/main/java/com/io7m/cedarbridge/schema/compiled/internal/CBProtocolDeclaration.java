@@ -26,6 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A protocol declaration.
+ */
+
 public final class CBProtocolDeclaration implements CBProtocolDeclarationType
 {
   private final String name;
@@ -59,11 +63,23 @@ public final class CBProtocolDeclaration implements CBProtocolDeclarationType
     return this.versionsRead;
   }
 
+  /**
+   * Set the owner of the protocol.
+   *
+   * @param newOwner The owner package
+   */
+
   public void setOwner(
     final CBPackage newOwner)
   {
     this.owner = Objects.requireNonNull(newOwner, "cbPackage");
   }
+
+  /**
+   * Add a protocol version.
+   *
+   * @param version The version
+   */
 
   public void addVersion(
     final CBProtocolVersionDeclaration version)

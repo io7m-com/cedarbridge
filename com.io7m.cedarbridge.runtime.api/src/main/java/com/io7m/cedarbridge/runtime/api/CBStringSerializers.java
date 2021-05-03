@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of string serializers.
+ */
+
 public final class CBStringSerializers
   extends CBAbstractSerializerFactory<CBString>
 {
+  /**
+   * A factory of string serializers.
+   */
+
   public CBStringSerializers()
   {
     super("com.io7m.cedarbridge", "String");

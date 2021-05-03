@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of serializers of 8-bit unsigned integers.
+ */
+
 public final class CBIntegerUnsigned8Serializers
   extends CBAbstractSerializerFactory<CBIntegerUnsigned8>
 {
+  /**
+   * A factory of serializers of 8-bit unsigned integers.
+   */
+
   public CBIntegerUnsigned8Serializers()
   {
     super("com.io7m.cedarbridge", "IntegerUnsigned8");

@@ -18,6 +18,10 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.Formattable;
 
+/**
+ * The base type of integers.
+ */
+
 public interface CBIntegerType extends Formattable, CBSerializableType
 {
 

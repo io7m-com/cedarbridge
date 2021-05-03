@@ -30,6 +30,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A variant type declaration.
+ */
+
 public final class CBTypeDeclarationVariant implements CBVariantType
 {
   private final List<CBVariantCaseType> casesRead;
@@ -39,6 +43,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   private final List<CBTypeParameterType> parameters;
   private CBPackageType owner;
   private Optional<CBExternalName> externalName;
+
+  /**
+   * Construct a variant type declaration.
+   *
+   * @param inName The type name
+   */
 
   public CBTypeDeclarationVariant(
     final String inName)
@@ -64,6 +74,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     this.parametersRead =
       Collections.unmodifiableList(this.parameters);
   }
+
+  /**
+   * Add a type parameter.
+   *
+   * @param parameter The parameter
+   */
 
   public void addTypeParameter(
     final CBTypeParameter parameter)
@@ -94,6 +110,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     parameter.setOwner(this);
   }
 
+  /**
+   * Add a variant case.
+   *
+   * @param caseV The case
+   */
+
   public void addCase(
     final CBVariantCase caseV)
   {
@@ -112,6 +134,13 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     this.cases.add(caseV);
     caseV.setOwner(this);
   }
+
+  /**
+   * Set the external name.
+   *
+   * @param newExternalPackage The external package
+   * @param newExternalName    The external name
+   */
 
   public void setExternalName(
     final String newExternalPackage,
@@ -154,6 +183,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   {
     return this.externalName;
   }
+
+  /**
+   * Set the owner.
+   *
+   * @param newOwner The new owner
+   */
 
   public void setOwner(
     final CBPackage newOwner)

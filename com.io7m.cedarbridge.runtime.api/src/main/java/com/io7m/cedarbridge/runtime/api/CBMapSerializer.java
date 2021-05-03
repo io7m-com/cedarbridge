@@ -21,16 +21,29 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * A serializer of maps.
+ *
+ * @param <K> The type of keys
+ * @param <V> The type of values
+ */
+
 public final class CBMapSerializer<K extends CBSerializableType, V extends CBSerializableType>
   extends CBAbstractSerializer<CBMap<K, V>>
 {
   private final CBSerializerType<CBMapEntry<K, V>> entrySerializer;
 
+  /**
+   * A serializer of maps.
+   *
+   * @param inEntrySerializer The entry serializer
+   */
+
   public CBMapSerializer(
-    final CBSerializerType<CBMapEntry<K, V>> inEntryDeserializer)
+    final CBSerializerType<CBMapEntry<K, V>> inEntrySerializer)
   {
     this.entrySerializer =
-      Objects.requireNonNull(inEntryDeserializer, "entrySerializer");
+      Objects.requireNonNull(inEntrySerializer, "entrySerializer");
   }
 
   @Override

@@ -23,11 +23,22 @@ import com.io7m.jaffirm.core.Preconditions;
 
 import java.util.Objects;
 
+/**
+ * A type parameter.
+ */
+
 public final class CBTypeParameter implements CBTypeParameterType
 {
   private final String name;
   private final int index;
   private CBTypeDeclarationType owner;
+
+  /**
+   * Construct a type parameter.
+   *
+   * @param inName  The parameter name
+   * @param inIndex The parameter index
+   */
 
   public CBTypeParameter(
     final String inName,
@@ -42,6 +53,12 @@ public final class CBTypeParameter implements CBTypeParameterType
       "Type parameter name must be valid"
     );
   }
+
+  /**
+   * Set the owner of the type.
+   *
+   * @param type The owner declaration
+   */
 
   public void setOwner(
     final CBTypeDeclarationType type)

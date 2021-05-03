@@ -44,6 +44,10 @@ import java.util.Optional;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 
+/**
+ * A package builder.
+ */
+
 public final class CBPackageBuilder implements CBPackageBuilderType
 {
   private final String packageName;
@@ -51,6 +55,12 @@ public final class CBPackageBuilder implements CBPackageBuilderType
   private final CBPackage packageNow;
   private final HashMap<String, ProtocolBuilder> protoBuilders;
   private boolean done;
+
+  /**
+   * Construct a package builder.
+   *
+   * @param inPackageName The package name
+   */
 
   public CBPackageBuilder(
     final String inPackageName)

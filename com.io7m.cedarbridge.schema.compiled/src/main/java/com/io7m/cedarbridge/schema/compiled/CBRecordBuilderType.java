@@ -16,8 +16,21 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+/**
+ * A builder of record types.
+ */
+
 public interface CBRecordBuilderType extends CBTypeDeclarationBuilderType
 {
+  /**
+   * Create a new record field.
+   *
+   * @param name The field name
+   * @param type The field type
+   *
+   * @return A new record field
+   */
+
   CBRecordBuilderType createField(
     String name,
     CBTypeExpressionType type);

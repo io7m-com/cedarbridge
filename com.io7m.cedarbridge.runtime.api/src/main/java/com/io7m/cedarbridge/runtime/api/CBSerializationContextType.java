@@ -16,6 +16,10 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+/**
+ * The main serialization context.
+ */
+
 public interface CBSerializationContextType
   extends CBSerializationContextInputType,
   CBSerializationContextOutputType,

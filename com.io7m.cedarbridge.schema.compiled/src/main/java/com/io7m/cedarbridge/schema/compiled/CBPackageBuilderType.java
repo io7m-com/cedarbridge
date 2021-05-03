@@ -18,38 +18,130 @@ package com.io7m.cedarbridge.schema.compiled;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
+/**
+ * The type of package builders.
+ */
+
 public interface CBPackageBuilderType
 {
+  /**
+   * Create a new external type declaration.
+   *
+   * @param externalPackageName The external package name
+   * @param externalName        The external type name
+   * @param name                The name within this package
+   *
+   * @return A type declaration builder
+   */
+
   CBTypeDeclarationBuilderType createExternalType(
     String externalPackageName,
     String externalName,
     String name);
 
+  /**
+   * Create a new record.
+   *
+   * @param name The name within this package
+   *
+   * @return A record builder
+   */
+
   CBRecordBuilderType createRecord(
     String name);
+
+  /**
+   * Find an existing record.
+   *
+   * @param name The name within this package
+   *
+   * @return A record builder
+   */
 
   CBRecordBuilderType findRecord(
     String name);
 
+  /**
+   * Create a new variant.
+   *
+   * @param name The name within this package
+   *
+   * @return A variant builder
+   */
+
   CBVariantBuilderType createVariant(
     String name);
+
+  /**
+   * Find an existing variant.
+   *
+   * @param name The name within this package
+   *
+   * @return A record builder
+   */
 
   CBVariantBuilderType findVariant(
     String name);
 
+  /**
+   * Find an existing type.
+   *
+   * @param name The name within this package
+   *
+   * @return A type builder
+   */
+
   CBTypeDeclarationBuilderType findType(
     String name);
+
+  /**
+   * Reference an existing type.
+   *
+   * @param name The name within this package
+   *
+   * @return A named type expression
+   */
 
   CBTypeExprNamedType referenceType(
     String name);
 
+  /**
+   * Reference an external type.
+   *
+   * @param typeDeclaration The type declaration
+   *
+   * @return A named type expression
+   */
+
   CBTypeExprNamedType referenceExternalType(
     CBTypeDeclarationType typeDeclaration);
 
+  /**
+   * Build a package based on all of the given values so far.
+   *
+   * @return A package
+   */
+
   CBPackageType build();
+
+  /**
+   * Import a package.
+   *
+   * @param imported The package
+   *
+   * @return this
+   */
 
   CBPackageBuilderType addImport(
     CBPackageType imported);
+
+  /**
+   * Create a new protocol.
+   *
+   * @param name The name within this package
+   *
+   * @return A protocol builder
+   */
 
   CBProtocolBuilderType createProtocol(
     String name);

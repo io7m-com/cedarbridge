@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of serializers of 32-bit unsigned integers.
+ */
+
 public final class CBIntegerUnsigned32Serializers
   extends CBAbstractSerializerFactory<CBIntegerUnsigned32>
 {
+  /**
+   * A factory of serializers of 32-bit unsigned integers.
+   */
+
   public CBIntegerUnsigned32Serializers()
   {
     super("com.io7m.cedarbridge", "IntegerUnsigned32");

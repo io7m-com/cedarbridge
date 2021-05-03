@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of float16 serializers.
+ */
+
 public final class CBFloat16Serializers
   extends CBAbstractSerializerFactory<CBFloat16>
 {
+  /**
+   * A factory of float16 serializers.
+   */
+
   public CBFloat16Serializers()
   {
     super("com.io7m.cedarbridge", "Float16");

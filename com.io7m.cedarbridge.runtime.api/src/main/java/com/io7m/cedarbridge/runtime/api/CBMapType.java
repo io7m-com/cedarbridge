@@ -26,11 +26,22 @@ import java.util.Formatter;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * The type of maps.
+ *
+ * @param <K> The type of keys
+ * @param <V> The type of values
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBMapType<K extends CBSerializableType, V extends CBSerializableType>
   extends Formattable, CBSerializableType
 {
+  /**
+   * @return The map
+   */
+
   @Value.Parameter
   Map<K, V> values();
 

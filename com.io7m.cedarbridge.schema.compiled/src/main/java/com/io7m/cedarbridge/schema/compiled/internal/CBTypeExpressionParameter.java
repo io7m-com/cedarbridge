@@ -22,9 +22,19 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 
+/**
+ * A type expression that refers to a type parameter.
+ */
+
 public final class CBTypeExpressionParameter implements CBTypeExprParameterType
 {
   private final CBTypeParameterType parameter;
+
+  /**
+   * Construct a type expression.
+   *
+   * @param inParameter The parameter
+   */
 
   public CBTypeExpressionParameter(
     final CBTypeParameterType inParameter)

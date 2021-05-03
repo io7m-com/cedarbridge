@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of 16-bit signed integer serializers.
+ */
+
 public final class CBIntegerSigned16Serializers
   extends CBAbstractSerializerFactory<CBIntegerSigned16>
 {
+  /**
+   * A factory of 16-bit signed integer serializers.
+   */
+
   public CBIntegerSigned16Serializers()
   {
     super("com.io7m.cedarbridge", "IntegerSigned16");

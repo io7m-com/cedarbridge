@@ -18,8 +18,16 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A float16 serializer.
+ */
+
 public final class CBFloat16Serializer extends CBAbstractSerializer<CBFloat16>
 {
+  /**
+   * A float16 serializer.
+   */
+
   public CBFloat16Serializer()
   {
 

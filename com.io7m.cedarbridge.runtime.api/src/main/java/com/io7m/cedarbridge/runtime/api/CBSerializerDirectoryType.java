@@ -24,6 +24,16 @@ import java.util.List;
 
 public interface CBSerializerDirectoryType
 {
+  /**
+   * Find a serializer for the given type name and arguments.
+   *
+   * @param typeName  The type name
+   * @param arguments The arguments
+   * @param <T>       The type of serialized values
+   *
+   * @return A serializer
+   */
+
   <T extends CBSerializableType> CBSerializerType<T> serializerFor(
     CBQualifiedTypeName typeName,
     List<CBTypeArgument> arguments

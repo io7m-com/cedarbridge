@@ -21,11 +21,19 @@ import org.immutables.value.Value;
 
 import java.util.Formatter;
 
+/**
+ * A 64-bit floating point value.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBFloat64Type
   extends Comparable<CBFloat64>, CBFloatType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   double value();
 

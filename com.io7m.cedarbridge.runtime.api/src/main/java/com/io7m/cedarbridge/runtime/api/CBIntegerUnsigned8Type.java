@@ -23,13 +23,25 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
+/**
+ * The type of unsigned 8-bit integers.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBIntegerUnsigned8Type
   extends Comparable<CBIntegerUnsigned8>, CBIntegerType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   int value();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

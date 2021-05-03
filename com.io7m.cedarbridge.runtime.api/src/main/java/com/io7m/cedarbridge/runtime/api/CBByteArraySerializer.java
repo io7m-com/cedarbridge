@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of byte arrays.
+ */
+
 public final class CBByteArraySerializer
   extends CBAbstractSerializer<CBByteArray>
 {
+  /**
+   * Construct a serializer of byte arrays.
+   */
+
   public CBByteArraySerializer()
   {
 

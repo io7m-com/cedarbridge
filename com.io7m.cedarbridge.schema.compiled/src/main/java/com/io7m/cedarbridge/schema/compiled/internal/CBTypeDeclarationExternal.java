@@ -30,6 +30,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * An external type declaration.
+ */
+
 public final class CBTypeDeclarationExternal implements CBExternalType
 {
   private final String name;
@@ -39,6 +43,14 @@ public final class CBTypeDeclarationExternal implements CBExternalType
   private final String externalType;
   private final Optional<CBExternalName> externalName;
   private CBPackageType owner;
+
+  /**
+   * Construct an external type.
+   *
+   * @param inName            The name
+   * @param inExternalPackage The external package name
+   * @param inExternalType    The external package type
+   */
 
   public CBTypeDeclarationExternal(
     final String inName,
@@ -83,6 +95,12 @@ public final class CBTypeDeclarationExternal implements CBExternalType
           .build()
       );
   }
+
+  /**
+   * Add a type parameter to the declaration.
+   *
+   * @param parameter A parameter
+   */
 
   public void addTypeParameter(
     final CBTypeParameter parameter)
@@ -136,6 +154,11 @@ public final class CBTypeDeclarationExternal implements CBExternalType
   {
     return this.externalName;
   }
+
+  /**
+   * Set the owner of the type declaration.
+   * @param newOwner The owner
+   */
 
   public void setOwner(
     final CBPackage newOwner)

@@ -20,10 +20,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * A serializer of lists.
+ *
+ * @param <T> The type of elements
+ */
+
 public final class CBListSerializer<T extends CBSerializableType>
   extends CBAbstractSerializer<CBList<T>>
 {
   private final CBSerializerType<T> itemSerializer;
+
+  /**
+   * A serializer of lists.
+   *
+   * @param inItemSerializer The list element serializer
+   */
 
   public CBListSerializer(
     final CBSerializerType<T> inItemSerializer)

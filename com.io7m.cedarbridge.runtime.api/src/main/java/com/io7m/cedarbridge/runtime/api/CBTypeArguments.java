@@ -18,12 +18,25 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * Functions over type arguments.
+ */
+
 public final class CBTypeArguments
 {
   private CBTypeArguments()
   {
 
   }
+
+  /**
+   * Construct a type argument.
+   *
+   * @param target    The target type
+   * @param arguments The type arguments
+   *
+   * @return The type argument
+   */
 
   public static CBTypeArgument of(
     final CBQualifiedTypeName target,
@@ -34,6 +47,15 @@ public final class CBTypeArguments
       .setArguments(arguments)
       .build();
   }
+
+  /**
+   * Check that the argument count matches the parameter count of the target type.
+   *
+   * @param packageName   The package name
+   * @param typeName      The type name
+   * @param expectedCount The expected number of arguments
+   * @param receivedCount The received number of arguments
+   */
 
   public static void checkArgumentCount(
     final String packageName,

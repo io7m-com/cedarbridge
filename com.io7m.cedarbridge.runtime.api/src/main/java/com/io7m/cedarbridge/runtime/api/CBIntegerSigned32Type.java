@@ -23,11 +23,19 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
+/**
+ * The type of signed 32-bit integers.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBIntegerSigned32Type
   extends Comparable<CBIntegerSigned32>, CBIntegerType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   int value();
 

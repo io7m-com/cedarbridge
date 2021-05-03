@@ -30,6 +30,14 @@ public final class CBUUIDs
 
   }
 
+  /**
+   * Produce a UUID from the given text.
+   *
+   * @param text The text
+   *
+   * @return A UUID
+   */
+
   public static Optional<UUID> uuid(
     final String text)
   {

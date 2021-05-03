@@ -18,9 +18,19 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of list serializers.
+ *
+ * @param <T> The type of list elements
+ */
+
 public final class CBListSerializers<T extends CBSerializableType>
   extends CBAbstractSerializerFactory<CBList<T>>
 {
+  /**
+   * A factory of list serializers.
+   */
+
   public CBListSerializers()
   {
     super("com.io7m.cedarbridge", "List");

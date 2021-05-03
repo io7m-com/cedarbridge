@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of 64-bit unsigned integers.
+ */
+
 public final class CBIntegerUnsigned64Serializer
   extends CBAbstractSerializer<CBIntegerUnsigned64>
 {
+  /**
+   * A serializer of 64-bit unsigned integers.
+   */
+
   public CBIntegerUnsigned64Serializer()
   {
 

@@ -19,49 +19,173 @@ package com.io7m.cedarbridge.runtime.api;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * The serialization context related to reading values.
+ */
+
 public interface CBSerializationContextInputType
 {
+  /**
+   * Read a sequence length
+   *
+   * @return The length
+   *
+   * @throws IOException On I/O errors
+   */
+
   int readSequenceLength()
     throws IOException;
+
+  /**
+   * Read a variant index
+   *
+   * @return The index
+   *
+   * @throws IOException On I/O errors
+   */
 
   int readVariantIndex()
     throws IOException;
 
+  /**
+   * Read a signed 64-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   long readS64()
     throws IOException;
+
+  /**
+   * Read a signed 32-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   int readS32()
     throws IOException;
 
+  /**
+   * Read a signed 16-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   int readS16()
     throws IOException;
+
+  /**
+   * Read a signed 8-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   int readS8()
     throws IOException;
 
+  /**
+   * Read an unsigned 64-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   long readU64()
     throws IOException;
+
+  /**
+   * Read an unsigned 32-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   long readU32()
     throws IOException;
 
+  /**
+   * Read an unsigned 16-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   int readU16()
     throws IOException;
+
+  /**
+   * Read an unsigned 8-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   int readU8()
     throws IOException;
 
+  /**
+   * Read a floating point 64-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   double readF64()
     throws IOException;
+
+  /**
+   * Read a floating point 32-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   double readF32()
     throws IOException;
 
+  /**
+   * Read a floating point 16-bit value
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   double readF16()
     throws IOException;
 
+  /**
+   * Read a byte array.
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   ByteBuffer readByteArray()
     throws IOException;
+
+  /**
+   * Read a UTF-8 string.
+   *
+   * @return The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   String readUTF8()
     throws IOException;

@@ -24,12 +24,24 @@ import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
 
+/**
+ * A qualified type name.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBQualifiedTypeNameType extends Formattable
 {
+  /**
+   * @return The package name
+   */
+
   @Value.Parameter
   String packageName();
+
+  /**
+   * @return The type name
+   */
 
   @Value.Parameter
   String typeName();

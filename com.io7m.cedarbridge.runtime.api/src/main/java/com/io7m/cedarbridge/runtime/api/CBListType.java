@@ -26,11 +26,21 @@ import java.util.Formatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The type of lists.
+ *
+ * @param <T> The type of list elements
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBListType<T extends CBSerializableType>
   extends Formattable, CBSerializableType
 {
+  /**
+   * @return The list elements
+   */
+
   @Value.Parameter
   List<T> values();
 

@@ -16,11 +16,31 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+/**
+ * A builder of collections of protocol serializers.
+ *
+ * @param <T> The type of protocol messages
+ */
+
 public interface CBProtocolSerializerCollectionBuilderType<T extends CBProtocolMessageType>
 {
+  /**
+   * Add a serializer factory.
+   *
+   * @param factory The factory
+   *
+   * @return this
+   */
+
   CBProtocolSerializerCollectionBuilderType<T> addFactory(
     CBProtocolSerializerFactoryType<? extends T> factory
   );
+
+  /**
+   * Build a protocol serializer collection.
+   *
+   * @return The collection
+   */
 
   CBProtocolSerializerCollectionType<T> build();
 }

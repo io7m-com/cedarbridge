@@ -27,6 +27,10 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
+/**
+ * A protocol version declaration.
+ */
+
 public final class CBProtocolVersionDeclaration
   implements CBProtocolVersionDeclarationType
 {
@@ -34,6 +38,13 @@ public final class CBProtocolVersionDeclaration
   private final BigInteger version;
   private final CBProtocolDeclarationType owner;
   private final List<CBTypeExprNamedType> types;
+
+  /**
+   * Construct a version declaration.
+   *
+   * @param inOwner   The owner
+   * @param inVersion The version
+   */
 
   public CBProtocolVersionDeclaration(
     final CBProtocolDeclarationType inOwner,
@@ -66,6 +77,12 @@ public final class CBProtocolVersionDeclaration
   {
     return this.typesRead;
   }
+
+  /**
+   * Add a type to the declaration.
+   *
+   * @param type The type
+   */
 
   public void addType(
     final CBTypeExprNamedType type)

@@ -18,9 +18,19 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.util.List;
 
+/**
+ * A factory of serializers of optional values.
+ *
+ * @param <T> The type of value
+ */
+
 public final class CBOptionSerializers<T extends CBSerializableType>
   extends CBAbstractSerializerFactory<CBOptionType<T>>
 {
+  /**
+   * A factory of serializers of optional values.
+   */
+
   public CBOptionSerializers()
   {
     super("com.io7m.cedarbridge", "Option");

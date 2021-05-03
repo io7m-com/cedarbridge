@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of unsigned 8-bit integer values.
+ */
+
 public final class CBIntegerUnsigned8Serializer
   extends CBAbstractSerializer<CBIntegerUnsigned8>
 {
+  /**
+   * A serializer of unsigned 8-bit integer values.
+   */
+
   public CBIntegerUnsigned8Serializer()
   {
 

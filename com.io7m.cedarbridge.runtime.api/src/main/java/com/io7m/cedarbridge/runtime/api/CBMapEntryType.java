@@ -22,13 +22,28 @@ import org.immutables.value.Value;
 import java.util.Formattable;
 import java.util.Formatter;
 
+/**
+ * The type of map entries.
+ *
+ * @param <K> The key type
+ * @param <V> The value type
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBMapEntryType<K extends CBSerializableType, V extends CBSerializableType>
   extends Formattable, CBSerializableType
 {
+  /**
+   * @return The key
+   */
+
   @Value.Parameter
   K key();
+
+  /**
+   * @return The value
+   */
 
   @Value.Parameter
   V value();

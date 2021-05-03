@@ -23,13 +23,25 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
+/**
+ * The type of unsigned 32-bit integers.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBIntegerUnsigned32Type
   extends Comparable<CBIntegerUnsigned32>, CBIntegerType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   long value();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

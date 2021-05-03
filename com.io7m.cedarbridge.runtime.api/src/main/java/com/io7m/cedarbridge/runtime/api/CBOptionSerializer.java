@@ -19,10 +19,22 @@ package com.io7m.cedarbridge.runtime.api;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A serializer of optional values.
+ *
+ * @param <T> The type of value
+ */
+
 public final class CBOptionSerializer<T extends CBSerializableType>
   extends CBAbstractSerializer<CBOptionType<T>>
 {
   private final CBSerializerType<T> itemSerializer;
+
+  /**
+   * A serializer of optional values.
+   *
+   * @param inItemSerializer The serializer for the held values
+   */
 
   public CBOptionSerializer(
     final CBSerializerType<T> inItemSerializer)

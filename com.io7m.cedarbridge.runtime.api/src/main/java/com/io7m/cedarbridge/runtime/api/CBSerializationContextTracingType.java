@@ -16,20 +16,50 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+/**
+ * The serialization context related to tracing serialization.
+ */
+
 public interface CBSerializationContextTracingType
 {
+  /**
+   * Begin serializing the given item.
+   *
+   * @param item The item
+   */
+
   void begin(
     String item
   );
+
+  /**
+   * Begin serializing the given item at index {@code index}.
+   *
+   * @param item  The item
+   * @param index the index
+   */
 
   void begin(
     String item,
     int index
   );
 
+  /**
+   * Finish serializing the given item.
+   *
+   * @param item The item
+   */
+
   void end(
     String item
   );
+
+  /**
+   * Finish serializing the given item at index {@code index}.
+   *
+   * @param item  The item
+   * @param index the index
+   */
 
   void end(
     String item,

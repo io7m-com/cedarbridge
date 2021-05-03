@@ -22,9 +22,19 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
+/**
+ * A named type expression.
+ */
+
 public final class CBTypeExpressionNamed implements CBTypeExprNamedType
 {
   private final CBTypeDeclarationType type;
+
+  /**
+   * Construct a type expression.
+   *
+   * @param inType The type declaration
+   */
 
   public CBTypeExpressionNamed(
     final CBTypeDeclarationType inType)

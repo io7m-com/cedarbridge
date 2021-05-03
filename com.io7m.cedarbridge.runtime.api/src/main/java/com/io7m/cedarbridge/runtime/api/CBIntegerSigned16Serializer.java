@@ -18,9 +18,17 @@ package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
 
+/**
+ * A serializer of signed 16-bit integer values.
+ */
+
 public final class CBIntegerSigned16Serializer
   extends CBAbstractSerializer<CBIntegerSigned16>
 {
+  /**
+   * A serializer of signed 16-bit integer values.
+   */
+
   public CBIntegerSigned16Serializer()
   {
 

@@ -19,20 +19,63 @@ package com.io7m.cedarbridge.schema.compiled;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 
+/**
+ * The base type of type declaration builders.
+ */
+
 public interface CBTypeDeclarationBuilderType
 {
+  /**
+   * @return The package that owns the type
+   */
+
   CBPackageBuilderType ownerPackage();
+
+  /**
+   * @return A reference to this type
+   */
 
   CBTypeExprNamedType reference();
 
+  /**
+   * Find an existing parameter with the given name.
+   *
+   * @param name The parameter name
+   *
+   * @return A parameter
+   */
+
   CBTypeParameterType findParameter(String name);
 
+  /**
+   * Reference an existing parameter with the given name.
+   *
+   * @param name The parameter name
+   *
+   * @return A parameter expression
+   */
+
   CBTypeExprParameterType referenceParameter(String name);
+
+  /**
+   * Add a type parameter.
+   *
+   * @param name The parameter name
+   *
+   * @return A type parameter
+   */
 
   CBTypeParameterType addTypeParameter(
     String name);
 
+  /**
+   * Set the external type of this name
+   *
+   * @param externalPackageName The package name
+   * @param name                The type name
+   */
+
   void setExternalName(
     String externalPackageName,
-    String cbOption);
+    String name);
 }

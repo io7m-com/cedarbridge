@@ -21,10 +21,18 @@ import org.immutables.value.Value;
 
 import java.nio.ByteBuffer;
 
+/**
+ * The type of byte arrays.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable(builder = false, copy = false)
 public interface CBByteArrayType extends CBSerializableType
 {
+  /**
+   * @return The value
+   */
+
   @Value.Parameter
   ByteBuffer value();
 }

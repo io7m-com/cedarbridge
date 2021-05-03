@@ -19,66 +19,196 @@ package com.io7m.cedarbridge.runtime.api;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * The serialization context related to writing values.
+ */
+
 public interface CBSerializationContextOutputType
 {
+  /**
+   * Flush the underlying stream, ensuring any buffered output is written.
+   *
+   * @throws IOException On I/O errors
+   */
+
   void flush()
     throws IOException;
+
+  /**
+   * Write a sequence length
+   *
+   * @param size The size
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeSequenceLength(
     int size)
     throws IOException;
 
+  /**
+   * Write a variant index
+   *
+   * @param x The index
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeVariantIndex(
     int x)
     throws IOException;
+
+  /**
+   * Write a signed 64-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeS64(
     long x)
     throws IOException;
 
+  /**
+   * Write a signed 32-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeS32(
     long x)
     throws IOException;
+
+  /**
+   * Write a signed 16-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeS16(
     long x)
     throws IOException;
 
+  /**
+   * Write a signed 8-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeS8(
     long x)
     throws IOException;
+
+  /**
+   * Write an unsigned 64-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeU64(
     long x)
     throws IOException;
 
+  /**
+   * Write an unsigned 32-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeU32(
     long x)
     throws IOException;
+
+  /**
+   * Write an unsigned 16-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeU16(
     long x)
     throws IOException;
 
+  /**
+   * Write an unsigned 8-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeU8(
     long x)
     throws IOException;
+
+  /**
+   * Write a floating point 64-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeF64(
     double x)
     throws IOException;
 
+  /**
+   * Write a floating point 32-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeF32(
     double x)
     throws IOException;
+
+  /**
+   * Write a floating point 16-bit value
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeF16(
     double x)
     throws IOException;
 
+  /**
+   * Write a byte array value.
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
+
   void writeByteArray(
     ByteBuffer x)
     throws IOException;
+
+  /**
+   * Write a UTF-8 string value.
+   *
+   * @param x The value
+   *
+   * @throws IOException On I/O errors
+   */
 
   void writeUTF8(
     String x)
