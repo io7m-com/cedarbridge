@@ -22,12 +22,25 @@ import com.squareup.javapoet.ParameterizedTypeName;
 
 import java.util.Objects;
 
+/**
+ * An operation that fetches a serializer for the given type application.
+ */
+
 public final class OpFetchSerializerForApplication
   extends OpAbstract implements OpFetchSerializerType
 {
   private final String localName;
   private final ParameterizedTypeName javaTypeName;
   private final OpBuildTypeArgumentForApplication typeArgument;
+
+  /**
+   * An operation that fetches a serializer for the given type application.
+   *
+   * @param order          The program order
+   * @param inJavaTypeName The target Java type
+   * @param inTypeArgument The operation that builds a type argument
+   * @param inLocalName    The local variable name
+   */
 
   public OpFetchSerializerForApplication(
     final int order,

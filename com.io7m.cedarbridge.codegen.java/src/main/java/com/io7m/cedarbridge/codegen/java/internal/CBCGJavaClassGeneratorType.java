@@ -21,8 +21,26 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 
 import java.nio.file.Path;
 
+/**
+ * A generator of a Java class.
+ *
+ * @param <T>
+ */
+
 public interface CBCGJavaClassGeneratorType<T>
 {
+  /**
+   * Generate code for the given type.
+   *
+   * @param configuration The generator configuration
+   * @param packageName   The package name
+   * @param type          The type name
+   *
+   * @return The path to the generated class
+   *
+   * @throws CBSPICodeGeneratorException On errors
+   */
+
   Path execute(
     CBSPICodeGeneratorConfiguration configuration,
     String packageName,

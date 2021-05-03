@@ -47,12 +47,24 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * Functions to generate code for serializers.
+ */
+
 public final class CBCGJavaSerializers
 {
   private CBCGJavaSerializers()
   {
 
   }
+
+  /**
+   * Create deserialization methods for the given protocol.
+   *
+   * @param proto The protocl
+   *
+   * @return The list of methods
+   */
 
   public static List<MethodSpec> createDeserializeMethodsProtocol(
     final CBProtocolVersionDeclarationType proto)
@@ -123,6 +135,14 @@ public final class CBCGJavaSerializers
   {
     return List.of();
   }
+
+  /**
+   * Create a deserialization method for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return A deserialization method
+   */
 
   public static MethodSpec createDeserializeMethodProtocol(
     final CBProtocolVersionDeclarationType proto)
@@ -308,6 +328,14 @@ public final class CBCGJavaSerializers
     throw new UnreachableCodeException();
   }
 
+  /**
+   * Create serialization methods for the given protocol.
+   *
+   * @param proto The protocl
+   *
+   * @return The list of methods
+   */
+
   public static List<MethodSpec> createSerializeMethodsProtocol(
     final CBProtocolVersionDeclarationType proto)
   {
@@ -361,6 +389,14 @@ public final class CBCGJavaSerializers
     }
     throw new UnreachableCodeException();
   }
+
+  /**
+   * Create a serialization method for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return A serialization method
+   */
 
   public static MethodSpec createSerializeMethodProtocol(
     final CBProtocolVersionDeclarationType proto)
@@ -491,6 +527,14 @@ public final class CBCGJavaSerializers
     throw new UnreachableCodeException();
   }
 
+  /**
+   * Create a list of class fields for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return A list of class fields
+   */
+
   public static List<FieldSpec> createFieldsProtocol(
     final CBProtocolVersionDeclarationType proto)
   {
@@ -557,6 +601,14 @@ public final class CBCGJavaSerializers
     }
     throw new UnreachableCodeException();
   }
+
+  /**
+   * Create a constructor for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return A constructor
+   */
 
   public static MethodSpec createConstructorProtocol(
     final CBProtocolVersionDeclarationType proto)

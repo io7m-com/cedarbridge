@@ -22,9 +22,20 @@ import java.util.Objects;
 
 import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.fieldAccessorName;
 
+/**
+ * An operation that calls a serialize method.
+ */
+
 public final class OpCallSerialize extends OpAbstract
 {
   private final String fieldName;
+
+  /**
+   * An operation that calls a serialize method.
+   *
+   * @param inOrder     The program order
+   * @param inFieldName The field name
+   */
 
   public OpCallSerialize(
     final int inOrder,

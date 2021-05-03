@@ -16,8 +16,16 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
+/**
+ * An operation that fetches a serializer.
+ */
+
 public interface OpFetchSerializerType extends
   CBCGSerializerInstantiationOperationType
 {
+  /**
+   * @return The java class to which this operation belongs
+   */
+
   String javaLocalName();
 }

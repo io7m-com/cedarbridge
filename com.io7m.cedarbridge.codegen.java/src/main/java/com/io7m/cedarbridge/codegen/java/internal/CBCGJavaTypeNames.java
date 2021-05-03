@@ -29,12 +29,24 @@ import com.squareup.javapoet.TypeVariableName;
 
 import java.util.stream.Collectors;
 
+/**
+ * Functions over Java type names.
+ */
+
 public final class CBCGJavaTypeNames
 {
   private CBCGJavaTypeNames()
   {
 
   }
+
+  /**
+   * Generate the Java class name for the given protocol.
+   *
+   * @param proto The protocol
+   *
+   * @return The Java class name
+   */
 
   public static ClassName protoNameOf(
     final CBProtocolDeclarationType proto)
@@ -47,6 +59,14 @@ public final class CBCGJavaTypeNames
     );
   }
 
+  /**
+   * Generate the Java interface name for the given protocol.
+   *
+   * @param proto The protocol
+   *
+   * @return The Java interface name
+   */
+
   public static ClassName protoInterfaceNameOf(
     final CBProtocolDeclarationType proto)
   {
@@ -57,6 +77,14 @@ public final class CBCGJavaTypeNames
       String.format("Protocol%sType", proto.name())
     );
   }
+
+  /**
+   * Generate the Java interface name for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return The Java interface name
+   */
 
   public static ClassName protoVersionedInterfaceNameOf(
     final CBProtocolVersionDeclarationType proto)
@@ -74,6 +102,14 @@ public final class CBCGJavaTypeNames
     );
   }
 
+  /**
+   * Generate the Java data class name for the given type.
+   *
+   * @param type The type
+   *
+   * @return The Java data class name
+   */
+
   public static ClassName dataClassNameOf(
     final CBTypeDeclarationType type)
   {
@@ -83,6 +119,14 @@ public final class CBCGJavaTypeNames
       externalName.externalName()
     );
   }
+
+  /**
+   * Generate the Java type name (including generic parameters) for the given type.
+   *
+   * @param type The type
+   *
+   * @return The Java type name
+   */
 
   public static TypeName dataTypeNameOf(
     final CBTypeDeclarationType type)
@@ -110,6 +154,14 @@ public final class CBCGJavaTypeNames
     typeNames.toArray(typeArray);
     return ParameterizedTypeName.get(className, typeArray);
   }
+
+  /**
+   * Generate the Java type name (including generic parameters) for the given case.
+   *
+   * @param caseV The case
+   *
+   * @return The Java type name
+   */
 
   public static TypeName dataTypeNameOfCase(
     final CBVariantCaseType caseV)
@@ -142,6 +194,14 @@ public final class CBCGJavaTypeNames
     return ParameterizedTypeName.get(className, typeArray);
   }
 
+  /**
+   * Generate the Java data class name for the given case.
+   *
+   * @param caseV The case
+   *
+   * @return The Java data class name
+   */
+
   public static ClassName dataClassNameOfCase(
     final CBVariantCaseType caseV)
   {
@@ -159,6 +219,14 @@ public final class CBCGJavaTypeNames
     );
   }
 
+  /**
+   * Generate the Java serializer class name for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return The Java serializer class name
+   */
+
   public static ClassName protoSerializerClassNameOf(
     final CBProtocolVersionDeclarationType proto)
   {
@@ -174,6 +242,14 @@ public final class CBCGJavaTypeNames
       )
     );
   }
+
+  /**
+   * Generate the Java serializer factory class name for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return The Java serializer factory class name
+   */
 
   public static ClassName protoSerializerFactoryClassNameOf(
     final CBProtocolVersionDeclarationType proto)
@@ -191,6 +267,14 @@ public final class CBCGJavaTypeNames
     );
   }
 
+  /**
+   * Generate the Java serializer class name for the given type.
+   *
+   * @param type The type
+   *
+   * @return The Java serializer class name
+   */
+
   public static ClassName serializerClassNameOf(
     final CBTypeDeclarationType type)
   {
@@ -201,6 +285,14 @@ public final class CBCGJavaTypeNames
     );
   }
 
+  /**
+   * Generate the Java serializer factory class name for the given type.
+   *
+   * @param type The type
+   *
+   * @return The Java serializer factory class name
+   */
+
   public static ClassName serializerFactoryClassNameOf(
     final CBTypeDeclarationType type)
   {
@@ -210,6 +302,14 @@ public final class CBCGJavaTypeNames
       String.format("%sSerializerFactory", externalName.externalName())
     );
   }
+
+  /**
+   * Generate the external name for the given type.
+   *
+   * @param type The type
+   *
+   * @return The external name
+   */
 
   public static CBExternalName externalNameOf(
     final CBTypeDeclarationType type)
@@ -225,6 +325,14 @@ public final class CBCGJavaTypeNames
         .build()
     );
   }
+
+  /**
+   * Generate the external type name for the given type.
+   *
+   * @param decl The type
+   *
+   * @return The external type name
+   */
 
   public static TypeName externalTypeNameOf(
     final CBExternalType decl)
@@ -248,11 +356,27 @@ public final class CBCGJavaTypeNames
     return String.format("%s%s", cString, input.substring(1));
   }
 
+  /**
+   * Generate the field accessor name for the given field name.
+   *
+   * @param name The field name
+   *
+   * @return The field accessor name
+   */
+
   public static String fieldAccessorName(
     final String name)
   {
     return String.format("field%s", toTitleCase(name));
   }
+
+  /**
+   * Generate the serializer collection class name for the given package name.
+   *
+   * @param packageName The package name
+   *
+   * @return The serializer collection class name
+   */
 
   public static ClassName serializerCollectionClassNameOf(
     final String packageName)

@@ -40,9 +40,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * A generator of serializer factory classes.
+ */
+
 public final class CBCGJavaSerializerFactoryGenerator
   implements CBCGJavaClassGeneratorType<CBTypeDeclarationType>
 {
+  /**
+   * A generator of serializer factory classes.
+   */
+
   public CBCGJavaSerializerFactoryGenerator()
   {
 

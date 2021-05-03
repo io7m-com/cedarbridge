@@ -51,9 +51,17 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+/**
+ * A generator of Java data classes for types.
+ */
+
 public final class CBCGDataClassGenerator
   implements CBCGJavaClassGeneratorType<CBTypeDeclarationType>
 {
+  /**
+   * A generator of Java data classes for types.
+   */
+
   public CBCGDataClassGenerator()
   {
 

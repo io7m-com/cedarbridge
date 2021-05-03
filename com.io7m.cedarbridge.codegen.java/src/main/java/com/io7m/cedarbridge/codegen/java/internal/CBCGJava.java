@@ -35,12 +35,22 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
+/**
+ * A Java code generator.
+ */
+
 public final class CBCGJava implements CBSPICodeGeneratorType
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBCGJava.class);
 
   private final CBSPICodeGeneratorConfiguration configuration;
+
+  /**
+   * A Java code generator.
+   *
+   * @param inConfiguration The code generator configuration
+   */
 
   public CBCGJava(
     final CBSPICodeGeneratorConfiguration inConfiguration)

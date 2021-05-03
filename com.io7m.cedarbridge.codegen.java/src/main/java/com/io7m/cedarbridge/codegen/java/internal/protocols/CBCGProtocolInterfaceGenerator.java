@@ -32,9 +32,17 @@ import java.util.Objects;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * A generator of Java interface types for protocol declarations.
+ */
+
 public final class CBCGProtocolInterfaceGenerator
   implements CBCGJavaClassGeneratorType<CBProtocolDeclarationType>
 {
+  /**
+   * A generator of Java interface types for protocol declarations.
+   */
+
   public CBCGProtocolInterfaceGenerator()
   {
 

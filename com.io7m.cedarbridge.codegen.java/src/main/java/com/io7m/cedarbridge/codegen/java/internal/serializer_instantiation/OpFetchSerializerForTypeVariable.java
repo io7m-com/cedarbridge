@@ -22,12 +22,25 @@ import com.squareup.javapoet.TypeVariableName;
 
 import java.util.Objects;
 
+/**
+ * An operation that fetches a serializer for the given type variable.
+ */
+
 public final class OpFetchSerializerForTypeVariable
   extends OpAbstract implements OpFetchSerializerType
 {
   private final TypeVariableName javaTypeVariableName;
   private final OpBuildTypeArgumentForTypeVariable runtimeTypeFetch;
   private final String localName;
+
+  /**
+   * An operation that fetches a serializer for the given type variable.
+   *
+   * @param order                  The program order
+   * @param inJavaTypeVariableName The type variable
+   * @param inRuntimeTypeFetch     The operation that builds a type variable
+   * @param inLocalName            The local variable name
+   */
 
   public OpFetchSerializerForTypeVariable(
     final int order,

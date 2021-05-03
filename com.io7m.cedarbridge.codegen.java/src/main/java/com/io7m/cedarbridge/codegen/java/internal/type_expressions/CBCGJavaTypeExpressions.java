@@ -38,12 +38,24 @@ import java.util.stream.Collectors;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 
+/**
+ * Functions to generate code for type expressions.
+ */
+
 public final class CBCGJavaTypeExpressions
 {
   private CBCGJavaTypeExpressions()
   {
 
   }
+
+  /**
+   * Evaluate the given type expression.
+   *
+   * @param type The type expression
+   *
+   * @return The name of the resulting type
+   */
 
   public static TypeName evaluateTypeExpression(
     final CBTypeExpressionType type)
@@ -92,6 +104,14 @@ public final class CBCGJavaTypeExpressions
     return TypeVariableName.get(type.parameter().name());
   }
 
+  /**
+   * Evaluate the given type expression.
+   *
+   * @param type The type expression
+   *
+   * @return The name of the resulting type
+   */
+
   public static TypeName evaluateTypeExpressionNamed(
     final CBTypeExprNamedType type)
   {
@@ -107,6 +127,14 @@ public final class CBCGJavaTypeExpressions
     }
     throw new UnreachableCodeException();
   }
+
+  /**
+   * Create type variables for the given list of parameters.
+   *
+   * @param typeParameters The type parameters
+   *
+   * @return The resulting type variables
+   */
 
   public static List<TypeVariableName> createTypeVariables(
     final List<CBTypeParameterType> typeParameters)

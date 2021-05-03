@@ -42,9 +42,17 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+/**
+ * A generator of Java code for protocol declarations.
+ */
+
 public final class CBCGProtocolGenerator
   implements CBCGJavaClassGeneratorType<CBProtocolDeclarationType>
 {
+  /**
+   * A generator of Java code for protocol declarations.
+   */
+
   public CBCGProtocolGenerator()
   {
 

@@ -32,12 +32,25 @@ import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.field
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * Functions to generate Java methods for types.
+ */
+
 public final class CBCGDataClassMethodGeneration
 {
   private CBCGDataClassMethodGeneration()
   {
 
   }
+
+  /**
+   * Create an equals method for the given class, using the given fields.
+   *
+   * @param className The class
+   * @param fields    The fields
+   *
+   * @return An equals method
+   */
 
   public static MethodSpec createEqualsMethod(
     final ClassName className,
@@ -75,6 +88,14 @@ public final class CBCGDataClassMethodGeneration
     return methodBuilder.build();
   }
 
+  /**
+   * Create a hashCode method for the given class, using the given fields.
+   *
+   * @param fields The fields
+   *
+   * @return A hashCode method
+   */
+
   public static MethodSpec createHashCodeMethod(
     final List<FieldSpec> fields)
   {
@@ -94,6 +115,14 @@ public final class CBCGDataClassMethodGeneration
     return methodBuilder.build();
   }
 
+  /**
+   * Create a field accessor method for the given field.
+   *
+   * @param field The field
+   *
+   * @return An accessor method
+   */
+
   public static MethodSpec createFieldAccessorMethod(
     final CBFieldType field)
   {
@@ -104,6 +133,14 @@ public final class CBCGDataClassMethodGeneration
     methodBuilder.addStatement("return this.$L", field.name());
     return methodBuilder.build();
   }
+
+  /**
+   * Create a constructor for the given set of fields.
+   *
+   * @param fields The fields
+   *
+   * @return A constructor
+   */
 
   public static MethodSpec createFieldSetConstructor(
     final List<CBFieldType> fields)
@@ -139,6 +176,14 @@ public final class CBCGDataClassMethodGeneration
 
     return methodBuilder.build();
   }
+
+  /**
+   * Create a constructor parameter for the given field.
+   *
+   * @param field The field
+   *
+   * @return A constructor parameter
+   */
 
   public static ParameterSpec createFieldSetConstructorParameter(
     final CBFieldType field)

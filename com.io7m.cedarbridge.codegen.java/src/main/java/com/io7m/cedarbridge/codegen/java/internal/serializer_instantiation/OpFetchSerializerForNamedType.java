@@ -22,12 +22,25 @@ import com.squareup.javapoet.CodeBlock;
 
 import java.util.Objects;
 
+/**
+ * An operation that fetches a serializer for the given type.
+ */
+
 public final class OpFetchSerializerForNamedType
   extends OpAbstract implements OpFetchSerializerType
 {
   private final OpBuildTypeArgumentForNamed buildTypeArgument;
   private final ClassName javaClassName;
   private final String localName;
+
+  /**
+   * An operation that fetches a serializer for the given type.
+   *
+   * @param order                 The program order
+   * @param inJavaTargetClassName The target Java class
+   * @param inBuildTypeArgument   The operation that builds a type argument
+   * @param inLocalName           The local variable name
+   */
 
   public OpFetchSerializerForNamedType(
     final int order,

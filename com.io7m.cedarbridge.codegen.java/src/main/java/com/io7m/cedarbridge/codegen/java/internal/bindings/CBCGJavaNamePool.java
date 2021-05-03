@@ -16,14 +16,26 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.bindings;
 
+/**
+ * A pool of names.
+ */
+
 public final class CBCGJavaNamePool
 {
   private int nextId;
+
+  /**
+   * A pool of names.
+   */
 
   public CBCGJavaNamePool()
   {
     this.nextId = 0;
   }
+
+  /**
+   * @return A fresh name
+   */
 
   public String freshLocalVariable()
   {

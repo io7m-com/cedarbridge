@@ -29,9 +29,28 @@ import java.util.Objects;
 
 public interface CBExpressionSourceFactoryType
 {
+  /**
+   * Create a source of expressions from the given stream.
+   *
+   * @param uri    The stream URI
+   * @param stream The stream
+   *
+   * @return An expression source
+   */
+
   CBExpressionSourceType create(
     URI uri,
     InputStream stream);
+
+  /**
+   * Create a source of expressions from the path.
+   *
+   * @param path The path
+   *
+   * @return An expression source
+   *
+   * @throws IOException On errors
+   */
 
   default CBExpressionSourceType create(
     final Path path)

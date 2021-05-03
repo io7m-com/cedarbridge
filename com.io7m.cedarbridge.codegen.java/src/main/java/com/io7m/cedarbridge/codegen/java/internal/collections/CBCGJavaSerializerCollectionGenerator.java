@@ -41,9 +41,17 @@ import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.STATIC;
 
+/**
+ * A generator for serializer collections.
+ */
+
 public final class CBCGJavaSerializerCollectionGenerator implements
   CBCGJavaClassGeneratorType<Collection<CBTypeDeclarationType>>
 {
+  /**
+   * A generator for serializer collections.
+   */
+
   public CBCGJavaSerializerCollectionGenerator()
   {
 

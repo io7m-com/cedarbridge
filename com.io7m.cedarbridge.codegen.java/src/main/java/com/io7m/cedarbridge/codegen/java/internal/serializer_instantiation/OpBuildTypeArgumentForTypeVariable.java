@@ -22,11 +22,23 @@ import com.squareup.javapoet.CodeBlock;
 
 import java.util.Objects;
 
+/**
+ * An operation that builds a type argument for the given type parameter.
+ */
+
 public final class OpBuildTypeArgumentForTypeVariable
   extends OpAbstract implements OpBuildTypeArgumentType
 {
   private final CBTypeParameterType parameter;
   private final String localName;
+
+  /**
+   * An operation that builds a type argument for the given type parameter.
+   *
+   * @param order       The program order
+   * @param inParameter The target type parameter
+   * @param inLocalName The local variable name
+   */
 
   public OpBuildTypeArgumentForTypeVariable(
     final int order,

@@ -16,14 +16,26 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.bindings;
 
+/**
+ * A program order tracker.
+ */
+
 public final class CBCGJavaProgramOrder
 {
   private int nextId;
+
+  /**
+   * A program order tracker.
+   */
 
   public CBCGJavaProgramOrder()
   {
     this.nextId = 0;
   }
+
+  /**
+   * @return The next element in program order
+   */
 
   public int next()
   {

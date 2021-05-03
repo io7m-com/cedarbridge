@@ -23,6 +23,10 @@ import org.immutables.value.Value;
 
 import java.net.URI;
 
+/**
+ * The type of errors.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBErrorType extends LexicalType<URI>
@@ -30,17 +34,46 @@ public interface CBErrorType extends LexicalType<URI>
   @Override
   LexicalPosition<URI> lexical();
 
+  /**
+   * @return The error severity
+   */
+
   Severity severity();
+
+  /**
+   * @return The exception associated with the error
+   */
 
   Exception exception();
 
+  /**
+   * @return The error code
+   */
+
   String errorCode();
+
+  /**
+   * @return The error message
+   */
 
   String message();
 
+  /**
+   * The error severity types
+   */
+
   enum Severity
   {
+    /**
+     * The error is a fatal error.
+     */
+
     ERROR,
+
+    /**
+     * The error is a warning.
+     */
+
     WARNING
   }
 }

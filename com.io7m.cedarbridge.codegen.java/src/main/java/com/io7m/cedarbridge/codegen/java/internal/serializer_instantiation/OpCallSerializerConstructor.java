@@ -22,11 +22,24 @@ import com.squareup.javapoet.CodeBlock;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * An operation that calls a serializer constructor.
+ */
+
 public final class OpCallSerializerConstructor extends OpAbstract
 {
   private final int typeArity;
   private final ClassName serializerClassName;
   private final List<OpFetchSerializerType> fetches;
+
+  /**
+   * An operation that calls a serializer constructor.
+   *
+   * @param inOrder               The program order
+   * @param inTypeArity           The type arity
+   * @param inSerializerClassName The serializer class name
+   * @param inFetches             The list of arguments to the constructor
+   */
 
   public OpCallSerializerConstructor(
     final int inOrder,

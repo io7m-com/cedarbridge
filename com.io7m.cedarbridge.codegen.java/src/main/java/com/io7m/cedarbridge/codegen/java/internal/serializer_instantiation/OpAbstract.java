@@ -16,10 +16,20 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
-public abstract class OpAbstract implements
-  CBCGSerializerInstantiationOperationType
+/**
+ * The abstract base of operations.
+ */
+
+public abstract class OpAbstract
+  implements CBCGSerializerInstantiationOperationType
 {
   private final int order;
+
+  /**
+   * The abstract base of operations.
+   *
+   * @param inOrder The program order for the operation
+   */
 
   public OpAbstract(
     final int inOrder)

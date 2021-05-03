@@ -52,12 +52,24 @@ import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PROTECTED;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * Functions to generate code that instantiates serializers.
+ */
+
 public final class CBCGSerializerInstantiations
 {
   private CBCGSerializerInstantiations()
   {
 
   }
+
+  /**
+   * Generate a serializer instantiation method for the given type declaration.
+   *
+   * @param type The type
+   *
+   * @return The instantiation method
+   */
 
   public static MethodSpec generateInstantiationMethod(
     final CBTypeDeclarationType type)
@@ -70,6 +82,14 @@ public final class CBCGSerializerInstantiations
     }
     throw new UnreachableCodeException();
   }
+
+  /**
+   * Generate a serializer instantiation method for the given protocol version.
+   *
+   * @param proto The protocol version
+   *
+   * @return The instantiation method
+   */
 
   public static MethodSpec generateInstantiationMethodForProtocol(
     final CBProtocolVersionDeclarationType proto)
@@ -171,6 +191,16 @@ public final class CBCGSerializerInstantiations
     return method.build();
   }
 
+  /**
+   * Generate a series of instantiation statements for the protocol version.
+   *
+   * @param lines The program order tracker
+   * @param names The name pool
+   * @param proto The protocol version
+   *
+   * @return The instantiation statements
+   */
+
   public static List<CBCGSerializerInstantiationOperationType> generateInstantiationStatementsForProtocol(
     final CBCGJavaProgramOrder lines,
     final CBCGJavaNamePool names,
@@ -219,6 +249,16 @@ public final class CBCGSerializerInstantiations
     return operations;
   }
 
+  /**
+   * Generate a series of instantiation statements for the record.
+   *
+   * @param lines  The program order tracker
+   * @param names  The name pool
+   * @param record The record
+   *
+   * @return The instantiation statements
+   */
+
   public static List<CBCGSerializerInstantiationOperationType> generateInstantiationStatementsForRecord(
     final CBCGJavaProgramOrder lines,
     final CBCGJavaNamePool names,
@@ -266,6 +306,16 @@ public final class CBCGSerializerInstantiations
 
     return operations;
   }
+
+  /**
+   * Generate a series of instantiation statements for the variant.
+   *
+   * @param lines   The program order tracker
+   * @param names   The name pool
+   * @param variant The variant
+   *
+   * @return The instantiation statements
+   */
 
   public static List<CBCGSerializerInstantiationOperationType> generateInstantiationStatementsForVariant(
     final CBCGJavaProgramOrder lines,

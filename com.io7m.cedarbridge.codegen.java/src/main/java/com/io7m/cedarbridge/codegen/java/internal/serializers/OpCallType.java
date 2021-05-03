@@ -16,7 +16,15 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializers;
 
+/**
+ * An operation that performs a call.
+ */
+
 public interface OpCallType extends CBCGSerializerCallOperationType
 {
+  /**
+   * @return The java class name to which this call applies
+   */
+
   String javaLocalName();
 }

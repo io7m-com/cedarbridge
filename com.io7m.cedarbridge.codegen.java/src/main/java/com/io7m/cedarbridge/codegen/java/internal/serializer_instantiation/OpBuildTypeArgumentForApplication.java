@@ -24,12 +24,25 @@ import com.squareup.javapoet.CodeBlock;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * An operation that builds a type argument for the given type application.
+ */
+
 public final class OpBuildTypeArgumentForApplication
   extends OpAbstract implements OpBuildTypeArgumentType
 {
   private final CBQualifiedTypeName name;
   private final String localName;
   private final List<OpBuildTypeArgumentType> arguments;
+
+  /**
+   * An operation that builds a type argument for the given type application.
+   *
+   * @param order       The program order
+   * @param inName      The target type name
+   * @param inLocalName The local variable name
+   * @param inArguments The list of input type arguments
+   */
 
   public OpBuildTypeArgumentForApplication(
     final int order,

@@ -28,12 +28,25 @@ import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The default expression source.
+ */
+
 public final class CBExpressionSource implements CBExpressionSourceType
 {
   private final CBRecordingUnicodeCharacterReader reader;
   private final URI uri;
   private final InputStream stream;
   private final JSXParserType parser;
+
+  /**
+   * The default expression source.
+   *
+   * @param inReader A character reader
+   * @param inUri    The source URI
+   * @param inStream The source stream
+   * @param inParser The source parser
+   */
 
   public CBExpressionSource(
     final CBRecordingUnicodeCharacterReader inReader,

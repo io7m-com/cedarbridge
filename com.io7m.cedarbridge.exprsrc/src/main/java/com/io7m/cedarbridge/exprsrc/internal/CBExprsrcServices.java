@@ -19,12 +19,25 @@ package com.io7m.cedarbridge.exprsrc.internal;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+/**
+ * Functions over services.
+ */
+
 public final class CBExprsrcServices
 {
   private CBExprsrcServices()
   {
 
   }
+
+  /**
+   * Fetch a service of type {@code T}.
+   *
+   * @param clazz The service class
+   * @param <T>   The type of service
+   *
+   * @return A service
+   */
 
   public static <T> T find(
     final Class<T> clazz)

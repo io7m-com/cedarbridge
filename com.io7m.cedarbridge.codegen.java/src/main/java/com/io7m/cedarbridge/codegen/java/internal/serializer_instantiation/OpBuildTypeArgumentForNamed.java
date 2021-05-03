@@ -24,11 +24,23 @@ import com.squareup.javapoet.CodeBlock;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * An operation that builds a type argument for the given named type.
+ */
+
 public final class OpBuildTypeArgumentForNamed
   extends OpAbstract implements OpBuildTypeArgumentType
 {
   private final CBQualifiedTypeName typeName;
   private final String localName;
+
+  /**
+   * An operation that builds a type argument for the given named type.
+   *
+   * @param order       The program order
+   * @param inTypeName  The target type name
+   * @param inLocalName The local variable name
+   */
 
   public OpBuildTypeArgumentForNamed(
     final int order,
@@ -67,6 +79,10 @@ public final class OpBuildTypeArgumentForNamed
         List.class
       ).build();
   }
+
+  /**
+   * @return The target type name
+   */
 
   public CBQualifiedTypeName typeName()
   {

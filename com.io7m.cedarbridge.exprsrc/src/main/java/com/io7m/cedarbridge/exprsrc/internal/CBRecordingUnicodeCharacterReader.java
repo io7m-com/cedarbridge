@@ -30,6 +30,10 @@ import java.util.TreeMap;
 import static com.io7m.cedarbridge.exprsrc.internal.CBRecordingUnicodeCharacterReader.State.IN_CR;
 import static com.io7m.cedarbridge.exprsrc.internal.CBRecordingUnicodeCharacterReader.State.IN_TEXT;
 
+/**
+ * A character reader that records characters.
+ */
+
 public final class CBRecordingUnicodeCharacterReader
   implements UnicodeCharacterReaderPushBackType
 {
@@ -38,6 +42,12 @@ public final class CBRecordingUnicodeCharacterReader
   private final Map<Integer, String> lines;
   private State state;
   private int lineNumber;
+
+  /**
+   * A character reader that records characters.
+   *
+   * @param inDelegate The underlying character reader
+   */
 
   public CBRecordingUnicodeCharacterReader(
     final UnicodeCharacterReaderPushBackType inDelegate)

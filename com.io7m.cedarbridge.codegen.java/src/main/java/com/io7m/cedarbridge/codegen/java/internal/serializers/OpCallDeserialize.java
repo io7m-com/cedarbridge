@@ -20,10 +20,22 @@ import com.squareup.javapoet.CodeBlock;
 
 import java.util.Objects;
 
+/**
+ * An operation that calls a deserialize method.
+ */
+
 public final class OpCallDeserialize extends OpAbstract implements OpCallType
 {
   private final String localName;
   private final String fieldName;
+
+  /**
+   * An operation that calls a deserialize method.
+   *
+   * @param inOrder     The program order
+   * @param inLocalName The local variable name
+   * @param inFieldName The field name
+   */
 
   public OpCallDeserialize(
     final int inOrder,

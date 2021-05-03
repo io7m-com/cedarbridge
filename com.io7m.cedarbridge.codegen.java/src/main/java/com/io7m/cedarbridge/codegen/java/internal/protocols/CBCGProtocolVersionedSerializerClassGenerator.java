@@ -36,9 +36,17 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
+/**
+ * A generator of Java serializer classes for protocol version declarations.
+ */
+
 public final class CBCGProtocolVersionedSerializerClassGenerator
   implements CBCGJavaClassGeneratorType<CBProtocolVersionDeclarationType>
 {
+  /**
+   * A generator of Java serializer classes for protocol version declarations.
+   */
+
   public CBCGProtocolVersionedSerializerClassGenerator()
   {
 

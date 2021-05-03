@@ -16,8 +16,16 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
+/**
+ * The type of operations that build type arguments.
+ */
+
 public interface OpBuildTypeArgumentType extends
   CBCGSerializerInstantiationOperationType
 {
+  /**
+   * @return The java class to which this operation belongs
+   */
+
   String javaLocalName();
 }
