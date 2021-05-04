@@ -39,6 +39,16 @@ import static com.io7m.cedarbridge.examples.generic.CBExClient.State.STATE_DONE;
 import static com.io7m.cedarbridge.examples.generic.CBExClient.State.STATE_INITIAL;
 import static com.io7m.cedarbridge.examples.generic.CBExClient.State.STATE_RUNNING;
 
+/**
+ * A basic TCP client. The client read and writes
+ * messages of type {@code M}, converting them to messages of type {@code P}
+ * for transfer on the wire. This client is generic enough to provide the
+ * base implementation for all of the example code.
+ *
+ * @param <M> The application-level message types
+ * @param <P> The wire-level message types
+ */
+
 public final class CBExClient<M, P extends CBProtocolMessageType>
   implements Closeable
 {
@@ -51,6 +61,15 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final CBExClientCoreType<M> core;
   private volatile CBExClient.State state;
+
+  /**
+   * Construct a client.
+   *
+   * @param inCore        A supplier of client cores
+   * @param inProtocols   The protocol serializer collection
+   * @param inSerializers A serializer directory
+   * @param inTranslators A translator directory
+   */
 
   public CBExClient(
     final CBSerializerDirectoryType inSerializers,
@@ -76,6 +95,10 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
   {
     this.threadPool.shutdown();
   }
+
+  /**
+   * Start the client.
+   */
 
   public void start()
   {
@@ -176,6 +199,10 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
       LOG.info("disconnected");
     }
   }
+
+  /**
+   * @return {@code true} if the client has finished executing
+   */
 
   public boolean isDone()
   {

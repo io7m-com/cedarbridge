@@ -32,6 +32,10 @@ import java.util.stream.Collectors;
 import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
 import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
+/**
+ * The "check" command.
+ */
+
 @Parameters(commandDescription = "Type-check a schema file.")
 public final class CBCommandCheck extends CLPAbstractCommand
 {

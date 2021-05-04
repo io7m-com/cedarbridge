@@ -21,9 +21,17 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import static com.io7m.cedarbridge.runtime.api.CBCore.string;
 
+/**
+ * A mapping from protocol v1 messages to the core message protocol.
+ */
+
 public final class CBExChatMessagesV1
   implements CBExMessageTranslatorType<CBExChatMessageType, ProtocolChatv1Type>
 {
+  /**
+   * A mapping from protocol v1 messages to the core message protocol.
+   */
+
   public CBExChatMessagesV1()
   {
 

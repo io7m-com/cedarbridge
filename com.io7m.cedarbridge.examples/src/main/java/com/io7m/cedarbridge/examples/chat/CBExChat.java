@@ -22,6 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+/**
+ * A chat model. This model manages a collection of sessions and distributes
+ * messages between the sessions.
+ */
+
 public final class CBExChat
 {
   private static final CBExChat INSTANCE = new CBExChat();
@@ -33,6 +38,10 @@ public final class CBExChat
     this.sessionsLock = new Object();
     this.sessions = new HashMap<String, Session>();
   }
+
+  /**
+   * @return The chat model instance
+   */
 
   public static CBExChat get()
   {
@@ -62,6 +71,16 @@ public final class CBExChat
     }
   }
 
+  /**
+   * Create a new session for the given name.
+   *
+   * @param name The name
+   *
+   * @return A new session
+   *
+   * @throws ChatException On errors
+   */
+
   public Session sessionCreateNew(
     final String name)
     throws ChatException
@@ -84,6 +103,10 @@ public final class CBExChat
 
     throw new ChatUserExists(String.format("User already exists: %s", name));
   }
+
+  /**
+   * A connected chat session.
+   */
 
   public static final class Session implements AutoCloseable
   {
@@ -109,10 +132,22 @@ public final class CBExChat
       this.chat.sessionDelete(this);
     }
 
+    /**
+     * Take an event from the session, if one is ready
+     *
+     * @return An event
+     */
+
     public Optional<CBExChatMessageType> takeEvent()
     {
       return Optional.ofNullable(this.queue.poll());
     }
+
+    /**
+     * Broadcast a message.
+     *
+     * @param message The message
+     */
 
     public void speak(
       final String message)
@@ -126,8 +161,18 @@ public final class CBExChat
     }
   }
 
+  /**
+   * The type of chat exceptions.
+   */
+
   public static abstract class ChatException extends Exception
   {
+    /**
+     * The type of chat exceptions.
+     *
+     * @param message The error message
+     */
+
     public ChatException(
       final String message)
     {
@@ -135,8 +180,18 @@ public final class CBExChat
     }
   }
 
+  /**
+   * A user already exists.
+   */
+
   public static final class ChatUserExists extends ChatException
   {
+    /**
+     * A user already exists.
+     *
+     * @param message The error message
+     */
+
     public ChatUserExists(
       final String message)
     {

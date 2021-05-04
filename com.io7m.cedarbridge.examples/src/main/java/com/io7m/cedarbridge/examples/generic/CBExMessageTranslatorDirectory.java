@@ -20,14 +20,35 @@ import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 
 import java.util.HashMap;
 
+/**
+ * A directory of message translators.
+ *
+ * @param <M> The type of application-level messages
+ * @param <P> The type of wire-level messages
+ */
+
 public final class CBExMessageTranslatorDirectory<M, P extends CBProtocolMessageType>
 {
   private final HashMap<Long, CBExMessageTranslatorType<M, P>> translators;
+
+  /**
+   * A directory of message translators.
+   */
 
   public CBExMessageTranslatorDirectory()
   {
     this.translators = new HashMap<>();
   }
+
+  /**
+   * Add a translator for protocol version {@code version}.
+   *
+   * @param version    The version
+   * @param translator The translator
+   * @param <Q>        The type of versioned messages
+   *
+   * @return this
+   */
 
   public <Q extends P> CBExMessageTranslatorDirectory<M, P> addTranslator(
     final long version,
@@ -39,6 +60,14 @@ public final class CBExMessageTranslatorDirectory<M, P extends CBProtocolMessage
     );
     return this;
   }
+
+  /**
+   * Retrieve a translator for version {@code version}.
+   *
+   * @param version The version
+   *
+   * @return A translator
+   */
 
   public CBExMessageTranslatorType<M, P> get(
     final long version)

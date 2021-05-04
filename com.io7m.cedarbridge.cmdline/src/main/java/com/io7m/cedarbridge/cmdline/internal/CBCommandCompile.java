@@ -35,6 +35,10 @@ import java.util.stream.Collectors;
 import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
 import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
+/**
+ * The "compile" command.
+ */
+
 @Parameters(commandDescription = "Compile a schema file and generate code.")
 public final class CBCommandCompile extends CLPAbstractCommand
 {

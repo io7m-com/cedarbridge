@@ -26,11 +26,19 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * A client that creates a paste, retrieves it, and then deletes it.
+ */
+
 public final class CBExPasteClientCoreWellBehaved
   implements CBExClientCoreType<CBExPasteMessageType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExPasteClientCoreWellBehaved.class);
+
+  /**
+   * A client that creates a paste, retrieves it, and then deletes it.
+   */
 
   public CBExPasteClientCoreWellBehaved()
   {

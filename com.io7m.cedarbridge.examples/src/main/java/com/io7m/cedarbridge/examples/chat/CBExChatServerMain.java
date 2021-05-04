@@ -21,12 +21,22 @@ import com.io7m.cedarbridge.examples.generic.CBExServer;
 import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
 import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 
+/**
+ * The main chat server.
+ */
+
 public final class CBExChatServerMain
 {
   private CBExChatServerMain()
   {
 
   }
+
+  /**
+   * The main chat server.
+   *
+   * @param args The command-line arguments
+   */
 
   public static void main(
     final String[] args)

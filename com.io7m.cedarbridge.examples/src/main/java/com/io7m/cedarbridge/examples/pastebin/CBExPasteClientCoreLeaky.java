@@ -26,11 +26,19 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.UUID;
 
+/**
+ * A client that creates a paste and doesn't delete it.
+ */
+
 public final class CBExPasteClientCoreLeaky
   implements CBExClientCoreType<CBExPasteMessageType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExPasteClientCoreLeaky.class);
+
+  /**
+   * A client that creates a paste and doesn't delete it.
+   */
 
   public CBExPasteClientCoreLeaky()
   {

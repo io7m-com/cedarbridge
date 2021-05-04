@@ -24,12 +24,22 @@ import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 
 import java.util.Objects;
 
+/**
+ * The main pastebin client entry point.
+ */
+
 public final class CBExPasteClientMain
 {
   private CBExPasteClientMain()
   {
 
   }
+
+  /**
+   * The main pastebin client entry point.
+   *
+   * @param args The command-line arguments
+   */
 
   public static void main(
     final String[] args)

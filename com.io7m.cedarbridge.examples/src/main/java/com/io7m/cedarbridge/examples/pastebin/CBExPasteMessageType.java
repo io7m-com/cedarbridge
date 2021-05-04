@@ -21,60 +21,132 @@ import org.immutables.value.Value;
 
 import java.util.UUID;
 
+/**
+ * The core pastebin message protocol.
+ */
+
 public interface CBExPasteMessageType
 {
+  /**
+   * Create a paste.
+   */
+
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteCreateType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste key required to delete the paste
+     */
+
     String key();
+
+    /**
+     * @return The paste text
+     */
 
     String text();
   }
+
+  /**
+   * A paste was created.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteCreatedType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste ID
+     */
+
     UUID id();
   }
+
+  /**
+   * Delete a paste.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteDeleteType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste ID
+     */
+
     UUID id();
+
+    /**
+     * @return The paste key required to delete the paste
+     */
 
     String key();
   }
+
+  /**
+   * A paste was deleted.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteDeletedType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste ID
+     */
+
     UUID id();
   }
+
+  /**
+   * Get a paste.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteGetType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste ID
+     */
+
     UUID id();
   }
+
+  /**
+   * A paste was retrieved.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBPasteGetResultType extends CBExPasteMessageType
   {
+    /**
+     * @return The paste ID
+     */
+
     UUID id();
+
+    /**
+     * @return The paste text
+     */
 
     String text();
   }
+
+  /**
+   * An error occurred.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBErrorType extends CBExPasteMessageType
   {
+    /**
+     * @return The error message
+     */
+
     String message();
   }
 }

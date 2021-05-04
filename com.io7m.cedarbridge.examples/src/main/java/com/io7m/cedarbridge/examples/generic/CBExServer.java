@@ -37,8 +37,18 @@ import static com.io7m.cedarbridge.examples.generic.CBExServer.State.STATE_DONE;
 import static com.io7m.cedarbridge.examples.generic.CBExServer.State.STATE_INITIAL;
 import static com.io7m.cedarbridge.examples.generic.CBExServer.State.STATE_RUNNING;
 
-public final class CBExServer<M, P extends CBProtocolMessageType> implements
-  Closeable
+/**
+ * A basic TCP server that manages clients. The clients read and writes
+ * messages of type {@code M}, converting them to messages of type {@code P}
+ * for transfer on the wire. This server is generic enough to provide the
+ * base implementation for all of the example code.
+ *
+ * @param <M> The application-level message types
+ * @param <P> The wire-level message types
+ */
+
+public final class CBExServer<M, P extends CBProtocolMessageType>
+  implements Closeable
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExServer.class);
@@ -49,6 +59,15 @@ public final class CBExServer<M, P extends CBProtocolMessageType> implements
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final Supplier<CBExServerClientCoreType<M>> core;
   private volatile State state;
+
+  /**
+   * Construct a server.
+   *
+   * @param inCore        A supplier of server-client cores
+   * @param inProtocols   The protocol serializer collection
+   * @param inSerializers A serializer directory
+   * @param inTranslators A translator directory
+   */
 
   public CBExServer(
     final CBSerializerDirectoryMutable inSerializers,
@@ -68,6 +87,10 @@ public final class CBExServer<M, P extends CBProtocolMessageType> implements
     this.threadPool = Executors.newCachedThreadPool();
     this.state = STATE_INITIAL;
   }
+
+  /**
+   * Start the server.
+   */
 
   public void start()
   {
@@ -137,6 +160,10 @@ public final class CBExServer<M, P extends CBProtocolMessageType> implements
       }
     }
   }
+
+  /**
+   * @return {@code true} if the server has finished executing
+   */
 
   public boolean isDone()
   {

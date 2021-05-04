@@ -23,12 +23,25 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ServiceLoader;
 
+/**
+ * Functions over services.
+ */
+
 public final class CBServices
 {
   private CBServices()
   {
 
   }
+
+  /**
+   * Find a service, or fail.
+   *
+   * @param service The service class
+   * @param <T>     The type of service
+   *
+   * @return The service instance
+   */
 
   public static <T> T findService(
     final Class<T> service)
@@ -45,6 +58,12 @@ public final class CBServices
       "No available implementations of service: %s",
       clazz.getCanonicalName()));
   }
+
+  /**
+   * @return The application version
+   *
+   * @throws IOException On I/O errors
+   */
 
   public static CBVersion findApplicationVersion()
     throws IOException

@@ -24,11 +24,19 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A single server client.
+ */
+
 public final class CBExChatServerClientCore
   implements CBExServerClientCoreType<CBExChatMessageType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExChatServerClientCore.class);
+
+  /**
+   * A single server client.
+   */
 
   public CBExChatServerClientCore()
   {
@@ -43,6 +51,10 @@ public final class CBExChatServerClientCore
     Objects.requireNonNull(socket, "socket");
 
     final var chat = CBExChat.get();
+
+    /*
+     * Read a JOIN command. Any other command results in an error.
+     */
 
     final var joinCommand = socket.readBlocking(CBChatCommandJoin.class);
     final CBExChat.Session session;
@@ -60,6 +72,11 @@ public final class CBExChatServerClientCore
     LOG.info("{} joined", joinCommand.name());
 
     try {
+
+      /*
+       * Read commands and execute them.
+       */
+
       while (true) {
         final var command = socket.read();
         if (command.isPresent()) {

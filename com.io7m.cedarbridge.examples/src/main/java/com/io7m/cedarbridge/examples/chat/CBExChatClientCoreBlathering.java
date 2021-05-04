@@ -28,6 +28,10 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * A chat client that connects and blathers nonsense endlessly.
+ */
+
 public final class CBExChatClientCoreBlathering
   implements CBExClientCoreType<CBExChatMessageType>
 {
@@ -36,6 +40,10 @@ public final class CBExChatClientCoreBlathering
 
   private static final DateTimeFormatter FORMATTER =
     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+
+  /**
+   * A chat client that connects and blathers nonsense endlessly.
+   */
 
   public CBExChatClientCoreBlathering()
   {

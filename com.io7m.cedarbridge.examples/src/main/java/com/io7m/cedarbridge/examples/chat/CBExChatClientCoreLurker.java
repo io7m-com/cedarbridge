@@ -25,11 +25,19 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A chat client that connects and says nothing.
+ */
+
 public final class CBExChatClientCoreLurker
   implements CBExClientCoreType<CBExChatMessageType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExChatClientCoreLurker.class);
+
+  /**
+   * A chat client that connects and says nothing.
+   */
 
   public CBExChatClientCoreLurker()
   {

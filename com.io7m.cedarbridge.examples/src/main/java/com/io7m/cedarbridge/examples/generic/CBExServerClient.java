@@ -32,6 +32,15 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Objects;
 
+/**
+ * A client on the server. The clients read and writes messages of type
+ * {@code M}, converting them to messages of type {@code P} for transfer on
+ * the wire.
+ *
+ * @param <M> The application-level message types
+ * @param <P> The wire-level message types
+ */
+
 public final class CBExServerClient<M, P extends CBProtocolMessageType>
   implements Closeable
 {
@@ -43,6 +52,19 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
   private final CBProtocolSerializerCollectionType<P> protocols;
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final CBExServerClientCoreType<M> core;
+
+  /**
+   * Create a client.
+   *
+   * @param inServer        The server
+   * @param inLogger        The logger
+   * @param inSocket        The client socket
+   * @param inClientAddress The client address
+   * @param inSerializers   The serializer directory
+   * @param inProtocols     The protocol directory
+   * @param inTranslators   The translator directory
+   * @param inCore          The client core
+   */
 
   public CBExServerClient(
     final CBExServer<M, P> inServer,
@@ -78,6 +100,12 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
   {
     this.socket.close();
   }
+
+  /**
+   * Execute the client.
+   *
+   * @throws IOException On I/O errors
+   */
 
   public void execute()
     throws IOException

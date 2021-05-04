@@ -37,6 +37,14 @@ import java.nio.ByteOrder;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A socket abstraction that reads and writes messages of type {@code M},
+ * converting them to messages of type {@code P} for transfer on the wire.
+ *
+ * @param <M> The application-level message types
+ * @param <P> The wire-level message types
+ */
+
 public final class CBExSocket<M, P extends CBProtocolMessageType>
 {
   private final BSSReaderProviderType readers;
@@ -49,6 +57,18 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
   private final ByteBuffer writeSizeBuffer;
   private final byte[] writeSizeData;
   private volatile ReadStateType<M> readState;
+
+  /**
+   * Construct a socket.
+   *
+   * @param inReaders    A provider of binary I/O readers
+   * @param inWriters    A provider of binary I/O writers
+   * @param inSocket     The underlying socket
+   * @param inTranslator A message translater from {@code M} to {@code P}
+   * @param inSerializer A message serializer from {@code P} to bytes
+   *
+   * @throws IOException On I/O errors
+   */
 
   public CBExSocket(
     final BSSReaderProviderType inReaders,
@@ -83,11 +103,31 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
       new ReadStateGettingSize<>(this);
   }
 
+  /**
+   * Perform a non-blocking read of a message from the socket.
+   *
+   * @return A message
+   *
+   * @throws IOException On I/O errors
+   */
+
   public Optional<M> read()
     throws IOException
   {
     return this.readState.read();
   }
+
+  /**
+   * Perform a non-blocking read of a message from the socket, casting it to
+   * the provided class.
+   *
+   * @param clazz The message class
+   * @param <N>   The specific subclass of {@code M}
+   *
+   * @return A message
+   *
+   * @throws IOException On I/O errors
+   */
 
   public <N extends M> Optional<N> read(
     final Class<N> clazz)
@@ -113,6 +153,14 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
     });
   }
 
+  /**
+   * Perform a blocking read of a message from the socket.
+   *
+   * @return A message
+   *
+   * @throws IOException On I/O errors
+   */
+
   public M readBlocking()
     throws IOException
   {
@@ -123,6 +171,18 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
       }
     }
   }
+
+  /**
+   * Perform a blocking read of a message from the socket, casting it to
+   * the provided class.
+   *
+   * @param clazz The message class
+   * @param <N>   The specific subclass of {@code M}
+   *
+   * @return A message
+   *
+   * @throws IOException On I/O errors
+   */
 
   public <N extends M> N readBlocking(
     final Class<N> clazz)
@@ -135,6 +195,14 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
       }
     }
   }
+
+  /**
+   * Perform a blocking write of a message from the socket.
+   *
+   * @param message A message
+   *
+   * @throws IOException On I/O errors
+   */
 
   public void write(
     final M message)

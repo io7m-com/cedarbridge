@@ -26,6 +26,14 @@ import java.io.IOException;
 
 public interface CBExClientCoreType<M>
 {
-  void execute(CBExSocket<M, ?> handler)
+  /**
+   * Execute the core with the given socket.
+   *
+   * @param socket The socket
+   *
+   * @throws IOException On I/O errors
+   */
+
+  void execute(CBExSocket<M, ?> socket)
     throws IOException;
 }

@@ -21,6 +21,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * A pastebin model. This model manages a collection of pastes.
+ */
+
 public final class CBExPastebin
 {
   private static final CBExPastebin INSTANCE = new CBExPastebin();
@@ -31,10 +35,22 @@ public final class CBExPastebin
     this.pastes = new ConcurrentHashMap<UUID, Paste>();
   }
 
+  /**
+   * @return The pastebin model instance
+   */
+
   public static CBExPastebin get()
   {
     return INSTANCE;
   }
+
+  /**
+   * Find a paste with the given id.
+   *
+   * @param id The id
+   *
+   * @return The paste, if any
+   */
 
   public Optional<Paste> find(
     final UUID id)
@@ -42,11 +58,26 @@ public final class CBExPastebin
     return Optional.ofNullable(this.pastes.get(id));
   }
 
+  /**
+   * Delete the paste with the given id.
+   *
+   * @param id The id
+   */
+
   public void delete(
     final UUID id)
   {
     this.pastes.remove(id);
   }
+
+  /**
+   * Create a paste with the given key and text.
+   *
+   * @param key  The key
+   * @param text The text
+   *
+   * @return The created paste
+   */
 
   public Paste create(
     final String key,
@@ -58,10 +89,22 @@ public final class CBExPastebin
     return paste;
   }
 
+  /**
+   * @return The number of pastes
+   */
+
   public int size()
   {
     return this.pastes.size();
   }
+
+  /**
+   * A paste.
+   *
+   * A paste consists of some text, with an associated key, and a unique ID.
+   * The key is set when the paste is created, and can only be deleted by
+   * providing the key.
+   */
 
   public static final class Paste
   {
@@ -74,20 +117,35 @@ public final class CBExPastebin
       final String inKey,
       final String inText)
     {
-      this.id = Objects.requireNonNull(inId, "id");
-      this.key = Objects.requireNonNull(inKey, "key");
-      this.text = Objects.requireNonNull(inText, "text");
+      this.id =
+        Objects.requireNonNull(inId, "id");
+      this.key =
+        Objects.requireNonNull(inKey, "key");
+      this.text =
+        Objects.requireNonNull(inText, "text");
     }
+
+    /**
+     * @return The paste ID
+     */
 
     public UUID id()
     {
       return this.id;
     }
 
+    /**
+     * @return The paste text
+     */
+
     public String text()
     {
       return this.text;
     }
+
+    /**
+     * @return The paste key
+     */
 
     public String key()
     {

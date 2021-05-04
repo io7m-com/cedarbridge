@@ -24,11 +24,19 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A client on a pastebin server.
+ */
+
 public final class CBExPasteServerClientCore
   implements CBExServerClientCoreType<CBExPasteMessageType>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBExPasteServerClientCore.class);
+
+  /**
+   * A client on a pastebin server.
+   */
 
   public CBExPasteServerClientCore()
   {

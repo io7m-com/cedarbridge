@@ -23,6 +23,10 @@ import com.io7m.claypot.core.CLPCommandContextType;
 
 import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
+/**
+ * The "version" command.
+ */
+
 @Parameters(commandDescription = "Show the application version.")
 public final class CBCommandVersion extends CLPAbstractCommand
 {

@@ -19,49 +19,105 @@ package com.io7m.cedarbridge.examples.chat;
 import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
+/**
+ * The core chat protocol.
+ */
+
 public interface CBExChatMessageType
 {
+  /**
+   * Join the server.
+   */
+
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatCommandJoinType extends CBExChatMessageType
   {
+    /**
+     * @return The desired user name
+     */
+
     String name();
   }
+
+  /**
+   * Speak a message to all connected clients.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatCommandSpeakType extends CBExChatMessageType
   {
+    /**
+     * @return The message
+     */
+
     String message();
   }
+
+  /**
+   * A user joined the server.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatEventJoinedType extends CBExChatMessageType
   {
+    /**
+     * @return The user name
+     */
+
     String user();
   }
+
+  /**
+   * A user left the server.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatEventLeftType extends CBExChatMessageType
   {
+    /**
+     * @return The user name
+     */
+
     String user();
   }
+
+  /**
+   * A user spoke.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatEventSpokeType extends CBExChatMessageType
   {
+    /**
+     * @return The user name of the speaker
+     */
+
     String user();
+
+    /**
+     * @return The message
+     */
 
     String message();
   }
+
+  /**
+   * An error occurred.
+   */
 
   @ImmutablesStyleType
   @Value.Immutable
   interface CBChatEventErrorType extends CBExChatMessageType
   {
+    /**
+     * @return The message
+     */
+
     String message();
   }
 }

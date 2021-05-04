@@ -25,9 +25,17 @@ import java.util.UUID;
 import static com.io7m.cedarbridge.runtime.api.CBCore.string;
 import static com.io7m.cedarbridge.runtime.api.CBCore.unsigned64;
 
+/**
+ * A translator between the core application messages and the protocol v1 messages.
+ */
+
 public final class CBExPasteMessagesV1
   implements CBExMessageTranslatorType<CBExPasteMessageType, ProtocolPastev1Type>
 {
+  /**
+   * A translator between the core application messages and the protocol v1 messages.
+   */
+
   public CBExPasteMessagesV1()
   {
 

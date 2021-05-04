@@ -23,6 +23,10 @@ import com.io7m.claypot.core.CLPCommandContextType;
 
 import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
+/**
+ * The "list-code-generators" command.
+ */
+
 @Parameters(commandDescription = "List available code generators")
 public final class CBCommandListCodeGenerators extends CLPAbstractCommand
 {
