@@ -22,9 +22,17 @@ import org.immutables.value.Value;
 
 import java.util.List;
 
+/**
+ * The result of a compilation.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBSchemaCompilationType
 {
+  /**
+   * @return The list of compiled packages
+   */
+
   List<CBPackageType> compiledPackages();
 }

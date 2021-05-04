@@ -34,6 +34,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * A factory of schema compilers.
+ */
+
 public final class CBSchemaCompilerFactory
   implements CBSchemaCompilerFactoryType
 {
@@ -41,6 +45,10 @@ public final class CBSchemaCompilerFactory
     LoggerFactory.getLogger(CBSchemaCompiler.class);
 
   private final CBSchemaCompilerInternalFactory factory;
+
+  /**
+   * A factory of schema compilers. Dependencies are loaded from ServiceLoader.
+   */
 
   public CBSchemaCompilerFactory()
   {
@@ -51,6 +59,15 @@ public final class CBSchemaCompilerFactory
       CBServices.findService(CBTypeCheckerFactoryType.class)
     );
   }
+
+  /**
+   * A factory of schema compilers.
+   *
+   * @param inBinders A source of binders
+   * @param inParsers A source of parsers
+   * @param inSources A source of expression sources
+   * @param inTypers  A source of type checkers
+   */
 
   public CBSchemaCompilerFactory(
     final CBExpressionSourceFactoryType inSources,

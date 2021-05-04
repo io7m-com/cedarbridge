@@ -40,6 +40,10 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * A schema compiler.
+ */
+
 public final class CBSchemaCompiler implements CBSchemaCompilerType
 {
   private static final Logger LOG =
@@ -52,6 +56,18 @@ public final class CBSchemaCompiler implements CBSchemaCompilerType
   private final CBSchemaCompilerConfiguration configuration;
   private final CBTypeCheckerFactoryType typers;
   private final Consumer<CBError> errorConsumer;
+
+  /**
+   * A schema compiler.
+   *
+   * @param inConfiguration The compiler configuration
+   * @param inErrorConsumer An error consumer
+   * @param inLoader        The package loader
+   * @param inBinders       A source of binders
+   * @param inParsers       A source of parsers
+   * @param inSources       A source of expression sources
+   * @param inTypers        A source of type checkers
+   */
 
   public CBSchemaCompiler(
     final Consumer<CBError> inErrorConsumer,

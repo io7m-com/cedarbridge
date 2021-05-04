@@ -41,6 +41,10 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The default loader implementation.
+ */
+
 public final class CBLoader implements CBLoaderType
 {
   private static final Logger LOG =
@@ -52,6 +56,14 @@ public final class CBLoader implements CBLoaderType
   private final Consumer<CBError> errors;
   private final HashMap<String, CBPackageType> packages;
   private final CBSchemaCompilerInternalFactory factory;
+
+  /**
+   * The default loader implementation.
+   *
+   * @param inErrors        An error consumer
+   * @param inIncludePaths  The list of include paths
+   * @param internalFactory An internal compiler factory
+   */
 
   public CBLoader(
     final CBSchemaCompilerInternalFactory internalFactory,

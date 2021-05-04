@@ -21,6 +21,10 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 
 import java.util.ResourceBundle;
 
+/**
+ * Compiler string resources.
+ */
+
 public final class CBSchemaCompilerStrings extends CBAbstractStrings
 {
   private CBSchemaCompilerStrings(
@@ -28,6 +32,10 @@ public final class CBSchemaCompilerStrings extends CBAbstractStrings
   {
     super(inResources);
   }
+
+  /**
+   * @return Compiler string resources.
+   */
 
   public static CBStringsType create()
   {

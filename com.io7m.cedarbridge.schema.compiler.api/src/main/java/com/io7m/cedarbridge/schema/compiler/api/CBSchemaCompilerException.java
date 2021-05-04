@@ -16,8 +16,16 @@
 
 package com.io7m.cedarbridge.schema.compiler.api;
 
+/**
+ * A compilation error.
+ */
+
 public final class CBSchemaCompilerException extends Exception
 {
+  /**
+   * A compilation error.
+   */
+
   public CBSchemaCompilerException()
   {
 

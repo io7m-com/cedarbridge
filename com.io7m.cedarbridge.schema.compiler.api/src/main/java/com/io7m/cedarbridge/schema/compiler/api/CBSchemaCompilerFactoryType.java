@@ -16,8 +16,20 @@
 
 package com.io7m.cedarbridge.schema.compiler.api;
 
+/**
+ * A factory of compilers.
+ */
+
 public interface CBSchemaCompilerFactoryType
 {
+  /**
+   * Create a compiler for the given configuration.
+   *
+   * @param configuration The compiler configuration
+   *
+   * @return A new compiler
+   */
+
   CBSchemaCompilerType createCompiler(
     CBSchemaCompilerConfiguration configuration);
 }

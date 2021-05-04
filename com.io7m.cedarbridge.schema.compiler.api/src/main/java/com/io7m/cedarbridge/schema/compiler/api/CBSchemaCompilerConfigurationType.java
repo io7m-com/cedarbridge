@@ -22,13 +22,29 @@ import org.immutables.value.Value;
 import java.nio.file.Path;
 import java.util.List;
 
+/**
+ * The compiler configuration.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBSchemaCompilerConfigurationType
 {
+  /**
+   * @return The list of directories within which to search for packages
+   */
+
   List<Path> includeDirectories();
 
+  /**
+   * @return The list of files to compile
+   */
+
   List<Path> filesToCompile();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

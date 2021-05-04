@@ -27,12 +27,25 @@ import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckerFactoryType;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * An internal compiler factory.
+ */
+
 public final class CBSchemaCompilerInternalFactory
 {
   private final CBParserFactoryType parsers;
   private final CBExpressionSourceFactoryType sources;
   private final CBTypeCheckerFactoryType typers;
   private final CBBinderFactoryType binders;
+
+  /**
+   * An internal compiler factory.
+   *
+   * @param inBinders A source of binders
+   * @param inParsers A source of parsers
+   * @param inSources A source of expression sources
+   * @param inTypers  A source of type checkers
+   */
 
   public CBSchemaCompilerInternalFactory(
     final CBExpressionSourceFactoryType inSources,
@@ -49,6 +62,16 @@ public final class CBSchemaCompilerInternalFactory
     this.binders =
       Objects.requireNonNull(inBinders, "inBinders");
   }
+
+  /**
+   * Create a new compiler.
+   *
+   * @param errorConsumer The error consumer
+   * @param configuration The compiler configuration
+   * @param loader        The package loader
+   *
+   * @return A new compiler
+   */
 
   public CBSchemaCompilerType createNewCompiler(
     final Consumer<CBError> errorConsumer,

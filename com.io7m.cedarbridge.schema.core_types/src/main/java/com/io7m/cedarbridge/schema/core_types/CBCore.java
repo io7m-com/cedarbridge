@@ -21,6 +21,10 @@ import com.io7m.cedarbridge.schema.compiled.CBPackages;
 
 import java.util.List;
 
+/**
+ * The core package.
+ */
+
 public final class CBCore
 {
   private CBCore()
@@ -94,6 +98,10 @@ public final class CBCore
 
     PACKAGE_VALUE = builder.build();
   }
+
+  /**
+   * @return The core package.
+   */
 
   public static CBPackageType get()
   {
