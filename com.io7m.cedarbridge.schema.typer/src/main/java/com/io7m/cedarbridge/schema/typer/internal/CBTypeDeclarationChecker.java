@@ -32,6 +32,10 @@ import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Type checking of type declarations.
+ */
+
 public final class CBTypeDeclarationChecker
   implements CBElementCheckerType<CBASTTypeDeclarationType>
 {
@@ -39,6 +43,10 @@ public final class CBTypeDeclarationChecker
     uuid("06c63d66-019b-420a-809c-98ed41c3cfb2");
   private static final Optional<UUID> SPEC_SECTION_VARIANT_FIELD_KIND_0 =
     uuid("9d1d4d2e-bee3-43eb-90db-0e75e40ce882");
+
+  /**
+   * Type checking of type declarations.
+   */
 
   public CBTypeDeclarationChecker()
   {

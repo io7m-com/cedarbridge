@@ -33,6 +33,10 @@ import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
 
+/**
+ * Contextual information for type checking.
+ */
+
 public final class CBTyperContext
 {
   private final LinkedList<Context> stack;
@@ -41,6 +45,15 @@ public final class CBTyperContext
   private final CBExpressionLineLogType lineLog;
   private final CBASTLanguage language;
   private int errors;
+
+  /**
+   * Contextual information for type checking.
+   *
+   * @param inStrings       String resources
+   * @param inErrorConsumer A consumer of errors
+   * @param inLanguage      The language being checked
+   * @param inLineLog       The line log for incoming expressions
+   */
 
   public CBTyperContext(
     final CBStringsType inStrings,
@@ -64,6 +77,10 @@ public final class CBTyperContext
     this.stack = new LinkedList<>();
     this.stack.push(new Context(this, null));
   }
+
+  /**
+   * @return The current typing context
+   */
 
   public CBTyperContextType current()
   {

@@ -20,11 +20,23 @@ import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jaffirm.core.Preconditions;
 import org.immutables.value.Value;
 
+/**
+ * An assignment of a type to an object.
+ */
+
 @ImmutablesStyleType
 @Value.Immutable
 public interface CBTypeAssignmentType
 {
+  /**
+   * @return The arity of the type (the number of type parameters)
+   */
+
   int arity();
+
+  /**
+   * Check preconditions for the type.
+   */
 
   @Value.Check
   default void checkPreconditions()

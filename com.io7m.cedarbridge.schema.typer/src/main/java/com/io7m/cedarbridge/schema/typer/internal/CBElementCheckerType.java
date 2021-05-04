@@ -19,8 +19,23 @@ package com.io7m.cedarbridge.schema.typer.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 
+/**
+ * Type checking for various AST elements.
+ *
+ * @param <T> The type of elements
+ */
+
 public interface CBElementCheckerType<T extends CBASTElementType>
 {
+  /**
+   * Check the type of an element.
+   *
+   * @param context The typing context
+   * @param item    The element
+   *
+   * @throws CBTypeCheckFailedException On type errors
+   */
+
   void check(
     CBTyperContextType context,
     T item)

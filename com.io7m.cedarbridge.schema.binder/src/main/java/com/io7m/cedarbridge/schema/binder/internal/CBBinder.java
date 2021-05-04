@@ -38,6 +38,10 @@ import java.util.function.Consumer;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Binding analysis for declarations.
+ */
+
 public final class CBBinder implements CBBinderType
 {
   /**
@@ -66,6 +70,16 @@ public final class CBBinder implements CBBinderType
   private final CBASTPackage parsedPackage;
   private final CBStringsType strings;
   private final Consumer<CBError> errors;
+
+  /**
+   * Binding analysis for import declarations.
+   *
+   * @param inStrings       String resources
+   * @param inErrors        An error consumer
+   * @param inLineLog       The line log for incoming expressions
+   * @param inLoader        A package loader
+   * @param inParsedPackage The package to analyze
+   */
 
   public CBBinder(
     final CBStringsType inStrings,

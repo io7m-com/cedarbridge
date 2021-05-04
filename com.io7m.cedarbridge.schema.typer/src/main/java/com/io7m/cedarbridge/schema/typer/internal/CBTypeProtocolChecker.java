@@ -31,11 +31,19 @@ import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Type checking of protocol declarations.
+ */
+
 public final class CBTypeProtocolChecker
   implements CBElementCheckerType<CBASTProtocolDeclaration>
 {
   private static final Optional<UUID> SPEC_SECTION_KIND_0 =
     uuid("15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a");
+
+  /**
+   * Type checking of protocol declarations.
+   */
 
   public CBTypeProtocolChecker()
   {

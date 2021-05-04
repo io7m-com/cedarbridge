@@ -32,11 +32,19 @@ import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Binding analysis for type expressions.
+ */
+
 public final class CBTypeExpressionBinder
   implements CBElementBinderType<CBASTTypeExpressionType>
 {
   private static final Optional<UUID> SPEC_SECTION =
     uuid("ff59ecee-af8c-42e3-8aa0-5ea348c69b6d");
+
+  /**
+   * Binding analysis for type expressions.
+   */
 
   public CBTypeExpressionBinder()
   {

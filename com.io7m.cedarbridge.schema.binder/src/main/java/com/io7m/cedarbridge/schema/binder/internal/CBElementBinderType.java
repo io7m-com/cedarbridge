@@ -19,8 +19,23 @@ package com.io7m.cedarbridge.schema.binder.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 
+/**
+ * Binding analysis for various AST elements.
+ *
+ * @param <T> The type of elements
+ */
+
 public interface CBElementBinderType<T extends CBASTElementType>
 {
+  /**
+   * Perform binding analysis.
+   *
+   * @param context The binding context
+   * @param item    The item to analyze
+   *
+   * @throws CBBindFailedException On errors
+   */
+
   void bind(
     CBBinderContextType context,
     T item)

@@ -23,11 +23,26 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * Contextual information for type checking.
+ */
+
 public interface CBTyperContextType extends AutoCloseable
 {
   @Override
   void close()
     throws CBTypeCheckFailedException;
+
+  /**
+   * Something failed.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information
+   * @param errorCode   The error code
+   * @param arguments   The error arguments
+   *
+   * @return An exception describing the error
+   */
 
   CBTypeCheckFailedException failed(
     Optional<UUID> specSection,

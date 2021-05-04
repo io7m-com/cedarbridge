@@ -35,11 +35,19 @@ import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLoca
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeParameterType;
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Type checking of type expressions.
+ */
+
 public final class CBTypeExpressionChecker
   implements CBElementCheckerType<CBASTTypeExpressionType>
 {
   private static final Optional<UUID> SPEC_SECTION_APPLICATION =
     uuid("2168e18e-88d5-4434-9a9e-07f489c836c7");
+
+  /**
+   * Type checking of type expressions.
+   */
 
   public CBTypeExpressionChecker()
   {

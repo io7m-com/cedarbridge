@@ -30,11 +30,19 @@ import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Binding analysis for protocol declarations.
+ */
+
 public final class CBProtocolDeclarationBinder
   implements CBElementBinderType<CBASTProtocolDeclaration>
 {
   private static final Optional<UUID> SPEC_SECTION_VERSION_CONTIGUOUS =
     uuid("404f0595-a150-4baf-b98b-37109250d8bd");
+
+  /**
+   * Binding analysis for protocol declarations.
+   */
 
   public CBProtocolDeclarationBinder()
   {

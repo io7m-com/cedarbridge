@@ -21,6 +21,10 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 
 import java.util.ResourceBundle;
 
+/**
+ * String resources for type checking.
+ */
+
 public final class CBTyperStrings extends CBAbstractStrings
 {
   private CBTyperStrings(
@@ -29,12 +33,16 @@ public final class CBTyperStrings extends CBAbstractStrings
     super(inResources);
   }
 
+  /**
+   * @return String resources for type checking.
+   */
+
   public static CBStringsType create()
   {
     return new CBTyperStrings(
       ofXML(
         CBTyperStrings.class.getResourceAsStream(
-        "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml"))
+          "/com/io7m/cedarbridge/schema/typer/internal/Messages.xml"))
     );
   }
 

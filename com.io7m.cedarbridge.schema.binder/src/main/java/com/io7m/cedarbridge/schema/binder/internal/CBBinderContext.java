@@ -47,6 +47,10 @@ import java.util.function.Consumer;
 import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
 import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
 
+/**
+ * The contextual information used during binding analysis.
+ */
+
 public final class CBBinderContext
 {
   private final LinkedList<Context> stack;
@@ -60,6 +64,17 @@ public final class CBBinderContext
   private final CBASTLanguage language;
   private BigInteger idPool;
   private int errors;
+
+  /**
+   * The contextual information used during binding analysis.
+   *
+   * @param inStrings       The strings
+   * @param inLoader        The loader
+   * @param inLineLog       The line log for incoming expressions
+   * @param inErrorConsumer The error consumer
+   * @param inPackageName   The package name
+   * @param inLanguage      The language being analyzed
+   */
 
   public CBBinderContext(
     final CBStringsType inStrings,
@@ -99,10 +114,18 @@ public final class CBBinderContext
       new HashMap<>();
   }
 
+  /**
+   * @return The current binder context
+   */
+
   public CBBinderContextType current()
   {
     return this.stack.peek();
   }
+
+  /**
+   * @return The number of errors encountered
+   */
 
   public int errorCount()
   {

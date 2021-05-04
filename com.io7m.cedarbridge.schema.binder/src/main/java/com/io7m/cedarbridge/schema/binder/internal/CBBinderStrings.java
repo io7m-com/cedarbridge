@@ -21,6 +21,10 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 
 import java.util.ResourceBundle;
 
+/**
+ * Binder string resources.
+ */
+
 public final class CBBinderStrings extends CBAbstractStrings
 {
   private CBBinderStrings(
@@ -28,6 +32,10 @@ public final class CBBinderStrings extends CBAbstractStrings
   {
     super(inResources);
   }
+
+  /**
+   * @return Binder string resources.
+   */
 
   public static CBStringsType create()
   {

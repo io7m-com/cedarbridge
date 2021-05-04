@@ -29,15 +29,41 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The contextual information used during binding analysis.
+ */
+
 public interface CBBinderContextType extends AutoCloseable
 {
+  /**
+   * @return The package loader
+   */
+
   CBLoaderType loader();
+
+  /**
+   * Open a new binding scope. This is typically called upon encountering
+   * a declaration that generates a new name.
+   *
+   * @return The scope
+   */
 
   CBBinderContextType openBindingScope();
 
   @Override
   void close()
     throws CBBindFailedException;
+
+  /**
+   * Register a package, making it available for subsequent analysis operations.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information
+   * @param text        The short package name
+   * @param packageV    The package
+   *
+   * @throws CBBindFailedException On errors
+   */
 
   void registerPackage(
     Optional<UUID> specSection,
@@ -46,11 +72,34 @@ public interface CBBinderContextType extends AutoCloseable
     CBPackageType packageV)
     throws CBBindFailedException;
 
+  /**
+   * Something failed.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information
+   * @param errorCode   The error code
+   * @param arguments   The error arguments
+   *
+   * @return A failure exception
+   */
+
   CBBindFailedException failed(
     Optional<UUID> specSection,
     LexicalPosition<URI> lexical,
     String errorCode,
     Object... arguments);
+
+  /**
+   * Something failed and referred to an object at a different lexical position.
+   *
+   * @param specSection  The quoted spec section
+   * @param lexical      The lexical information
+   * @param lexicalOther The other lexical information
+   * @param errorCode    The error code
+   * @param arguments    The error arguments
+   *
+   * @return A failure exception
+   */
 
   CBBindFailedException failedWithOther(
     Optional<UUID> specSection,
@@ -59,15 +108,49 @@ public interface CBBinderContextType extends AutoCloseable
     String errorCode,
     Object... arguments);
 
+  /**
+   * Bind the type declaration.
+   *
+   * @param specSection The quoted spec section
+   * @param type        The type
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
   CBBindingLocalType bindType(
     Optional<UUID> specSection,
     CBASTTypeDeclarationType type)
     throws CBBindFailedException;
 
+  /**
+   * Bind the protocol declaration.
+   *
+   * @param specSection The quoted spec section
+   * @param proto       The protocol declaration
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
   CBBindingLocalType bindProtocol(
     Optional<UUID> specSection,
     CBASTProtocolDeclaration proto)
     throws CBBindFailedException;
+
+  /**
+   * Bind the type parameter.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information for the identifier
+   * @param text        The type parameter
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
 
   CBBindingLocalType bindTypeParameter(
     Optional<UUID> specSection,
@@ -75,11 +158,35 @@ public interface CBBinderContextType extends AutoCloseable
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
+  /**
+   * Bind the field.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information for the identifier
+   * @param text        The field
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
   CBBindingLocalType bindField(
     Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
+
+  /**
+   * Check that a type exists.
+   *
+   * @param specSection The quoted spec section
+   * @param text        The type name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
 
   CBBindingLocalType checkTypeBinding(
     Optional<UUID> specSection,
@@ -87,11 +194,35 @@ public interface CBBinderContextType extends AutoCloseable
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
+  /**
+   * Bind the variant case.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information for the identifier
+   * @param text        The variant case
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
   CBBindingLocalType bindVariantCase(
     Optional<UUID> specSection,
     String text,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
+
+  /**
+   * Check that a package exists.
+   *
+   * @param specSection The quoted spec section
+   * @param text        The package name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
 
   CBPackageType checkPackageBinding(
     Optional<UUID> specSection,
@@ -99,7 +230,23 @@ public interface CBBinderContextType extends AutoCloseable
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 
+  /**
+   * @return The name of the current package
+   */
+
   String currentPackage();
+
+  /**
+   * Bind the protocol version.
+   *
+   * @param specSection The quoted spec section
+   * @param lexical     The lexical information for the identifier
+   * @param version     The version
+   *
+   * @return A local binding
+   *
+   * @throws CBBindFailedException On errors
+   */
 
   CBBindingLocalType bindProtocolVersion(
     Optional<UUID> specSection,

@@ -34,9 +34,17 @@ import java.util.UUID;
 import static com.io7m.cedarbridge.schema.binder.internal.CBBinder.SPEC_SEMANTICS_RECORD;
 import static com.io7m.cedarbridge.schema.binder.internal.CBBinder.SPEC_SEMANTICS_VARIANT;
 
+/**
+ * Binding analysis for type declarations.
+ */
+
 public final class CBTypeDeclarationBinder
   implements CBElementBinderType<CBASTTypeDeclarationType>
 {
+  /**
+   * Binding analysis for type declarations.
+   */
+
   public CBTypeDeclarationBinder()
   {
 

@@ -28,6 +28,10 @@ import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
+/**
+ * Binding analysis for import declarations.
+ */
+
 public final class CBImportBinder implements CBElementBinderType<CBASTImport>
 {
   private static final Optional<UUID> SPEC_SECTION =
@@ -35,6 +39,10 @@ public final class CBImportBinder implements CBElementBinderType<CBASTImport>
 
   private static final Logger LOG =
     LoggerFactory.getLogger(CBImportBinder.class);
+
+  /**
+   * Binding analysis for import declarations.
+   */
 
   public CBImportBinder()
   {

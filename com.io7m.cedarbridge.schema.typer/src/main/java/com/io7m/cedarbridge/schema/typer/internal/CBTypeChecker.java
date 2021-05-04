@@ -30,12 +30,25 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * The main type checker.
+ */
+
 public final class CBTypeChecker implements CBTypeCheckerType
 {
   private final Consumer<CBError> errors;
   private final CBExpressionLineLogType lineLog;
   private final CBASTPackage packageV;
   private final CBStringsType strings;
+
+  /**
+   * The main type checker.
+   *
+   * @param inLineLog The line log for incoming expressions
+   * @param inErrors  An error consumer
+   * @param inStrings String resources
+   * @param inPackage The package being checked
+   */
 
   public CBTypeChecker(
     final Consumer<CBError> inErrors,

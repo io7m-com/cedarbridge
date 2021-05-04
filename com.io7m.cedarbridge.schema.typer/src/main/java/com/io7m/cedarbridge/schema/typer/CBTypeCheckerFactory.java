@@ -28,15 +28,29 @@ import com.io7m.cedarbridge.strings.api.CBStringsType;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * A factory of type checkers.
+ */
+
 public final class CBTypeCheckerFactory implements CBTypeCheckerFactoryType
 {
   private final CBStringsType strings;
+
+  /**
+   * A factory of type checkers.
+   *
+   * @param inStrings String resources
+   */
 
   public CBTypeCheckerFactory(
     final CBStringsType inStrings)
   {
     this.strings = Objects.requireNonNull(inStrings, "strings");
   }
+
+  /**
+   * A factory of type checkers.
+   */
 
   public CBTypeCheckerFactory()
   {
