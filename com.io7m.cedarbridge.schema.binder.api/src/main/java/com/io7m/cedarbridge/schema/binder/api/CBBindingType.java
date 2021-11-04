@@ -74,6 +74,10 @@ public interface CBBindingType extends LexicalType<URI>
     @Value.Immutable
     interface CBBindingLocalTypeDeclarationType extends CBBindingLocalType
     {
+      /**
+       * @return The type declaration
+       */
+
       CBASTTypeDeclarationType type();
     }
 
@@ -85,6 +89,10 @@ public interface CBBindingType extends LexicalType<URI>
     @Value.Immutable
     interface CBBindingLocalProtocolDeclarationType extends CBBindingLocalType
     {
+      /**
+       * @return The protocol declaration
+       */
+
       CBASTProtocolDeclaration protocol();
     }
 
@@ -96,6 +104,10 @@ public interface CBBindingType extends LexicalType<URI>
     @Value.Immutable
     interface CBBindingLocalProtocolVersionDeclarationType extends CBBindingLocalType
     {
+      /**
+       * @return The protocol version
+       */
+
       BigInteger version();
     }
 
