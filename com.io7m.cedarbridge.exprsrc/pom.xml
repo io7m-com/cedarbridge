@@ -16,7 +16,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.cedarbridge.exprsrc</name>
   <description>Cedarbridge message protocol (Expression source)</description>
-  <url>https://www.github.com/io7m/cedarbridge</url>
+  <url>https://www.io7m.com/software/cedarbridge</url>
 
   <dependencies>
     <dependency>

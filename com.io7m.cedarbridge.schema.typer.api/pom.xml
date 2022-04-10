@@ -16,7 +16,7 @@
   <packaging>jar</packaging>
   <name>com.io7m.cedarbridge.schema.typer.api</name>
   <description>Cedarbridge message protocol (Schema type checker API)</description>
-  <url>https://www.github.com/io7m/cedarbridge</url>
+  <url>https://www.io7m.com/software/cedarbridge</url>
 
   <dependencies>
     <dependency>
