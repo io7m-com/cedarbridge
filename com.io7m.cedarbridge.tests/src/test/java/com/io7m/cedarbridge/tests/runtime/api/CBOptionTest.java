@@ -41,7 +41,7 @@ public final class CBOptionTest
   {
     assertEquals(
       Optional.empty(),
-      new CBNone<>().asOptional()
+      CBNone.of().asOptional()
     );
   }
 
@@ -54,7 +54,7 @@ public final class CBOptionTest
     );
     assertEquals(
       "(CBNone)",
-      String.format("%s", new CBNone<>())
+      String.format("%s", CBNone.of())
     );
   }
 }

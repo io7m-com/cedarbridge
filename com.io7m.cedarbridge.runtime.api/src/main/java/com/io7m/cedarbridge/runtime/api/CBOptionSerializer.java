@@ -110,6 +110,6 @@ public final class CBOptionSerializer<T extends CBSerializableType>
   private CBOptionType<T> deserializeNone(
     final CBSerializationContextType context)
   {
-    return new CBNone<>();
+    return CBNone.of();
   }
 }
