@@ -16,14 +16,14 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.jlexing.core.ImmutableStyleType;
+import com.io7m.immutables.styles.ImmutablesStyleType;
 import org.immutables.value.Value;
 
 /**
  * A package declaration.
  */
 
-@ImmutableStyleType
+@ImmutablesStyleType
 @Value.Immutable
 public interface CBASTPackageDeclarationType extends CBASTDeclarationType
 {
