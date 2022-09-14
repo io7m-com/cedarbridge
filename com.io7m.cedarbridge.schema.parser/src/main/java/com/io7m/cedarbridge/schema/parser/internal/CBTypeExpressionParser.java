@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
@@ -25,6 +26,7 @@ import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -51,7 +53,7 @@ public final class CBTypeExpressionParser
 
   }
 
-  private static CBASTTypeExpressionType.CBASTTypeNamedType parseTypePath(
+  private static CBASTTypeNamed parseTypePath(
     final CBParseContextType context,
     final SExpressionSymbolType expression)
     throws CBParseFailedException
@@ -67,28 +69,25 @@ public final class CBTypeExpressionParser
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
       try {
-        final var builder =
-          CBASTTypeNamed.builder()
-            .setLexical(expression.lexical());
-
         final var text = expression.text();
         final var segments = List.of(text.split(":"));
 
         if (segments.size() == 1) {
-          builder.setName(
+          return new CBASTTypeNamed(
+            new CBASTMutableUserData(),
+            expression.lexical(),
+            Optional.empty(),
             CBASTNames.typeName(expression, segments.get(0))
           );
-          return builder.build();
         }
 
         if (segments.size() == 2) {
-          builder.setPackageName(
-            CBASTNames.packageName(expression, segments.get(0))
-          );
-          builder.setName(
+          return new CBASTTypeNamed(
+            new CBASTMutableUserData(),
+            expression.lexical(),
+            Optional.of(CBASTNames.packageName(expression, segments.get(0))),
             CBASTNames.typeName(expression, segments.get(1))
           );
-          return builder.build();
         }
 
         throw subContext.failed(
@@ -151,10 +150,6 @@ public final class CBTypeExpressionParser
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingForms)) {
 
-      final var builder =
-        CBASTTypeApplication.builder()
-          .setLexical(expression.lexical());
-
       if (expression.size() == 0) {
         throw subContext.failed(
           expression,
@@ -163,19 +158,25 @@ public final class CBTypeExpressionParser
           "errorEmptyTypeApplication");
       }
 
-      builder.setTarget(
+      final var typeNamed =
         parseTypePath(
           subContext,
           subContext.checkExpressionIs(
             expression.get(0),
             SPEC_SECTION,
-            SExpressionSymbolType.class))
-      );
+            SExpressionSymbolType.class)
+        );
 
+      final var subExpressions = new ArrayList<CBASTTypeExpressionType>();
       for (int index = 1; index < expression.size(); ++index) {
-        builder.addArguments(this.parse(subContext, expression.get(index)));
+        subExpressions.add(this.parse(subContext, expression.get(index)));
       }
-      return builder.build();
+      return new CBASTTypeApplication(
+        new CBASTMutableUserData(),
+        expression.lexical(),
+        typeNamed,
+        subExpressions
+      );
     }
   }
 }

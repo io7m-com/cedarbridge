@@ -16,16 +16,15 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.util.List;
 
 /**
  * The type of type declarations.
  */
 
-public interface CBASTTypeDeclarationType extends CBASTDeclarationType
+public sealed interface CBASTTypeDeclarationType
+  extends CBASTDeclarationType
+  permits CBASTTypeRecord, CBASTTypeVariant
 {
   /**
    * @return The type name
@@ -39,66 +38,4 @@ public interface CBASTTypeDeclarationType extends CBASTDeclarationType
 
   List<CBASTTypeParameterName> parameters();
 
-  /**
-   * A record declaration.
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeRecordType extends CBASTTypeDeclarationType
-  {
-    @Override
-    CBASTTypeName name();
-
-    @Override
-    List<CBASTTypeParameterName> parameters();
-
-    /**
-     * @return The list of fields
-     */
-
-    List<CBASTField> fields();
-  }
-
-  /**
-   * A variant declaration.
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeVariantType extends CBASTTypeDeclarationType
-  {
-    @Override
-    CBASTTypeName name();
-
-    @Override
-    List<CBASTTypeParameterName> parameters();
-
-    /**
-     * @return The list of cases
-     */
-
-    List<CBASTTypeVariantCase> cases();
-  }
-
-  /**
-   * A variant case declaration.
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTTypeVariantCaseType extends CBASTDeclarationType
-  {
-    /**
-     * @return The name of the variant case
-     */
-
-    CBASTVariantCaseName name();
-
-    /**
-     * @return The list of fields
-     */
-
-    List<CBASTField> fields();
-  }
 }

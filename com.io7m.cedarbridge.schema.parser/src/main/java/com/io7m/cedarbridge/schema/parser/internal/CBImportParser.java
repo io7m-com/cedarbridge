@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageShortName;
@@ -86,11 +87,12 @@ public final class CBImportParser
         SExpressionSymbolType.class
       );
 
-    return CBASTImport.builder()
-      .setLexical(list.lexical())
-      .setTarget(parsePackageName(context, packName))
-      .setShortName(parseShortName(context, packShort))
-      .build();
+    return new CBASTImport(
+      new CBASTMutableUserData(),
+      list.lexical(),
+      parsePackageName(context, packName),
+      parseShortName(context, packShort)
+    );
   }
 
   private static CBASTPackageShortName parseShortName(

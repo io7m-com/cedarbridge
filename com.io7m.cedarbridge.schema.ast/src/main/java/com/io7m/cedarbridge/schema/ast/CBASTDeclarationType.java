@@ -20,7 +20,15 @@ package com.io7m.cedarbridge.schema.ast;
  * The base type of AST declarations.
  */
 
-public interface CBASTDeclarationType extends CBASTElementType
+public sealed interface CBASTDeclarationType
+  extends CBASTElementType
+  permits CBASTImport,
+  CBASTLanguage,
+  CBASTPackageDeclaration,
+  CBASTProtocolDeclaration,
+  CBASTProtocolVersion,
+  CBASTTypeDeclarationType,
+  CBASTTypeVariantCase
 {
 
 }

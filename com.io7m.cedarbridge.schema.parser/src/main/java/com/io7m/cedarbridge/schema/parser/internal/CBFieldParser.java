@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTField;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionType;
@@ -72,11 +73,12 @@ public final class CBFieldParser implements CBElementParserType<CBASTField>
       final var expr =
         new CBTypeExpressionParser().parse(subContext, expression.get(2));
 
-      return CBASTField.builder()
-        .setLexical(expression.lexical())
-        .setName(name)
-        .setType(expr)
-        .build();
+      return new CBASTField(
+        new CBASTMutableUserData(),
+        expression.lexical(),
+        name,
+        expr
+      );
     }
   }
 

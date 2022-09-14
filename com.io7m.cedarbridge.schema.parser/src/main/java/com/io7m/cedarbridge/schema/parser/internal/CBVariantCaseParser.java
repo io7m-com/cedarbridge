@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTField;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionListType;
@@ -100,13 +101,13 @@ public final class CBVariantCaseParser
       throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
-    return CBASTTypeVariantCase.builder()
-      .setLexical(expression.lexical())
-      .setFields(CBFilters.filter(items, CBASTField.class))
-      .setName(name)
-      .build();
+    return new CBASTTypeVariantCase(
+      new CBASTMutableUserData(),
+      expression.lexical(),
+      name,
+      CBFilters.filter(items, CBASTField.class)
+    );
   }
-
 
   @Override
   public CBASTTypeVariantCase parse(

@@ -54,9 +54,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType.CBASTTypeRecordType;
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType.CBASTTypeVariantType;
-
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
@@ -115,8 +112,7 @@ public final class CBTypeCheckerTest
         assertEquals(tarType, tarParam.owner());
       }
 
-      if (srcType instanceof CBASTTypeVariantType) {
-        final var srcVar = (CBASTTypeVariantType) srcType;
+      if (srcType instanceof CBASTTypeVariant srcVar) {
         final var tarVar = (CBVariantType) tarType;
         final var srcCases = srcVar.cases();
         final var tarCases = tarVar.cases();
@@ -128,8 +124,7 @@ public final class CBTypeCheckerTest
           assertEquals(srcCase.name().text(), tarCase.name());
           checkFieldsMatch(srcCase.fields(), tarCase.fields());
         }
-      } else if (srcType instanceof CBASTTypeRecordType) {
-        final var srcRec = (CBASTTypeRecordType) srcType;
+      } else if (srcType instanceof CBASTTypeRecord srcRec) {
         final var tarRec = (CBRecordType) tarType;
         final var srcFields = srcRec.fields();
         final var tarFields = tarRec.fields();

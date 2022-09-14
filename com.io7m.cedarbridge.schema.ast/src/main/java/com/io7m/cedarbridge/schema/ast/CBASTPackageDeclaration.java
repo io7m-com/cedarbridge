@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,26 +16,37 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import com.io7m.jlexing.core.LexicalPosition;
+
+import java.net.URI;
+import java.util.Objects;
 
 /**
- * A package import.
+ * A package declaration.
+ *
+ * @param userData The user data
+ * @param lexical  The lexical info
+ * @param name     The package name
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBASTImportType extends CBASTDeclarationType
+public record CBASTPackageDeclaration(
+  CBASTMutableUserData userData,
+  LexicalPosition<URI> lexical,
+  CBASTPackageName name)
+  implements CBASTDeclarationType
 {
   /**
-   * @return The target package
+   * A package declaration.
+   *
+   * @param userData The user data
+   * @param lexical  The lexical info
+   * @param name     The package name
    */
 
-  CBASTPackageName target();
-
-  /**
-   * @return The short name to which the package will be referred
-   */
-
-  CBASTPackageShortName shortName();
+  public CBASTPackageDeclaration
+  {
+    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(lexical, "lexical");
+    Objects.requireNonNull(name, "name");
+  }
 }

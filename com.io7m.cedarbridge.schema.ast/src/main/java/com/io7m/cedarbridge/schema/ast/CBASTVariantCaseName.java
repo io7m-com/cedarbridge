@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,30 +17,39 @@
 package com.io7m.cedarbridge.schema.ast;
 
 import com.io7m.cedarbridge.schema.names.CBVariantCaseNames;
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import com.io7m.jlexing.core.LexicalPosition;
+
+import java.net.URI;
+import java.util.Objects;
 
 /**
- * The type of variant case names.
+ * The type of type parameter names.
+ *
+ * @param userData User data
+ * @param lexical  Lexical info
+ * @param text     The name text
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBASTVariantCaseNameType extends CBASTElementType
+public record CBASTVariantCaseName(
+  CBASTMutableUserData userData,
+  LexicalPosition<URI> lexical,
+  String text)
+  implements CBASTElementType
 {
   /**
-   * @return The name text
+   * The type of type parameter names.
+   *
+   * @param userData User data
+   * @param lexical  Lexical info
+   * @param text     The name text
    */
 
-  String text();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
+  public CBASTVariantCaseName
   {
-    CBVariantCaseNames.INSTANCE.checkValid(this.text());
+    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(lexical, "lexical");
+    Objects.requireNonNull(text, "text");
+
+    CBVariantCaseNames.INSTANCE.checkValid(text);
   }
 }

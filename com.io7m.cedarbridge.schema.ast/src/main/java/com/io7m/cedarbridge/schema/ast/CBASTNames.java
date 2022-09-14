@@ -44,10 +44,11 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTFieldName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTFieldName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 
   /**
@@ -63,10 +64,11 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTPackageName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTPackageName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 
   /**
@@ -82,10 +84,11 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTPackageShortName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTPackageShortName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 
   /**
@@ -101,10 +104,11 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTTypeName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTTypeName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 
   /**
@@ -120,10 +124,11 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTTypeParameterName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTTypeParameterName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 
   /**
@@ -139,9 +144,10 @@ public final class CBASTNames
     final LexicalType<URI> lexical,
     final String text)
   {
-    return CBASTVariantCaseName.builder()
-      .setLexical(lexical.lexical())
-      .setText(text)
-      .build();
+    return new CBASTVariantCaseName(
+      new CBASTMutableUserData(),
+      lexical.lexical(),
+      text
+    );
   }
 }

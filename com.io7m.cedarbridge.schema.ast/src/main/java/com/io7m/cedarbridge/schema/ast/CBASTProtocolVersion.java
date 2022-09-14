@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,50 +16,43 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import com.io7m.jlexing.core.LexicalPosition;
 
 import java.math.BigInteger;
+import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 /**
- * The type of protocol declarations.
+ * A protocol version declaration.
+ *
+ * @param userData The user data
+ * @param lexical  The lexical info
+ * @param version  The version
+ * @param types    The type declarations
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBASTProtocolDeclarationType extends CBASTDeclarationType
+public record CBASTProtocolVersion(
+  CBASTMutableUserData userData,
+  LexicalPosition<URI> lexical,
+  BigInteger version,
+  List<CBASTTypeName> types)
+  implements CBASTDeclarationType
 {
   /**
-   * @return The protocol name
-   */
-
-  CBASTTypeName name();
-
-  /**
-   * @return The protocol versions
-   */
-
-  List<CBASTProtocolVersion> versions();
-
-  /**
    * A protocol version declaration.
+   *
+   * @param userData The user data
+   * @param lexical  The lexical info
+   * @param version  The version
+   * @param types    The type declarations
    */
 
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBASTProtocolVersionType extends CBASTElementType
+  public CBASTProtocolVersion
   {
-    /**
-     * @return The protocol version
-     */
-
-    BigInteger version();
-
-    /**
-     * @return The protocol types
-     */
-
-    List<CBASTTypeName> types();
+    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(lexical, "lexical");
+    Objects.requireNonNull(version, "version");
+    Objects.requireNonNull(types, "types");
   }
 }
