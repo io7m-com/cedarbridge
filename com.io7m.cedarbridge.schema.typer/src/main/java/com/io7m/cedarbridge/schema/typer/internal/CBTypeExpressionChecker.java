@@ -21,6 +21,8 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
@@ -30,9 +32,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeDeclarationType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeParameterType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
+
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 
 /**
@@ -103,9 +104,7 @@ public final class CBTypeExpressionChecker
     expression.userData()
       .put(
         CBTypeAssignment.class,
-        CBTypeAssignment.builder()
-          .setArity(targetType.arity())
-          .build()
+        new CBTypeAssignment(targetType.arity())
       );
   }
 
@@ -114,26 +113,22 @@ public final class CBTypeExpressionChecker
     final CBASTTypeNamed expression,
     final CBBindingLocalType binding)
   {
-    if (binding instanceof CBBindingLocalTypeDeclarationType) {
+    if (binding instanceof CBBindingLocalTypeDeclaration typeDeclaration) {
       final var parameters =
-        ((CBBindingLocalTypeDeclarationType) binding).type().parameters();
+        typeDeclaration.type().parameters();
       expression.userData()
         .put(
           CBTypeAssignment.class,
-          CBTypeAssignment.builder()
-            .setArity(parameters.size())
-            .build()
+          new CBTypeAssignment(parameters.size())
         );
       return;
     }
 
-    if (binding instanceof CBBindingLocalTypeParameterType) {
+    if (binding instanceof CBBindingLocalTypeParameter) {
       expression.userData()
         .put(
           CBTypeAssignment.class,
-          CBTypeAssignment.builder()
-            .setArity(0)
-            .build()
+          new CBTypeAssignment(0)
         );
       return;
     }
@@ -201,9 +196,7 @@ public final class CBTypeExpressionChecker
     expression.userData()
       .put(
         CBTypeAssignment.class,
-        CBTypeAssignment.builder()
-          .setArity(remaining)
-          .build()
+        new CBTypeAssignment(remaining)
       );
   }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,34 +14,31 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.codegen.api;
+package com.io7m.cedarbridge.schema.compiled;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import java.util.Objects;
 
 /**
- * A description of a code generator.
+ * The type of external names that can be used during code generation.
+ *
+ * @param externalPackage The name of the external package
+ * @param externalName    The name of the external type
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBCodeGeneratorDescriptionType
+public record CBExternalName(
+  String externalPackage,
+  String externalName)
 {
   /**
-   * @return The ID of the generator
+   * The type of external names that can be used during code generation.
+   *
+   * @param externalPackage The name of the external package
+   * @param externalName    The name of the external type
    */
 
-  String id();
-
-  /**
-   * @return The name of the target language
-   */
-
-  String languageName();
-
-  /**
-   * @return A humanly-readable description of the generator
-   */
-
-  String description();
+  public CBExternalName
+  {
+    Objects.requireNonNull(externalPackage, "externalPackage");
+    Objects.requireNonNull(externalName, "externalName");
+  }
 }

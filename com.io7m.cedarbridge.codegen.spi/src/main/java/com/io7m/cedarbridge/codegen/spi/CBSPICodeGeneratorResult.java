@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,24 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.codegen.api;
-
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+package com.io7m.cedarbridge.codegen.spi;
 
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Objects;
 
 /**
- * Configuration information for code generators.
+ * The result of code generation.
+ *
+ * @param createdFiles The created files
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBCodeGeneratorConfigurationType
+public record CBSPICodeGeneratorResult(
+  List<Path> createdFiles)
 {
   /**
-   * @return The directory to which code is written
+   * The result of code generation.
+   *
+   * @param createdFiles The created files
    */
 
-  Path outputDirectory();
+  public CBSPICodeGeneratorResult
+  {
+    Objects.requireNonNull(createdFiles, "createdFiles");
+  }
 }

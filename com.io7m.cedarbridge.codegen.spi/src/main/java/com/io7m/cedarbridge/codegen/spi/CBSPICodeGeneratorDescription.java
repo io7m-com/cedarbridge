@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,32 +16,33 @@
 
 package com.io7m.cedarbridge.codegen.spi;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import java.util.Objects;
 
 /**
  * A description of a code generator.
+ *
+ * @param id           The ID of the generator
+ * @param languageName The name of the target language
+ * @param description  A humanly-readable description of the generator
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBSPICodeGeneratorDescriptionType
+public record CBSPICodeGeneratorDescription(
+  String id,
+  String languageName,
+  String description)
 {
   /**
-   * @return The ID of the generator
+   * A description of a code generator.
+   *
+   * @param id           The ID of the generator
+   * @param languageName The name of the target language
+   * @param description  A humanly-readable description of the generator
    */
 
-  String id();
-
-  /**
-   * @return The name of the target language
-   */
-
-  String languageName();
-
-  /**
-   * @return A humanly-readable description of the generator
-   */
-
-  String description();
+  public CBSPICodeGeneratorDescription
+  {
+    Objects.requireNonNull(id, "id");
+    Objects.requireNonNull(languageName, "languageName");
+    Objects.requireNonNull(description, "description");
+  }
 }

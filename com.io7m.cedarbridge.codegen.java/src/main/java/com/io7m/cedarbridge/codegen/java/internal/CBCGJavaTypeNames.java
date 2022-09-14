@@ -319,10 +319,10 @@ public final class CBCGJavaTypeNames
     }
 
     return type.external().orElse(
-      CBExternalName.builder()
-        .setExternalPackage(type.owner().name())
-        .setExternalName(type.name())
-        .build()
+      new CBExternalName(
+        type.owner().name(),
+        type.name()
+      )
     );
   }
 

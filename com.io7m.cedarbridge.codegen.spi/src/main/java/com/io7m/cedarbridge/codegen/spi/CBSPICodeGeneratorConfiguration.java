@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,22 +16,24 @@
 
 package com.io7m.cedarbridge.codegen.spi;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  * Configuration information for code generators.
+ *
+ * @param outputDirectory The directory to which code is written
  */
-
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBSPICodeGeneratorConfigurationType
+public record CBSPICodeGeneratorConfiguration(
+  Path outputDirectory)
 {
   /**
-   * @return The directory to which code is written
+   * Configuration information for code generators.
+   *
+   * @param outputDirectory The directory to which code is written
    */
-
-  Path outputDirectory();
+  public CBSPICodeGeneratorConfiguration
+  {
+    Objects.requireNonNull(outputDirectory, "outputDirectory");
+  }
 }

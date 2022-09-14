@@ -20,8 +20,6 @@
 
 module com.io7m.cedarbridge.codegen.spi
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 

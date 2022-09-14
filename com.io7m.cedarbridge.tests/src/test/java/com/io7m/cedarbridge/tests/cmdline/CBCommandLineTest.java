@@ -222,7 +222,7 @@ public final class CBCommandLineTest
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Java 11+"));
+    assertTrue(text.contains("Java 17+"));
     LOG.debug("{}", text);
   }
 
@@ -236,7 +236,7 @@ public final class CBCommandLineTest
     MainExitless.main(new String[]{
       "compile",
       "--language",
-      "Java 11+",
+      "Java 17+",
       "--output-directory",
       this.directoryOutput.toString()
     });
@@ -266,7 +266,7 @@ public final class CBCommandLineTest
       "--file",
       file.toString(),
       "--language",
-      "Java 11+",
+      "Java 17+",
       "--output-directory",
       this.directoryOutput.toString()
     });

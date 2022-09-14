@@ -29,11 +29,11 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorType;
 public final class CBCGJavaFactory implements CBSPICodeGeneratorFactoryType
 {
   private static final CBSPICodeGeneratorDescription DESCRIPTION =
-    CBSPICodeGeneratorDescription.builder()
-      .setId("com.io7m.cedarbridge.java11")
-      .setLanguageName("Java 11+")
-      .setDescription("A generator that produces Java 11 sources.")
-      .build();
+    new CBSPICodeGeneratorDescription(
+      "com.io7m.cedarbridge.java17",
+      "Java 17+",
+      "A generator that produces Java 17 sources."
+    );
 
   /**
    * Construct a code generator factory.

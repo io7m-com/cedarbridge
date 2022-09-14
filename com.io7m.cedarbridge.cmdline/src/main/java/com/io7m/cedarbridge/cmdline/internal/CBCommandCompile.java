@@ -134,9 +134,7 @@ public final class CBCommandCompile extends CLPAbstractCommand
     }
 
     final var codeGeneratorConfiguration =
-      CBCodeGeneratorConfiguration.builder()
-        .setOutputDirectory(this.output)
-        .build();
+      new CBCodeGeneratorConfiguration(this.output);
 
     final var codeGenerator =
       codeGeneratorFactory.createGenerator(codeGeneratorConfiguration);

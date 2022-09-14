@@ -33,7 +33,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
+import static com.io7m.cedarbridge.errors.CBError.Severity.ERROR;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
 
@@ -228,15 +228,14 @@ public final class CBParseContext
       }
 
       final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(Objects.requireNonNullElseGet(
-            e,
-            () -> new CBParseFailedException(fatal)))
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
+        new CBError(
+          lexical,
+          ERROR,
+          Objects.requireNonNullElseGet(
+            e, () -> new CBParseFailedException(fatal)),
+          errorCode,
+          text
+        );
 
       this.root.errorConsumer.accept(errorValue);
       return new CBParseFailedException(fatal);
@@ -308,15 +307,14 @@ public final class CBParseContext
 
 
       final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(Objects.requireNonNullElseGet(
-            exception,
-            () -> new CBParseFailedException(fatal)))
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
+        new CBError(
+          lexical,
+          ERROR,
+          Objects.requireNonNullElseGet(
+            exception, () -> new CBParseFailedException(fatal)),
+          errorCode,
+          text
+        );
 
       this.root.errorConsumer.accept(errorValue);
       return new CBParseFailedException(fatal);

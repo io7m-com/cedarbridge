@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,28 +14,27 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+package com.io7m.cedarbridge.schema.binder.api;
+
+import java.math.BigInteger;
 
 /**
- * The type of external names that can be used during code generation.
+ * A binding to something declared within the same package.
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBExternalNameType
+public sealed interface CBBindingLocalType
+  extends CBBindingType
+  permits CBBindingLocalFieldName,
+  CBBindingLocalProtocolDeclaration,
+  CBBindingLocalProtocolVersionDeclaration,
+  CBBindingLocalTypeDeclaration,
+  CBBindingLocalTypeParameter,
+  CBBindingLocalVariantCase
 {
   /**
-   * @return The name of the external package
+   * @return The package-unique ID of the binding
    */
 
-  String externalPackage();
-
-  /**
-   * @return The name of the external type
-   */
-
-  String externalName();
+  BigInteger id();
 }

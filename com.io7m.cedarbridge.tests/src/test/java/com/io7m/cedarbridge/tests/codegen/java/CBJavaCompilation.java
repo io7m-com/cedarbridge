@@ -107,9 +107,7 @@ public final class CBJavaCompilation
 
     final var result =
       compilation.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(outputDirectory)
-          .build()
+        new CBSPICodeGeneratorConfiguration(outputDirectory)
       ).execute(pack);
 
     compilation.compileJava(result.createdFiles());

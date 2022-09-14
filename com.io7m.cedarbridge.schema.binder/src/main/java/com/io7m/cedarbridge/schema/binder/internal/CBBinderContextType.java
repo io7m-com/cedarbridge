@@ -19,7 +19,7 @@ package com.io7m.cedarbridge.schema.binder.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
-import com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.jlexing.core.LexicalPosition;

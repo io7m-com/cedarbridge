@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,24 +17,37 @@
 package com.io7m.cedarbridge.schema.binder.api;
 
 import com.io7m.jlexing.core.LexicalPosition;
-import com.io7m.jlexing.core.LexicalType;
 
+import java.math.BigInteger;
 import java.net.URI;
+import java.util.Objects;
 
 /**
- * A binding to a name.
+ * The binding names a type parameter.
+ *
+ * @param lexical The lexical information
+ * @param id The identifier
+ * @param name The name
  */
 
-public sealed interface CBBindingType extends LexicalType<URI>
-  permits CBBindingExternal, CBBindingLocalType
+public record CBBindingLocalTypeParameter(
+  String name,
+  LexicalPosition<URI> lexical,
+  BigInteger id)
+  implements CBBindingLocalType
 {
   /**
-   * @return The name
+   * The binding names a type parameter.
+   *
+   * @param lexical The lexical information
+   * @param id The identifier
+   * @param name The name
    */
 
-  String name();
-
-  @Override
-  LexicalPosition<URI> lexical();
-
+  public CBBindingLocalTypeParameter
+  {
+    Objects.requireNonNull(name, "name");
+    Objects.requireNonNull(lexical, "lexical");
+    Objects.requireNonNull(id, "id");
+  }
 }

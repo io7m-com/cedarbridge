@@ -23,6 +23,8 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
@@ -40,8 +42,6 @@ import java.util.stream.Collectors;
 
 import static com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeApplicationType;
 import static com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeNamedType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeDeclarationType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeParameterType;
 
 /**
  * A simple translator from ASTs to the more abstract compiled model.
@@ -119,10 +119,10 @@ public final class CBTypePackageConverter
       final var bindingExternal = (CBBindingExternal) binding;
       return ownerPackage.referenceExternalType(bindingExternal.type());
     }
-    if (binding instanceof CBBindingLocalTypeDeclarationType) {
+    if (binding instanceof CBBindingLocalTypeDeclaration) {
       return ownerPackage.referenceType(binding.name());
     }
-    if (binding instanceof CBBindingLocalTypeParameterType) {
+    if (binding instanceof CBBindingLocalTypeParameter) {
       return typeBuilder.referenceParameter(binding.name());
     }
     throw new UnreachableCodeException();

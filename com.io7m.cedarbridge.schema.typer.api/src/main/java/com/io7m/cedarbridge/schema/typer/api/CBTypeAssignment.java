@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,34 +16,26 @@
 
 package com.io7m.cedarbridge.schema.typer.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jaffirm.core.Preconditions;
-import org.immutables.value.Value;
 
 /**
  * An assignment of a type to an object.
+ *
+ * @param arity The arity of the type (the number of type parameters)
  */
-
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBTypeAssignmentType
+public record CBTypeAssignment(
+  int arity)
 {
   /**
-   * @return The arity of the type (the number of type parameters)
+   * An assignment of a type to an object.
+   *
+   * @param arity The arity of the type (the number of type parameters)
    */
 
-  int arity();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
-  {
+  public CBTypeAssignment {
     Preconditions.checkPreconditionI(
-      this.arity(),
-      this.arity() >= 0,
+      arity,
+      arity >= 0,
       value -> "Arity must be non-negative"
     );
   }

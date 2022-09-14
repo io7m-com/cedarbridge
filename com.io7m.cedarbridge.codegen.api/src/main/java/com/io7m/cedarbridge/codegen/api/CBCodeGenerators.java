@@ -82,19 +82,17 @@ public final class CBCodeGenerators implements CBCodeGeneratorDirectoryType
   private static CBCodeGeneratorDescription convertDescription(
     final CBSPICodeGeneratorDescription description)
   {
-    return CBCodeGeneratorDescription.builder()
-      .setDescription(description.description())
-      .setId(description.id())
-      .setLanguageName(description.languageName())
-      .build();
+    return new CBCodeGeneratorDescription(
+      description.id(),
+      description.languageName(),
+      description.description()
+    );
   }
 
   private static CBSPICodeGeneratorConfiguration convertConfiguration(
     final CBCodeGeneratorConfiguration configuration)
   {
-    return CBSPICodeGeneratorConfiguration.builder()
-      .setOutputDirectory(configuration.outputDirectory())
-      .build();
+    return new CBSPICodeGeneratorConfiguration(configuration.outputDirectory());
   }
 
   @Override
