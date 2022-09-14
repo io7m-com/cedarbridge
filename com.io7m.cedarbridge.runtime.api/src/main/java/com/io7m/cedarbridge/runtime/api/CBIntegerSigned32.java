@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,45 +16,37 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
-import java.util.Formattable;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.util.Formatter;
 
 /**
- * The type of map entries.
+ * The type of signed 32-bit integers.
  *
- * @param <K> The key type
- * @param <V> The value type
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBMapEntryType<K extends CBSerializableType, V extends CBSerializableType>
-  extends Formattable, CBSerializableType
+public record CBIntegerSigned32(int value)
+  implements Comparable<CBIntegerSigned32>, CBIntegerType
 {
-  /**
-   * @return The key
-   */
-
-  @Value.Parameter
-  K key();
-
-  /**
-   * @return The value
-   */
-
-  @Value.Parameter
-  V value();
+  @Override
+  public int compareTo(
+    final CBIntegerSigned32 other)
+  {
+    return Integer.compare(this.value(), other.value());
+  }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
-    formatter.format("(%s %s)", this.key(), this.value());
+    try {
+      formatter.out().append(Integer.toString(this.value()));
+    } catch (final IOException exception) {
+      throw new UncheckedIOException(exception);
+    }
   }
 }

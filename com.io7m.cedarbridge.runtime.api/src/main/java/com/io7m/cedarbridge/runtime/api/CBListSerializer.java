@@ -81,6 +81,6 @@ public final class CBListSerializer<T extends CBSerializableType>
     }
 
     context.end("items");
-    return CBList.of(items);
+    return new CBList(items);
   }
 }

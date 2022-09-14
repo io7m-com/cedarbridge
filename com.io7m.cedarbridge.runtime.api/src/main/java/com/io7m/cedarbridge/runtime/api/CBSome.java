@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,52 +14,53 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.util.Formattable;
 import java.util.Formatter;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
- * A qualified type name.
+ * The Some case.
+ *
+ * @param <T>   The type of values
+ * @param value The present value
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBQualifiedTypeNameType extends Formattable
+public record CBSome<T extends CBSerializableType>(T value)
+  implements CBOptionType<T>
 {
   /**
-   * @return The package name
+   * The variant index.
    */
 
-  @Value.Parameter
-  String packageName();
+  static final int VARIANT_INDEX = 1;
 
   /**
-   * @return The type name
+   * The Some case.
+   *
+   * @param value The present value
    */
 
-  @Value.Parameter
-  String typeName();
+  public CBSome
+  {
+    Objects.requireNonNull(value, "value");
+  }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
-    try {
-      final var out = formatter.out();
-      out.append(this.packageName());
-      out.append(":");
-      out.append(this.typeName());
-    } catch (final IOException e) {
-      throw new UncheckedIOException(e);
-    }
+    formatter.format("(CBSome %s)", this.value());
+  }
+
+  @Override
+  public Optional<T> asOptional()
+  {
+    return Optional.of(this.value());
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,53 +16,37 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.util.Formattable;
 import java.util.Formatter;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * The type of lists.
+ * The type of unsigned 64-bit integers.
  *
- * @param <T> The type of list elements
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBListType<T extends CBSerializableType>
-  extends Formattable, CBSerializableType
+public record CBIntegerUnsigned64(long value)
+  implements Comparable<CBIntegerUnsigned64>, CBIntegerType
 {
-  /**
-   * @return The list elements
-   */
-
-  @Value.Parameter
-  List<T> values();
+  @Override
+  public int compareTo(
+    final CBIntegerUnsigned64 other)
+  {
+    return Long.compareUnsigned(this.value(), other.value());
+  }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
     try {
-      final var out = formatter.out();
-      out.append('[');
-      out.append(
-        this.values()
-          .stream()
-          .map(x -> String.format("%s", x))
-          .collect(Collectors.joining(" "))
-      );
-      out.append(']');
-    } catch (final IOException e) {
-      throw new UncheckedIOException(e);
+      formatter.out().append(Long.toUnsignedString(this.value()));
+    } catch (final IOException exception) {
+      throw new UncheckedIOException(exception);
     }
   }
 }

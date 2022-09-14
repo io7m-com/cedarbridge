@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,41 +16,44 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
+import java.util.Formattable;
 import java.util.Formatter;
+import java.util.Objects;
 
 /**
- * A 16-bit floating point value.
+ * The type of map entries.
+ *
+ * @param <K>   The key type
+ * @param <V>   The value type
+ * @param key   The key
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBFloat16Type
-  extends Comparable<CBFloat16>, CBFloatType
+public record CBMapEntry<K extends CBSerializableType, V extends CBSerializableType>(
+  K key,
+  V value)
+  implements Formattable, CBSerializableType
 {
   /**
-   * @return The value
+   * The type of map entries.
+   *
+   * @param key   The key
+   * @param value The value
    */
 
-  @Value.Parameter
-  double value();
-
-  @Override
-  default int compareTo(
-    final CBFloat16 other)
+  public CBMapEntry
   {
-    return Double.compare(this.value(), other.value());
+    Objects.requireNonNull(key, "key");
+    Objects.requireNonNull(value, "value");
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
-    formatter.format("%f", Double.valueOf(this.value()));
+    formatter.format("(%s %s)", this.key(), this.value());
   }
 }

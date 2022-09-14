@@ -58,7 +58,7 @@ public final class CBMapSerializer<K extends CBSerializableType, V extends CBSer
     for (final var entry : map.entrySet()) {
       this.entrySerializer.serialize(
         context,
-        CBMapEntry.of(entry.getKey(), entry.getValue())
+        new CBMapEntry<>(entry.getKey(), entry.getValue())
       );
     }
   }
@@ -75,6 +75,6 @@ public final class CBMapSerializer<K extends CBSerializableType, V extends CBSer
       final var entry = this.entrySerializer.deserialize(context);
       results.put(entry.key(), entry.value());
     }
-    return CBMap.of(results);
+    return new CBMap<>(results);
   }
 }

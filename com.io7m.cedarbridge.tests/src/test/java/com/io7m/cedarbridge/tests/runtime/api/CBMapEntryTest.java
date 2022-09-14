@@ -30,7 +30,7 @@ public final class CBMapEntryTest
   {
     assertEquals(
       "(k0 23)",
-      String.format("%s", CBMapEntry.of(string("k0"), unsigned32(23)))
+      String.format("%s", new CBMapEntry<>(string("k0"), unsigned32(23)))
     );
   }
 }

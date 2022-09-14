@@ -22,7 +22,15 @@ import java.util.Formattable;
  * The base type of integers.
  */
 
-public interface CBIntegerType extends Formattable, CBSerializableType
+public sealed interface CBIntegerType
+  extends Formattable, CBSerializableType permits CBIntegerSigned16,
+  CBIntegerSigned32,
+  CBIntegerSigned64,
+  CBIntegerSigned8,
+  CBIntegerUnsigned16,
+  CBIntegerUnsigned32,
+  CBIntegerUnsigned64,
+  CBIntegerUnsigned8
 {
 
 }

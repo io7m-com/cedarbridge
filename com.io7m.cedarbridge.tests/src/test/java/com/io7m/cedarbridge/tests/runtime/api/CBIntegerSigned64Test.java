@@ -28,15 +28,15 @@ public final class CBIntegerSigned64Test
   {
     assertEquals(
       0,
-      CBIntegerSigned64.of(0L).compareTo(CBIntegerSigned64.of(0L))
+      new CBIntegerSigned64(0L).compareTo(new CBIntegerSigned64(0L))
     );
     assertEquals(
       1,
-      CBIntegerSigned64.of(0L).compareTo(CBIntegerSigned64.of(-1L))
+      new CBIntegerSigned64(0L).compareTo(new CBIntegerSigned64(-1L))
     );
     assertEquals(
       -1,
-      CBIntegerSigned64.of(-1L).compareTo(CBIntegerSigned64.of(0L))
+      new CBIntegerSigned64(-1L).compareTo(new CBIntegerSigned64(0L))
     );
   }
 
@@ -45,7 +45,7 @@ public final class CBIntegerSigned64Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerSigned64.of(23L))
+      String.format("%s", new CBIntegerSigned64(23L))
     );
   }
 }

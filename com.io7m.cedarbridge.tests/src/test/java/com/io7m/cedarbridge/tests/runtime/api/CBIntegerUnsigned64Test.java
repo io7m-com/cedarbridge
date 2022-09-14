@@ -29,15 +29,15 @@ public final class CBIntegerUnsigned64Test
   {
     assertEquals(
       0,
-      CBIntegerUnsigned64.of(0L).compareTo(CBIntegerUnsigned64.of(0L))
+      new CBIntegerUnsigned64(0L).compareTo(new CBIntegerUnsigned64(0L))
     );
     assertEquals(
       1,
-      CBIntegerUnsigned64.of(1L).compareTo(CBIntegerUnsigned64.of(0L))
+      new CBIntegerUnsigned64(1L).compareTo(new CBIntegerUnsigned64(0L))
     );
     assertEquals(
       -1,
-      CBIntegerUnsigned64.of(0L).compareTo(CBIntegerUnsigned64.of(1L))
+      new CBIntegerUnsigned64(0L).compareTo(new CBIntegerUnsigned64(1L))
     );
   }
 
@@ -46,7 +46,7 @@ public final class CBIntegerUnsigned64Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerUnsigned64.of(23L))
+      String.format("%s", new CBIntegerUnsigned64(23L))
     );
   }
 }

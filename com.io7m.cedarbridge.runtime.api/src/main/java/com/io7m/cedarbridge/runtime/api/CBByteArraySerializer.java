@@ -48,6 +48,6 @@ public final class CBByteArraySerializer
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBByteArray.of(context.readByteArray());
+    return new CBByteArray(context.readByteArray());
   }
 }

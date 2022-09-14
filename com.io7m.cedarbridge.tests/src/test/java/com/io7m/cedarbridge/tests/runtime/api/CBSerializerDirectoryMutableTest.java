@@ -16,7 +16,6 @@
 
 package com.io7m.cedarbridge.tests.runtime.api;
 
-import com.io7m.cedarbridge.runtime.api.CBCore;
 import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
 import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned32Serializers;
 import com.io7m.cedarbridge.runtime.api.CBQualifiedTypeName;
@@ -36,10 +35,7 @@ public final class CBSerializerDirectoryMutableTest
     final var directory = new CBSerializerDirectoryMutable();
 
     assertThrows(IllegalArgumentException.class, () -> directory.serializerFor(
-      CBQualifiedTypeName.builder()
-        .setPackageName("com.io7m.cedarbridge")
-        .setTypeName("T")
-        .build(),
+      new CBQualifiedTypeName("com.io7m.cedarbridge", "T"),
       List.of()
     ));
   }

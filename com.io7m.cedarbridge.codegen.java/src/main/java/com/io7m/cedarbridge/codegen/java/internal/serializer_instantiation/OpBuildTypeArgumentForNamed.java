@@ -69,7 +69,7 @@ public final class OpBuildTypeArgumentForNamed
       .addStatement(
         "// Build type argument for named type $L:$L", packName, tyName)
       .addStatement(
-        "final $T $L = $T.of($T.of($S,$S),$T.of())",
+        "final $T $L = $T.of(new $T($S,$S),$T.of())",
         CBTypeArgument.class,
         this.javaLocalName(),
         CBTypeArguments.class,

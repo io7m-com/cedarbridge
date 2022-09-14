@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,37 +17,49 @@
 package com.io7m.cedarbridge.runtime.api;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Formattable;
+import java.util.Formatter;
+import java.util.Objects;
 
 /**
- * A serializer of 64-bit unsigned integers.
+ * The type of UTF-8 strings.
+ *
+ * @param value The value
  */
 
-public final class CBIntegerUnsigned64Serializer
-  extends CBAbstractSerializer<CBIntegerUnsigned64>
+public record CBString(String value)
+  implements Comparable<CBString>, Formattable, CBSerializableType
 {
   /**
-   * A serializer of 64-bit unsigned integers.
+   * The type of UTF-8 strings.
+   *
+   * @param value The value
    */
 
-  public CBIntegerUnsigned64Serializer()
+  public CBString
   {
-
+    Objects.requireNonNull(value, "value");
   }
 
   @Override
-  public void serialize(
-    final CBSerializationContextType context,
-    final CBIntegerUnsigned64 value)
-    throws IOException
+  public int compareTo(
+    final CBString other)
   {
-    context.writeU64(value.value());
+    return this.value().compareTo(other.value());
   }
 
   @Override
-  public CBIntegerUnsigned64 deserialize(
-    final CBSerializationContextType context)
-    throws IOException
+  public void formatTo(
+    final Formatter formatter,
+    final int flags,
+    final int width,
+    final int precision)
   {
-    return new CBIntegerUnsigned64(context.readU64());
+    try {
+      formatter.out().append(this.value());
+    } catch (final IOException exception) {
+      throw new UncheckedIOException(exception);
+    }
   }
 }

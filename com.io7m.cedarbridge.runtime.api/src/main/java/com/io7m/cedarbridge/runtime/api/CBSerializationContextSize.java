@@ -21,8 +21,8 @@ import java.nio.ByteBuffer;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * A serialization context that writes no data, but calculates the size of
- * all data passing through it.
+ * A serialization context that writes no data, but calculates the size of all
+ * data passing through it.
  */
 
 public final class CBSerializationContextSize

@@ -29,15 +29,15 @@ public final class CBIntegerSigned32Test
   {
     assertEquals(
       0,
-      CBIntegerSigned32.of(0).compareTo(CBIntegerSigned32.of(0))
+      new CBIntegerSigned32(0).compareTo(new CBIntegerSigned32(0))
     );
     assertEquals(
       1,
-      CBIntegerSigned32.of(1).compareTo(CBIntegerSigned32.of(0))
+      new CBIntegerSigned32(1).compareTo(new CBIntegerSigned32(0))
     );
     assertEquals(
       -1,
-      CBIntegerSigned32.of(0).compareTo(CBIntegerSigned32.of(1))
+      new CBIntegerSigned32(0).compareTo(new CBIntegerSigned32(1))
     );
   }
 
@@ -46,7 +46,7 @@ public final class CBIntegerSigned32Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerSigned32.of(23))
+      String.format("%s", new CBIntegerSigned32(23))
     );
   }
 }

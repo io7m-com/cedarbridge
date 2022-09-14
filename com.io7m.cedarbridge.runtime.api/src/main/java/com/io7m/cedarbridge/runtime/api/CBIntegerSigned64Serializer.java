@@ -48,6 +48,6 @@ public final class CBIntegerSigned64Serializer
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBIntegerSigned64.of(context.readS64());
+    return new CBIntegerSigned64(context.readS64());
   }
 }

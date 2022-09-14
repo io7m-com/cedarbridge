@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,62 +16,53 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
 /**
  * The type of signed 8-bit integers.
+ *
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBIntegerSigned8Type
-  extends Comparable<CBIntegerSigned8>, CBIntegerType
+public record CBIntegerSigned8(int value)
+  implements Comparable<CBIntegerSigned8>, CBIntegerType
 {
   /**
-   * @return The value
+   * The type of signed 8-bit integers.
+   *
+   * @param value The value
    */
 
-  @Value.Parameter
-  int value();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
+  public CBIntegerSigned8
   {
-    if (this.value() < 0) {
+    if (value < -128) {
       throw new IllegalArgumentException(
         String.format(
           "Value %d must be in the range [-128, 127]",
-          Integer.valueOf(this.value()))
+          Integer.valueOf(value))
       );
     }
 
-    if (this.value() > 0xff) {
+    if (value > 127) {
       throw new IllegalArgumentException(
         String.format(
           "Value %d must be in the range [-128, 127]",
-          Integer.valueOf(this.value()))
+          Integer.valueOf(value))
       );
     }
   }
 
   @Override
-  default int compareTo(
+  public int compareTo(
     final CBIntegerSigned8 other)
   {
     return Integer.compare(this.value(), other.value());
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,

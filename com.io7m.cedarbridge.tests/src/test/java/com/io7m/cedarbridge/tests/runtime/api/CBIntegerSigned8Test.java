@@ -28,7 +28,7 @@ public final class CBIntegerSigned8Test
   public void testRange0()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerSigned8.of(-257);
+      new CBIntegerSigned8(-257);
     });
   }
 
@@ -36,7 +36,7 @@ public final class CBIntegerSigned8Test
   public void testRange1()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerSigned8.of(257);
+      new CBIntegerSigned8(257);
     });
   }
 
@@ -45,15 +45,15 @@ public final class CBIntegerSigned8Test
   {
     assertEquals(
       0,
-      CBIntegerSigned8.of(0).compareTo(CBIntegerSigned8.of(0))
+      new CBIntegerSigned8(0).compareTo(new CBIntegerSigned8(0))
     );
     assertEquals(
       1,
-      CBIntegerSigned8.of(1).compareTo(CBIntegerSigned8.of(0))
+      new CBIntegerSigned8(1).compareTo(new CBIntegerSigned8(0))
     );
     assertEquals(
       -1,
-      CBIntegerSigned8.of(0).compareTo(CBIntegerSigned8.of(1))
+      new CBIntegerSigned8(0).compareTo(new CBIntegerSigned8(1))
     );
   }
 
@@ -62,7 +62,7 @@ public final class CBIntegerSigned8Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerSigned8.of(23))
+      String.format("%s", new CBIntegerSigned8(23))
     );
   }
 }

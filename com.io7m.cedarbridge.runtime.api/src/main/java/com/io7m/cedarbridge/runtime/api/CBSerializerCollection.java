@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,67 +16,49 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-import org.osgi.annotation.versioning.ProviderType;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * A collection of serializers.
+ *
+ * @param packageName The package name
+ * @param serializers The serializers
  */
 
-@ProviderType
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBSerializerCollectionType
+public record CBSerializerCollection(
+  String packageName,
+  List<CBSerializerFactoryType<?>> serializers)
 {
-  private static void check(
-    final boolean condition,
-    final String format,
-    final Object... arguments)
+  /**
+   * A collection of serializers.
+   *
+   * @param packageName The package name
+   * @param serializers The serializers
+   */
+
+  public CBSerializerCollection
   {
-    if (!condition) {
-      throw new IllegalArgumentException(String.format(format, arguments));
-    }
-  }
+    Objects.requireNonNull(packageName, "packageName");
+    Objects.requireNonNull(serializers, "serializers");
 
-  /**
-   * @return The package name
-   */
-
-  String packageName();
-
-  /**
-   * @return The serializers
-   */
-
-  List<CBSerializerFactoryType<?>> serializers();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
-  {
     final var names =
       new HashMap<String, CBSerializerFactoryType<?>>(
-        this.serializers().size()
+        serializers.size()
       );
 
-    for (final var serializer : this.serializers()) {
+    for (final var serializer : serializers) {
       final var typeName = serializer.typeName();
 
       check(
-        Objects.equals(typeName.packageName(), this.packageName()),
+        Objects.equals(typeName.packageName(), packageName),
         "Serializer %s must have package name %s (was %s)",
         serializer.getClass(),
         typeName,
-        this.packageName()
+        packageName
       );
+
       final var existing = names.get(typeName.typeName());
       if (existing != null) {
         check(
@@ -88,6 +70,16 @@ public interface CBSerializerCollectionType
         );
       }
       names.put(typeName.typeName(), serializer);
+    }
+  }
+
+  private static void check(
+    final boolean condition,
+    final String format,
+    final Object... arguments)
+  {
+    if (!condition) {
+      throw new IllegalArgumentException(String.format(format, arguments));
     }
   }
 }

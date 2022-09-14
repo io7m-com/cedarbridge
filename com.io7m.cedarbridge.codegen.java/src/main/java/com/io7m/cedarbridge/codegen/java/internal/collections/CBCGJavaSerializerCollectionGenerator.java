@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
+import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -30,6 +31,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -65,14 +67,24 @@ public final class CBCGJavaSerializerCollectionGenerator implements
       MethodSpec.methodBuilder("makeCollection")
         .addModifiers(PRIVATE, STATIC);
     method.returns(CBSerializerCollection.class);
+
     method.addStatement(
-      "final var builder = $T.builder()",
-      CBSerializerCollection.class);
-    method.addStatement("builder.setPackageName($S)", packageName);
+      "final var s = new $T<$T<?>>()",
+      ArrayList.class,
+      CBSerializerFactoryType.class
+    );
+
     for (final var clazz : classes) {
-      method.addStatement("builder.addSerializers(new $T())", clazz);
+      method.addStatement("s.add(new $T())", clazz);
     }
-    method.addStatement("return builder.build()");
+
+    method.addStatement(
+      "return new $T($S, $T.copyOf(s))",
+      CBSerializerCollection.class,
+      packageName,
+      List.class
+    );
+
     return method.build();
   }
 

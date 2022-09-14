@@ -28,7 +28,7 @@ public final class CBIntegerUnsigned32Test
   public void testRange0()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerUnsigned32.of(-1L);
+      new CBIntegerUnsigned32(-1L);
     });
   }
 
@@ -36,7 +36,7 @@ public final class CBIntegerUnsigned32Test
   public void testRange1()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerUnsigned32.of(4294967296L);
+      new CBIntegerUnsigned32(4294967296L);
     });
   }
 
@@ -45,15 +45,15 @@ public final class CBIntegerUnsigned32Test
   {
     assertEquals(
       0,
-      CBIntegerUnsigned32.of(0L).compareTo(CBIntegerUnsigned32.of(0L))
+      new CBIntegerUnsigned32(0L).compareTo(new CBIntegerUnsigned32(0L))
     );
     assertEquals(
       1,
-      CBIntegerUnsigned32.of(1L).compareTo(CBIntegerUnsigned32.of(0L))
+      new CBIntegerUnsigned32(1L).compareTo(new CBIntegerUnsigned32(0L))
     );
     assertEquals(
       -1,
-      CBIntegerUnsigned32.of(0L).compareTo(CBIntegerUnsigned32.of(1L))
+      new CBIntegerUnsigned32(0L).compareTo(new CBIntegerUnsigned32(1L))
     );
   }
 
@@ -62,7 +62,7 @@ public final class CBIntegerUnsigned32Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerUnsigned32.of(23L))
+      String.format("%s", new CBIntegerUnsigned32(23L))
     );
   }
 }

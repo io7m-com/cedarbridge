@@ -151,9 +151,13 @@ public final class CBJavaCompilation
           compileFiles
         );
 
+      final var result =
+        task.call();
+
       assertTrue(
-        task.call().booleanValue(),
-        "Compilation of all files must succeed");
+        result.booleanValue(),
+        "Compilation of all files must succeed"
+      );
     }
 
     this.createModule();

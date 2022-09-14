@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,47 +16,31 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Formatter;
 
 /**
- * The type of unsigned 64-bit integers.
+ * A 16-bit floating point value.
+ *
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBIntegerUnsigned64Type
-  extends Comparable<CBIntegerUnsigned64>, CBIntegerType
+public record CBFloat16(double value)
+  implements Comparable<CBFloat16>, CBFloatType
 {
-  /**
-   * @return The value
-   */
-
-  @Value.Parameter
-  long value();
-
   @Override
-  default int compareTo(
-    final CBIntegerUnsigned64 other)
+  public int compareTo(
+    final CBFloat16 other)
   {
-    return Long.compareUnsigned(this.value(), other.value());
+    return Double.compare(this.value(), other.value());
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
-    try {
-      formatter.out().append(Long.toUnsignedString(this.value()));
-    } catch (final IOException exception) {
-      throw new UncheckedIOException(exception);
-    }
+    formatter.format("%f", Double.valueOf(this.value()));
   }
 }

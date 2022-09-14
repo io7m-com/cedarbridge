@@ -16,11 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.util.Formattable;
-import java.util.Formatter;
 import java.util.Optional;
 
 /**
@@ -29,85 +25,13 @@ import java.util.Optional;
  * @param <T> The type of values
  */
 
-public interface CBOptionType<T extends CBSerializableType>
+public sealed interface CBOptionType<T extends CBSerializableType>
   extends Formattable, CBSerializableType
+  permits CBNone, CBSome
 {
   /**
    * @return This value as a Java Optional
    */
 
   Optional<T> asOptional();
-
-  /**
-   * The None case.
-   *
-   * @param <T> The type of values
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable(builder = false, copy = false)
-  interface CBNoneType<T extends CBSerializableType> extends CBOptionType<T>
-  {
-    /**
-     * The variant index.
-     */
-
-    int VARIANT_INDEX = 0;
-
-    @Override
-    default void formatTo(
-      final Formatter formatter,
-      final int flags,
-      final int width,
-      final int precision)
-    {
-      formatter.format("(CBNone)");
-    }
-
-    @Override
-    default Optional<T> asOptional()
-    {
-      return Optional.empty();
-    }
-  }
-
-  /**
-   * The Some case.
-   *
-   * @param <T> The type of values
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable(builder = false, copy = false)
-  interface CBSomeType<T extends CBSerializableType> extends CBOptionType<T>
-  {
-    /**
-     * The variant index.
-     */
-
-    int VARIANT_INDEX = 1;
-
-    /**
-     * @return The present value
-     */
-
-    @Value.Parameter
-    T value();
-
-    @Override
-    default void formatTo(
-      final Formatter formatter,
-      final int flags,
-      final int width,
-      final int precision)
-    {
-      formatter.format("(CBSome %s)", this.value());
-    }
-
-    @Override
-    default Optional<T> asOptional()
-    {
-      return Optional.of(this.value());
-    }
-  }
 }

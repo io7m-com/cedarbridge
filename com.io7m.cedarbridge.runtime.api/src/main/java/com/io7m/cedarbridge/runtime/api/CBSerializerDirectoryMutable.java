@@ -43,8 +43,8 @@ public final class CBSerializerDirectoryMutable
   /**
    * Add all serializers in the collection to the directory. This is equivalent
    * to calling {@link #addSerializer(CBSerializerFactoryType)} to every member
-   * of the collection in order, accumulating the exceptions and then raising
-   * an exception at the end if any exceptions were raised.
+   * of the collection in order, accumulating the exceptions and then raising an
+   * exception at the end if any exceptions were raised.
    *
    * @param collection The collection
    */
@@ -166,7 +166,7 @@ public final class CBSerializerDirectoryMutable
       }
       final Instantiation that = (Instantiation) o;
       return this.typeName.equals(that.typeName)
-        && this.arguments.equals(that.arguments);
+             && this.arguments.equals(that.arguments);
     }
 
     @Override

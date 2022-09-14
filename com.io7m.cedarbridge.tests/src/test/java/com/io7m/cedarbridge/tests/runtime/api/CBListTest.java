@@ -35,14 +35,14 @@ public final class CBListTest
   {
     final var xs =
       List.of(
-        CBIntegerUnsigned32.of(23L),
-        CBIntegerUnsigned32.of(24L),
-        CBIntegerUnsigned32.of(25L)
+        new CBIntegerUnsigned32(23L),
+        new CBIntegerUnsigned32(24L),
+        new CBIntegerUnsigned32(25L)
       );
 
     assertEquals(
       "[23 24 25]",
-      String.format("%s", CBList.of(xs))
+      String.format("%s", new CBList<>(xs))
     );
   }
 }

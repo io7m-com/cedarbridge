@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,36 +16,26 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.util.Formatter;
 
 /**
- * A 64-bit floating point value.
+ * A 32-bit floating point value.
+ *
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBFloat64Type
-  extends Comparable<CBFloat64>, CBFloatType
+public record CBFloat32(double value)
+  implements Comparable<CBFloat32>, CBFloatType
 {
-  /**
-   * @return The value
-   */
-
-  @Value.Parameter
-  double value();
-
   @Override
-  default int compareTo(
-    final CBFloat64 other)
+  public int compareTo(
+    final CBFloat32 other)
   {
     return Double.compare(this.value(), other.value());
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,

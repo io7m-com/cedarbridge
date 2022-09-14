@@ -19,8 +19,8 @@ package com.io7m.cedarbridge.runtime.api;
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * A service that can be published in order to make serializers available
- * to code.
+ * A service that can be published in order to make serializers available to
+ * code.
  */
 
 @ProviderType
@@ -30,5 +30,5 @@ public interface CBSerializerCollectionServiceType
    * @return The available serializers
    */
 
-  CBSerializerCollectionType get();
+  CBSerializerCollection get();
 }

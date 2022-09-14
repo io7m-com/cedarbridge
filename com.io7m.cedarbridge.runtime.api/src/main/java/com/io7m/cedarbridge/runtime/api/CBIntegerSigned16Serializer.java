@@ -48,6 +48,6 @@ public final class CBIntegerSigned16Serializer
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBIntegerSigned16.of(context.readS16());
+    return new CBIntegerSigned16(context.readS16());
   }
 }

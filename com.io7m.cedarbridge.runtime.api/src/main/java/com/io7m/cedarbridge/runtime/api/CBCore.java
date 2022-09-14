@@ -38,7 +38,7 @@ public final class CBCore
   public static CBFloat16 float16(
     final double x)
   {
-    return CBFloat16.of(x);
+    return new CBFloat16(x);
   }
 
   /**
@@ -52,7 +52,7 @@ public final class CBCore
   public static CBFloat32 float32(
     final double x)
   {
-    return CBFloat32.of(x);
+    return new CBFloat32(x);
   }
 
   /**
@@ -66,7 +66,7 @@ public final class CBCore
   public static CBFloat64 float64(
     final double x)
   {
-    return CBFloat64.of(x);
+    return new CBFloat64(x);
   }
 
   /**
@@ -80,7 +80,7 @@ public final class CBCore
   public static CBIntegerUnsigned64 unsigned64(
     final long x)
   {
-    return CBIntegerUnsigned64.of(x);
+    return new CBIntegerUnsigned64(x);
   }
 
   /**
@@ -94,7 +94,7 @@ public final class CBCore
   public static CBIntegerUnsigned32 unsigned32(
     final long x)
   {
-    return CBIntegerUnsigned32.of(x);
+    return new CBIntegerUnsigned32(x);
   }
 
   /**
@@ -136,7 +136,7 @@ public final class CBCore
   public static CBIntegerUnsigned16 unsigned16(
     final int x)
   {
-    return CBIntegerUnsigned16.of(x);
+    return new CBIntegerUnsigned16(x);
   }
 
   /**
@@ -164,7 +164,7 @@ public final class CBCore
   public static CBIntegerUnsigned8 unsigned8(
     final int x)
   {
-    return CBIntegerUnsigned8.of(x);
+    return new CBIntegerUnsigned8(x);
   }
 
   /**
@@ -178,7 +178,7 @@ public final class CBCore
   public static CBIntegerSigned64 signed64(
     final long x)
   {
-    return CBIntegerSigned64.of(x);
+    return new CBIntegerSigned64(x);
   }
 
   /**
@@ -192,7 +192,7 @@ public final class CBCore
   public static CBIntegerSigned32 signed32(
     final long x)
   {
-    return CBIntegerSigned32.of((int) x);
+    return new CBIntegerSigned32((int) x);
   }
 
   /**
@@ -206,7 +206,7 @@ public final class CBCore
   public static CBIntegerSigned32 signed32(
     final int x)
   {
-    return CBIntegerSigned32.of(x);
+    return new CBIntegerSigned32(x);
   }
 
   /**
@@ -234,7 +234,7 @@ public final class CBCore
   public static CBIntegerSigned16 signed16(
     final int x)
   {
-    return CBIntegerSigned16.of(x);
+    return new CBIntegerSigned16(x);
   }
 
   /**
@@ -262,7 +262,7 @@ public final class CBCore
   public static CBIntegerSigned8 signed8(
     final int x)
   {
-    return CBIntegerSigned8.of(x);
+    return new CBIntegerSigned8(x);
   }
 
   /**
@@ -276,6 +276,6 @@ public final class CBCore
   public static CBString string(
     final String x)
   {
-    return CBString.of(x);
+    return new CBString(x);
   }
 }

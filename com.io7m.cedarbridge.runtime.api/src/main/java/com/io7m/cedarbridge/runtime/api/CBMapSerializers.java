@@ -47,7 +47,7 @@ public final class CBMapSerializers<K extends CBSerializableType, V extends CBSe
 
     final CBSerializerType<CBMapEntry<K, V>> entrySerializer =
       directory.serializerFor(
-        this.typeName().withTypeName("MapEntry"),
+        new CBQualifiedTypeName(this.typeName().packageName(), "MapEntry"),
         List.of(keyType, valType)
       );
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,25 +14,29 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
  * The type of byte arrays.
+ *
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBByteArrayType extends CBSerializableType
+public record CBByteArray(ByteBuffer value)
+  implements CBSerializableType
 {
   /**
-   * @return The value
+   * The type of byte arrays.
+   *
+   * @param value The value
    */
 
-  @Value.Parameter
-  ByteBuffer value();
+  public CBByteArray
+  {
+    Objects.requireNonNull(value, "value");
+  }
 }

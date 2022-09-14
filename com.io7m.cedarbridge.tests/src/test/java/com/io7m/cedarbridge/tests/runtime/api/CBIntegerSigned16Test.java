@@ -28,7 +28,7 @@ public final class CBIntegerSigned16Test
   public void testRange0()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerSigned16.of(-32769);
+      new CBIntegerSigned16(-32769);
     });
   }
 
@@ -36,7 +36,7 @@ public final class CBIntegerSigned16Test
   public void testRange1()
   {
     assertThrows(IllegalArgumentException.class, () -> {
-      CBIntegerSigned16.of(32769);
+      new CBIntegerSigned16(32769);
     });
   }
 
@@ -45,15 +45,15 @@ public final class CBIntegerSigned16Test
   {
     assertEquals(
       0,
-      CBIntegerSigned16.of(0).compareTo(CBIntegerSigned16.of(0))
+      new CBIntegerSigned16(0).compareTo(new CBIntegerSigned16(0))
     );
     assertEquals(
       1,
-      CBIntegerSigned16.of(1).compareTo(CBIntegerSigned16.of(0))
+      new CBIntegerSigned16(1).compareTo(new CBIntegerSigned16(0))
     );
     assertEquals(
       -1,
-      CBIntegerSigned16.of(0).compareTo(CBIntegerSigned16.of(1))
+      new CBIntegerSigned16(0).compareTo(new CBIntegerSigned16(1))
     );
   }
 
@@ -62,7 +62,7 @@ public final class CBIntegerSigned16Test
   {
     assertEquals(
       "23",
-      String.format("%s", CBIntegerSigned16.of(23))
+      String.format("%s", new CBIntegerSigned16(23))
     );
   }
 }

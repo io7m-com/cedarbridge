@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,37 +16,39 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 /**
- * The type of maps.
+ * A qualified type name.
  *
- * @param <K> The type of keys
- * @param <V> The type of values
+ * @param packageName The package name
+ * @param typeName    The type name
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBMapType<K extends CBSerializableType, V extends CBSerializableType>
-  extends Formattable, CBSerializableType
+public record CBQualifiedTypeName(
+  String packageName,
+  String typeName)
+  implements Formattable
 {
   /**
-   * @return The map
+   * A qualified type name.
+   *
+   * @param packageName The package name
+   * @param typeName    The type name
    */
 
-  @Value.Parameter
-  Map<K, V> values();
+  public CBQualifiedTypeName
+  {
+    Objects.requireNonNull(packageName, "packageName");
+    Objects.requireNonNull(typeName, "typeName");
+  }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
@@ -54,15 +56,9 @@ public interface CBMapType<K extends CBSerializableType, V extends CBSerializabl
   {
     try {
       final var out = formatter.out();
-      out.append('[');
-      out.append(
-        this.values()
-          .entrySet()
-          .stream()
-          .map(x -> String.format("(%s %s)", x.getKey(), x.getValue()))
-          .collect(Collectors.joining(" "))
-      );
-      out.append(']');
+      out.append(this.packageName());
+      out.append(":");
+      out.append(this.typeName());
     } catch (final IOException e) {
       throw new UncheckedIOException(e);
     }

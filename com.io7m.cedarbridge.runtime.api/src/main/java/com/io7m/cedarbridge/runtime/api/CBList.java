@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,47 +16,54 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.Formattable;
 import java.util.Formatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * The type of signed 64-bit integers.
+ * The type of lists.
+ *
+ * @param <T>    The type of list elements
+ * @param values The values
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBIntegerSigned64Type
-  extends Comparable<CBIntegerSigned64>, CBIntegerType
+public record CBList<T extends CBSerializableType>(List<T> values)
+  implements Formattable, CBSerializableType
 {
   /**
-   * @return The value
+   * The type of lists.
+   *
+   * @param values The values
    */
 
-  @Value.Parameter
-  long value();
-
-  @Override
-  default int compareTo(
-    final CBIntegerSigned64 other)
+  public CBList
   {
-    return Long.compare(this.value(), other.value());
+    Objects.requireNonNull(values, "values");
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
     try {
-      formatter.out().append(Long.toString(this.value()));
-    } catch (final IOException exception) {
-      throw new UncheckedIOException(exception);
+      final var out = formatter.out();
+      out.append('[');
+      out.append(
+        this.values()
+          .stream()
+          .map(x -> String.format("%s", x))
+          .collect(Collectors.joining(" "))
+      );
+      out.append(']');
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 }

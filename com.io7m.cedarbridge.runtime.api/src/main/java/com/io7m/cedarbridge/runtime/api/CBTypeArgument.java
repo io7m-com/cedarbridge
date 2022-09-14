@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,48 +16,60 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formattable;
 import java.util.Formatter;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
- * The type of UTF-8 strings.
+ * A type argument.
+ *
+ * @param target    The type name
+ * @param arguments The type arguments
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBStringType
-  extends Comparable<CBString>, Formattable, CBSerializableType
+public record CBTypeArgument(
+  CBQualifiedTypeName target,
+  List<CBTypeArgument> arguments)
+  implements Formattable
 {
   /**
-   * @return The string value
+   * A type argument.
+   *
+   * @param target    The type name
+   * @param arguments The type arguments
    */
 
-  @Value.Parameter
-  String value();
-
-  @Override
-  default int compareTo(
-    final CBString other)
+  public CBTypeArgument
   {
-    return this.value().compareTo(other.value());
+    Objects.requireNonNull(target, "target");
+    Objects.requireNonNull(arguments, "arguments");
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
     try {
-      formatter.out().append(this.value());
-    } catch (final IOException exception) {
-      throw new UncheckedIOException(exception);
+      final var out = formatter.out();
+      out.append(String.format("%s", this.target()));
+      final var args = this.arguments();
+      if (!args.isEmpty()) {
+        out.append(" ");
+        out.append(
+          args.stream()
+            .map(x -> String.format("%s", x))
+            .collect(Collectors.joining(" "))
+        );
+      }
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
     }
   }
 }

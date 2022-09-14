@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,69 +16,60 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Formatter;
 
 /**
- * The type of unsigned 16-bit integers.
+ * The type of unsigned 32-bit integers.
+ *
+ * @param value The value
  */
 
-@ImmutablesStyleType
-@Value.Immutable(builder = false, copy = false)
-public interface CBIntegerUnsigned16Type
-  extends Comparable<CBIntegerUnsigned16>, CBIntegerType
+public record CBIntegerUnsigned32(long value)
+  implements Comparable<CBIntegerUnsigned32>, CBIntegerType
 {
   /**
-   * @return The value
+   * The type of unsigned 32-bit integers.
+   *
+   * @param value The value
    */
 
-  @Value.Parameter
-  int value();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
+  public CBIntegerUnsigned32
   {
-    if (this.value() < 0) {
+    if (value < 0L) {
       throw new IllegalArgumentException(
         String.format(
-          "Value %d must be in the range [0, 65535]",
-          Integer.valueOf(this.value()))
+          "Value %s must be in the range [0, 4294967295]",
+          Long.toUnsignedString(this.value()))
       );
     }
 
-    if (this.value() > 0xffff) {
+    if (value > 4294967295L) {
       throw new IllegalArgumentException(
         String.format(
-          "Value %d must be in the range [0, 65535]",
-          Integer.valueOf(this.value()))
+          "Value %s must be in the range [0, 4294967295]",
+          Long.toUnsignedString(this.value()))
       );
     }
   }
 
   @Override
-  default int compareTo(
-    final CBIntegerUnsigned16 other)
+  public int compareTo(
+    final CBIntegerUnsigned32 other)
   {
-    return Integer.compareUnsigned(this.value(), other.value());
+    return Long.compareUnsigned(this.value(), other.value());
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
     final int precision)
   {
     try {
-      formatter.out().append(Integer.toUnsignedString(this.value()));
+      formatter.out().append(Long.toUnsignedString(this.value()));
     } catch (final IOException exception) {
       throw new UncheckedIOException(exception);
     }

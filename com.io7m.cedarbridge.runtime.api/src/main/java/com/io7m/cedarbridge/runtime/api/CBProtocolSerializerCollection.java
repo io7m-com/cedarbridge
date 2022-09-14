@@ -22,7 +22,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * The default implementation of the {@link CBProtocolSerializerCollectionType} interface.
+ * The default implementation of the {@link CBProtocolSerializerCollectionType}
+ * interface.
  *
  * @param <T> The type of serialized protocol messages
  */
