@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -17,22 +17,27 @@
 package com.io7m.cedarbridge.schema.compiler.api;
 
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The result of a compilation.
+ *
+ * @param compiledPackages The list of compiled packages
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBSchemaCompilationType
+public record CBSchemaCompilation(
+  List<CBPackageType> compiledPackages)
 {
   /**
-   * @return The list of compiled packages
+   * The result of a compilation.
+   *
+   * @param compiledPackages The list of compiled packages
    */
 
-  List<CBPackageType> compiledPackages();
+  public CBSchemaCompilation
+  {
+    Objects.requireNonNull(compiledPackages, "compiledPackages");
+  }
 }

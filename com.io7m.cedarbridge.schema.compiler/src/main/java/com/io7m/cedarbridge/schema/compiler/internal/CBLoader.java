@@ -166,10 +166,10 @@ public final class CBLoader implements CBLoaderType
     final var source = this.findSourceFile(name);
 
     final var configuration =
-      CBSchemaCompilerConfiguration.builder()
-        .setIncludeDirectories(this.includePaths)
-        .setFilesToCompile(List.of(source))
-        .build();
+      new CBSchemaCompilerConfiguration(
+        this.includePaths,
+        List.of(source)
+      );
 
     final var compiler =
       this.factory.createNewCompiler(

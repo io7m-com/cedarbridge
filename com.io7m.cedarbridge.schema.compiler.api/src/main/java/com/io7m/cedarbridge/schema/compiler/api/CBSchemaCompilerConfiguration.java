@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,43 +16,39 @@
 
 package com.io7m.cedarbridge.schema.compiler.api;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The compiler configuration.
+ *
+ * @param includeDirectories The list of directories within which to search for
+ *                           packages
+ * @param filesToCompile     The list of files to compile
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBSchemaCompilerConfigurationType
+public record CBSchemaCompilerConfiguration(
+  List<Path> includeDirectories,
+  List<Path> filesToCompile)
 {
   /**
-   * @return The list of directories within which to search for packages
+   * The compiler configuration.
+   *
+   * @param includeDirectories The list of directories within which to search
+   *                           for packages
+   * @param filesToCompile     The list of files to compile
    */
 
-  List<Path> includeDirectories();
-
-  /**
-   * @return The list of files to compile
-   */
-
-  List<Path> filesToCompile();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
+  public CBSchemaCompilerConfiguration
   {
-    this.includeDirectories()
-      .forEach(CBSchemaCompilerConfigurationType::checkAbsolute);
-    this.filesToCompile()
-      .forEach(CBSchemaCompilerConfigurationType::checkAbsolute);
+    Objects.requireNonNull(includeDirectories, "includeDirectories");
+    Objects.requireNonNull(filesToCompile, "filesToCompile");
+
+    includeDirectories
+      .forEach(CBSchemaCompilerConfiguration::checkAbsolute);
+    filesToCompile
+      .forEach(CBSchemaCompilerConfiguration::checkAbsolute);
   }
 
   private static void checkAbsolute(

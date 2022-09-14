@@ -76,9 +76,7 @@ public final class CBCodeGenerators implements CBCodeGeneratorDirectoryType
   private static CBCodeGeneratorResult convertResult(
     final CBSPICodeGeneratorResult result)
   {
-    return CBCodeGeneratorResult.builder()
-      .setCreatedFiles(result.createdFiles())
-      .build();
+    return new CBCodeGeneratorResult(result.createdFiles());
   }
 
   private static CBCodeGeneratorDescription convertDescription(

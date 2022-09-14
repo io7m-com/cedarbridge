@@ -34,8 +34,8 @@ public final class CBVersions
   }
 
   /**
-   * Load a version from the given stream, which is assumed to be in Java properties
-   * format.
+   * Load a version from the given stream, which is assumed to be in Java
+   * properties format.
    *
    * @param stream The input stream
    *
@@ -65,22 +65,18 @@ public final class CBVersions
     final Properties properties)
   {
     Objects.requireNonNull(properties, "properties");
-    return CBVersion.builder()
-      .setMajor(
-        Optional.ofNullable(properties.getProperty("major"))
-          .map(Integer::parseUnsignedInt)
-          .orElse(0))
-      .setMinor(
-        Optional.ofNullable(properties.getProperty("minor"))
-          .map(Integer::parseUnsignedInt)
-          .orElse(0))
-      .setPatch(
-        Optional.ofNullable(properties.getProperty("patch"))
-          .map(Integer::parseUnsignedInt)
-          .orElse(0))
-      .setQualifier(
-        Optional.ofNullable(properties.getProperty("qualifier"))
-          .orElse(""))
-      .build();
+    return new CBVersion(
+      Optional.ofNullable(properties.getProperty("major"))
+        .map(Integer::parseUnsignedInt)
+        .orElse(0),
+      Optional.ofNullable(properties.getProperty("minor"))
+        .map(Integer::parseUnsignedInt)
+        .orElse(0),
+      Optional.ofNullable(properties.getProperty("patch"))
+        .map(Integer::parseUnsignedInt)
+        .orElse(0),
+      Optional.ofNullable(properties.getProperty("qualifier"))
+        .orElse("")
+    );
   }
 }

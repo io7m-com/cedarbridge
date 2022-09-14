@@ -114,10 +114,10 @@ public final class CBCommandCompile extends CLPAbstractCommand
         .collect(Collectors.toList());
 
     final var configuration =
-      CBSchemaCompilerConfiguration.builder()
-        .setFilesToCompile(compileFiles)
-        .setIncludeDirectories(includeDirectories)
-        .build();
+      new CBSchemaCompilerConfiguration(
+        includeDirectories,
+        compileFiles
+      );
 
     final var compiler =
       compilers.createCompiler(configuration);

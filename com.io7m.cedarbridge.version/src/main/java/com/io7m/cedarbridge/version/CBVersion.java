@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,60 +16,56 @@
 
 package com.io7m.cedarbridge.version;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
-
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Comparator;
 import java.util.Formattable;
 import java.util.Formatter;
+import java.util.Objects;
 
 /**
  * A semantic version number.
+ *
+ * @param major     The major version
+ * @param minor     The minor version
+ * @param patch     The patch version
+ * @param qualifier The qualifier
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBVersionType extends Comparable<CBVersionType>, Formattable
+public record CBVersion(
+  int major,
+  int minor,
+  int patch,
+  String qualifier)
+  implements Comparable<CBVersion>, Formattable
 {
   /**
-   * @return The major version
+   * A semantic version number.
+   *
+   * @param major     The major version
+   * @param minor     The minor version
+   * @param patch     The patch version
+   * @param qualifier The qualifier
    */
 
-  int major();
-
-  /**
-   * @return The minor version
-   */
-
-  int minor();
-
-  /**
-   * @return The patch version
-   */
-
-  int patch();
-
-  /**
-   * @return A version qualifier
-   */
-
-  String qualifier();
+  public CBVersion
+  {
+    Objects.requireNonNull(qualifier, "qualifier");
+  }
 
   @Override
-  default int compareTo(
-    final CBVersionType other)
+  public int compareTo(
+    final CBVersion other)
   {
-    return Comparator.comparingInt(CBVersionType::major)
-      .thenComparingInt(CBVersionType::minor)
-      .thenComparingInt(CBVersionType::patch)
-      .thenComparing(CBVersionType::qualifier)
+    return Comparator.comparingInt(CBVersion::major)
+      .thenComparingInt(CBVersion::minor)
+      .thenComparingInt(CBVersion::patch)
+      .thenComparing(CBVersion::qualifier)
       .compare(this, other);
   }
 
   @Override
-  default void formatTo(
+  public void formatTo(
     final Formatter formatter,
     final int flags,
     final int width,
