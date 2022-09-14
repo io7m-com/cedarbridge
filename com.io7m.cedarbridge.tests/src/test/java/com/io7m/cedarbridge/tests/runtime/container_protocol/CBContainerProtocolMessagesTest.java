@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.tests.runtime.container_protocol;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollection;
+import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolAvailable;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
@@ -228,10 +229,7 @@ public final class CBContainerProtocolMessagesTest
 
     final var response =
       CBContainerProtocolMessages.serializeResponseAsBytes(
-        CBContainerProtocolResponse.builder()
-          .setOk(false)
-          .setMessage(ex.getMessage())
-          .build()
+        new CBContainerProtocolResponse(false, ex.getMessage())
       );
 
     assertEquals(256, response.length);
@@ -250,10 +248,7 @@ public final class CBContainerProtocolMessagesTest
     }
 
     assertThrows(IllegalArgumentException.class, () -> {
-      CBContainerProtocolResponse.builder()
-        .setOk(false)
-        .setMessage(array.toString(StandardCharsets.UTF_8))
-        .build();
+      new CBContainerProtocolResponse(false, array.toString(StandardCharsets.UTF_8));
     });
   }
 

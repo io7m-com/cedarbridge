@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,40 +16,35 @@
 
 package com.io7m.cedarbridge.runtime.container_protocol;
 
-import com.io7m.immutables.styles.ImmutablesStyleType;
-import org.immutables.value.Value;
+import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * A response to a {@link CBContainerProtocolUseType} message. If {@code ok}
- * is {@code false}, the client should expect to be disconnected immediately.
+ * A response to a {@link CBContainerProtocolUse} message. If {@code ok} is
+ * {@code false}, the client should expect to be disconnected immediately.
+ *
+ * @param ok      The "use" message was/was not acceptable
+ * @param message The error message text, if any
  */
 
-@ImmutablesStyleType
-@Value.Immutable
-public interface CBContainerProtocolResponseType
+public record CBContainerProtocolResponse(
+  boolean ok,
+  String message)
 {
   /**
-   * @return The "use" message was not acceptable
+   * A response to a {@link CBContainerProtocolUse} message. If {@code ok} is
+   * {@code false}, the client should expect to be disconnected immediately.
+   *
+   * @param ok      The "use" message was/was not acceptable
+   * @param message The error message text, if any
    */
 
-  boolean ok();
-
-  /**
-   * @return The error message text, if any
-   */
-
-  String message();
-
-  /**
-   * Check preconditions for the type.
-   */
-
-  @Value.Check
-  default void checkPreconditions()
+  public CBContainerProtocolResponse
   {
-    final var encoded = this.message().getBytes(UTF_8);
+    Objects.requireNonNull(message, "message");
+
+    final var encoded = message.getBytes(UTF_8);
     if (encoded.length > 244) {
       throw new IllegalArgumentException(
         "Message too long; must be <= 244 bytes");
