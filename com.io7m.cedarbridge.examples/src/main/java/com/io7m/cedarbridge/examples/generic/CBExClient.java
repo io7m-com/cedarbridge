@@ -158,11 +158,11 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
 
       output.write(
         CBContainerProtocolMessages.serializeUseAsBytes(
-          CBContainerProtocolUse.builder()
-            .setContainerProtocolVersion(1L)
-            .setApplicationProtocolId(available.applicationProtocolId())
-            .setApplicationProtocolVersion(highestVersion)
-            .build()
+          new CBContainerProtocolUse(
+            1L,
+            available.applicationProtocolId(),
+            highestVersion
+          )
         )
       );
 

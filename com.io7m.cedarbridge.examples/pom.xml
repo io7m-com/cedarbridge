@@ -117,7 +117,7 @@
                 <argument>--file</argument>
                 <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</argument>
                 <argument>--language</argument>
-                <argument>Java 11+</argument>
+                <argument>Java 17+</argument>
               </arguments>
             </configuration>
           </execution>
@@ -136,7 +136,7 @@
                 <argument>--file</argument>
                 <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</argument>
                 <argument>--language</argument>
-                <argument>Java 11+</argument>
+                <argument>Java 17+</argument>
               </arguments>
             </configuration>
           </execution>

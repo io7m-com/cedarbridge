@@ -118,13 +118,13 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
 
       output.write(
         CBContainerProtocolMessages.serializeAvailableAsBytes(
-          CBContainerProtocolAvailable.builder()
-            .setContainerProtocolMinimumVersion(1L)
-            .setContainerProtocolMaximumVersion(1L)
-            .setApplicationProtocolId(this.protocols.id())
-            .setApplicationProtocolMinimumVersion(this.protocols.versionLower())
-            .setApplicationProtocolMaximumVersion(this.protocols.versionUpper())
-            .build()
+          new CBContainerProtocolAvailable(
+            1L,
+            1L,
+            this.protocols.id(),
+            this.protocols.versionLower(),
+            this.protocols.versionUpper()
+          )
         )
       );
 
@@ -141,10 +141,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
       } catch (final IllegalArgumentException e) {
         output.write(
           CBContainerProtocolMessages.serializeResponseAsBytes(
-            CBContainerProtocolResponse.builder()
-              .setOk(false)
-              .setMessage(e.getMessage())
-              .build()
+            new CBContainerProtocolResponse(false, e.getMessage())
           )
         );
         this.socket.close();
@@ -160,10 +157,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
 
       output.write(
         CBContainerProtocolMessages.serializeResponseAsBytes(
-          CBContainerProtocolResponse.builder()
-            .setOk(true)
-            .setMessage("")
-            .build()
+          new CBContainerProtocolResponse(true, "")
         )
       );
 
