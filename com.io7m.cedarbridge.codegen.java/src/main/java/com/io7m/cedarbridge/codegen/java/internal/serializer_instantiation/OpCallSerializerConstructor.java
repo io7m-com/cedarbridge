@@ -16,8 +16,8 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.CodeBlock;
 
 import java.util.List;
 import java.util.Objects;

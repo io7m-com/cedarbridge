@@ -28,14 +28,16 @@ import com.io7m.cedarbridge.schema.compiled.CBRecordType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.CodeBlock;
+import com.io7m.jodist.FieldSpec;
+import com.io7m.jodist.JavaFile;
+import com.io7m.jodist.MethodSpec;
+import com.io7m.jodist.ParameterSpec;
+import com.io7m.jodist.ParameterizedTypeName;
+import com.io7m.jodist.TypeName;
+import com.io7m.jodist.TypeSpec;
 import com.io7m.junreachable.UnreachableCodeException;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -43,12 +45,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.stream.Collectors;
 
+import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.fieldAccessorName;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.SEALED;
 import static javax.lang.model.element.Modifier.STATIC;
 
 /**
@@ -75,6 +77,10 @@ public final class CBCGDataClassGenerator
       TypeSpec.interfaceBuilder(className)
         .addSuperinterface(CBSerializableType.class)
         .addModifiers(PUBLIC);
+
+    if (!type.cases().isEmpty()) {
+      containerBuilder.addModifiers(SEALED);
+    }
 
     final var typeParameters =
       type.parameters();
@@ -147,26 +153,14 @@ public final class CBCGDataClassGenerator
     final var fields =
       fieldList
         .stream()
-        .map(CBCGDataClassGenerator::createFieldDefinition)
-        .collect(Collectors.toList());
-
-    final var fieldAccessors =
-      fieldList
-        .stream()
-        .map(CBCGDataClassMethodGeneration::createFieldAccessorMethod)
-        .collect(Collectors.toList());
+        .map(CBCGDataClassGenerator::createRecordParameter)
+        .toList();
 
     final var typeVariables =
       CBCGJavaTypeExpressions.createTypeVariables(parameters);
-    final var constructor =
-      CBCGDataClassMethodGeneration.createFieldSetConstructor(fieldList);
-    final var equals =
-      CBCGDataClassMethodGeneration.createEqualsMethod(className, fields);
-    final var hashCode =
-      CBCGDataClassMethodGeneration.createHashCodeMethod(fields);
 
-    final var classBuilder = TypeSpec.classBuilder(className);
-    classBuilder.addModifiers(FINAL, PUBLIC);
+    final var classBuilder = TypeSpec.recordBuilder(className);
+    classBuilder.addModifiers(PUBLIC);
     classBuilder.addSuperinterface(CBSerializableType.class);
 
     for (final var protocol : protocols) {
@@ -188,22 +182,38 @@ public final class CBCGDataClassGenerator
     });
 
     classBuilder.addTypeVariables(typeVariables);
-    classBuilder.addMethod(constructor);
-    classBuilder.addMethod(equals);
-    classBuilder.addMethod(hashCode);
-    classBuilder.addMethods(fieldAccessors);
-    classBuilder.addFields(fields);
+    classBuilder.addRecordComponents(fields);
+    classBuilder.compactConstructor(createCompactConstructor(fields));
+
     return classBuilder.build();
   }
 
-  private static FieldSpec createFieldDefinition(
+  private static MethodSpec createCompactConstructor(
+    final List<ParameterSpec> fields)
+  {
+    final var builder = MethodSpec.constructorBuilder();
+    builder.addModifiers(PUBLIC);
+
+    for (final var f : fields) {
+      if (!f.type.isPrimitive()) {
+        builder.addStatement(
+          "$T.requireNonNull($L, $S)",
+          Objects.class,
+          f.name,
+          f.name
+        );
+      }
+    }
+
+    return builder.build();
+  }
+
+  private static ParameterSpec createRecordParameter(
     final CBFieldType f)
   {
-    return FieldSpec.builder(
+    return ParameterSpec.builder(
       CBCGJavaTypeExpressions.evaluateTypeExpression(f.type()),
-      f.name(),
-      FINAL,
-      PRIVATE
+      fieldAccessorName(f.name())
     ).build();
   }
 

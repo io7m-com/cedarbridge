@@ -28,12 +28,12 @@ import com.io7m.cedarbridge.schema.compiled.CBRecordType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.CodeBlock;
+import com.io7m.jodist.FieldSpec;
+import com.io7m.jodist.MethodSpec;
+import com.io7m.jodist.ParameterizedTypeName;
 import com.io7m.junreachable.UnreachableCodeException;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 
 import java.io.IOException;
 import java.util.List;
