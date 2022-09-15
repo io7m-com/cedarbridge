@@ -64,8 +64,7 @@ public final class CBExChatClientCoreBlathering
     );
 
     final var joinResponse = socket.readBlocking();
-    if (joinResponse instanceof CBChatEventError) {
-      final var error = (CBChatEventError) joinResponse;
+    if (joinResponse instanceof CBChatEventError error) {
       LOG.error("failed to join: {}", error.message());
       return;
     } else if (joinResponse instanceof CBChatEventJoined) {
@@ -96,14 +95,11 @@ public final class CBExChatClientCoreBlathering
       final var messageOpt = socket.read();
       if (messageOpt.isPresent()) {
         final var message = messageOpt.get();
-        if (message instanceof CBChatEventSpoke) {
-          final var spoke = (CBChatEventSpoke) message;
+        if (message instanceof CBChatEventSpoke spoke) {
           LOG.info("[spoke] {}: {}", spoke.user(), spoke.message());
-        } else if (message instanceof CBChatEventJoined) {
-          final var joined = (CBChatEventJoined) message;
+        } else if (message instanceof final CBChatEventJoined joined) {
           LOG.info("[joined] {}", joined.user());
-        } else if (message instanceof CBChatEventLeft) {
-          final var left = (CBChatEventLeft) message;
+        } else if (message instanceof final CBChatEventLeft left) {
           LOG.info("[left] {}", left.user());
         }
       }

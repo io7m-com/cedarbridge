@@ -92,12 +92,8 @@ public final class CBSchemaCompilerFactory
 
     final Consumer<CBError> errorConsumer = error -> {
       switch (error.severity()) {
-        case ERROR:
-          LOG.error("{}", error.message());
-          break;
-        case WARNING:
-          LOG.warn("{}", error.message());
-          break;
+        case ERROR -> LOG.error("{}", error.message());
+        case WARNING -> LOG.warn("{}", error.message());
       }
     };
 

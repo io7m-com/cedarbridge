@@ -89,8 +89,7 @@ public final class CBCGJavaTypeExpressions
     final var target =
       evaluateTypeExpressionNamed(type.target());
 
-    if (target instanceof ClassName) {
-      final var name0 = ((ClassName) target);
+    if (target instanceof final ClassName name0) {
       return ParameterizedTypeName.get(name0, argumentArray);
     }
 

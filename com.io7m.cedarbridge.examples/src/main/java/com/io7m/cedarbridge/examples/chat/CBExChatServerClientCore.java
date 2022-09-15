@@ -116,8 +116,7 @@ public final class CBExChatServerClientCore
       return;
     }
 
-    if (command instanceof CBChatCommandSpeak) {
-      final var speakCommand = (CBChatCommandSpeak) command;
+    if (command instanceof final CBChatCommandSpeak speakCommand) {
       session.speak(speakCommand.message());
       return;
     }

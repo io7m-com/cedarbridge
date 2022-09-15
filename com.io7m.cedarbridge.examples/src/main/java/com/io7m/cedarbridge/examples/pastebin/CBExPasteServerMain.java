@@ -52,7 +52,7 @@ public final class CBExPasteServerMain
       new CBExMessageTranslatorDirectory<CBExPasteMessageType, ProtocolPasteType>();
     translators.addTranslator(1L, new CBExPasteMessagesV1());
 
-    try (var server = new CBExServer<CBExPasteMessageType, ProtocolPasteType>(
+    try (var server = new CBExServer<>(
       serializers, protocols, translators, CBExPasteServerClientCore::new)) {
       server.start();
       while (!server.isDone()) {

@@ -190,19 +190,16 @@ public final class CBVariantParser
         SExpressionSymbolType.class
       );
 
-    switch (start.text()) {
-      case "parameter":
-        return parseVariantMemberParameter(context, expression);
-      case "case":
-        return new CBVariantCaseParser().parse(context, expression);
-      default:
-        throw context.failed(
-          expression,
-          IS_NOT_FATAL,
-          SPEC_SECTION,
-          "errorVariantUnrecognizedMember"
-        );
-    }
+    return switch (start.text()) {
+      case "parameter" -> parseVariantMemberParameter(context, expression);
+      case "case" -> new CBVariantCaseParser().parse(context, expression);
+      default -> throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorVariantUnrecognizedMember"
+      );
+    };
   }
 
   @Override

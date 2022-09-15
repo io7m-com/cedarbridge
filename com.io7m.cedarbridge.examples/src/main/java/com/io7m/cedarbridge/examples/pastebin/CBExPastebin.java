@@ -32,7 +32,7 @@ public final class CBExPastebin
 
   private CBExPastebin()
   {
-    this.pastes = new ConcurrentHashMap<UUID, Paste>();
+    this.pastes = new ConcurrentHashMap<>();
   }
 
   /**

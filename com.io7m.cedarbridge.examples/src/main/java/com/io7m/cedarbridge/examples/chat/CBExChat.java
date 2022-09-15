@@ -36,7 +36,7 @@ public final class CBExChat
   private CBExChat()
   {
     this.sessionsLock = new Object();
-    this.sessions = new HashMap<String, Session>();
+    this.sessions = new HashMap<>();
   }
 
   /**

@@ -163,8 +163,7 @@ public final class CBParseContext
       final String errorCode)
       throws CBParseFailedException
     {
-      if (expression instanceof SExpressionSymbolType) {
-        final var symbol = (SExpressionSymbolType) expression;
+      if (expression instanceof final SExpressionSymbolType symbol) {
         if (!Objects.equals(symbol.text(), name)) {
           throw this.failed(expression, IS_NOT_FATAL, specSection, errorCode);
         }

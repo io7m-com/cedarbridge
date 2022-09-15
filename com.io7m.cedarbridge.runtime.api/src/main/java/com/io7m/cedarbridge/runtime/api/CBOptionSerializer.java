@@ -85,18 +85,14 @@ public final class CBOptionSerializer<T extends CBSerializableType>
     throws IOException
   {
     final var index = context.readVariantIndex();
-    switch (index) {
-      case CBNone.VARIANT_INDEX:
-        return this.deserializeNone(context);
-      case CBSome.VARIANT_INDEX:
-        return this.deserializeSome(context);
-
-      default:
-        throw new IllegalStateException(
-          String.format(
-            "Unrecognized variant index: %d", Integer.valueOf(index))
-        );
-    }
+    return switch (index) {
+      case CBNone.VARIANT_INDEX -> this.deserializeNone(context);
+      case CBSome.VARIANT_INDEX -> this.deserializeSome(context);
+      default -> throw new IllegalStateException(
+        String.format(
+          "Unrecognized variant index: %d", Integer.valueOf(index))
+      );
+    };
   }
 
   private CBOptionType<T> deserializeSome(

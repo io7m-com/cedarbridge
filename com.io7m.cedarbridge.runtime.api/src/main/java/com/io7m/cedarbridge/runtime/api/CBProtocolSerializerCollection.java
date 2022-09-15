@@ -174,7 +174,7 @@ public final class CBProtocolSerializerCollection<T extends CBProtocolMessageTyp
     @Override
     public CBProtocolSerializerCollectionType<T> build()
     {
-      return new CBProtocolSerializerCollection<T>(
+      return new CBProtocolSerializerCollection<>(
         this.id,
         this.serializers,
         this.lowestVersion,

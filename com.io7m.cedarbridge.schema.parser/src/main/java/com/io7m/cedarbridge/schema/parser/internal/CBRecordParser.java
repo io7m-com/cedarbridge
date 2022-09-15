@@ -185,19 +185,16 @@ public final class CBRecordParser
         SExpressionSymbolType.class
       );
 
-    switch (start.text()) {
-      case "parameter":
-        return parseRecordMemberParameter(context, expression);
-      case "field":
-        return new CBFieldParser().parse(context, expression);
-      default:
-        throw context.failed(
-          expression,
-          IS_NOT_FATAL,
-          SPEC_SECTION,
-          "errorRecordUnrecognizedMember"
-        );
-    }
+    return switch (start.text()) {
+      case "parameter" -> parseRecordMemberParameter(context, expression);
+      case "field" -> new CBFieldParser().parse(context, expression);
+      default -> throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorRecordUnrecognizedMember"
+      );
+    };
   }
 
   @Override

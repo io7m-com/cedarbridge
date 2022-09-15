@@ -73,7 +73,7 @@ public final class CBDeclarationParser
       );
 
     switch (keyword.text()) {
-      case "language": {
+      case "language" -> {
         if (this.tooLateForLanguage) {
           throw context.failed(
             expression,
@@ -92,27 +92,27 @@ public final class CBDeclarationParser
         );
         return language;
       }
-      case "package": {
+      case "package" -> {
         return new CBPackageDeclarationParser()
           .parse(context, expression);
       }
-      case "import": {
+      case "import" -> {
         return new CBImportParser()
           .parse(context, expression);
       }
-      case "record": {
+      case "record" -> {
         return new CBRecordParser()
           .parse(context, expression);
       }
-      case "variant": {
+      case "variant" -> {
         return new CBVariantParser()
           .parse(context, expression);
       }
-      case "protocol": {
+      case "protocol" -> {
         return new CBProtocolParser()
           .parse(context, expression);
       }
-      default: {
+      default -> {
         throw context.failed(
           expression,
           IS_NOT_FATAL,

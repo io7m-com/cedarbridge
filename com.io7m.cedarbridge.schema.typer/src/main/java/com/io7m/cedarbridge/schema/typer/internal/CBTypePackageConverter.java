@@ -112,8 +112,7 @@ public final class CBTypePackageConverter
   {
     final var binding = astType.userData().get(CBBindingType.class);
     final var ownerPackage = typeBuilder.ownerPackage();
-    if (binding instanceof CBBindingExternal) {
-      final var bindingExternal = (CBBindingExternal) binding;
+    if (binding instanceof final CBBindingExternal bindingExternal) {
       return ownerPackage.referenceExternalType(bindingExternal.type());
     }
     if (binding instanceof CBBindingLocalTypeDeclaration) {

@@ -96,51 +96,41 @@ public final class CBRecordingUnicodeCharacterReader
     final var codePoint = this.delegate.readCodePoint();
 
     switch (this.state) {
-      case IN_TEXT: {
+      case IN_TEXT -> {
         switch (codePoint) {
-          case '\r': {
+          case '\r' -> {
             this.state = IN_CR;
-            break;
           }
-          case '\n':
-          case -1: {
+          case '\n', -1 -> {
             this.finishLine();
-            break;
           }
-          default: {
+          default -> {
             this.lineBuffer.appendCodePoint(codePoint);
             this.lines.put(
               Integer.valueOf(this.lineNumber),
               this.lineBuffer.toString()
             );
-            break;
           }
         }
-        break;
       }
-      case IN_CR: {
+      case IN_CR -> {
         switch (codePoint) {
-          case '\r': {
+          case '\r' -> {
             this.state = IN_CR;
             this.finishLine();
-            break;
           }
-          case -1:
-          case '\n': {
+          case -1, '\n' -> {
             this.finishLine();
-            break;
           }
-          default: {
+          default -> {
             this.finishLine();
             this.lineBuffer.appendCodePoint(codePoint);
             this.lines.put(
               Integer.valueOf(this.lineNumber),
               this.lineBuffer.toString()
             );
-            break;
           }
         }
-        break;
       }
     }
 

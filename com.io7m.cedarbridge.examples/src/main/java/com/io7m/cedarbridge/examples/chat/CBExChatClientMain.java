@@ -47,15 +47,13 @@ public final class CBExChatClientMain
 
     if (args.length > 0) {
       switch (args[0]) {
-        case "lurker": {
+        case "lurker" -> {
           core = new CBExChatClientCoreLurker();
-          break;
         }
-        case "blathering": {
+        case "blathering" -> {
           core = new CBExChatClientCoreBlathering();
-          break;
         }
-        default: {
+        default -> {
           throw new IllegalArgumentException(
             String.format("Unrecognized core: %s", args[0])
           );

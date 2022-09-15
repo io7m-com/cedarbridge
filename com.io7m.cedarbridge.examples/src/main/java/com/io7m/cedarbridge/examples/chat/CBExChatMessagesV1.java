@@ -41,28 +41,22 @@ public final class CBExChatMessagesV1
   public ProtocolChatv1Type toWireNullable(
     final CBExChatMessageType x)
   {
-    if (x instanceof CBChatCommandJoin) {
-      final var xm = (CBChatCommandJoin) x;
+    if (x instanceof CBChatCommandJoin xm) {
       return new ChatCommandJoin(string(xm.name()));
     }
-    if (x instanceof CBChatCommandSpeak) {
-      final var xm = (CBChatCommandSpeak) x;
+    if (x instanceof CBChatCommandSpeak xm) {
       return new ChatCommandSpeak(string(xm.message()));
     }
-    if (x instanceof CBChatEventError) {
-      final var xm = (CBChatEventError) x;
+    if (x instanceof CBChatEventError xm) {
       return new ChatEventError(string(xm.message()));
     }
-    if (x instanceof CBChatEventJoined) {
-      final var xm = (CBChatEventJoined) x;
+    if (x instanceof CBChatEventJoined xm) {
       return new ChatEventJoined(string(xm.user()));
     }
-    if (x instanceof CBChatEventLeft) {
-      final var xm = (CBChatEventLeft) x;
+    if (x instanceof CBChatEventLeft xm) {
       return new ChatEventLeft(string(xm.user()));
     }
-    if (x instanceof CBChatEventSpoke) {
-      final var xm = (CBChatEventSpoke) x;
+    if (x instanceof CBChatEventSpoke xm) {
       return new ChatEventSpoke(string(xm.user()), string(xm.message()));
     }
     throw new UnreachableCodeException();
@@ -72,38 +66,32 @@ public final class CBExChatMessagesV1
   public CBExChatMessageType fromWire(
     final ProtocolChatv1Type x)
   {
-    if (x instanceof ChatCommandJoin) {
-      final var xm = (ChatCommandJoin) x;
+    if (x instanceof ChatCommandJoin xm) {
       return CBChatCommandJoin.builder()
         .setName(xm.fieldName().value())
         .build();
     }
-    if (x instanceof ChatCommandSpeak) {
-      final var xm = (ChatCommandSpeak) x;
+    if (x instanceof ChatCommandSpeak xm) {
       return CBChatCommandSpeak.builder()
         .setMessage(xm.fieldMessage().value())
         .build();
     }
-    if (x instanceof ChatEventError) {
-      final var xm = (ChatEventError) x;
+    if (x instanceof ChatEventError xm) {
       return CBChatEventError.builder()
         .setMessage(xm.fieldMessage().value())
         .build();
     }
-    if (x instanceof ChatEventJoined) {
-      final var xm = (ChatEventJoined) x;
+    if (x instanceof ChatEventJoined xm) {
       return CBChatEventJoined.builder()
         .setUser(xm.fieldUser().value())
         .build();
     }
-    if (x instanceof ChatEventLeft) {
-      final var xm = (ChatEventLeft) x;
+    if (x instanceof ChatEventLeft xm) {
       return CBChatEventLeft.builder()
         .setUser(xm.fieldUser().value())
         .build();
     }
-    if (x instanceof ChatEventSpoke) {
-      final var xm = (ChatEventSpoke) x;
+    if (x instanceof ChatEventSpoke xm) {
       return CBChatEventSpoke.builder()
         .setUser(xm.fieldUser().value())
         .setMessage(xm.fieldMessage().value())
