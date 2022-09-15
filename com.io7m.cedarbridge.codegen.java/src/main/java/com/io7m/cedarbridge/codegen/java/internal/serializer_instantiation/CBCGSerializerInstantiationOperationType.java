@@ -16,7 +16,7 @@
 
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
-import com.squareup.javapoet.CodeBlock;
+import com.io7m.jodist.CodeBlock;
 
 /**
  * An operation performed by a serializer. Operations are ordered by

@@ -34,6 +34,6 @@ module com.io7m.cedarbridge.codegen.java
   requires org.slf4j;
   requires com.io7m.jaffirm.core;
   requires com.io7m.junreachable.core;
-  requires com.squareup.javapoet;
+  requires com.io7m.jodist;
   requires java.compiler;
 }

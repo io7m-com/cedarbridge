@@ -22,10 +22,10 @@ import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeVariableName;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.ParameterizedTypeName;
+import com.io7m.jodist.TypeName;
+import com.io7m.jodist.TypeVariableName;
 
 import java.util.stream.Collectors;
 

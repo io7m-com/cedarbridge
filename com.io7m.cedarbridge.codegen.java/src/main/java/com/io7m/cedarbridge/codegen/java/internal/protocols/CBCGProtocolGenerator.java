@@ -24,12 +24,12 @@ import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollection;
 import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollectionType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeSpec;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.FieldSpec;
+import com.io7m.jodist.JavaFile;
+import com.io7m.jodist.MethodSpec;
+import com.io7m.jodist.ParameterizedTypeName;
+import com.io7m.jodist.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;

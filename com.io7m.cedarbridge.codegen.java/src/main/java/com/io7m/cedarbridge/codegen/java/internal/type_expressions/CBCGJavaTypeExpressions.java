@@ -25,10 +25,10 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamed
 import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import com.io7m.junreachable.UnreachableCodeException;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeVariableName;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.ParameterizedTypeName;
+import com.io7m.jodist.TypeName;
+import com.io7m.jodist.TypeVariableName;
 
 import java.util.LinkedList;
 import java.util.List;

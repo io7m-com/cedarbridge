@@ -21,8 +21,8 @@ import com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
-import com.squareup.javapoet.JavaFile;
-import com.squareup.javapoet.TypeSpec;
+import com.io7m.jodist.JavaFile;
+import com.io7m.jodist.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;

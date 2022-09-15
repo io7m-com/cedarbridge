@@ -33,11 +33,11 @@ import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
 import com.io7m.junreachable.UnreachableCodeException;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import com.squareup.javapoet.TypeVariableName;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.MethodSpec;
+import com.io7m.jodist.ParameterizedTypeName;
+import com.io7m.jodist.TypeName;
+import com.io7m.jodist.TypeVariableName;
 
 import java.util.ArrayList;
 import java.util.HashMap;

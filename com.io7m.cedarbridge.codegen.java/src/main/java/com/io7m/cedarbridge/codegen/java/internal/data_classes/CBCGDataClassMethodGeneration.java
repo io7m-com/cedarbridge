@@ -18,11 +18,11 @@ package com.io7m.cedarbridge.codegen.java.internal.data_classes;
 
 import com.io7m.cedarbridge.codegen.java.internal.type_expressions.CBCGJavaTypeExpressions;
 import com.io7m.cedarbridge.schema.compiled.CBFieldType;
-import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.MethodSpec;
-import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.TypeName;
+import com.io7m.jodist.ClassName;
+import com.io7m.jodist.FieldSpec;
+import com.io7m.jodist.MethodSpec;
+import com.io7m.jodist.ParameterSpec;
+import com.io7m.jodist.TypeName;
 
 import java.util.List;
 import java.util.Objects;

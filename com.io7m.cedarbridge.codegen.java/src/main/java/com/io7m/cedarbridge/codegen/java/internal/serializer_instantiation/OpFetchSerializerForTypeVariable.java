@@ -17,8 +17,8 @@
 package com.io7m.cedarbridge.codegen.java.internal.serializer_instantiation;
 
 import com.io7m.cedarbridge.runtime.api.CBSerializerType;
-import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeVariableName;
+import com.io7m.jodist.CodeBlock;
+import com.io7m.jodist.TypeVariableName;
 
 import java.util.Objects;
 
