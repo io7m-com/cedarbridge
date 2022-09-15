@@ -22,15 +22,18 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
+import com.io7m.jodist.ClassName;
 import com.io7m.jodist.JavaFile;
 import com.io7m.jodist.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.Objects;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.SEALED;
 
 /**
  * A generator of Java interface types for protocol declarations.
@@ -64,12 +67,22 @@ public final class CBCGProtocolInterfaceGenerator
 
     final var classBuilder = TypeSpec.interfaceBuilder(className);
     classBuilder.addSuperinterface(CBProtocolMessageType.class);
-    classBuilder.addModifiers(PUBLIC);
+    classBuilder.addModifiers(PUBLIC, SEALED);
     classBuilder.addJavadoc(
       "Protocol {@code $L.$L}",
       pack.name(),
       proto.name()
     );
+
+    final var versions =
+      proto.versions()
+        .values()
+        .stream()
+        .map(CBCGJavaTypeNames::protoVersionedInterfaceNameOf)
+        .sorted(Comparator.comparing(ClassName::canonicalName))
+        .toList();
+
+    classBuilder.addPermittedSubclasses(versions);
 
     final var classDefinition = classBuilder.build();
 
