@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.jlexing.core.LexicalPosition;
@@ -42,8 +43,8 @@ public interface CBBinderContextType extends AutoCloseable
   CBLoaderType loader();
 
   /**
-   * Open a new binding scope. This is typically called upon encountering
-   * a declaration that generates a new name.
+   * Open a new binding scope. This is typically called upon encountering a
+   * declaration that generates a new name.
    *
    * @return The scope
    */
@@ -55,7 +56,8 @@ public interface CBBinderContextType extends AutoCloseable
     throws CBBindFailedException;
 
   /**
-   * Register a package, making it available for subsequent analysis operations.
+   * Register a package, making it available for subsequent analysis
+   * operations.
    *
    * @param specSection The quoted spec section
    * @param lexical     The lexical information
@@ -90,7 +92,8 @@ public interface CBBinderContextType extends AutoCloseable
     Object... arguments);
 
   /**
-   * Something failed and referred to an object at a different lexical position.
+   * Something failed and referred to an object at a different lexical
+   * position.
    *
    * @param specSection  The quoted spec section
    * @param lexical      The lexical information
@@ -195,6 +198,24 @@ public interface CBBinderContextType extends AutoCloseable
     throws CBBindFailedException;
 
   /**
+   * Check that a field exists.
+   *
+   * @param specSection The quoted spec section
+   * @param text        The field name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
+  CBBindingLocalType checkFieldBinding(
+    Optional<UUID> specSection,
+    String text,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  /**
    * Bind the variant case.
    *
    * @param specSection The quoted spec section
@@ -251,6 +272,78 @@ public interface CBBinderContextType extends AutoCloseable
   CBBindingLocalType bindProtocolVersion(
     Optional<UUID> specSection,
     BigInteger version,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  /**
+   * Check that a type or protocol exists.
+   *
+   * @param specSection The quoted spec section
+   * @param target      The type or protocol name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
+  CBBindingLocalType checkTypeOrProtocolBinding(
+    Optional<UUID> specSection,
+    String target,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  /**
+   * Check that a variant case exists.
+   *
+   * @param specSection The quoted spec section
+   * @param target      The case name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
+  CBBindingLocalType checkCaseBinding(
+    Optional<UUID> specSection,
+    String target,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  /**
+   * Check that a field or type parameter exists.
+   *
+   * @param specSection The quoted spec section
+   * @param target      The case name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
+  CBBindingType checkTypeParameterOrFieldBinding(
+    Optional<UUID> specSection,
+    String target,
+    LexicalPosition<URI> lexical)
+    throws CBBindFailedException;
+
+  /**
+   * Check that a variant case or type parameter exists.
+   *
+   * @param specSection The quoted spec section
+   * @param target      The case name
+   * @param lexical     The lexical information for the identifier
+   *
+   * @return The binding
+   *
+   * @throws CBBindFailedException On errors
+   */
+
+  CBBindingType checkTypeParameterOrCaseBinding(
+    Optional<UUID> specSection,
+    String target,
     LexicalPosition<URI> lexical)
     throws CBBindFailedException;
 }

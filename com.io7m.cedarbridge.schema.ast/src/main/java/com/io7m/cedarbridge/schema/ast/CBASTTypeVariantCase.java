@@ -25,30 +25,34 @@ import java.util.Objects;
 /**
  * A variant case declaration.
  *
- * @param fields   The case fields
- * @param lexical  The lexical info
- * @param name     The case name
- * @param userData The user data
+ * @param documentations The documentation elements
+ * @param fields         The case fields
+ * @param lexical        The lexical info
+ * @param name           The case name
+ * @param userData       The user data
  */
 
 public record CBASTTypeVariantCase(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   CBASTVariantCaseName name,
+  List<CBASTDocumentation> documentations,
   List<CBASTField> fields)
   implements CBASTDeclarationType
 {
   /**
    * A variant case declaration.
    *
-   * @param fields   The case fields
-   * @param lexical  The lexical info
-   * @param name     The case name
-   * @param userData The user data
+   * @param documentations The documentation elements
+   * @param fields         The case fields
+   * @param lexical        The lexical info
+   * @param name           The case name
+   * @param userData       The user data
    */
 
   public CBASTTypeVariantCase
   {
+    Objects.requireNonNull(documentations, "documentations");
     Objects.requireNonNull(fields, "fields");
     Objects.requireNonNull(lexical, "lexical");
     Objects.requireNonNull(name, "name");

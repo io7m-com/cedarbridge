@@ -16,7 +16,6 @@
 
 package com.io7m.cedarbridge.schema.compiled.internal;
 
-
 import com.io7m.cedarbridge.schema.compiled.CBFieldType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
@@ -38,6 +37,7 @@ public final class CBVariantCase implements CBVariantCaseType
   private final List<CBFieldType> fields;
   private final String name;
   private CBTypeDeclarationVariant owner;
+  private List<String> documentation;
 
   /**
    * Construct a case.
@@ -50,6 +50,8 @@ public final class CBVariantCase implements CBVariantCaseType
   {
     this.name =
       Objects.requireNonNull(inName, "name");
+    this.documentation =
+      List.of();
     this.fields =
       new ArrayList<>();
 
@@ -106,6 +108,12 @@ public final class CBVariantCase implements CBVariantCaseType
     return this.name;
   }
 
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
+  }
+
   /**
    * Set the owner of the variant case.
    *
@@ -116,5 +124,17 @@ public final class CBVariantCase implements CBVariantCaseType
     final CBTypeDeclarationVariant newOwner)
   {
     this.owner = Objects.requireNonNull(newOwner, "cbPackage");
+  }
+
+  /**
+   * Set the documentation for the case.
+   *
+   * @param text The documentation
+   */
+
+  public void setDocumentation(
+    final List<String> text)
+  {
+    this.documentation = Objects.requireNonNull(text, "text");
   }
 }

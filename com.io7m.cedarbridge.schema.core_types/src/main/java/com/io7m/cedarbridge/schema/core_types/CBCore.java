@@ -67,10 +67,10 @@ public final class CBCore
     {
       final var option = builder.createVariant("Option");
       option.setExternalName(externalPackageName, "CBOptionType");
-      option.addTypeParameter("T");
+      option.addTypeParameter("T", List.of());
       option.createCase("None");
       final var some = option.createCase("Some");
-      some.createField("value", option.referenceParameter("T"));
+      some.createField("value", option.referenceParameter("T"), List.of());
     }
 
     {
@@ -79,21 +79,21 @@ public final class CBCore
           externalPackageName,
           "CBMapEntry",
           "MapEntry");
-      mapEntry.addTypeParameter("K");
-      mapEntry.addTypeParameter("V");
+      mapEntry.addTypeParameter("K", List.of());
+      mapEntry.addTypeParameter("V", List.of());
     }
 
     {
       final var list =
         builder.createExternalType(externalPackageName, "CBList", "List");
-      list.addTypeParameter("A");
+      list.addTypeParameter("A", List.of());
     }
 
     {
       final var map =
         builder.createExternalType(externalPackageName, "CBMap", "Map");
-      map.addTypeParameter("K");
-      map.addTypeParameter("V");
+      map.addTypeParameter("K", List.of());
+      map.addTypeParameter("V", List.of());
     }
 
     PACKAGE_VALUE = builder.build();

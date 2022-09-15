@@ -775,4 +775,129 @@ public final class CBTypeCheckerTest
     assertEquals("errorTypeProtocolKind0", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
+
+  @Test
+  public void testDocumented0()
+    throws Exception
+  {
+    this.loader.register(new CBFakePackage("x.y.z"));
+
+    final var pack = this.check("documented0.cbs");
+    assertEquals(0, this.errors.size());
+
+    final var types = pack.types();
+    assertEquals(3, types.size());
+    final var protos = pack.protocols();
+    assertEquals(1, protos.size());
+
+    final var p = pack.userData().get(CBPackageType.class);
+
+    {
+      final var d = pack.documentation();
+      assertEquals(3, d.size());
+      assertEquals("Option", d.get(0).target());
+      assertEquals("An Option", d.get(0).text());
+      assertEquals("Pair", d.get(1).target());
+      assertEquals("A Pair", d.get(1).text());
+      assertEquals("Z", d.get(2).target());
+      assertEquals("A Z", d.get(2).text());
+    }
+
+    {
+      final var t = (CBASTTypeVariant) types.get(0);
+      assertEquals(t.name().text(), "UnitType");
+
+      final var pt = p.types().get(t.name().text());
+      assertEquals(List.of(), pt.documentation());
+    }
+
+    {
+      final var t = (CBASTTypeVariant) types.get(1);
+      assertEquals(t.name().text(), "Option");
+
+      {
+        final var d = t.documentations();
+        assertEquals(3, d.size());
+        assertEquals("T", d.get(0).target());
+        assertEquals("A T", d.get(0).text());
+        assertEquals("None", d.get(1).target());
+        assertEquals("A None", d.get(1).text());
+        assertEquals("Some", d.get(2).target());
+        assertEquals("A Some", d.get(2).text());
+      }
+
+      final var pt = (CBVariantType) p.types().get(t.name().text());
+      assertEquals(List.of("An Option"), pt.documentation());
+
+      {
+        final var c = t.cases().get(0);
+        final var pc = pt.cases().get(0);
+
+        {
+          final var d = c.documentations();
+          assertEquals(0, c.documentations().size());
+        }
+
+        assertEquals(List.of("A None"), pc.documentation());
+      }
+
+      {
+        final var c = t.cases().get(1);
+        final var pc = pt.cases().get(1);
+
+        {
+          final var d = c.documentations();
+          assertEquals(1, d.size());
+          assertEquals("value", d.get(0).target());
+          assertEquals("A value", d.get(0).text());
+
+          final var pf = pc.fields().get(0);
+          assertEquals(List.of("A value"), pf.documentation());
+        }
+
+        assertEquals(List.of("A Some"), pc.documentation());
+      }
+    }
+
+    {
+      final var t = (CBASTTypeRecord) types.get(2);
+      assertEquals(t.name().text(), "Pair");
+
+      final var pt = (CBRecordType) p.types().get(t.name().text());
+      assertEquals(List.of("A Pair"), pt.documentation());
+
+      {
+        final var d = t.documentations();
+        assertEquals(4, d.size());
+        assertEquals("A", d.get(0).target());
+        assertEquals("A A", d.get(0).text());
+        assertEquals("B", d.get(1).target());
+        assertEquals("A B", d.get(1).text());
+        assertEquals("f0", d.get(2).target());
+        assertEquals("A f0", d.get(2).text());
+        assertEquals("f1", d.get(3).target());
+        assertEquals("A f1", d.get(3).text());
+      }
+
+      {
+        final var f = pt.parameters().get(0);
+        assertEquals(List.of("A A"), f.documentation());
+      }
+
+      {
+        final var f = pt.parameters().get(1);
+        assertEquals(List.of("A B"), f.documentation());
+      }
+
+      {
+        final var f = pt.fields().get(0);
+        assertEquals(List.of("A f0"), f.documentation());
+      }
+
+      {
+        final var f = pt.fields().get(1);
+        assertEquals(List.of("A f1"), f.documentation());
+      }
+    }
+  }
 }

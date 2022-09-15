@@ -262,7 +262,7 @@ public final class CBVariantParserTest extends CBElementParserContract
     });
     LOG.debug("", ex);
     assertEquals(
-      "errorFieldInvalid",
+      "errorVariantUnrecognizedMember",
       this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }

@@ -62,25 +62,41 @@ public final class CBTypePackageConverter
 
   private static CBVariantBuilderType buildVariant(
     final CBPackageBuilderType builder,
-    final List<CBASTDocumentation> documentation,
+    final List<CBASTDocumentation> packageLevelDocumentation,
     final CBASTTypeVariant typeDecl)
   {
-    final var name = typeDecl.name().text();
-    final var variant = builder.findVariant(name);
+    final var typeName =
+      typeDecl.name().text();
+    final var variant =
+      builder.findVariant(typeName);
 
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
       final var param = typeParameters.get(index);
-      variant.addTypeParameter(param.text());
+      final var parameterName = param.text();
+      variant.addTypeParameter(
+        parameterName,
+        compileDocumentation(typeDecl.documentations(), parameterName)
+      );
     }
+
     for (final var caseV : typeDecl.cases()) {
+      final var caseName =
+        caseV.name().text();
       final var caseBuilder =
-        variant.createCase(caseV.name().text());
+        variant.createCase(caseName);
+
+      caseBuilder.setDocumentation(
+        compileDocumentation(typeDecl.documentations(), caseName)
+      );
+
       buildVariantCase(caseBuilder, caseV);
     }
 
     Objects.requireNonNull(variant.ownerPackage(), "ownerPackage");
-    variant.setDocumentation(compileDocumentation(documentation, name));
+    variant.setDocumentation(
+      compileDocumentation(packageLevelDocumentation, typeName)
+    );
     return variant;
   }
 
@@ -89,9 +105,11 @@ public final class CBTypePackageConverter
     final CBASTTypeVariantCase caseV)
   {
     for (final var field : caseV.fields()) {
+      final var fieldName = field.name().text();
       caseBuilder.createField(
-        field.name().text(),
-        buildTypeExpression(caseBuilder.owner(), field.type())
+        fieldName,
+        buildTypeExpression(caseBuilder.owner(), field.type()),
+        compileDocumentation(caseV.documentations(), fieldName)
       );
     }
 
@@ -158,12 +176,19 @@ public final class CBTypePackageConverter
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
       final var param = typeParameters.get(index);
-      record.addTypeParameter(param.text());
+      final var paramName = param.text();
+      record.addTypeParameter(
+        paramName,
+        compileDocumentation(typeDecl.documentations(), paramName)
+      );
     }
+
     for (final var field : typeDecl.fields()) {
+      final var fieldName = field.name().text();
       record.createField(
-        field.name().text(),
-        buildTypeExpression(record, field.type())
+        fieldName,
+        buildTypeExpression(record, field.type()),
+        compileDocumentation(typeDecl.documentations(), fieldName)
       );
     }
 
@@ -189,9 +214,9 @@ public final class CBTypePackageConverter
   }
 
   /**
-   * Build a compiled package from the given AST. This assumes that all
-   * binding analysis and type checking has been completed, and that the
-   * AST will have the expected user data annotations.
+   * Build a compiled package from the given AST. This assumes that all binding
+   * analysis and type checking has been completed, and that the AST will have
+   * the expected user data annotations.
    *
    * @param pack The package
    *

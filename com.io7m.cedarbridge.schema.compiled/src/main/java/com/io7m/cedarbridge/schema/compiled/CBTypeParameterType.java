@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+
 /**
  * A type parameter.
  */
@@ -39,4 +41,10 @@ public interface CBTypeParameterType
    */
 
   CBTypeDeclarationType owner();
+
+  /**
+   * @return The documentation for the parameter
+   */
+
+  List<String> documentation();
 }

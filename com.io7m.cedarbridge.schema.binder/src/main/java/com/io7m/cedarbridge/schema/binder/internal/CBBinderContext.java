@@ -29,6 +29,7 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.loader.api.CBLoaderType;
 import com.io7m.cedarbridge.schema.names.CBSpecificationLocation;
@@ -566,6 +567,136 @@ public final class CBBinderContext
         );
       }
       return existing;
+    }
+
+    @Override
+    public CBBindingLocalType checkFieldBinding(
+      final Optional<UUID> specSection,
+      final String text,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(text, "text");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findFieldBinding(text);
+      if (existing == null) {
+        throw this.failed(
+          specSection,
+          lexical,
+          "errorBindingMissing",
+          text
+        );
+      }
+      return existing;
+    }
+
+    @Override
+    public CBBindingLocalType checkTypeOrProtocolBinding(
+      final Optional<UUID> specSection,
+      final String target,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(target, "text");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existingType =
+        this.findTypeBinding(target);
+      final var existingProto =
+        this.findProtoBinding(target);
+
+      if (existingType == null && existingProto == null) {
+        throw this.failed(
+          specSection,
+          lexical,
+          "errorBindingMissing",
+          target
+        );
+      }
+
+      return Optional.ofNullable(existingType).orElse(existingProto);
+    }
+
+    @Override
+    public CBBindingLocalType checkCaseBinding(
+      final Optional<UUID> specSection,
+      final String target,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(target, "target");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var existing = this.findCaseBinding(target);
+      if (existing == null) {
+        throw this.failed(
+          specSection,
+          lexical,
+          "errorBindingMissing",
+          target
+        );
+      }
+      return existing;
+    }
+
+    @Override
+    public CBBindingType checkTypeParameterOrFieldBinding(
+      final Optional<UUID> specSection,
+      final String target,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(target, "target");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var field =
+        this.findFieldBinding(target);
+      final var type =
+        this.findTypeBinding(target);
+
+      if (field == null && type == null) {
+        throw this.failed(
+          specSection,
+          lexical,
+          "errorBindingMissing",
+          target
+        );
+      }
+
+      return Optional.ofNullable(field).orElse(type);
+    }
+
+    @Override
+    public CBBindingType checkTypeParameterOrCaseBinding(
+      final Optional<UUID> specSection,
+      final String target,
+      final LexicalPosition<URI> lexical)
+      throws CBBindFailedException
+    {
+      Objects.requireNonNull(specSection, "specSection");
+      Objects.requireNonNull(target, "target");
+      Objects.requireNonNull(lexical, "lexical");
+
+      final var caseV =
+        this.findCaseBinding(target);
+      final var type =
+        this.findTypeBinding(target);
+
+      if (caseV == null && type == null) {
+        throw this.failed(
+          specSection,
+          lexical,
+          "errorBindingMissing",
+          target
+        );
+      }
+
+      return Optional.ofNullable(caseV).orElse(type);
     }
 
     @Override

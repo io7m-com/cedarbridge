@@ -128,7 +128,7 @@ public final class CBBinder implements CBBinderType
     for (final var documentation : documentations) {
       try {
         final var binding =
-          context.checkTypeBinding(
+          context.checkTypeOrProtocolBinding(
             Optional.empty(),
             documentation.target(),
             documentation.lexical()
@@ -215,10 +215,22 @@ public final class CBBinder implements CBBinderType
       );
 
     final var contextMain = context.current();
-    this.processImports(contextMain);
-    this.processTypes(contextMain);
-    this.processProtocols(contextMain);
-    this.processDocumentation(contextMain);
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    try {
+      this.processImports(contextMain);
+      this.processTypes(contextMain);
+      this.processProtocols(contextMain);
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    try {
+      this.processDocumentation(contextMain);
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    exceptions.throwIfNecessary();
   }
 
   private void processDocumentation(

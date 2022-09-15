@@ -49,6 +49,7 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBBinderTest
 {
@@ -452,6 +453,27 @@ public final class CBBinderTest
         pack.documentation().get(0).userData().get(CBBindingType.class);
       assertEquals("T", t.name());
     }
+  }
+
+  @Test
+  public void testDocumentationFails()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindDocumented0.cbs");
+    });
+
+    assertEquals(10, this.errors.size());
+    assertTrue(this.errors.get(0).message().contains("NONEXISTENT2"));
+    assertTrue(this.errors.get(1).message().contains("NONEXISTENT0"));
+    assertTrue(this.errors.get(2).message().contains("NONEXISTENT1"));
+    assertTrue(this.errors.get(3).message().contains("NONEXISTENT3"));
+    assertTrue(this.errors.get(4).message().contains("NONEXISTENT5"));
+    assertTrue(this.errors.get(5).message().contains("NONEXISTENT6"));
+    assertTrue(this.errors.get(6).message().contains("NONEXISTENT7"));
+    assertTrue(this.errors.get(7).message().contains("NONEXISTENT8"));
+    assertTrue(this.errors.get(8).message().contains("NONEXISTENT4"));
+    assertTrue(this.errors.get(9).message().contains("NONEXISTENT9"));
   }
 
   private CBBindingLocalType checkHaveSeenBefore(

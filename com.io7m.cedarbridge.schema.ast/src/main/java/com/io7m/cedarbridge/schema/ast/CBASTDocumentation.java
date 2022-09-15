@@ -35,7 +35,7 @@ public record CBASTDocumentation(
   LexicalPosition<URI> lexical,
   String target,
   String text)
-  implements CBASTDeclarationType
+  implements CBASTVariantMemberType, CBASTRecordMemberType, CBASTDeclarationType
 {
   /**
    * Documentation for an element.

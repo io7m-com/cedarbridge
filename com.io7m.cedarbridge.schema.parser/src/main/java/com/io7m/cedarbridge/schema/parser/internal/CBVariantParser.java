@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
@@ -134,11 +135,14 @@ public final class CBVariantParser
       CBFilters.filter(items, CBASTTypeParameterName.class);
     final var cases =
       CBFilters.filter(items, CBASTTypeVariantCase.class);
+    final var documentations =
+      CBFilters.filter(items, CBASTDocumentation.class);
 
     return new CBASTTypeVariant(
       new CBASTMutableUserData(),
       expression.lexical(),
       name,
+      documentations,
       parameters,
       cases
     );
@@ -154,7 +158,8 @@ public final class CBVariantParser
     final var expectingShapes =
       List.of(
         "(parameter <type-parameter-name>)",
-        "(case <type-name> <field-decl> ...)"
+        "(case <type-name> <field-decl> ...)",
+        "(documentation <name> <quoted-string>)"
       );
 
     try (var subContext =
@@ -191,8 +196,16 @@ public final class CBVariantParser
       );
 
     return switch (start.text()) {
-      case "parameter" -> parseVariantMemberParameter(context, expression);
-      case "case" -> new CBVariantCaseParser().parse(context, expression);
+      case "parameter" -> {
+        yield parseVariantMemberParameter(context, expression);
+      }
+      case "case" -> {
+        yield new CBVariantCaseParser().parse(context, expression);
+      }
+      case "documentation" -> {
+        yield new CBDocumentationParser().parse(context, expression);
+      }
+
       default -> throw context.failed(
         expression,
         IS_NOT_FATAL,

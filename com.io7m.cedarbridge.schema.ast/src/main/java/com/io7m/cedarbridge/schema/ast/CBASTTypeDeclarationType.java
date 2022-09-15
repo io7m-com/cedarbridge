@@ -38,4 +38,9 @@ public sealed interface CBASTTypeDeclarationType
 
   List<CBASTTypeParameterName> parameters();
 
+  /**
+   * @return The associated documentation elements
+   */
+
+  List<CBASTDocumentation> documentations();
 }

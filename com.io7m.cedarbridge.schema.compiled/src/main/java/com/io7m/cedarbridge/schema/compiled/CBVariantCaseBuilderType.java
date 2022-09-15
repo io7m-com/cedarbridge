@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+
 /**
  * A builder of variant cases.
  */
@@ -25,19 +27,29 @@ public interface CBVariantCaseBuilderType
   /**
    * Create a new field within this variant case.
    *
-   * @param name The field name
-   * @param type The type name
+   * @param name          The field name
+   * @param type          The type name
+   * @param documentation The documentation
    *
    * @return A case builder
    */
 
   CBVariantCaseBuilderType createField(
     String name,
-    CBTypeExpressionType type);
+    CBTypeExpressionType type,
+    List<String> documentation);
 
   /**
    * @return The owner of this variant case
    */
 
   CBVariantBuilderType owner();
+
+  /**
+   * Set the documentation elements for the case.
+   *
+   * @param documentation The documentation
+   */
+
+  void setDocumentation(List<String> documentation);
 }

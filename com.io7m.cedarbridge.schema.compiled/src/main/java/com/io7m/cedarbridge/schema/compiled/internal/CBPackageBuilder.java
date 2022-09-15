@@ -344,7 +344,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     @Override
     public CBRecordBuilderType createField(
       final String name,
-      final CBTypeExpressionType type)
+      final CBTypeExpressionType type,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBFieldNames.INSTANCE.checkValid(name);
@@ -355,13 +356,14 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      this.record.addField(new CBField(name, type));
+      this.record.addField(new CBField(name, documentation, type));
       return this;
     }
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String name)
+      final String name,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(name);
@@ -372,7 +374,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(name, this.record.arity());
+      final var parameter =
+        new CBTypeParameter(
+          name,
+          this.record.arity(),
+          documentation
+        );
+
       this.record.addTypeParameter(parameter);
       return parameter;
     }
@@ -456,7 +464,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String name)
+      final String name,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(name);
@@ -467,7 +476,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(name, this.variant.arity());
+      final var parameter =
+        new CBTypeParameter(
+          name,
+          this.variant.arity(),
+          documentation
+        );
+
       this.variant.addTypeParameter(parameter);
       return parameter;
     }
@@ -539,7 +554,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     @Override
     public CBVariantCaseBuilderType createField(
       final String name,
-      final CBTypeExpressionType type)
+      final CBTypeExpressionType type,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBFieldNames.INSTANCE.checkValid(name);
@@ -550,8 +566,15 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      this.caseV.addField(new CBField(name, type));
+      this.caseV.addField(new CBField(name, documentation, type));
       return this;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.caseV.setDocumentation(text);
     }
 
     @Override
@@ -615,7 +638,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String parameterName)
+      final String parameterName,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(parameterName);
@@ -626,9 +650,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(
-        parameterName,
-        this.external.arity());
+      final var parameter =
+        new CBTypeParameter(
+          parameterName,
+          this.external.arity(),
+          documentation
+        );
+
       this.external.addTypeParameter(parameter);
       return parameter;
     }

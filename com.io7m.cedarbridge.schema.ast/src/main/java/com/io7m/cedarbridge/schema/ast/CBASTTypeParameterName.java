@@ -34,7 +34,7 @@ public record CBASTTypeParameterName(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   String text)
-  implements CBASTNameType
+  implements CBASTNameType, CBASTRecordMemberType, CBASTVariantMemberType
 {
   /**
    * The type of type parameter names.

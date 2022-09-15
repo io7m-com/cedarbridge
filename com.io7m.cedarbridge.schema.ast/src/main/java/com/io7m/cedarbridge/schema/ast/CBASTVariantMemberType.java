@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,21 +14,18 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-package com.io7m.cedarbridge.schema.compiled;
+
+package com.io7m.cedarbridge.schema.ast;
 
 /**
- * A builder of variant types.
+ * The objects that can appear in variants.
  */
 
-public interface CBVariantBuilderType extends CBTypeDeclarationBuilderType
+public sealed interface CBASTVariantMemberType
+  extends CBASTDeclarationType
+  permits CBASTDocumentation,
+  CBASTField,
+  CBASTTypeParameterName
 {
-  /**
-   * Create a new variant case.
-   *
-   * @param name The name of the case
-   *
-   * @return A case builder
-   */
 
-  CBVariantCaseBuilderType createCase(String name);
 }

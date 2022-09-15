@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.binder.internal;
 
+import com.io7m.cedarbridge.errors.CBExceptionTracker;
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
@@ -55,13 +57,75 @@ public final class CBTypeDeclarationBinder
     final CBASTTypeDeclarationType item)
     throws CBBindFailedException
   {
-    if (item instanceof CBASTTypeVariant) {
-      bindDeclarationVariant(context, (CBASTTypeVariant) item);
-    } else if (item instanceof CBASTTypeRecord) {
-      bindDeclarationRecord(context, (CBASTTypeRecord) item);
+    if (item instanceof CBASTTypeVariant var) {
+      bindDeclarationVariant(context, var);
+    } else if (item instanceof CBASTTypeRecord rec) {
+      bindDeclarationRecord(context, rec);
     } else {
       throw new UnreachableCodeException();
     }
+  }
+
+  private static void bindDocumentationsInRecord(
+    final CBBinderContextType context,
+    final List<CBASTDocumentation> documentations)
+    throws CBBindFailedException
+  {
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    for (final var documentation : documentations) {
+      try {
+        bindDocumentationInRecord(context, documentation);
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
+    }
+    exceptions.throwIfNecessary();
+  }
+
+  private static void bindDocumentationInRecord(
+    final CBBinderContextType context,
+    final CBASTDocumentation documentation)
+    throws CBBindFailedException
+  {
+    final var binding =
+      context.checkTypeParameterOrFieldBinding(
+        Optional.empty(),
+        documentation.target(),
+        documentation.lexical()
+      );
+
+    documentation.userData().put(CBBindingType.class, binding);
+  }
+
+  private static void bindDocumentationsInVariant(
+    final CBBinderContextType context,
+    final List<CBASTDocumentation> documentations)
+    throws CBBindFailedException
+  {
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    for (final var documentation : documentations) {
+      try {
+        bindDocumentationInVariant(context, documentation);
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
+    }
+    exceptions.throwIfNecessary();
+  }
+
+  private static void bindDocumentationInVariant(
+    final CBBinderContextType context,
+    final CBASTDocumentation documentation)
+    throws CBBindFailedException
+  {
+    final CBBindingType binding =
+      context.checkTypeParameterOrCaseBinding(
+        Optional.empty(),
+        documentation.target(),
+        documentation.lexical()
+      );
+
+    documentation.userData().put(CBBindingType.class, binding);
   }
 
   private static void bindTypeParameters(
@@ -70,7 +134,7 @@ public final class CBTypeDeclarationBinder
     final List<CBASTTypeParameterName> parameters)
     throws CBBindFailedException
   {
-    var failed = false;
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var parameter : parameters) {
       try {
         final var binding =
@@ -82,12 +146,10 @@ public final class CBTypeDeclarationBinder
 
         parameter.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
     }
-    if (failed) {
-      throw new CBBindFailedException();
-    }
+    exceptions.throwIfNecessary();
   }
 
   private static void bindDeclarationRecord(
@@ -95,8 +157,22 @@ public final class CBTypeDeclarationBinder
     final CBASTTypeRecord item)
     throws CBBindFailedException
   {
-    bindTypeParameters(context, SPEC_SEMANTICS_RECORD, item.parameters());
-    bindFields(context, item.fields());
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+
+    try {
+      bindTypeParameters(context, SPEC_SEMANTICS_RECORD, item.parameters());
+      bindFields(context, item.fields());
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    try {
+      bindDocumentationsInRecord(context, item.documentations());
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    exceptions.throwIfNecessary();
   }
 
   private static void bindFields(
@@ -104,7 +180,7 @@ public final class CBTypeDeclarationBinder
     final List<CBASTField> fields)
     throws CBBindFailedException
   {
-    var failed = false;
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var field : fields) {
       try {
         final var name = field.name();
@@ -112,19 +188,17 @@ public final class CBTypeDeclarationBinder
           context.bindField(SPEC_SEMANTICS_RECORD, name.text(), name.lexical());
         name.userData().put(CBBindingType.class, binding);
       } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
 
       try {
         new CBTypeExpressionBinder().bind(context, field.type());
       } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
     }
 
-    if (failed) {
-      throw new CBBindFailedException();
-    }
+    exceptions.throwIfNecessary();
   }
 
   private static void bindDeclarationVariant(
@@ -132,8 +206,22 @@ public final class CBTypeDeclarationBinder
     final CBASTTypeVariant item)
     throws CBBindFailedException
   {
-    bindTypeParameters(context, SPEC_SEMANTICS_VARIANT, item.parameters());
-    bindVariantCases(context, item.cases());
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+
+    try {
+      bindTypeParameters(context, SPEC_SEMANTICS_VARIANT, item.parameters());
+      bindVariantCases(context, item.cases());
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    try {
+      bindDocumentationsInVariant(context, item.documentations());
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    exceptions.throwIfNecessary();
   }
 
   private static void bindVariantCases(
@@ -141,31 +229,52 @@ public final class CBTypeDeclarationBinder
     final List<CBASTTypeVariantCase> cases)
     throws CBBindFailedException
   {
-    var failed = false;
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
     for (final var caseV : cases) {
       try {
-        final var name = caseV.name();
-        final var binding =
-          context.bindVariantCase(
-            SPEC_SEMANTICS_VARIANT,
-            name.text(),
-            name.lexical()
-          );
-        caseV.userData().put(CBBindingType.class, binding);
+        bindVariantCase(context, caseV);
       } catch (final CBBindFailedException e) {
-        failed = true;
-      }
-
-      try {
-        bindFields(context, caseV.fields());
-      } catch (final CBBindFailedException e) {
-        failed = true;
+        exceptions.addException(e);
       }
     }
+    exceptions.throwIfNecessary();
+  }
 
-    if (failed) {
-      throw new CBBindFailedException();
+  private static void bindVariantCase(
+    final CBBinderContextType context,
+    final CBASTTypeVariantCase caseV)
+    throws CBBindFailedException
+  {
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    try {
+      final var name = caseV.name();
+      final var binding =
+        context.bindVariantCase(
+          SPEC_SEMANTICS_VARIANT,
+          name.text(),
+          name.lexical()
+        );
+      caseV.userData().put(CBBindingType.class, binding);
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
     }
+
+    try {
+      bindFields(context, caseV.fields());
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    try {
+      bindDocumentationsInRecord(
+        context,
+        caseV.documentations()
+      );
+    } catch (final CBBindFailedException e) {
+      exceptions.addException(e);
+    }
+
+    exceptions.throwIfNecessary();
   }
 
   @Override

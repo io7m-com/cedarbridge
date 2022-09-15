@@ -28,8 +28,10 @@ public sealed interface CBASTDeclarationType
   CBASTPackageDeclaration,
   CBASTProtocolDeclaration,
   CBASTProtocolVersion,
+  CBASTRecordMemberType,
   CBASTTypeDeclarationType,
-  CBASTTypeVariantCase
+  CBASTTypeVariantCase,
+  CBASTVariantMemberType
 {
 
 }
