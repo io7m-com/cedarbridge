@@ -22,7 +22,8 @@ package com.io7m.cedarbridge.schema.ast;
 
 public sealed interface CBASTDeclarationType
   extends CBASTElementType
-  permits CBASTImport,
+  permits CBASTDocumentation,
+  CBASTImport,
   CBASTLanguage,
   CBASTPackageDeclaration,
   CBASTProtocolDeclaration,

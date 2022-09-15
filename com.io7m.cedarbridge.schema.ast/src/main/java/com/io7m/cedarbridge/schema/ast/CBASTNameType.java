@@ -16,40 +16,18 @@
 
 package com.io7m.cedarbridge.schema.ast;
 
-import com.io7m.cedarbridge.schema.names.CBPackageShortNames;
-import com.io7m.jlexing.core.LexicalPosition;
-
-import java.net.URI;
-import java.util.Objects;
-
 /**
- * The type of package short names.
- *
- * @param userData User data
- * @param lexical  Lexical info
- * @param text     The name text
+ * The base type of names.
  */
 
-public record CBASTPackageShortName(
-  CBASTMutableUserData userData,
-  LexicalPosition<URI> lexical,
-  String text)
-  implements CBASTNameType
+public sealed interface CBASTNameType
+  extends CBASTElementType
+  permits CBASTFieldName,
+  CBASTPackageName,
+  CBASTPackageShortName,
+  CBASTTypeName,
+  CBASTTypeParameterName,
+  CBASTVariantCaseName
 {
-  /**
-   * The type of package short names.
-   *
-   * @param userData User data
-   * @param lexical  Lexical info
-   * @param text     The name text
-   */
 
-  public CBASTPackageShortName
-  {
-    Objects.requireNonNull(userData, "userData");
-    Objects.requireNonNull(lexical, "lexical");
-    Objects.requireNonNull(text, "text");
-
-    CBPackageShortNames.INSTANCE.checkValid(text);
-  }
 }

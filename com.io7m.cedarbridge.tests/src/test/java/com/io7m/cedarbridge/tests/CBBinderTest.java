@@ -28,6 +28,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
@@ -45,7 +46,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -426,6 +426,32 @@ public final class CBBinderTest
     }
 
     assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testPackageDocumentation0()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindPackageDocumentation0.cbs");
+    });
+
+    assertEquals("errorBindingMissing", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testPackageDocumentation1()
+    throws Exception
+  {
+    final var pack = this.bind("bindPackageDocumentation1.cbs");
+    assertEquals(1, pack.documentation().size());
+
+    {
+      final var t =
+        pack.documentation().get(0).userData().get(CBBindingType.class);
+      assertEquals("T", t.name());
+    }
   }
 
   private CBBindingLocalType checkHaveSeenBefore(

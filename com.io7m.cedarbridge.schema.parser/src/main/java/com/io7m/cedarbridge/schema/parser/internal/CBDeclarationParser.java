@@ -112,6 +112,10 @@ public final class CBDeclarationParser
         return new CBProtocolParser()
           .parse(context, expression);
       }
+      case "documentation" -> {
+        return new CBDocumentationParser()
+          .parse(context, expression);
+      }
       default -> {
         throw context.failed(
           expression,
@@ -133,20 +137,22 @@ public final class CBDeclarationParser
     final List<String> expectingShapes;
     if (this.tooLateForLanguage) {
       expectingShapes = List.of(
-        "<package-decl>",
+        "<documentation-decl>",
         "<import-decl>",
+        "<package-decl>",
+        "<protocol-decl>",
         "<record-decl>",
-        "<variant-decl>",
-        "<protocol-decl>"
+        "<variant-decl>"
       );
     } else {
       expectingShapes = List.of(
-        "<package-decl>",
+        "<documentation-decl>",
         "<import-decl>",
-        "<record-decl>",
-        "<variant-decl>",
+        "<language-decl>",
+        "<package-decl>",
         "<protocol-decl>",
-        "<language-decl>"
+        "<record-decl>",
+        "<variant-decl>"
       );
     }
 

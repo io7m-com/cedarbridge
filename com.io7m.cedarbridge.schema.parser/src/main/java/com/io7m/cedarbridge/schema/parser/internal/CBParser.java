@@ -19,6 +19,7 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
@@ -111,6 +112,15 @@ public final class CBParser implements CBParserType
       .collect(Collectors.toList());
   }
 
+  private static List<CBASTDocumentation> findDocumentation(
+    final List<CBASTDeclarationType> declarations)
+  {
+    return declarations.stream()
+      .filter(i -> i instanceof CBASTDocumentation)
+      .map(x -> (CBASTDocumentation) x)
+      .collect(Collectors.toList());
+  }
+
   @Override
   public CBASTPackage execute()
     throws CBParseFailedException
@@ -197,6 +207,8 @@ public final class CBParser implements CBParserType
       findTypes(declarations);
     final var protocols =
       findProtocols(declarations);
+    final var documentation =
+      findDocumentation(declarations);
 
     return new CBASTPackage(
       new CBASTMutableUserData(),
@@ -204,7 +216,8 @@ public final class CBParser implements CBParserType
       language,
       imports,
       types,
-      protocols
+      protocols,
+      documentation
     );
   }
 

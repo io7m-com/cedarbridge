@@ -28,6 +28,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
@@ -54,7 +55,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;

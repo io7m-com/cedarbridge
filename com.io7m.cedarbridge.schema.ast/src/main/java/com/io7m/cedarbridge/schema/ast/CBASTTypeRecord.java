@@ -25,11 +25,11 @@ import java.util.Objects;
 /**
  * A record declaration.
  *
- * @param userData   The user data
- * @param lexical    The lexical info
- * @param name       The type name
- * @param parameters The type parameters
- * @param fields     The record fields
+ * @param fields        The record fields
+ * @param lexical       The lexical info
+ * @param name          The type name
+ * @param parameters    The type parameters
+ * @param userData      The user data
  */
 
 public record CBASTTypeRecord(
@@ -43,19 +43,19 @@ public record CBASTTypeRecord(
   /**
    * A record declaration.
    *
-   * @param userData   The user data
-   * @param lexical    The lexical info
-   * @param name       The type name
-   * @param parameters The type parameters
-   * @param fields     The record fields
+   * @param fields        The record fields
+   * @param lexical       The lexical info
+   * @param name          The type name
+   * @param parameters    The type parameters
+   * @param userData      The user data
    */
 
   public CBASTTypeRecord
   {
-    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(fields, "fields");
     Objects.requireNonNull(lexical, "lexical");
     Objects.requireNonNull(name, "name");
     Objects.requireNonNull(parameters, "parameters");
-    Objects.requireNonNull(fields, "fields");
+    Objects.requireNonNull(userData, "userData");
   }
 }

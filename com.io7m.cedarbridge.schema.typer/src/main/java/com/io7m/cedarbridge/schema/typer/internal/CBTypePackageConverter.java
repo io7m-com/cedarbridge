@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.typer.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
@@ -39,6 +40,8 @@ import com.io7m.cedarbridge.schema.compiled.CBVariantBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseBuilderType;
 import com.io7m.junreachable.UnreachableCodeException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -59,10 +62,11 @@ public final class CBTypePackageConverter
 
   private static CBVariantBuilderType buildVariant(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> documentation,
     final CBASTTypeVariant typeDecl)
   {
-    final var variant =
-      builder.findVariant(typeDecl.name().text());
+    final var name = typeDecl.name().text();
+    final var variant = builder.findVariant(name);
 
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
@@ -76,6 +80,7 @@ public final class CBTypePackageConverter
     }
 
     Objects.requireNonNull(variant.ownerPackage(), "ownerPackage");
+    variant.setDocumentation(compileDocumentation(documentation, name));
     return variant;
   }
 
@@ -142,10 +147,13 @@ public final class CBTypePackageConverter
 
   private static CBRecordBuilderType buildRecord(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> documentation,
     final CBASTTypeRecord typeDecl)
   {
+    final var name =
+      typeDecl.name().text();
     final var record =
-      builder.findRecord(typeDecl.name().text());
+      builder.findRecord(name);
 
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
@@ -158,6 +166,8 @@ public final class CBTypePackageConverter
         buildTypeExpression(record, field.type())
       );
     }
+
+    record.setDocumentation(compileDocumentation(documentation, name));
     return record;
   }
 
@@ -212,10 +222,10 @@ public final class CBTypePackageConverter
     }
 
     for (final var typeDecl : pack.types()) {
-      if (typeDecl instanceof CBASTTypeRecord) {
-        buildRecord(packBuilder, (CBASTTypeRecord) typeDecl);
-      } else if (typeDecl instanceof CBASTTypeVariant) {
-        buildVariant(packBuilder, (CBASTTypeVariant) typeDecl);
+      if (typeDecl instanceof CBASTTypeRecord rec) {
+        buildRecord(packBuilder, pack.documentation(), rec);
+      } else if (typeDecl instanceof CBASTTypeVariant var) {
+        buildVariant(packBuilder, pack.documentation(), var);
       } else {
         throw new UnreachableCodeException();
       }
@@ -226,5 +236,18 @@ public final class CBTypePackageConverter
     }
 
     return packBuilder.build();
+  }
+
+  private static List<String> compileDocumentation(
+    final List<CBASTDocumentation> documentation,
+    final String name)
+  {
+    final var texts = new ArrayList<String>();
+    for (final var doc : documentation) {
+      if (Objects.equals(doc.target(), name)) {
+        texts.add(doc.text());
+      }
+    }
+    return List.copyOf(texts);
   }
 }

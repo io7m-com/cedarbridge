@@ -298,6 +298,62 @@ public final class CBParserTest
     }
   }
 
+  @Test
+  public void testPackageDocumentationBroken0()
+    throws Exception
+  {
+    try (var stream = this.stream("errorPackageDocumentationBroken0.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals("errorDeclarationInvalid", this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testPackageDocumentationBroken1()
+    throws Exception
+  {
+    try (var stream = this.stream("errorPackageDocumentationBroken1.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals("errorDeclarationInvalid", this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testPackageDocumentationBroken2()
+    throws Exception
+  {
+    try (var stream = this.stream("errorPackageDocumentationBroken2.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        assertEquals("errorDeclarationInvalid", this.takeError().errorCode());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
+  @Test
+  public void testPackageDocumentationOk0()
+    throws Exception
+  {
+    try (var stream = this.stream("parsePackageDocumentationOK0.cbs")) {
+      try (var parser = this.parser(stream)) {
+        final var parsedPackage = parser.execute();
+        assertEquals("com.io7m.cedarbridge", parsedPackage.name().text());
+
+        final var d0 = parsedPackage.documentation().get(0);
+        assertEquals("X is something.", d0.text());
+        final var d1 = parsedPackage.documentation().get(1);
+        assertEquals("This is more documentation.", d1.text());
+      }
+    }
+  }
+
   private CBParserType parser(
     final InputStream stream)
   {

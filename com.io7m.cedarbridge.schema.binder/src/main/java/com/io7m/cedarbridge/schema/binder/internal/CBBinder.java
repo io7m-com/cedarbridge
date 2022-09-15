@@ -19,6 +19,7 @@ package com.io7m.cedarbridge.schema.binder.internal;
 import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.errors.CBExceptionTracker;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionLineLogType;
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
@@ -118,6 +119,29 @@ public final class CBBinder implements CBBinderType
     exceptions.throwIfNecessary();
   }
 
+  private static void bindDocumentation(
+    final CBBinderContextType context,
+    final List<CBASTDocumentation> documentations)
+    throws CBBindFailedException
+  {
+    final var exceptions = new CBExceptionTracker<CBBindFailedException>();
+    for (final var documentation : documentations) {
+      try {
+        final var binding =
+          context.checkTypeBinding(
+            Optional.empty(),
+            documentation.target(),
+            documentation.lexical()
+          );
+
+        documentation.userData().put(CBBindingType.class, binding);
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
+    }
+    exceptions.throwIfNecessary();
+  }
+
   private static void collectTopLevelBindings(
     final CBBinderContextType context,
     final List<CBASTTypeDeclarationType> types,
@@ -194,6 +218,14 @@ public final class CBBinder implements CBBinderType
     this.processImports(contextMain);
     this.processTypes(contextMain);
     this.processProtocols(contextMain);
+    this.processDocumentation(contextMain);
+  }
+
+  private void processDocumentation(
+    final CBBinderContextType context)
+    throws CBBindFailedException
+  {
+    bindDocumentation(context, this.parsedPackage.documentation());
   }
 
   private void processProtocols(

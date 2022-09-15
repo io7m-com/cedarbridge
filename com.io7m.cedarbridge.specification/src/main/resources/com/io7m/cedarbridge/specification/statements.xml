@@ -10,4 +10,5 @@
   <xi:include href="st-record.xml"/>
   <xi:include href="st-variant.xml"/>
   <xi:include href="st-protocol.xml"/>
+  <xi:include href="st-documentation.xml"/>
 </Section>

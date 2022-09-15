@@ -25,10 +25,10 @@ import java.util.Objects;
 /**
  * A variant case declaration.
  *
- * @param userData The user data
- * @param lexical  The lexical info
  * @param fields   The case fields
+ * @param lexical  The lexical info
  * @param name     The case name
+ * @param userData The user data
  */
 
 public record CBASTTypeVariantCase(
@@ -41,17 +41,17 @@ public record CBASTTypeVariantCase(
   /**
    * A variant case declaration.
    *
-   * @param userData The user data
-   * @param lexical  The lexical info
    * @param fields   The case fields
+   * @param lexical  The lexical info
    * @param name     The case name
+   * @param userData The user data
    */
 
   public CBASTTypeVariantCase
   {
-    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(fields, "fields");
     Objects.requireNonNull(lexical, "lexical");
     Objects.requireNonNull(name, "name");
-    Objects.requireNonNull(fields, "fields");
+    Objects.requireNonNull(userData, "userData");
   }
 }

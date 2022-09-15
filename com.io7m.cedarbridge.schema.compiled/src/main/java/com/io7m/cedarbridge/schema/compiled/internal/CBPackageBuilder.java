@@ -37,6 +37,7 @@ import com.io7m.jaffirm.core.Preconditions;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -377,6 +378,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     }
 
     @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.record.setDocumentation(text);
+    }
+
+    @Override
     public void setExternalName(
       final String externalPackageName,
       final String name)
@@ -462,6 +470,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
       final var parameter = new CBTypeParameter(name, this.variant.arity());
       this.variant.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.variant.setDocumentation(text);
     }
 
     @Override
@@ -616,6 +631,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         this.external.arity());
       this.external.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.external.setDocumentation(text);
     }
 
     @Override

@@ -34,7 +34,7 @@ public record CBASTVariantCaseName(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   String text)
-  implements CBASTElementType
+  implements CBASTNameType
 {
   /**
    * The type of type parameter names.

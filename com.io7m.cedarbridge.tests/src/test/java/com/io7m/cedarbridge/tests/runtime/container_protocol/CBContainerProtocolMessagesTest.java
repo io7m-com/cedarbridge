@@ -18,7 +18,6 @@ package com.io7m.cedarbridge.tests.runtime.container_protocol;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollection;
-import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolAvailable;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
 import com.io7m.cedarbridge.tests.CBTestDirectories;

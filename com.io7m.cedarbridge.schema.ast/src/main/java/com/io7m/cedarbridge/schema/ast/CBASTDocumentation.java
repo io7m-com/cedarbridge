@@ -19,43 +19,38 @@ package com.io7m.cedarbridge.schema.ast;
 import com.io7m.jlexing.core.LexicalPosition;
 
 import java.net.URI;
-import java.util.List;
 import java.util.Objects;
 
 /**
- * A variant declaration.
+ * Documentation for an element.
  *
- * @param cases         The variant cases
- * @param lexical       The lexical info
- * @param name          The type name
- * @param parameters    The type parameters
- * @param userData      The user data
+ * @param userData The mutable user data
+ * @param lexical  The lexical information
+ * @param target   The target element
+ * @param text     The text
  */
 
-public record CBASTTypeVariant(
+public record CBASTDocumentation(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
-  CBASTTypeName name,
-  List<CBASTTypeParameterName> parameters,
-  List<CBASTTypeVariantCase> cases)
-  implements CBASTTypeDeclarationType
+  String target,
+  String text)
+  implements CBASTDeclarationType
 {
   /**
-   * A variant declaration.
+   * Documentation for an element.
    *
-   * @param cases         The variant cases
-   * @param lexical       The lexical info
-   * @param name          The type name
-   * @param parameters    The type parameters
-   * @param userData      The user data
+   * @param userData The mutable user data
+   * @param lexical  The lexical information
+   * @param target   The target element
+   * @param text     The text
    */
 
-  public CBASTTypeVariant
+  public CBASTDocumentation
   {
-    Objects.requireNonNull(cases, "cases");
-    Objects.requireNonNull(lexical, "lexical");
-    Objects.requireNonNull(name, "name");
-    Objects.requireNonNull(parameters, "parameters");
     Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(lexical, "lexical");
+    Objects.requireNonNull(target, "target");
+    Objects.requireNonNull(text, "text");
   }
 }

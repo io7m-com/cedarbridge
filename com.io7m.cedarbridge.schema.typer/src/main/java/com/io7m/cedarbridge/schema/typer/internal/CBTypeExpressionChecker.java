@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
@@ -31,8 +32,6 @@ import com.io7m.junreachable.UnreachableCodeException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 

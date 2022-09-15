@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
 
@@ -67,6 +69,14 @@ public interface CBTypeDeclarationBuilderType
 
   CBTypeParameterType addTypeParameter(
     String name);
+
+  /**
+   * Set the documentation string for the declaration.
+   *
+   * @param text The text
+   */
+
+  void setDocumentation(List<String> text);
 
   /**
    * Set the external type of this name

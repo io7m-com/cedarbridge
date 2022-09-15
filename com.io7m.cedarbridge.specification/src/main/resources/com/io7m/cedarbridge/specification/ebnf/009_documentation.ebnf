@@ -1,0 +1,2 @@
+documentation_declaration =
+  "(" , "documentation" , symbol , quoted_string , ")" ;

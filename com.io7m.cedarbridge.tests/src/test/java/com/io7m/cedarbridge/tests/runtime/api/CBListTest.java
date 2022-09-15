@@ -18,13 +18,9 @@ package com.io7m.cedarbridge.tests.runtime.api;
 
 import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned32;
 import com.io7m.cedarbridge.runtime.api.CBList;
-import com.io7m.cedarbridge.runtime.api.CBMap;
-import com.io7m.cedarbridge.runtime.api.CBString;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

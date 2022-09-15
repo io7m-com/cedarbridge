@@ -43,6 +43,7 @@ public final class CBTypeDeclarationExternal implements CBExternalType
   private final String externalType;
   private final Optional<CBExternalName> externalName;
   private CBPackageType owner;
+  private List<String> documentation;
 
   /**
    * Construct an external type.
@@ -65,6 +66,8 @@ public final class CBTypeDeclarationExternal implements CBExternalType
       Objects.requireNonNull(inExternalType, "externalType");
     this.parameters =
       new ArrayList<>();
+    this.documentation =
+      List.of();
 
     Preconditions.checkPreconditionV(
       inName,
@@ -150,6 +153,12 @@ public final class CBTypeDeclarationExternal implements CBExternalType
     return this.externalName;
   }
 
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
+  }
+
   /**
    * Set the owner of the type declaration.
    * @param newOwner The owner
@@ -159,5 +168,17 @@ public final class CBTypeDeclarationExternal implements CBExternalType
     final CBPackage newOwner)
   {
     this.owner = Objects.requireNonNull(newOwner, "cbPackage");
+  }
+
+  /**
+   * Set the documentation.
+   *
+   * @param text The text
+   */
+
+  public void setDocumentation(
+    final List<String> text)
+  {
+    this.documentation = Objects.requireNonNull(text, "text");
   }
 }
