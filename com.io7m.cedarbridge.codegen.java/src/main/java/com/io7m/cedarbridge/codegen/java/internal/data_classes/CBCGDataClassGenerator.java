@@ -50,6 +50,7 @@ import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.field
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
 import static javax.lang.model.element.Modifier.PUBLIC;
+import static javax.lang.model.element.Modifier.SEALED;
 import static javax.lang.model.element.Modifier.STATIC;
 
 /**
@@ -76,6 +77,10 @@ public final class CBCGDataClassGenerator
       TypeSpec.interfaceBuilder(className)
         .addSuperinterface(CBSerializableType.class)
         .addModifiers(PUBLIC);
+
+    if (!type.cases().isEmpty()) {
+      containerBuilder.addModifiers(SEALED);
+    }
 
     final var typeParameters =
       type.parameters();
