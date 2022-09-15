@@ -32,12 +32,12 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import com.io7m.jaffirm.core.Postconditions;
 import com.io7m.jaffirm.core.Preconditions;
-import com.io7m.junreachable.UnreachableCodeException;
 import com.io7m.jodist.ClassName;
 import com.io7m.jodist.MethodSpec;
 import com.io7m.jodist.ParameterizedTypeName;
 import com.io7m.jodist.TypeName;
 import com.io7m.jodist.TypeVariableName;
+import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
