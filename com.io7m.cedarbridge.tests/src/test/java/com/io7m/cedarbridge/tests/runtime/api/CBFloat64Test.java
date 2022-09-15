@@ -28,15 +28,15 @@ public final class CBFloat64Test
   {
     assertEquals(
       0,
-      CBFloat64.of(0.0).compareTo(CBFloat64.of(0.0))
+      new CBFloat64(0.0).compareTo(new CBFloat64(0.0))
     );
     assertEquals(
       1,
-      CBFloat64.of(1.0).compareTo(CBFloat64.of(0.0))
+      new CBFloat64(1.0).compareTo(new CBFloat64(0.0))
     );
     assertEquals(
       -1,
-      CBFloat64.of(0.0).compareTo(CBFloat64.of(1.0))
+      new CBFloat64(0.0).compareTo(new CBFloat64(1.0))
     );
   }
 
@@ -45,7 +45,7 @@ public final class CBFloat64Test
   {
     assertEquals(
       "23.000000",
-      String.format("%s", CBFloat64.of(23.0))
+      String.format("%s", new CBFloat64(23.0))
     );
   }
 }

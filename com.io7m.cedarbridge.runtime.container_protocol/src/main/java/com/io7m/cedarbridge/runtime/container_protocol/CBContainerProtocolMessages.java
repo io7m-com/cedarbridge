@@ -95,13 +95,13 @@ public final class CBContainerProtocolMessages
     final var appMin = data.getLong();
     final var appMax = data.getLong();
 
-    return CBContainerProtocolAvailable.builder()
-      .setContainerProtocolMinimumVersion(Integer.toUnsignedLong(containerMin))
-      .setContainerProtocolMaximumVersion(Integer.toUnsignedLong(containerMax))
-      .setApplicationProtocolId(appId)
-      .setApplicationProtocolMinimumVersion(appMin)
-      .setApplicationProtocolMaximumVersion(appMax)
-      .build();
+    return new CBContainerProtocolAvailable(
+      Integer.toUnsignedLong(containerMin),
+      Integer.toUnsignedLong(containerMax),
+      appId,
+      appMin,
+      appMax
+    );
   }
 
   /**
@@ -139,11 +139,11 @@ public final class CBContainerProtocolMessages
     final var appId = new UUID(appIdHigh, appIdLow);
     final var appV = data.getLong();
 
-    return CBContainerProtocolUse.builder()
-      .setContainerProtocolVersion(Integer.toUnsignedLong(containerV))
-      .setApplicationProtocolId(appId)
-      .setApplicationProtocolVersion(appV)
-      .build();
+    return new CBContainerProtocolUse(
+      Integer.toUnsignedLong(containerV),
+      appId,
+      appV
+    );
   }
 
   /**
@@ -202,10 +202,7 @@ public final class CBContainerProtocolMessages
       throw new UncheckedIOException(e);
     }
 
-    return CBContainerProtocolResponse.builder()
-      .setOk(ok)
-      .setMessage(text)
-      .build();
+    return new CBContainerProtocolResponse(ok, text);
   }
 
   /**

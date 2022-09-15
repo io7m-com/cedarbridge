@@ -18,7 +18,6 @@ package com.io7m.cedarbridge.schema.ast;
 
 import com.io7m.jlexing.core.LexicalPosition;
 import com.io7m.jlexing.core.LexicalType;
-import org.immutables.value.Value;
 
 import java.net.URI;
 
@@ -26,17 +25,22 @@ import java.net.URI;
  * The base type of AST elements.
  */
 
-public interface CBASTElementType extends LexicalType<URI>
+public sealed interface CBASTElementType extends LexicalType<URI>
+  permits CBASTDeclarationType,
+  CBASTField,
+  CBASTFieldName,
+  CBASTPackageName,
+  CBASTPackageShortName,
+  CBASTTypeExpressionType,
+  CBASTTypeName,
+  CBASTTypeParameterName,
+  CBASTVariantCaseName
 {
   /**
    * @return The user data associated with the element
    */
 
-  @Value.Default
-  default CBASTMutableUserData userData()
-  {
-    return new CBASTMutableUserData();
-  }
+  CBASTMutableUserData userData();
 
   @Override
   LexicalPosition<URI> lexical();

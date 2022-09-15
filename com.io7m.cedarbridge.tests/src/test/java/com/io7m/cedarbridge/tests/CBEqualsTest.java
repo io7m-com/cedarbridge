@@ -80,19 +80,22 @@ import nl.jqno.equalsverifier.Warning;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.TestFactory;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 public final class CBEqualsTest
 {
   private static final CBTypeArgument TYPE_ARGUMENT_0 =
-    CBTypeArgument.builder()
-      .setTarget(CBQualifiedTypeName.of("x.y", "T"))
-      .build();
+    new CBTypeArgument(
+      new CBQualifiedTypeName("x.y", "T"),
+      List.of()
+    );
 
   private static final CBTypeArgument TYPE_ARGUMENT_1 =
-    CBTypeArgument.builder()
-      .setTarget(CBQualifiedTypeName.of("x.y", "U"))
-      .build();
+    new CBTypeArgument(
+      new CBQualifiedTypeName("x.y", "U"),
+      List.of()
+    );
 
   private static DynamicTest toTest(
     final Class<?> clazz)
@@ -115,63 +118,22 @@ public final class CBEqualsTest
   public Stream<DynamicTest> testEquals()
   {
     return Stream.of(
-      CBASTField.class,
       CBASTFieldName.class,
       CBASTImport.class,
-      CBASTPackage.class,
       CBASTPackageDeclaration.class,
       CBASTPackageName.class,
       CBASTPackageShortName.class,
-      CBASTProtocolDeclaration.class,
-      CBASTProtocolVersion.class,
-      CBASTTypeApplication.class,
-      CBASTTypeName.class,
-      CBASTTypeNamed.class,
-      CBASTTypeParameterName.class,
-      CBASTTypeRecord.class,
-      CBASTTypeVariant.class,
-      CBASTTypeVariantCase.class,
-      CBASTVariantCaseName.class,
       CBBindingExternal.class,
       CBBindingLocalFieldName.class,
-      CBBindingLocalProtocolDeclaration.class,
       CBBindingLocalProtocolVersionDeclaration.class,
-      CBBindingLocalTypeDeclaration.class,
       CBBindingLocalTypeParameter.class,
       CBBindingLocalVariantCase.class,
-      CBByteArray.class,
       CBCodeGeneratorConfiguration.class,
       CBCodeGeneratorDescription.class,
       CBCodeGeneratorResult.class,
-      CBContainerProtocolAvailable.class,
-      CBContainerProtocolResponse.class,
-      CBContainerProtocolUse.class,
-      CBError.class,
-      CBFloat16.class,
-      CBFloat32.class,
-      CBFloat64.class,
-      CBIntegerSigned16.class,
-      CBIntegerSigned32.class,
-      CBIntegerSigned64.class,
-      CBIntegerSigned8.class,
-      CBIntegerUnsigned16.class,
-      CBIntegerUnsigned32.class,
-      CBIntegerUnsigned64.class,
-      CBIntegerUnsigned8.class,
-      CBList.class,
-      CBMap.class,
-      CBMapEntry.class,
-      CBNone.class,
-      CBQualifiedTypeName.class,
       CBSPICodeGeneratorConfiguration.class,
       CBSPICodeGeneratorDescription.class,
       CBSPICodeGeneratorResult.class,
-      CBSchemaCompilation.class,
-      CBSchemaCompilerConfiguration.class,
-      CBSerializerCollection.class,
-      CBSome.class,
-      CBString.class,
-      CBTypeArgument.class,
       CBTypeAssignment.class,
       CBVersion.class
     ).map(CBEqualsTest::toTest);

@@ -641,7 +641,7 @@ public final class CBCGSerializerInstantiations
     final var targetDecl =
       targetType.declaration();
     final var qName =
-      CBQualifiedTypeName.of(targetDecl.owner().name(), targetDecl.name());
+      new CBQualifiedTypeName(targetDecl.owner().name(), targetDecl.name());
 
     final var builtArguments =
       arguments.stream()
@@ -675,7 +675,7 @@ public final class CBCGSerializerInstantiations
     final var typeDeclaration =
       type.declaration();
     final var qName =
-      CBQualifiedTypeName.of(
+      new CBQualifiedTypeName(
         typeDeclaration.owner().name(),
         typeDeclaration.name());
 

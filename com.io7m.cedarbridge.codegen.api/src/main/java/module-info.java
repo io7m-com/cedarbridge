@@ -22,8 +22,6 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorFactoryType;
 
 module com.io7m.cedarbridge.codegen.api
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 

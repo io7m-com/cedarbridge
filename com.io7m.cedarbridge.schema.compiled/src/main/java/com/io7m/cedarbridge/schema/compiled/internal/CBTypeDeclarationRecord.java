@@ -147,10 +147,7 @@ public final class CBTypeDeclarationRecord implements CBRecordType
     final String newExternalName)
   {
     this.externalName = Optional.of(
-      CBExternalName.builder()
-        .setExternalPackage(newExternalPackage)
-        .setExternalName(newExternalName)
-        .build()
+      new CBExternalName(newExternalPackage, newExternalName)
     );
   }
 

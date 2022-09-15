@@ -104,12 +104,12 @@ public final class CBOptionSerializer<T extends CBSerializableType>
     throws IOException
   {
     final var v0000 = this.itemSerializer.deserialize(context);
-    return CBSome.of(v0000);
+    return new CBSome<>(v0000);
   }
 
   private CBOptionType<T> deserializeNone(
     final CBSerializationContextType context)
   {
-    return CBNone.of();
+    return new CBNone<>();
   }
 }

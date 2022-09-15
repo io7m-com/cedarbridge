@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.ast.CBASTImport;
 import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
@@ -120,12 +121,13 @@ public final class CBParser implements CBParserType
       new ArrayList<CBASTDeclarationType>();
 
     var language =
-      CBASTLanguage.builder()
-        .setLexical(LexicalPositions.zero())
-        .setLanguage("cedarbridge")
-        .setMajor(BigInteger.ONE)
-        .setMinor(BigInteger.ZERO)
-        .build();
+      new CBASTLanguage(
+        new CBASTMutableUserData(),
+        LexicalPositions.zero(),
+        "cedarbridge",
+        BigInteger.ONE,
+        BigInteger.ZERO
+      );
 
     boolean tooLateForLanguage = false;
 
@@ -196,13 +198,14 @@ public final class CBParser implements CBParserType
     final var protocols =
       findProtocols(declarations);
 
-    return CBASTPackage.builder()
-      .setName(name.name())
-      .setLanguage(language)
-      .setImports(imports)
-      .setTypes(types)
-      .setProtocols(protocols)
-      .build();
+    return new CBASTPackage(
+      new CBASTMutableUserData(),
+      name.name(),
+      language,
+      imports,
+      types,
+      protocols
+    );
   }
 
   private CBASTPackageDeclaration findName(

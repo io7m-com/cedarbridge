@@ -135,8 +135,8 @@ public interface CBProtocolSerializerCollectionType<T extends CBProtocolMessageT
   }
 
   /**
-   * Retrieve the highest supported version of protocol {@code requestedId}
-   * in the range {@code [requestedLow, requestedHigh]}.
+   * Retrieve the highest supported version of protocol {@code requestedId} in
+   * the range {@code [requestedLow, requestedHigh]}.
    *
    * @param requestedId   The protocol ID
    * @param requestedLow  The lowest allowed version
@@ -144,7 +144,8 @@ public interface CBProtocolSerializerCollectionType<T extends CBProtocolMessageT
    *
    * @return The version
    *
-   * @throws IllegalArgumentException If the range is malformed, or if no version is available in the given range
+   * @throws IllegalArgumentException If the range is malformed, or if no
+   *                                  version is available in the given range
    */
 
   default long highestSupportedVersion(
@@ -206,7 +207,8 @@ public interface CBProtocolSerializerCollectionType<T extends CBProtocolMessageT
    *
    * @return The version
    *
-   * @throws IllegalArgumentException If no version is available in the given range
+   * @throws IllegalArgumentException If no version is available in the given
+   *                                  range
    */
 
   default long checkSupportedVersion(

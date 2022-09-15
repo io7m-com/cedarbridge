@@ -107,9 +107,7 @@ public final class CBJavaCompilation
 
     final var result =
       compilation.codeGen.createGenerator(
-        CBSPICodeGeneratorConfiguration.builder()
-          .setOutputDirectory(outputDirectory)
-          .build()
+        new CBSPICodeGeneratorConfiguration(outputDirectory)
       ).execute(pack);
 
     compilation.compileJava(result.createdFiles());
@@ -153,9 +151,13 @@ public final class CBJavaCompilation
           compileFiles
         );
 
+      final var result =
+        task.call();
+
       assertTrue(
-        task.call().booleanValue(),
-        "Compilation of all files must succeed");
+        result.booleanValue(),
+        "Compilation of all files must succeed"
+      );
     }
 
     this.createModule();

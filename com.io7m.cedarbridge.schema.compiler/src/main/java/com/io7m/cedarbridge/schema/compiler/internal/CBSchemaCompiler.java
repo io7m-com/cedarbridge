@@ -119,9 +119,7 @@ public final class CBSchemaCompiler implements CBSchemaCompilerType
     }
 
     exceptions.throwIfNecessary();
-    return CBSchemaCompilation.builder()
-      .setCompiledPackages(packages)
-      .build();
+    return new CBSchemaCompilation(packages);
   }
 
   private CBPackageType compileOne(

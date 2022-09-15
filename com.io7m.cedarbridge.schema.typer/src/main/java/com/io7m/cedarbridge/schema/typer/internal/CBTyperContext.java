@@ -31,7 +31,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
+import static com.io7m.cedarbridge.errors.CBError.Severity.ERROR;
 
 /**
  * Contextual information for type checking.
@@ -160,13 +160,13 @@ public final class CBTyperContext
       }
 
       final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(new CBTypeCheckFailedException())
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
+        new CBError(
+          lexical,
+          ERROR,
+          new CBTypeCheckFailedException(),
+          errorCode,
+          text
+        );
 
       this.root.errorConsumer.accept(errorValue);
       return new CBTypeCheckFailedException();

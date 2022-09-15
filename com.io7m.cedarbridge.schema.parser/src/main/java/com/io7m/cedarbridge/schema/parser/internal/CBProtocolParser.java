@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
@@ -99,11 +100,12 @@ public final class CBProtocolParser
       throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
-    return CBASTProtocolDeclaration.builder()
-      .setLexical(expression.lexical())
-      .setName(name)
-      .setVersions(items)
-      .build();
+    return new CBASTProtocolDeclaration(
+      new CBASTMutableUserData(),
+      expression.lexical(),
+      name,
+      items
+    );
   }
 
   private static CBASTProtocolVersion parseVersion(
@@ -178,11 +180,12 @@ public final class CBProtocolParser
       throw new CBParseFailedException(IS_NOT_FATAL);
     }
 
-    return CBASTProtocolVersion.builder()
-      .setVersion(versionNumber)
-      .setTypes(items)
-      .setLexical(expression.get(1).lexical())
-      .build();
+    return new CBASTProtocolVersion(
+      new CBASTMutableUserData(),
+      expression.get(1).lexical(),
+      versionNumber,
+      items
+    );
   }
 
   @Override

@@ -34,9 +34,9 @@ public final class CBMapTest
   {
     final var baseMap =
       Map.ofEntries(
-        Map.entry(CBString.of("k0"), CBIntegerUnsigned32.of(23L)),
-        Map.entry(CBString.of("k1"), CBIntegerUnsigned32.of(24L)),
-        Map.entry(CBString.of("k2"), CBIntegerUnsigned32.of(25L))
+        Map.entry(new CBString("k0"), new CBIntegerUnsigned32(23L)),
+        Map.entry(new CBString("k1"), new CBIntegerUnsigned32(24L)),
+        Map.entry(new CBString("k2"), new CBIntegerUnsigned32(25L))
       );
 
     final var linkMap =
@@ -44,7 +44,7 @@ public final class CBMapTest
 
     assertEquals(
       "[(k0 23) (k1 24) (k2 25)]",
-      String.format("%s", CBMap.of(linkMap))
+      String.format("%s", new CBMap<>(linkMap))
     );
   }
 }

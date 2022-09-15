@@ -148,11 +148,11 @@ public final class CBTypeExpressionBinder
     packageName.userData().put(CBPackageType.class, packageV);
 
     final var external =
-      CBBindingExternal.builder()
-        .setLexical(name.lexical())
-        .setName(name.text())
-        .setType(typeV)
-        .build();
+      new CBBindingExternal(
+        name.text(),
+        name.lexical(),
+        typeV
+      );
 
     item.userData().put(CBBindingType.class, external);
   }

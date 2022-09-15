@@ -18,11 +18,15 @@ package com.io7m.cedarbridge.schema.typer.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
@@ -37,11 +41,6 @@ import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeApplicationType;
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeNamedType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeDeclarationType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType.CBBindingLocalTypeParameterType;
 
 /**
  * A simple translator from ASTs to the more abstract compiled model.
@@ -98,20 +97,18 @@ public final class CBTypePackageConverter
     final CBTypeDeclarationBuilderType owner,
     final CBASTTypeExpressionType type)
   {
-    if (type instanceof CBASTTypeApplicationType) {
-      return buildTypeExpressionApplication(
-        owner, (CBASTTypeApplicationType) type);
+    if (type instanceof CBASTTypeApplication application) {
+      return buildTypeExpressionApplication(owner, application);
     }
-    if (type instanceof CBASTTypeNamedType) {
-      return buildTypeExpressionNamed(
-        owner, (CBASTTypeNamedType) type);
+    if (type instanceof CBASTTypeNamed named) {
+      return buildTypeExpressionNamed(owner, named);
     }
     throw new UnreachableCodeException();
   }
 
   private static CBTypeExpressionType buildTypeExpressionNamed(
     final CBTypeDeclarationBuilderType typeBuilder,
-    final CBASTTypeNamedType astType)
+    final CBASTTypeNamed astType)
   {
     final var binding = astType.userData().get(CBBindingType.class);
     final var ownerPackage = typeBuilder.ownerPackage();
@@ -119,10 +116,10 @@ public final class CBTypePackageConverter
       final var bindingExternal = (CBBindingExternal) binding;
       return ownerPackage.referenceExternalType(bindingExternal.type());
     }
-    if (binding instanceof CBBindingLocalTypeDeclarationType) {
+    if (binding instanceof CBBindingLocalTypeDeclaration) {
       return ownerPackage.referenceType(binding.name());
     }
-    if (binding instanceof CBBindingLocalTypeParameterType) {
+    if (binding instanceof CBBindingLocalTypeParameter) {
       return typeBuilder.referenceParameter(binding.name());
     }
     throw new UnreachableCodeException();
@@ -130,7 +127,7 @@ public final class CBTypePackageConverter
 
   private static CBTypeExpressionType buildTypeExpressionApplication(
     final CBTypeDeclarationBuilderType owner,
-    final CBASTTypeApplicationType type)
+    final CBASTTypeApplication type)
   {
     final var arguments =
       type.arguments()

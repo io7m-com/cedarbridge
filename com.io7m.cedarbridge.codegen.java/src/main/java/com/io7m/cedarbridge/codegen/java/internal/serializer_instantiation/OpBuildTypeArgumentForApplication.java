@@ -78,7 +78,7 @@ public final class OpBuildTypeArgumentForApplication
       .addStatement(
         "// Build type argument for application")
       .addStatement(
-        "final $T $L = $T.of($T.of($S,$S),$T.of($L))",
+        "final $T $L = $T.of(new $T($S,$S),$T.of($L))",
         CBTypeArgument.class,
         this.javaLocalName(),
         CBTypeArguments.class,

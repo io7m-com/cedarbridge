@@ -42,14 +42,12 @@ public final class CBTypeArguments
     final CBQualifiedTypeName target,
     final List<CBTypeArgument> arguments)
   {
-    return CBTypeArgument.builder()
-      .setTarget(target)
-      .setArguments(arguments)
-      .build();
+    return new CBTypeArgument(target, arguments);
   }
 
   /**
-   * Check that the argument count matches the parameter count of the target type.
+   * Check that the argument count matches the parameter count of the target
+   * type.
    *
    * @param packageName   The package name
    * @param typeName      The type name

@@ -114,10 +114,10 @@ public final class CBCommandCompile extends CLPAbstractCommand
         .collect(Collectors.toList());
 
     final var configuration =
-      CBSchemaCompilerConfiguration.builder()
-        .setFilesToCompile(compileFiles)
-        .setIncludeDirectories(includeDirectories)
-        .build();
+      new CBSchemaCompilerConfiguration(
+        includeDirectories,
+        compileFiles
+      );
 
     final var compiler =
       compilers.createCompiler(configuration);
@@ -134,9 +134,7 @@ public final class CBCommandCompile extends CLPAbstractCommand
     }
 
     final var codeGeneratorConfiguration =
-      CBCodeGeneratorConfiguration.builder()
-        .setOutputDirectory(this.output)
-        .build();
+      new CBCodeGeneratorConfiguration(this.output);
 
     final var codeGenerator =
       codeGeneratorFactory.createGenerator(codeGeneratorConfiguration);

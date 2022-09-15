@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
@@ -134,12 +135,13 @@ public final class CBVariantParser
     final var cases =
       CBFilters.filter(items, CBASTTypeVariantCase.class);
 
-    return CBASTTypeVariant.builder()
-      .setLexical(expression.lexical())
-      .setCases(cases)
-      .setParameters(parameters)
-      .setName(name)
-      .build();
+    return new CBASTTypeVariant(
+      new CBASTMutableUserData(),
+      expression.lexical(),
+      name,
+      parameters,
+      cases
+    );
   }
 
   private static CBASTElementType parseVariantMember(

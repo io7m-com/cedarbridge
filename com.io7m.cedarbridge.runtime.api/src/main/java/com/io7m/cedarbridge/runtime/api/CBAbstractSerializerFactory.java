@@ -39,7 +39,7 @@ public abstract class CBAbstractSerializerFactory<T extends CBSerializableType>
     final String inPackageName,
     final String inTypeName)
   {
-    this.typeName = CBQualifiedTypeName.of(inPackageName, inTypeName);
+    this.typeName = new CBQualifiedTypeName(inPackageName, inTypeName);
   }
 
   @Override

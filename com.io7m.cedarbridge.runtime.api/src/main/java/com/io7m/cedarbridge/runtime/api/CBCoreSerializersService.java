@@ -33,7 +33,7 @@ public final class CBCoreSerializersService
   }
 
   @Override
-  public CBSerializerCollectionType get()
+  public CBSerializerCollection get()
   {
     return CBCoreSerializers.get();
   }

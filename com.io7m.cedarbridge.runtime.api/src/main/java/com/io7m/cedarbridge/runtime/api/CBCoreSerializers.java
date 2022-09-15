@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.util.List;
+
 /**
  * Serializers for the core Cedarbridge package types.
  */
@@ -26,26 +28,27 @@ public final class CBCoreSerializers
 
   static {
     COLLECTION =
-      CBSerializerCollection.builder()
-        .setPackageName("com.io7m.cedarbridge")
-        .addSerializers(new CBByteArraySerializers())
-        .addSerializers(new CBFloat16Serializers())
-        .addSerializers(new CBFloat32Serializers())
-        .addSerializers(new CBFloat64Serializers())
-        .addSerializers(new CBIntegerSigned16Serializers())
-        .addSerializers(new CBIntegerSigned32Serializers())
-        .addSerializers(new CBIntegerSigned64Serializers())
-        .addSerializers(new CBIntegerSigned8Serializers())
-        .addSerializers(new CBIntegerUnsigned16Serializers())
-        .addSerializers(new CBIntegerUnsigned32Serializers())
-        .addSerializers(new CBIntegerUnsigned64Serializers())
-        .addSerializers(new CBIntegerUnsigned8Serializers())
-        .addSerializers(new CBListSerializers<>())
-        .addSerializers(new CBMapEntrySerializers<>())
-        .addSerializers(new CBMapSerializers<>())
-        .addSerializers(new CBOptionSerializers<>())
-        .addSerializers(new CBStringSerializers())
-        .build();
+      new CBSerializerCollection(
+        "com.io7m.cedarbridge",
+        List.of(
+          new CBByteArraySerializers(),
+          new CBFloat16Serializers(),
+          new CBFloat32Serializers(),
+          new CBFloat64Serializers(),
+          new CBIntegerSigned16Serializers(),
+          new CBIntegerSigned32Serializers(),
+          new CBIntegerSigned64Serializers(),
+          new CBIntegerSigned8Serializers(),
+          new CBIntegerUnsigned16Serializers(),
+          new CBIntegerUnsigned32Serializers(),
+          new CBIntegerUnsigned64Serializers(),
+          new CBIntegerUnsigned8Serializers(),
+          new CBListSerializers<>(),
+          new CBMapEntrySerializers<>(),
+          new CBMapSerializers<>(),
+          new CBOptionSerializers<>(),
+          new CBStringSerializers()
+        ));
   }
 
   private CBCoreSerializers()

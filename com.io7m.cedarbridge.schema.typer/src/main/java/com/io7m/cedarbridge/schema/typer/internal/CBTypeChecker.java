@@ -70,9 +70,7 @@ public final class CBTypeChecker implements CBTypeCheckerType
     final CBASTTypeDeclarationType decl)
   {
     final var assignment =
-      CBTypeAssignment.builder()
-        .setArity(decl.parameters().size())
-        .build();
+      new CBTypeAssignment(decl.parameters().size());
 
     decl.userData().put(CBTypeAssignment.class, assignment);
   }

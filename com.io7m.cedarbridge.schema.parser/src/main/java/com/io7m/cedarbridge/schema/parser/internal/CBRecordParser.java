@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
@@ -129,12 +130,13 @@ public final class CBRecordParser
     final var parameters =
       CBFilters.filter(items, CBASTTypeParameterName.class);
 
-    return CBASTTypeRecord.builder()
-      .setLexical(expression.lexical())
-      .setFields(fields)
-      .setParameters(parameters)
-      .setName(name)
-      .build();
+    return new CBASTTypeRecord(
+      new CBASTMutableUserData(),
+      expression.lexical(),
+      name,
+      parameters,
+      fields
+    );
   }
 
   private static CBASTElementType parseRecordMember(

@@ -20,7 +20,6 @@ import com.io7m.cedarbridge.errors.CBError;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType.CBASTTypeNamedType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
@@ -94,9 +93,7 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
   public void testUnqualifiedName()
     throws CBParseFailedException
   {
-    final var name =
-      (CBASTTypeNamedType) this.parse("T");
-
+    final var name = (CBASTTypeNamed) this.parse("T");
     assertEquals(Optional.empty(), name.packageName());
     assertEquals("T", name.name().text());
   }
@@ -117,8 +114,7 @@ public final class CBTypeExpressionParserTest extends CBElementParserContract
   public void testQualifiedName()
     throws Exception
   {
-    final var name =
-      (CBASTTypeNamedType) this.parse("com.io7m.cedarbridge:T");
+    final var name = (CBASTTypeNamed) this.parse("com.io7m.cedarbridge:T");
 
     assertEquals(
       "com.io7m.cedarbridge",

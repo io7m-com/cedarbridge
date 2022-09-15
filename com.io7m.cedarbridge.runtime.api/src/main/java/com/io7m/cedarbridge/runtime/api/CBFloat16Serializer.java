@@ -47,6 +47,6 @@ public final class CBFloat16Serializer extends CBAbstractSerializer<CBFloat16>
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBFloat16.of(context.readF16());
+    return new CBFloat16(context.readF16());
   }
 }

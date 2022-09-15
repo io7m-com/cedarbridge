@@ -16,22 +16,17 @@
 
 package com.io7m.cedarbridge.schema.binder.api;
 
-import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
-import com.io7m.immutables.styles.ImmutablesStyleType;
 import com.io7m.jlexing.core.LexicalPosition;
 import com.io7m.jlexing.core.LexicalType;
-import org.immutables.value.Value;
 
-import java.math.BigInteger;
 import java.net.URI;
 
 /**
  * A binding to a name.
  */
 
-public interface CBBindingType extends LexicalType<URI>
+public sealed interface CBBindingType extends LexicalType<URI>
+  permits CBBindingExternal, CBBindingLocalType
 {
   /**
    * @return The name
@@ -42,110 +37,4 @@ public interface CBBindingType extends LexicalType<URI>
   @Override
   LexicalPosition<URI> lexical();
 
-  /**
-   * A binding to something declared within the same package.
-   */
-
-
-  interface CBBindingLocalType extends CBBindingType
-  {
-    /**
-     * @return The package-unique ID of the binding
-     */
-
-    BigInteger id();
-
-    /**
-     * The binding names a type parameter.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalTypeParameterType extends CBBindingLocalType
-    {
-
-    }
-
-    /**
-     * The binding names a type declaration.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalTypeDeclarationType extends CBBindingLocalType
-    {
-      /**
-       * @return The type declaration
-       */
-
-      CBASTTypeDeclarationType type();
-    }
-
-    /**
-     * The binding names a protocol declaration.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalProtocolDeclarationType extends CBBindingLocalType
-    {
-      /**
-       * @return The protocol declaration
-       */
-
-      CBASTProtocolDeclaration protocol();
-    }
-
-    /**
-     * The binding names a protocol version.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalProtocolVersionDeclarationType extends CBBindingLocalType
-    {
-      /**
-       * @return The protocol version
-       */
-
-      BigInteger version();
-    }
-
-    /**
-     * The binding names a variant case.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalVariantCaseType extends CBBindingLocalType
-    {
-
-    }
-
-    /**
-     * The binding names a field name.
-     */
-
-    @ImmutablesStyleType
-    @Value.Immutable
-    interface CBBindingLocalFieldNameType extends CBBindingLocalType
-    {
-
-    }
-  }
-
-  /**
-   * A binding to a type declared within an external package.
-   */
-
-  @ImmutablesStyleType
-  @Value.Immutable
-  interface CBBindingExternalType extends CBBindingType
-  {
-    /**
-     * @return The type
-     */
-
-    CBTypeDeclarationType type();
-  }
 }

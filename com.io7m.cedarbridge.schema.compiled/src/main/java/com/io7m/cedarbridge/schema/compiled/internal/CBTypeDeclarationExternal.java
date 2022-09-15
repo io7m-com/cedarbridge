@@ -88,12 +88,7 @@ public final class CBTypeDeclarationExternal implements CBExternalType
       Collections.unmodifiableList(this.parameters);
 
     this.externalName =
-      Optional.of(
-        CBExternalName.builder()
-          .setExternalPackage(this.externalPackage)
-          .setExternalName(this.externalType)
-          .build()
-      );
+      Optional.of(new CBExternalName(this.externalPackage, this.externalType));
   }
 
   /**

@@ -31,8 +31,8 @@ public final class CBOptionTest
   public void testSome()
   {
     assertEquals(
-      Optional.of(CBIntegerUnsigned32.of(23L)),
-      CBSome.of(CBIntegerUnsigned32.of(23L)).asOptional()
+      Optional.of(new CBIntegerUnsigned32(23L)),
+      new CBSome<>(new CBIntegerUnsigned32(23L)).asOptional()
     );
   }
 
@@ -41,7 +41,7 @@ public final class CBOptionTest
   {
     assertEquals(
       Optional.empty(),
-      CBNone.of().asOptional()
+      new CBNone<>().asOptional()
     );
   }
 
@@ -50,11 +50,11 @@ public final class CBOptionTest
   {
     assertEquals(
       "(CBSome 23)",
-      String.format("%s", CBSome.of(CBIntegerUnsigned32.of(23L)))
+      String.format("%s", new CBSome<>(new CBIntegerUnsigned32(23L)))
     );
     assertEquals(
       "(CBNone)",
-      String.format("%s", CBNone.of())
+      String.format("%s", new CBNone<>())
     );
   }
 }

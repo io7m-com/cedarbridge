@@ -23,8 +23,6 @@ import com.io7m.cedarbridge.runtime.api.CBSerializerCollectionServiceType;
 
 module com.io7m.cedarbridge.runtime.api
 {
-  requires static com.io7m.immutables.style;
-  requires static org.immutables.value;
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 

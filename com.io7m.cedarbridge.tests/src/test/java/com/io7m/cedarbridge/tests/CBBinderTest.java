@@ -45,7 +45,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;

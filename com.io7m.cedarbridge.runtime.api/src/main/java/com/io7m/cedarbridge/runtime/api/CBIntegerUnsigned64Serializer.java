@@ -48,6 +48,6 @@ public final class CBIntegerUnsigned64Serializer
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBIntegerUnsigned64.of(context.readU64());
+    return new CBIntegerUnsigned64(context.readU64());
   }
 }

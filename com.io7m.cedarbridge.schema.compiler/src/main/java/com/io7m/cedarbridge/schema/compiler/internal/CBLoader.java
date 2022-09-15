@@ -17,7 +17,6 @@
 package com.io7m.cedarbridge.schema.compiler.internal;
 
 import com.io7m.cedarbridge.errors.CBError;
-import com.io7m.cedarbridge.errors.CBErrorType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
@@ -166,10 +165,10 @@ public final class CBLoader implements CBLoaderType
     final var source = this.findSourceFile(name);
 
     final var configuration =
-      CBSchemaCompilerConfiguration.builder()
-        .setIncludeDirectories(this.includePaths)
-        .setFilesToCompile(List.of(source))
-        .build();
+      new CBSchemaCompilerConfiguration(
+        this.includePaths,
+        List.of(source)
+      );
 
     final var compiler =
       this.factory.createNewCompiler(
@@ -246,13 +245,13 @@ public final class CBLoader implements CBLoaderType
     final var message =
       this.strings.format("errorFileUnexpectedPackage", name, file, names);
 
-    return CBError.builder()
-      .setLexical(lex)
-      .setErrorCode("loadUnexpectedPackage")
-      .setException(new CBLoadFailedException())
-      .setSeverity(CBErrorType.Severity.ERROR)
-      .setMessage(message)
-      .build();
+    return new CBError(
+      lex,
+      CBError.Severity.ERROR,
+      new CBLoadFailedException(),
+      "loadUnexpectedPackage",
+      message
+    );
   }
 
   private CBError errorMissingFile(
@@ -269,13 +268,13 @@ public final class CBLoader implements CBLoaderType
       pathText.append(System.lineSeparator());
     }
 
-    return CBError.builder()
-      .setLexical(lex)
-      .setErrorCode("loadMissingFile")
-      .setException(new CBLoadFailedException())
-      .setSeverity(CBErrorType.Severity.ERROR)
-      .setMessage(this.strings.format("errorMissingFile", name, pathText))
-      .build();
+    return new CBError(
+      lex,
+      CBError.Severity.ERROR,
+      new CBLoadFailedException(),
+      "loadMissingFile",
+      this.strings.format("errorMissingFile", name, pathText)
+    );
   }
 
 
@@ -294,13 +293,13 @@ public final class CBLoader implements CBLoaderType
       pathText.append(System.lineSeparator());
     }
 
-    return CBError.builder()
-      .setLexical(lex)
-      .setErrorCode("loadCircularImport")
-      .setException(new CBLoadFailedException())
-      .setSeverity(CBErrorType.Severity.ERROR)
-      .setMessage(this.strings.format("errorCircularImport", name, pathText))
-      .build();
+    return new CBError(
+      lex,
+      CBError.Severity.ERROR,
+      new CBLoadFailedException(),
+      "loadCircularImport",
+      this.strings.format("errorCircularImport", name, pathText)
+    );
   }
 
   private boolean isAlreadyInImportPath(

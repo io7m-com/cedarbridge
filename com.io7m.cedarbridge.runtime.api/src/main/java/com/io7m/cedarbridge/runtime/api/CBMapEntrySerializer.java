@@ -66,6 +66,6 @@ public final class CBMapEntrySerializer<K extends CBSerializableType, V extends 
   {
     final var key = this.keySerializer.deserialize(context);
     final var val = this.valueSerializer.deserialize(context);
-    return CBMapEntry.of(key, val);
+    return new CBMapEntry<>(key, val);
   }
 }

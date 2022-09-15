@@ -25,6 +25,7 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalFieldName;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalProtocolVersionDeclaration;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalVariantCase;
@@ -44,8 +45,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static com.io7m.cedarbridge.errors.CBErrorType.Severity.ERROR;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
+import static com.io7m.cedarbridge.errors.CBError.Severity.ERROR;
 
 /**
  * The contextual information used during binding analysis.
@@ -245,13 +245,13 @@ public final class CBBinderContext
       }
 
       final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(new CBBindFailedException())
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
+        new CBError(
+          lexical,
+          ERROR,
+          new CBBindFailedException(),
+          errorCode,
+          text
+        );
 
       this.root.errorConsumer.accept(errorValue);
       return new CBBindFailedException();
@@ -319,13 +319,13 @@ public final class CBBinderContext
       }
 
       final var errorValue =
-        CBError.builder()
-          .setErrorCode(errorCode)
-          .setException(new CBBindFailedException())
-          .setLexical(lexical)
-          .setMessage(text)
-          .setSeverity(ERROR)
-          .build();
+        new CBError(
+          lexical,
+          ERROR,
+          new CBBindFailedException(),
+          errorCode,
+          text
+        );
 
       this.root.errorConsumer.accept(errorValue);
       return new CBBindFailedException();
@@ -430,12 +430,12 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalTypeDeclaration.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setName(name)
-          .setType(type)
-          .build();
+        new CBBindingLocalTypeDeclaration(
+          name,
+          lexical,
+          this.root.idPool,
+          type
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.typeBindings.put(name, binding);
@@ -465,12 +465,12 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalProtocolDeclaration.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setName(name)
-          .setProtocol(proto)
-          .build();
+        new CBBindingLocalProtocolDeclaration(
+          name,
+          lexical,
+          this.root.idPool,
+          proto
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.protoBindings.put(name, binding);
@@ -500,11 +500,11 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalTypeParameter.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setName(name)
-          .build();
+        new CBBindingLocalTypeParameter(
+          name,
+          lexical,
+          this.root.idPool
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.typeBindings.put(name, binding);
@@ -534,11 +534,11 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalFieldName.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setName(name)
-          .build();
+        new CBBindingLocalFieldName(
+          name,
+          lexical,
+          this.root.idPool
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.fieldBindings.put(name, binding);
@@ -591,11 +591,11 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalVariantCase.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setName(name)
-          .build();
+        new CBBindingLocalVariantCase(
+          name,
+          lexical,
+          this.root.idPool
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.caseBindings.put(name, binding);
@@ -655,12 +655,12 @@ public final class CBBinderContext
       }
 
       final var binding =
-        CBBindingLocalProtocolVersionDeclaration.builder()
-          .setLexical(lexical)
-          .setId(this.root.idPool)
-          .setVersion(version)
-          .setName(version.toString())
-          .build();
+        new CBBindingLocalProtocolVersionDeclaration(
+          version.toString(),
+          lexical,
+          this.root.idPool,
+          version
+        );
 
       this.root.idPool = this.root.idPool.add(BigInteger.ONE);
       this.protoVersionBindings.put(version, binding);

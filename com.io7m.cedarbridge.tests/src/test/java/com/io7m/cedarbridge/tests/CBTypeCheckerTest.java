@@ -23,11 +23,11 @@ import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
-import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
@@ -54,10 +54,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType.CBASTTypeRecordType;
-import static com.io7m.cedarbridge.schema.ast.CBASTTypeDeclarationType.CBASTTypeVariantType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingExternalType;
-import static com.io7m.cedarbridge.schema.binder.api.CBBindingType.CBBindingLocalType;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
@@ -115,8 +112,7 @@ public final class CBTypeCheckerTest
         assertEquals(tarType, tarParam.owner());
       }
 
-      if (srcType instanceof CBASTTypeVariantType) {
-        final var srcVar = (CBASTTypeVariantType) srcType;
+      if (srcType instanceof CBASTTypeVariant srcVar) {
         final var tarVar = (CBVariantType) tarType;
         final var srcCases = srcVar.cases();
         final var tarCases = tarVar.cases();
@@ -128,8 +124,7 @@ public final class CBTypeCheckerTest
           assertEquals(srcCase.name().text(), tarCase.name());
           checkFieldsMatch(srcCase.fields(), tarCase.fields());
         }
-      } else if (srcType instanceof CBASTTypeRecordType) {
-        final var srcRec = (CBASTTypeRecordType) srcType;
+      } else if (srcType instanceof CBASTTypeRecord srcRec) {
         final var tarRec = (CBRecordType) tarType;
         final var srcFields = srcRec.fields();
         final var tarFields = tarRec.fields();
@@ -208,7 +203,7 @@ public final class CBTypeCheckerTest
         }
       } else {
         final var tarNam = (CBTypeExprNamedType) tarType;
-        final var bindExt = (CBBindingExternalType) binding;
+        final var bindExt = (CBBindingExternal) binding;
         assertEquals(bindExt.type(), tarNam.declaration());
       }
     } else {

@@ -47,6 +47,6 @@ public final class CBFloat32Serializer extends CBAbstractSerializer<CBFloat32>
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBFloat32.of(context.readF32());
+    return new CBFloat32(context.readF32());
   }
 }

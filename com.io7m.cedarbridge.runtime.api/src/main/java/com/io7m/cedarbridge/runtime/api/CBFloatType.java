@@ -22,7 +22,9 @@ import java.util.Formattable;
  * The base type of floating-point values.
  */
 
-public interface CBFloatType extends Formattable, CBSerializableType
+public sealed interface CBFloatType
+  extends Formattable, CBSerializableType
+  permits CBFloat16, CBFloat32, CBFloat64
 {
 
 }

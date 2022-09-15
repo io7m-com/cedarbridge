@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
+import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
@@ -153,12 +154,13 @@ public final class CBLanguageParser
       );
     }
 
-    return CBASTLanguage.builder()
-      .setLexical(list.lexical())
-      .setLanguage(langName)
-      .setMajor(langMajor)
-      .setMinor(langMinor)
-      .build();
+    return new CBASTLanguage(
+      new CBASTMutableUserData(),
+      list.lexical(),
+      langName,
+      langMajor,
+      langMinor
+    );
   }
 
   @Override

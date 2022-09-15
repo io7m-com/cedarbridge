@@ -47,6 +47,6 @@ public final class CBStringSerializer extends CBAbstractSerializer<CBString>
     final CBSerializationContextType context)
     throws IOException
   {
-    return CBString.of(context.readUTF8());
+    return new CBString(context.readUTF8());
   }
 }

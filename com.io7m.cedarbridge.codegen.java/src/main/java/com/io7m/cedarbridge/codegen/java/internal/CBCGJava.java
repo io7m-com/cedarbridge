@@ -33,6 +33,8 @@ import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -66,8 +68,7 @@ public final class CBCGJava implements CBSPICodeGeneratorType
   {
     Objects.requireNonNull(pack, "pack");
 
-    final var resultBuilder =
-      CBSPICodeGeneratorResult.builder();
+    final var createdFiles = new ArrayList<Path>();
 
     final var protos = pack.protocols();
     for (final var entry : protos.entrySet()) {
@@ -82,8 +83,8 @@ public final class CBCGJava implements CBSPICodeGeneratorType
 
       LOG.debug("generate: {}", wroteProtoInterface);
       LOG.debug("generate: {}", wroteProto);
-      resultBuilder.addCreatedFiles(wroteProtoInterface);
-      resultBuilder.addCreatedFiles(wroteProto);
+      createdFiles.add(wroteProtoInterface);
+      createdFiles.add(wroteProto);
 
       for (final var version : proto.versions().values()) {
         final var wroteInterface =
@@ -100,9 +101,9 @@ public final class CBCGJava implements CBSPICodeGeneratorType
         LOG.debug("generate: {}", wroteSerializer);
         LOG.debug("generate: {}", wroteSerializerFactory);
 
-        resultBuilder.addCreatedFiles(wroteInterface);
-        resultBuilder.addCreatedFiles(wroteSerializer);
-        resultBuilder.addCreatedFiles(wroteSerializerFactory);
+        createdFiles.add(wroteInterface);
+        createdFiles.add(wroteSerializer);
+        createdFiles.add(wroteSerializerFactory);
       }
     }
 
@@ -113,7 +114,7 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       new CBCGJavaSerializerCollectionGenerator()
         .execute(this.configuration, pack.name(), types.values());
     LOG.debug("generate: {}", wroteCollection);
-    resultBuilder.addCreatedFiles(wroteCollection);
+    createdFiles.add(wroteCollection);
 
     for (final var entry : types.entrySet()) {
       final var type =
@@ -132,11 +133,11 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       LOG.debug("generate: {}", wroteSerializer);
       LOG.debug("generate: {}", wroteSerializerFactory);
 
-      resultBuilder.addCreatedFiles(wroteData);
-      resultBuilder.addCreatedFiles(wroteSerializer);
-      resultBuilder.addCreatedFiles(wroteSerializerFactory);
+      createdFiles.add(wroteData);
+      createdFiles.add(wroteSerializer);
+      createdFiles.add(wroteSerializerFactory);
     }
 
-    return resultBuilder.build();
+    return new CBSPICodeGeneratorResult(createdFiles);
   }
 }
