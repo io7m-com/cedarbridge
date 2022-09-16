@@ -31,6 +31,35 @@
       A <Term type="statement">documentation</Term> statement <Term type="expression">(documentation T s)</Term>
       adds the documentation string <Term type="expression">s</Term> to the object <Term type="expression">T</Term>.
     </Paragraph>
+    <Paragraph>
+      The <Term type="statement">documentation</Term> statement may appear:
+    </Paragraph>
+    <FormalItem title="Documentation Locations">
+      <ListUnordered>
+        <Item>
+          Inside packages, where the target objects may be types or protocols.
+        </Item>
+        <Item>
+          Inside <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link> definitions, where the
+          target objects may be fields within the record, or type parameters on the record.
+        </Item>
+        <Item>
+          Inside <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> definitions, where the
+          target objects may be the cases of the variant, or type parameters on the variant.
+        </Item>
+        <Item>
+          Inside <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> cases, where the
+          target objects may be fields within the variant case.
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph>
+      <Term type="statement">Documentation</Term> statements may refer to objects that are yet to be defined.
+      For example, it is possible to specify documentation for a record field before that record field is defined.
+      However, it is an error to refer to objects that are never defined. Implementations are encouraged to perform
+      binding analyses of documentation statements in a separate pass after the definitions of other objects are
+      checked.
+    </Paragraph>
   </Subsection>
 
   <Subsection title="Example">
@@ -40,12 +69,14 @@
     <FormalItem title="Package Example">
       <Verbatim><![CDATA[(package com.io7m.cedarbridge)
 
-(record Color
-  (field red   Float64)
-  (field green Float64)
-  (field blue  Float64))
-
 (documentation Color "The type of linear RGB color vectors.")
+(record Color
+  (documentation red "The red channel.")
+  (field red Float64)
+  (documentation green "The red channel.")
+  (field green Float64)
+  (documentation blue "The red channel.")
+  (field blue Float64))
 ]]></Verbatim>
     </FormalItem>
   </Subsection>
