@@ -6,7 +6,7 @@
 
   <Paragraph>
     The <Term type="package">cedarbridge</Term> language is a language designed for specifying message protocols
-    with a focus on minimalism and a well-founded mathematical foundation. The language has the following notable
+    with a focus on minimalism and a clean mathematical foundation. The language has the following notable
     features:
   </Paragraph>
 
