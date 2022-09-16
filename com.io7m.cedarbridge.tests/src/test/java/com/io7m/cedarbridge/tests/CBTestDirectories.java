@@ -19,11 +19,13 @@ package com.io7m.cedarbridge.tests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.UUID;
 
 public final class CBTestDirectories
@@ -82,5 +84,16 @@ public final class CBTestDirectories
     throws IOException
   {
     return Files.newInputStream(resourceOf(clazz, output, name));
+  }
+
+  public static void deleteDirectory(
+    final Path directory)
+    throws IOException
+  {
+    try (var walk = Files.walk(directory)) {
+      walk.sorted(Comparator.reverseOrder())
+        .map(Path::toFile)
+        .forEach(File::delete);
+    }
   }
 }

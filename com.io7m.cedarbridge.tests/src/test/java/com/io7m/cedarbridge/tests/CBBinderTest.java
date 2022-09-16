@@ -33,6 +33,7 @@ import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -117,6 +118,13 @@ public final class CBBinderTest
     this.parsers = new CBParserFactory();
     this.binders = new CBBinderFactory();
     this.loader = new CBFakeLoader();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
   }
 
   @Test

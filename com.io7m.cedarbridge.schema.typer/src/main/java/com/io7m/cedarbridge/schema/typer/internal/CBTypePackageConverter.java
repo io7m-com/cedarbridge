@@ -198,10 +198,17 @@ public final class CBTypePackageConverter
 
   private static void buildProto(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> documentation,
     final CBASTProtocolDeclaration protoDecl)
   {
+    final var protoName =
+      protoDecl.name().text();
     final var protoBuilder =
-      builder.createProtocol(protoDecl.name().text());
+      builder.createProtocol(protoName);
+
+    protoBuilder.setDocumentation(
+      compileDocumentation(documentation, protoName)
+    );
 
     for (final var version : protoDecl.versions()) {
       final var versionBuilder =
@@ -257,7 +264,7 @@ public final class CBTypePackageConverter
     }
 
     for (final var protoDecl : pack.protocols()) {
-      buildProto(packBuilder, protoDecl);
+      buildProto(packBuilder, pack.documentation(), protoDecl);
     }
 
     return packBuilder.build();

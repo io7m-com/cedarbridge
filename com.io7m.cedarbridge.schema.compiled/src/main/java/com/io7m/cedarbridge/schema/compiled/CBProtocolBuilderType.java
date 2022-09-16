@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.schema.compiled;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * A builder for protocols.
@@ -34,4 +35,12 @@ public interface CBProtocolBuilderType
 
   CBProtocolVersionBuilderType createVersion(
     BigInteger version);
+
+  /**
+   * Set the documentation string for the declaration.
+   *
+   * @param text The text
+   */
+
+  void setDocumentation(List<String> text);
 }

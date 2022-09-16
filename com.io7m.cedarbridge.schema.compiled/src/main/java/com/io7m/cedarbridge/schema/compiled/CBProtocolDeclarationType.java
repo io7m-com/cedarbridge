@@ -85,4 +85,10 @@ public interface CBProtocolDeclarationType
       throw new UncheckedIOException(e);
     }
   }
+
+  /**
+   * @return Documentation for the protocol declaration
+   */
+
+  List<String> documentation();
 }

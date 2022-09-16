@@ -42,6 +42,7 @@ import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
 import com.io7m.junreachable.UnreachableCodeException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -270,6 +271,13 @@ public final class CBTypeCheckerTest
     this.binders = new CBBinderFactory();
     this.loader = new CBFakeLoader();
     this.typeCheckers = new CBTypeCheckerFactory();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
   }
 
   @Test

@@ -23,6 +23,7 @@ import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -36,6 +37,7 @@ public final class CBProtocolDeclaration implements CBProtocolDeclarationType
   private final Map<BigInteger, CBProtocolVersionDeclarationType> versions;
   private final Map<BigInteger, CBProtocolVersionDeclarationType> versionsRead;
   private CBPackage owner;
+  private List<String> documentation;
 
   CBProtocolDeclaration(
     final String inName)
@@ -43,6 +45,7 @@ public final class CBProtocolDeclaration implements CBProtocolDeclarationType
     this.name = Objects.requireNonNull(inName, "inName");
     this.versions = new HashMap<>();
     this.versionsRead = Collections.unmodifiableMap(this.versions);
+    this.documentation = List.of();
   }
 
   @Override
@@ -61,6 +64,12 @@ public final class CBProtocolDeclaration implements CBProtocolDeclarationType
   public Map<BigInteger, CBProtocolVersionDeclarationType> versions()
   {
     return this.versionsRead;
+  }
+
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
   }
 
   /**
@@ -86,5 +95,17 @@ public final class CBProtocolDeclaration implements CBProtocolDeclarationType
   {
     Objects.requireNonNull(version, "version");
     this.versions.put(version.version(), version);
+  }
+
+  /**
+   * Set the documentation.
+   *
+   * @param text The text
+   */
+
+  public void setDocumentation(
+    final List<String> text)
+  {
+    this.documentation = Objects.requireNonNull(text, "text");
   }
 }

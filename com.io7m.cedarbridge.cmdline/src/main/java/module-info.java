@@ -23,6 +23,7 @@ module com.io7m.cedarbridge.cmdline
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires com.io7m.cedarbridge.bridgedoc.api;
   requires com.io7m.cedarbridge.codegen.api;
   requires com.io7m.cedarbridge.schema.compiler.api;
   requires com.io7m.cedarbridge.schema.core.types;

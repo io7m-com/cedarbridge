@@ -14,9 +14,7 @@
 ; IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 ;
 
-(package com.io7m.cedarbridge)
-
-(import x.y.z b)
+(package x.y.z)
 
 (variant UnitType)
 

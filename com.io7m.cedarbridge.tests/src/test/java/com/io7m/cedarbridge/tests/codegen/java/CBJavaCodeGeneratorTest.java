@@ -27,6 +27,7 @@ import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.verification.Times;
@@ -68,6 +69,14 @@ public final class CBJavaCodeGeneratorTest
       mock(CBSerializationContextType.class);
     this.serializers =
       new CBSerializerDirectoryMutable();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
+    CBTestDirectories.deleteDirectory(this.moduleDirectory);
   }
 
   private void compile(

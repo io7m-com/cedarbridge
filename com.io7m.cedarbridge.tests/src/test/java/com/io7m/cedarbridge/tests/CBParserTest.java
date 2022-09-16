@@ -26,6 +26,7 @@ import com.io7m.cedarbridge.schema.parser.internal.CBParseContext;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jsx.api.serializer.JSXSerializerType;
 import org.apache.commons.io.input.BrokenInputStream;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -72,6 +73,13 @@ public final class CBParserTest
     this.errors = new ArrayList<CBError>();
     this.parsers = new CBParserFactory();
     this.directory = CBTestDirectories.createTempDirectory();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
   }
 
   @Test

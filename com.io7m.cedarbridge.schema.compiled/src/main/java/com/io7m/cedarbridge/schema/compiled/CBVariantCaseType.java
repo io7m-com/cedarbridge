@@ -23,7 +23,7 @@ import java.util.List;
  * product type, analogous to an anonymous {@link CBRecordType}.
  */
 
-public interface CBVariantCaseType extends CBFieldOwnerType
+public non-sealed interface CBVariantCaseType extends CBFieldOwnerType
 {
   /**
    * @return The type within which this case is declared

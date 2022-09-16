@@ -21,6 +21,9 @@
   <url>https://www.io7m.com/software/cedarbridge</url>
 
   <modules>
+    <module>com.io7m.cedarbridge.bridgedoc.api</module>
+    <module>com.io7m.cedarbridge.bridgedoc.spi</module>
+    <module>com.io7m.cedarbridge.bridgedoc.xhtml</module>
     <module>com.io7m.cedarbridge.cmdline</module>
     <module>com.io7m.cedarbridge.codegen.api</module>
     <module>com.io7m.cedarbridge.codegen.java</module>
@@ -236,6 +239,11 @@
       <dependency>
         <groupId>com.io7m.xstructural</groupId>
         <artifactId>com.io7m.xstructural.cmdline</artifactId>
+        <version>${com.io7m.xstructural.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.xstructural</groupId>
+        <artifactId>com.io7m.xstructural.vanilla</artifactId>
         <version>${com.io7m.xstructural.version}</version>
       </dependency>
       <dependency>

@@ -303,6 +303,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
       this.protocol.addVersion(builder.version);
       return builder;
     }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.protocol.setDocumentation(text);
+    }
   }
 
   private final class ProtocolVersionBuilder
