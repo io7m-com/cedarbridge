@@ -87,6 +87,12 @@ public interface CBTypeDeclarationType
   UUID id();
 
   /**
+   * @return Documentation for the type declaration
+   */
+
+  List<String> documentation();
+
+  /**
    * @param type The "type" of type declaration (record, variant, etc)
    *
    * @return The unique ID of the type

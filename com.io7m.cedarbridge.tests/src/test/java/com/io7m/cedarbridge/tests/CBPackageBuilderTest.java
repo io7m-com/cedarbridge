@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.schema.compiled.CBPackages;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -185,9 +186,9 @@ public final class CBPackageBuilderTest
     final var recordBuilder =
       packageBuilder.createRecord("A");
 
-    recordBuilder.createField("x", recordBuilder.reference());
+    recordBuilder.createField("x", recordBuilder.reference(), List.of());
     assertThrows(IllegalArgumentException.class, () -> {
-      recordBuilder.createField("x", recordBuilder.reference());
+      recordBuilder.createField("x", recordBuilder.reference(), List.of());
     });
   }
 
@@ -199,9 +200,9 @@ public final class CBPackageBuilderTest
     final var recordBuilder =
       packageBuilder.createRecord("A");
 
-    recordBuilder.addTypeParameter("A");
+    recordBuilder.addTypeParameter("A", List.of());
     assertThrows(IllegalArgumentException.class, () -> {
-      recordBuilder.addTypeParameter("A");
+      recordBuilder.addTypeParameter("A", List.of());
     });
   }
 
@@ -214,7 +215,7 @@ public final class CBPackageBuilderTest
       packageBuilder.createRecord("A");
 
     assertThrows(IllegalArgumentException.class, () -> {
-      recordBuilder.createField("x", recordBuilder.referenceParameter("Z"));
+      recordBuilder.createField("x", recordBuilder.referenceParameter("Z"), List.of());
     });
   }
 
@@ -242,7 +243,7 @@ public final class CBPackageBuilderTest
 
     final var caseBuilder = variantBuilder.createCase("C");
     assertThrows(IllegalArgumentException.class, () -> {
-      caseBuilder.createField("x", variantBuilder.referenceParameter("Z"));
+      caseBuilder.createField("x", variantBuilder.referenceParameter("Z"), List.of());
     });
   }
 
@@ -255,10 +256,10 @@ public final class CBPackageBuilderTest
       packageBuilder.createVariant("A");
 
     final var caseBuilder = variantBuilder.createCase("C");
-    caseBuilder.createField("x", variantBuilder.reference());
+    caseBuilder.createField("x", variantBuilder.reference(), List.of());
 
     assertThrows(IllegalArgumentException.class, () -> {
-      caseBuilder.createField("x", variantBuilder.reference());
+      caseBuilder.createField("x", variantBuilder.reference(), List.of());
     });
   }
 
@@ -270,9 +271,9 @@ public final class CBPackageBuilderTest
     final var recordBuilder =
       packageBuilder.createVariant("A");
 
-    recordBuilder.addTypeParameter("A");
+    recordBuilder.addTypeParameter("A", List.of());
     assertThrows(IllegalArgumentException.class, () -> {
-      recordBuilder.addTypeParameter("A");
+      recordBuilder.addTypeParameter("A", List.of());
     });
   }
 
@@ -310,9 +311,9 @@ public final class CBPackageBuilderTest
     final var externalBuilder =
       packageBuilder.createExternalType("x.y", "A", "T");
 
-    externalBuilder.addTypeParameter("A");
+    externalBuilder.addTypeParameter("A", List.of());
     assertThrows(IllegalArgumentException.class, () -> {
-      externalBuilder.addTypeParameter("A");
+      externalBuilder.addTypeParameter("A", List.of());
     });
   }
 

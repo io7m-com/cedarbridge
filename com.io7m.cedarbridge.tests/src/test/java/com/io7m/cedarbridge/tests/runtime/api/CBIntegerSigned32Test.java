@@ -20,7 +20,6 @@ import com.io7m.cedarbridge.runtime.api.CBIntegerSigned32;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class CBIntegerSigned32Test
 {

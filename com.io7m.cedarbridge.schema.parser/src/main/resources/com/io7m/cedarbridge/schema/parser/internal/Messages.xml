@@ -24,17 +24,18 @@
   Specification: {4}
 {5}]]></entry>
 
-  <entry key="errorLanguageFirst">A language statement must be the first statement in a compilation unit, if present.</entry>
-  <entry key="errorLanguageBadName">Unrecognized language name.</entry>
-  <entry key="errorLanguageBadVersion">Unrecognized or invalid language version.</entry>
   <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
   <entry key="errorDeclarationUnrecognized">Unrecognized package-level declaration.</entry>
+  <entry key="errorDocumentationKeyword">Expected 'documentation' keyword.</entry>
   <entry key="errorEmptyTypeApplication">Empty type application.</entry>
   <entry key="errorFieldInvalid">Invalid field.</entry>
   <entry key="errorFieldNameInvalid">Invalid field name.</entry>
   <entry key="errorIO">I/O error.</entry>
   <entry key="errorImportInvalid">Invalid import declaration.</entry>
   <entry key="errorImportKeyword">Expected 'import' keyword.</entry>
+  <entry key="errorLanguageBadName">Unrecognized language name.</entry>
+  <entry key="errorLanguageBadVersion">Unrecognized or invalid language version.</entry>
+  <entry key="errorLanguageFirst">A language statement must be the first statement in a compilation unit, if present.</entry>
   <entry key="errorPackageInvalid">Invalid package declaration.</entry>
   <entry key="errorPackageKeyword">Expected 'package' keyword.</entry>
   <entry key="errorPackageNameInvalid">Invalid package name.</entry>
@@ -62,6 +63,7 @@
   <entry key="errorVariantUnrecognizedMember">Unrecognized variant member declaration.</entry>
 
   <entry key="objectDeclaration">Package-level declaration</entry>
+  <entry key="objectDocumentation">Documentation declaration</entry>
   <entry key="objectField">Field</entry>
   <entry key="objectFieldName">Field name</entry>
   <entry key="objectImport">Import declaration</entry>

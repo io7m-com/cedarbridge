@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:7:0"
+         id="ed17be50-42ca-4593-8e1c-a9c9e45a898c"
+         title="documentation">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">documentation</Term> - Add documentation to an element
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">documentation</Term> specifies a paragraph of documentation for an element.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax" id="a07ef108-697e-4d79-bb17-3ff419babd68">
+    <FormalItem title="Documentation Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/009_documentation.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph id="be502650-0974-42df-a612-29873ed587a4">
+      A <Term type="statement">documentation</Term> statement <Term type="expression">(documentation T s)</Term>
+      adds the documentation string <Term type="expression">s</Term> to the object <Term type="expression">T</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="statement">documentation</Term> statement may appear:
+    </Paragraph>
+    <FormalItem title="Documentation Locations">
+      <ListUnordered>
+        <Item>
+          Inside packages, where the target objects may be types or protocols.
+        </Item>
+        <Item>
+          Inside <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link> definitions, where the
+          target objects may be fields within the record, or type parameters on the record.
+        </Item>
+        <Item>
+          Inside <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> definitions, where the
+          target objects may be the cases of the variant, or type parameters on the variant.
+        </Item>
+        <Item>
+          Inside <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> cases, where the
+          target objects may be fields within the variant case.
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph>
+      <Term type="statement">Documentation</Term> statements may refer to objects that are yet to be defined.
+      For example, it is possible to specify documentation for a record field before that record field is defined.
+      However, it is an error to refer to objects that are never defined. Implementations are encouraged to perform
+      binding analyses of documentation statements in a separate pass after the definitions of other objects are
+      checked.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statement adds documentation to a <Term type="type">Color</Term> record type:
+    </Paragraph>
+    <FormalItem title="Package Example">
+      <Verbatim><![CDATA[(package com.io7m.cedarbridge)
+
+(documentation Color "The type of linear RGB color vectors.")
+(record Color
+  (documentation red "The red channel.")
+  (field red Float64)
+  (documentation green "The red channel.")
+  (field green Float64)
+  (documentation blue "The red channel.")
+  (field blue Float64))
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+</Section>

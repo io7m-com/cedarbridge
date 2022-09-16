@@ -31,8 +31,4 @@ public interface CBVariantBuilderType extends CBTypeDeclarationBuilderType
    */
 
   CBVariantCaseBuilderType createCase(String name);
-
-  @Override
-  CBTypeParameterType addTypeParameter(
-    String name);
 }

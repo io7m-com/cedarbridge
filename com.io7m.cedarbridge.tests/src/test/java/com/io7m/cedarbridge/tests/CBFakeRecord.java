@@ -31,6 +31,7 @@ public final class CBFakeRecord implements CBRecordType
   private final String name;
   private final int arity;
   private CBPackageType owner;
+  private List<String> documentation;
 
   public CBFakeRecord(
     final String inName,
@@ -38,12 +39,19 @@ public final class CBFakeRecord implements CBRecordType
   {
     this.name = Objects.requireNonNull(inName, "name");
     this.arity = arity;
+    this.documentation = List.of();
   }
 
   public void setOwner(
     final CBPackageType inOwner)
   {
     this.owner = Objects.requireNonNull(inOwner, "owner");
+  }
+
+  public void setDocumentation(
+    final List<String> text)
+  {
+    this.documentation = Objects.requireNonNull(text, "text");
   }
 
   @Override
@@ -74,6 +82,12 @@ public final class CBFakeRecord implements CBRecordType
   public Optional<CBExternalName> external()
   {
     return Optional.empty();
+  }
+
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
   }
 
   @Override

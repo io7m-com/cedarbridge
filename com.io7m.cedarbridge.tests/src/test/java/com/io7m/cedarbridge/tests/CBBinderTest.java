@@ -28,10 +28,12 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.binder.CBBinderFactory;
 import com.io7m.cedarbridge.schema.binder.api.CBBindFailedException;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingExternal;
+import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeParameter;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.parser.CBParserFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,10 +47,10 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalType;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBBinderTest
 {
@@ -116,6 +118,13 @@ public final class CBBinderTest
     this.parsers = new CBParserFactory();
     this.binders = new CBBinderFactory();
     this.loader = new CBFakeLoader();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
   }
 
   @Test
@@ -426,6 +435,53 @@ public final class CBBinderTest
     }
 
     assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testPackageDocumentation0()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindPackageDocumentation0.cbs");
+    });
+
+    assertEquals("errorBindingMissing", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testPackageDocumentation1()
+    throws Exception
+  {
+    final var pack = this.bind("bindPackageDocumentation1.cbs");
+    assertEquals(1, pack.documentation().size());
+
+    {
+      final var t =
+        pack.documentation().get(0).userData().get(CBBindingType.class);
+      assertEquals("T", t.name());
+    }
+  }
+
+  @Test
+  public void testDocumentationFails()
+    throws Exception
+  {
+    assertThrows(CBBindFailedException.class, () -> {
+      this.bind("errorBindDocumented0.cbs");
+    });
+
+    assertEquals(10, this.errors.size());
+    assertTrue(this.errors.get(0).message().contains("NONEXISTENT2"));
+    assertTrue(this.errors.get(1).message().contains("NONEXISTENT0"));
+    assertTrue(this.errors.get(2).message().contains("NONEXISTENT1"));
+    assertTrue(this.errors.get(3).message().contains("NONEXISTENT3"));
+    assertTrue(this.errors.get(4).message().contains("NONEXISTENT5"));
+    assertTrue(this.errors.get(5).message().contains("NONEXISTENT6"));
+    assertTrue(this.errors.get(6).message().contains("NONEXISTENT7"));
+    assertTrue(this.errors.get(7).message().contains("NONEXISTENT8"));
+    assertTrue(this.errors.get(8).message().contains("NONEXISTENT4"));
+    assertTrue(this.errors.get(9).message().contains("NONEXISTENT9"));
   }
 
   private CBBindingLocalType checkHaveSeenBefore(

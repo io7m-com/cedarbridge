@@ -16,9 +16,11 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
+import com.io7m.cedarbridge.schema.ast.CBASTVariantMemberType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionSymbolType;
@@ -83,15 +85,11 @@ public final class CBVariantCaseParser
     for (var index = 2; index < expression.size(); ++index) {
       try {
         final var subExpr = expression.get(index);
-        items.add(
-          new CBFieldParser().parse(
-            context,
-            context.checkExpressionIs(
-              subExpr,
-              SPEC_SECTION,
-              SExpressionListType.class)
-          )
-        );
+        items.add(parseCaseMember(
+          context,
+          context.checkExpressionIs(
+            subExpr, SPEC_SECTION, SExpressionListType.class)
+        ));
       } catch (final CBParseFailedException e) {
         // Ignore this particular exception
       }
@@ -105,8 +103,48 @@ public final class CBVariantCaseParser
       new CBASTMutableUserData(),
       expression.lexical(),
       name,
+      CBFilters.filter(items, CBASTDocumentation.class),
       CBFilters.filter(items, CBASTField.class)
     );
+  }
+
+  private static CBASTVariantMemberType parseCaseMember(
+    final CBParseContextType context,
+    final SExpressionListType expression)
+    throws CBParseFailedException
+  {
+    if (expression.size() == 0) {
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorVariantUnrecognizedMember"
+      );
+    }
+
+    final var start =
+      context.checkExpressionIs(
+        expression.get(0),
+        SPEC_SECTION,
+        SExpressionSymbolType.class
+      );
+
+    return switch (start.text()) {
+      case "field" -> {
+        yield new CBFieldParser().parse(context, expression);
+      }
+
+      case "documentation" -> {
+        yield new CBDocumentationParser().parse(context, expression);
+      }
+
+      default -> throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorVariantUnrecognizedMember"
+      );
+    };
   }
 
   @Override
@@ -118,7 +156,10 @@ public final class CBVariantCaseParser
     final var expectingKind =
       "objectVariantCase";
     final var expectingShapes =
-      List.of("(case <type-name-decl> <field-decl>...)");
+      List.of(
+        "(case <type-name-decl> <field-decl>...)",
+        "(documentation <name> <quoted-string>)"
+      );
 
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {

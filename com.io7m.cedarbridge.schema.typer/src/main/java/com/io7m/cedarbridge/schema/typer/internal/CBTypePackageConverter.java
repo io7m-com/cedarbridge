@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.typer.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
@@ -39,6 +40,8 @@ import com.io7m.cedarbridge.schema.compiled.CBVariantBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseBuilderType;
 import com.io7m.junreachable.UnreachableCodeException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -59,23 +62,41 @@ public final class CBTypePackageConverter
 
   private static CBVariantBuilderType buildVariant(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> packageLevelDocumentation,
     final CBASTTypeVariant typeDecl)
   {
+    final var typeName =
+      typeDecl.name().text();
     final var variant =
-      builder.findVariant(typeDecl.name().text());
+      builder.findVariant(typeName);
 
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
       final var param = typeParameters.get(index);
-      variant.addTypeParameter(param.text());
+      final var parameterName = param.text();
+      variant.addTypeParameter(
+        parameterName,
+        compileDocumentation(typeDecl.documentations(), parameterName)
+      );
     }
+
     for (final var caseV : typeDecl.cases()) {
+      final var caseName =
+        caseV.name().text();
       final var caseBuilder =
-        variant.createCase(caseV.name().text());
+        variant.createCase(caseName);
+
+      caseBuilder.setDocumentation(
+        compileDocumentation(typeDecl.documentations(), caseName)
+      );
+
       buildVariantCase(caseBuilder, caseV);
     }
 
     Objects.requireNonNull(variant.ownerPackage(), "ownerPackage");
+    variant.setDocumentation(
+      compileDocumentation(packageLevelDocumentation, typeName)
+    );
     return variant;
   }
 
@@ -84,9 +105,11 @@ public final class CBTypePackageConverter
     final CBASTTypeVariantCase caseV)
   {
     for (final var field : caseV.fields()) {
+      final var fieldName = field.name().text();
       caseBuilder.createField(
-        field.name().text(),
-        buildTypeExpression(caseBuilder.owner(), field.type())
+        fieldName,
+        buildTypeExpression(caseBuilder.owner(), field.type()),
+        compileDocumentation(caseV.documentations(), fieldName)
       );
     }
 
@@ -142,31 +165,50 @@ public final class CBTypePackageConverter
 
   private static CBRecordBuilderType buildRecord(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> documentation,
     final CBASTTypeRecord typeDecl)
   {
+    final var name =
+      typeDecl.name().text();
     final var record =
-      builder.findRecord(typeDecl.name().text());
+      builder.findRecord(name);
 
     final var typeParameters = typeDecl.parameters();
     for (int index = 0; index < typeParameters.size(); ++index) {
       final var param = typeParameters.get(index);
-      record.addTypeParameter(param.text());
-    }
-    for (final var field : typeDecl.fields()) {
-      record.createField(
-        field.name().text(),
-        buildTypeExpression(record, field.type())
+      final var paramName = param.text();
+      record.addTypeParameter(
+        paramName,
+        compileDocumentation(typeDecl.documentations(), paramName)
       );
     }
+
+    for (final var field : typeDecl.fields()) {
+      final var fieldName = field.name().text();
+      record.createField(
+        fieldName,
+        buildTypeExpression(record, field.type()),
+        compileDocumentation(typeDecl.documentations(), fieldName)
+      );
+    }
+
+    record.setDocumentation(compileDocumentation(documentation, name));
     return record;
   }
 
   private static void buildProto(
     final CBPackageBuilderType builder,
+    final List<CBASTDocumentation> documentation,
     final CBASTProtocolDeclaration protoDecl)
   {
+    final var protoName =
+      protoDecl.name().text();
     final var protoBuilder =
-      builder.createProtocol(protoDecl.name().text());
+      builder.createProtocol(protoName);
+
+    protoBuilder.setDocumentation(
+      compileDocumentation(documentation, protoName)
+    );
 
     for (final var version : protoDecl.versions()) {
       final var versionBuilder =
@@ -179,9 +221,9 @@ public final class CBTypePackageConverter
   }
 
   /**
-   * Build a compiled package from the given AST. This assumes that all
-   * binding analysis and type checking has been completed, and that the
-   * AST will have the expected user data annotations.
+   * Build a compiled package from the given AST. This assumes that all binding
+   * analysis and type checking has been completed, and that the AST will have
+   * the expected user data annotations.
    *
    * @param pack The package
    *
@@ -212,19 +254,32 @@ public final class CBTypePackageConverter
     }
 
     for (final var typeDecl : pack.types()) {
-      if (typeDecl instanceof CBASTTypeRecord) {
-        buildRecord(packBuilder, (CBASTTypeRecord) typeDecl);
-      } else if (typeDecl instanceof CBASTTypeVariant) {
-        buildVariant(packBuilder, (CBASTTypeVariant) typeDecl);
+      if (typeDecl instanceof CBASTTypeRecord rec) {
+        buildRecord(packBuilder, pack.documentation(), rec);
+      } else if (typeDecl instanceof CBASTTypeVariant var) {
+        buildVariant(packBuilder, pack.documentation(), var);
       } else {
         throw new UnreachableCodeException();
       }
     }
 
     for (final var protoDecl : pack.protocols()) {
-      buildProto(packBuilder, protoDecl);
+      buildProto(packBuilder, pack.documentation(), protoDecl);
     }
 
     return packBuilder.build();
+  }
+
+  private static List<String> compileDocumentation(
+    final List<CBASTDocumentation> documentation,
+    final String name)
+  {
+    final var texts = new ArrayList<String>();
+    for (final var doc : documentation) {
+      if (Objects.equals(doc.target(), name)) {
+        texts.add(doc.text());
+      }
+    }
+    return List.copyOf(texts);
   }
 }

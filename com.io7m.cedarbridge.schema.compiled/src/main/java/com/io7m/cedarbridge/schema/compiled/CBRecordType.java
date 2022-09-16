@@ -22,7 +22,8 @@ import java.util.UUID;
  * A record type, or algebraic (nominal) product type.
  */
 
-public interface CBRecordType extends CBTypeDeclarationType, CBFieldOwnerType
+public non-sealed interface CBRecordType
+  extends CBTypeDeclarationType, CBFieldOwnerType
 {
   /**
    * @return The unique ID of the type

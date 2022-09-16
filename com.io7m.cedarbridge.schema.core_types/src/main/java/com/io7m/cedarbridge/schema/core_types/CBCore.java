@@ -57,20 +57,46 @@ public final class CBCore
       "String",
       "ByteArray"
     )) {
-      builder.createExternalType(
-        externalPackageName,
-        String.format("CB%s", name),
-        name
+      final var t =
+        builder.createExternalType(
+          externalPackageName,
+          String.format("CB%s", name),
+          name
+        );
+      t.setDocumentation(
+        List.of(
+          switch (name) {
+            case "IntegerUnsigned8" -> "An 8-bit unsigned integer.";
+            case "IntegerUnsigned16" -> "A 16-bit unsigned integer";
+            case "IntegerUnsigned32" -> "A 32-bit unsigned integer.";
+            case "IntegerUnsigned64" -> "A 64-bit unsigned integer.";
+            case "IntegerSigned8" -> "An 8-bit signed integer.";
+            case "IntegerSigned16" -> "A 16-bit signed integer";
+            case "IntegerSigned32" -> "A 32-bit signed integer.";
+            case "IntegerSigned64" -> "A 64-bit signed integer.";
+            case "Float16" -> "A 16-bit IEEE binary16 floating-point value.";
+            case "Float32" -> "A 32-bit IEEE binary32 floating-point value.";
+            case "Float64" -> "A 64-bit IEEE binary64 floating-point value.";
+            case "String" -> "A UTF-8 string.";
+            case "ByteArray" -> "An array of bytes.";
+            default -> throw new IllegalStateException(name);
+          }
+        )
       );
     }
 
     {
       final var option = builder.createVariant("Option");
       option.setExternalName(externalPackageName, "CBOptionType");
-      option.addTypeParameter("T");
-      option.createCase("None");
+      option.addTypeParameter("T", List.of("The type of optional values."));
+      option.setDocumentation(List.of("An optional value."));
+
+      final var none = option.createCase("None");
+      none.setDocumentation(List.of("No value is present."));
+
       final var some = option.createCase("Some");
-      some.createField("value", option.referenceParameter("T"));
+      some.createField("value", option.referenceParameter("T"), List.of("The current value."));
+      some.setDocumentation(List.of("A value is present."));
     }
 
     {
@@ -79,21 +105,24 @@ public final class CBCore
           externalPackageName,
           "CBMapEntry",
           "MapEntry");
-      mapEntry.addTypeParameter("K");
-      mapEntry.addTypeParameter("V");
+      mapEntry.addTypeParameter("K", List.of("The type of keys."));
+      mapEntry.addTypeParameter("V", List.of("The type of values."));
+      mapEntry.setDocumentation(List.of("An entry within a map."));
     }
 
     {
       final var list =
         builder.createExternalType(externalPackageName, "CBList", "List");
-      list.addTypeParameter("A");
+      list.addTypeParameter("A", List.of("The type of values within the list."));
+      list.setDocumentation(List.of("A sequence of values."));
     }
 
     {
       final var map =
         builder.createExternalType(externalPackageName, "CBMap", "Map");
-      map.addTypeParameter("K");
-      map.addTypeParameter("V");
+      map.addTypeParameter("K", List.of());
+      map.addTypeParameter("V", List.of());
+      map.setDocumentation(List.of("A key/value map data structure."));
     }
 
     PACKAGE_VALUE = builder.build();

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+if [ -z "${CEDARBRIDGE_HOME}" ]
+then
+  echo "CEDARBRIDGE_HOME is unset" 1>&2
+  exit 1
+fi
+
+exec /usr/bin/env java \
+-p "${CEDARBRIDGE_HOME}/lib" \
+-m com.io7m.cedarbridge.cmdline/com.io7m.cedarbridge.cmdline.Main \
+"$@"

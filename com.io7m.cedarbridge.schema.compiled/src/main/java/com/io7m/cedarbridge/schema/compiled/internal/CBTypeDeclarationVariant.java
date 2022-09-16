@@ -43,6 +43,7 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   private final List<CBTypeParameterType> parameters;
   private CBPackageType owner;
   private Optional<CBExternalName> externalName;
+  private List<String> documentation;
 
   /**
    * Construct a variant type declaration.
@@ -68,6 +69,8 @@ public final class CBTypeDeclarationVariant implements CBVariantType
       new ArrayList<>();
     this.externalName =
       Optional.empty();
+    this.documentation =
+      List.of();
 
     this.casesRead =
       Collections.unmodifiableList(this.cases);
@@ -181,6 +184,12 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     return this.externalName;
   }
 
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
+  }
+
   /**
    * Set the owner.
    *
@@ -191,5 +200,17 @@ public final class CBTypeDeclarationVariant implements CBVariantType
     final CBPackage newOwner)
   {
     this.owner = Objects.requireNonNull(newOwner, "cbPackage");
+  }
+
+  /**
+   * Set the documentation.
+   *
+   * @param text The text
+   */
+
+  public void setDocumentation(
+    final List<String> text)
+  {
+    this.documentation = Objects.requireNonNull(text, "text");
   }
 }

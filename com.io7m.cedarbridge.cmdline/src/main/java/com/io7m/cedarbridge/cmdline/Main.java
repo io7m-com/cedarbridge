@@ -18,7 +18,9 @@ package com.io7m.cedarbridge.cmdline;
 
 import com.io7m.cedarbridge.cmdline.internal.CBCommandCheck;
 import com.io7m.cedarbridge.cmdline.internal.CBCommandCompile;
+import com.io7m.cedarbridge.cmdline.internal.CBCommandDocument;
 import com.io7m.cedarbridge.cmdline.internal.CBCommandListCodeGenerators;
+import com.io7m.cedarbridge.cmdline.internal.CBCommandListDocGenerators;
 import com.io7m.cedarbridge.cmdline.internal.CBCommandVersion;
 import com.io7m.claypot.core.CLPApplicationConfiguration;
 import com.io7m.claypot.core.CLPCommandConstructorType;
@@ -57,7 +59,9 @@ public final class Main implements Runnable
       List.of(
         CBCommandCheck::new,
         CBCommandCompile::new,
+        CBCommandDocument::new,
         CBCommandListCodeGenerators::new,
+        CBCommandListDocGenerators::new,
         CBCommandVersion::new
       );
 

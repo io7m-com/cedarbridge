@@ -18,7 +18,7 @@
  * Cedarbridge message protocol (Schema core types)
  */
 
-module com.io7m.cedarbridge.schema.core.types
+module com.io7m.cedarbridge.schema.core_types
 {
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;

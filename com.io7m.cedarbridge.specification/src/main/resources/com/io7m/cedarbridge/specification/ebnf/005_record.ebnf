@@ -11,4 +11,4 @@ type_parameter_declaration =
   "(" , "parameter" , type_parameter_name , ")" ;
 
 record_declaration =
-  "(" , "record" , type_name , { field_declaration | type_parameter_declaration } , ")" ;
+  "(" , "record" , type_name , { field_declaration | type_parameter_declaration | documentation_declaration } , ")" ;

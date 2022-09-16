@@ -28,13 +28,8 @@ import java.net.URI;
 public sealed interface CBASTElementType extends LexicalType<URI>
   permits CBASTDeclarationType,
   CBASTField,
-  CBASTFieldName,
-  CBASTPackageName,
-  CBASTPackageShortName,
-  CBASTTypeExpressionType,
-  CBASTTypeName,
-  CBASTTypeParameterName,
-  CBASTVariantCaseName
+  CBASTNameType,
+  CBASTTypeExpressionType
 {
   /**
    * @return The user data associated with the element

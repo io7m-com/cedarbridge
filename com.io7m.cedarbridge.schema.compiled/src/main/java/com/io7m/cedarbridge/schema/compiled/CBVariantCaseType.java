@@ -16,12 +16,14 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+
 /**
  * A single case within a {@link CBVariantType}. A (nominal) algebraic
  * product type, analogous to an anonymous {@link CBRecordType}.
  */
 
-public interface CBVariantCaseType extends CBFieldOwnerType
+public non-sealed interface CBVariantCaseType extends CBFieldOwnerType
 {
   /**
    * @return The type within which this case is declared
@@ -34,4 +36,10 @@ public interface CBVariantCaseType extends CBFieldOwnerType
    */
 
   String name();
+
+  /**
+   * @return The documentation for the case
+   */
+
+  List<String> documentation();
 }

@@ -1,0 +1,6 @@
+(package com.io7m.cedarbridge)
+
+(record T)
+
+(documentation T "X is something.")
+(documentation T "This is more documentation.")

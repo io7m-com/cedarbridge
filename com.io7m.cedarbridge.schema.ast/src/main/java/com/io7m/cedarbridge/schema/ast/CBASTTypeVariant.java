@@ -25,17 +25,19 @@ import java.util.Objects;
 /**
  * A variant declaration.
  *
- * @param userData   The user data
- * @param lexical    The lexical info
- * @param name       The type name
- * @param parameters The type parameters
- * @param cases      The variant cases
+ * @param documentations The documentation elements
+ * @param cases          The variant cases
+ * @param lexical        The lexical info
+ * @param name           The type name
+ * @param parameters     The type parameters
+ * @param userData       The user data
  */
 
 public record CBASTTypeVariant(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   CBASTTypeName name,
+  List<CBASTDocumentation> documentations,
   List<CBASTTypeParameterName> parameters,
   List<CBASTTypeVariantCase> cases)
   implements CBASTTypeDeclarationType
@@ -43,19 +45,21 @@ public record CBASTTypeVariant(
   /**
    * A variant declaration.
    *
-   * @param userData   The user data
-   * @param lexical    The lexical info
-   * @param name       The type name
-   * @param parameters The type parameters
-   * @param cases      The variant cases
+   * @param documentations The documentation elements
+   * @param cases          The variant cases
+   * @param lexical        The lexical info
+   * @param name           The type name
+   * @param parameters     The type parameters
+   * @param userData       The user data
    */
 
   public CBASTTypeVariant
   {
-    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(documentations, "documentations");
+    Objects.requireNonNull(cases, "cases");
     Objects.requireNonNull(lexical, "lexical");
     Objects.requireNonNull(name, "name");
     Objects.requireNonNull(parameters, "parameters");
-    Objects.requireNonNull(cases, "cases");
+    Objects.requireNonNull(userData, "userData");
   }
 }

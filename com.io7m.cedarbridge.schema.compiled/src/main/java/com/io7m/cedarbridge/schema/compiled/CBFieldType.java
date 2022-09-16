@@ -16,6 +16,8 @@
 
 package com.io7m.cedarbridge.schema.compiled;
 
+import java.util.List;
+
 /**
  * A field within a {@link CBRecordType}, or a {@link CBVariantCaseType}.
  */
@@ -39,4 +41,10 @@ public interface CBFieldType
    */
 
   CBTypeExpressionType type();
+
+  /**
+   * @return Documentation for the field
+   */
+
+  List<String> documentation();
 }

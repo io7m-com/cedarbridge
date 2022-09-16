@@ -37,6 +37,7 @@ import com.io7m.jaffirm.core.Preconditions;
 
 import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -302,6 +303,13 @@ public final class CBPackageBuilder implements CBPackageBuilderType
       this.protocol.addVersion(builder.version);
       return builder;
     }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.protocol.setDocumentation(text);
+    }
   }
 
   private final class ProtocolVersionBuilder
@@ -343,7 +351,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     @Override
     public CBRecordBuilderType createField(
       final String name,
-      final CBTypeExpressionType type)
+      final CBTypeExpressionType type,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBFieldNames.INSTANCE.checkValid(name);
@@ -354,13 +363,14 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      this.record.addField(new CBField(name, type));
+      this.record.addField(new CBField(name, documentation, type));
       return this;
     }
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String name)
+      final String name,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(name);
@@ -371,9 +381,22 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(name, this.record.arity());
+      final var parameter =
+        new CBTypeParameter(
+          name,
+          this.record.arity(),
+          documentation
+        );
+
       this.record.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.record.setDocumentation(text);
     }
 
     @Override
@@ -448,7 +471,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String name)
+      final String name,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(name);
@@ -459,9 +483,22 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(name, this.variant.arity());
+      final var parameter =
+        new CBTypeParameter(
+          name,
+          this.variant.arity(),
+          documentation
+        );
+
       this.variant.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.variant.setDocumentation(text);
     }
 
     @Override
@@ -524,7 +561,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
     @Override
     public CBVariantCaseBuilderType createField(
       final String name,
-      final CBTypeExpressionType type)
+      final CBTypeExpressionType type,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBFieldNames.INSTANCE.checkValid(name);
@@ -535,8 +573,15 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      this.caseV.addField(new CBField(name, type));
+      this.caseV.addField(new CBField(name, documentation, type));
       return this;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.caseV.setDocumentation(text);
     }
 
     @Override
@@ -600,7 +645,8 @@ public final class CBPackageBuilder implements CBPackageBuilderType
 
     @Override
     public CBTypeParameterType addTypeParameter(
-      final String parameterName)
+      final String parameterName,
+      final List<String> documentation)
     {
       CBPackageBuilder.this.checkNotDone();
       CBTypeParameterNames.INSTANCE.checkValid(parameterName);
@@ -611,11 +657,22 @@ public final class CBPackageBuilder implements CBPackageBuilderType
         );
       }
 
-      final var parameter = new CBTypeParameter(
-        parameterName,
-        this.external.arity());
+      final var parameter =
+        new CBTypeParameter(
+          parameterName,
+          this.external.arity(),
+          documentation
+        );
+
       this.external.addTypeParameter(parameter);
       return parameter;
+    }
+
+    @Override
+    public void setDocumentation(
+      final List<String> text)
+    {
+      this.external.setDocumentation(text);
     }
 
     @Override

@@ -25,7 +25,8 @@ import java.util.stream.Collectors;
  * The objects that can contain fields.
  */
 
-public interface CBFieldOwnerType
+public sealed interface CBFieldOwnerType
+  permits CBRecordType, CBVariantCaseType
 {
   /**
    * @return The fields of the record in declaration order

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         title="compile">
+
+  <Subsection title="Name">
+    <Paragraph>
+      <Term type="command">compile</Term> - Compile cedarbridge sources
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Description">
+    <Paragraph>
+      The <Term type="command">compile</Term> command compiles cedarbridge sources.
+    </Paragraph>
+    <FormalItem title="Parameters">
+      <xi:include href="CBCommandCompile.xml"/>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Examples">
+    <FormalItem title="Example" type="example">
+      <Verbatim>
+        <xi:include parse="text"
+                    href="c-compile-example.txt"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+</Section>

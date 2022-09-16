@@ -23,7 +23,7 @@ import java.net.URI;
 import java.util.Objects;
 
 /**
- * The  type of record field names.
+ * The type of record field names.
  *
  * @param userData User data
  * @param lexical  Lexical info
@@ -34,7 +34,7 @@ public record CBASTFieldName(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   String text)
-  implements CBASTElementType
+  implements CBASTNameType
 {
   /**
    * The  type of record field names.

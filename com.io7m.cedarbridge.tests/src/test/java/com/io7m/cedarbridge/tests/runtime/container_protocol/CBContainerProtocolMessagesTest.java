@@ -18,11 +18,11 @@ package com.io7m.cedarbridge.tests.runtime.container_protocol;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollection;
-import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolAvailable;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import com.io7m.cedarbridge.tests.runtime.FakeProtocolSerializerFactory;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -51,6 +51,13 @@ public final class CBContainerProtocolMessagesTest
     throws Exception
   {
     this.directory = CBTestDirectories.createTempDirectory();
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
   }
 
   @Test

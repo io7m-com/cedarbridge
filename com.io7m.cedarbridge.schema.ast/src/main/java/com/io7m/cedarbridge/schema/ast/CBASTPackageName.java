@@ -34,7 +34,7 @@ public record CBASTPackageName(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   String text)
-  implements CBASTElementType
+  implements CBASTNameType
 {
   /**
    * The type of package names.

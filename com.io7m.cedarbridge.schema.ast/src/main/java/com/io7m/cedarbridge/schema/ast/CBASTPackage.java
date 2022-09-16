@@ -22,12 +22,13 @@ import java.util.Objects;
 /**
  * A package.
  *
- * @param userData  The user data
- * @param name      The package name
- * @param language  The package language
- * @param imports   The package imports
- * @param protocols The package protocols
- * @param types     The package types
+ * @param imports       The package imports
+ * @param language      The package language
+ * @param name          The package name
+ * @param protocols     The package protocols
+ * @param types         The package types
+ * @param userData      The user data
+ * @param documentation The documentation
  */
 
 public record CBASTPackage(
@@ -36,26 +37,29 @@ public record CBASTPackage(
   CBASTLanguage language,
   List<CBASTImport> imports,
   List<CBASTTypeDeclarationType> types,
-  List<CBASTProtocolDeclaration> protocols)
+  List<CBASTProtocolDeclaration> protocols,
+  List<CBASTDocumentation> documentation)
 {
   /**
    * A package.
    *
-   * @param userData  The user data
-   * @param name      The package name
-   * @param language  The package language
-   * @param imports   The package imports
-   * @param protocols The package protocols
-   * @param types     The package types
+   * @param imports       The package imports
+   * @param language      The package language
+   * @param name          The package name
+   * @param protocols     The package protocols
+   * @param types         The package types
+   * @param userData      The user data
+   * @param documentation The documentation
    */
 
   public CBASTPackage
   {
-    Objects.requireNonNull(userData, "userData");
-    Objects.requireNonNull(name, "name");
-    Objects.requireNonNull(language, "language");
     Objects.requireNonNull(imports, "imports");
-    Objects.requireNonNull(types, "types");
+    Objects.requireNonNull(language, "language");
+    Objects.requireNonNull(name, "name");
     Objects.requireNonNull(protocols, "protocols");
+    Objects.requireNonNull(types, "types");
+    Objects.requireNonNull(userData, "userData");
+    Objects.requireNonNull(documentation, "documentation");
   }
 }

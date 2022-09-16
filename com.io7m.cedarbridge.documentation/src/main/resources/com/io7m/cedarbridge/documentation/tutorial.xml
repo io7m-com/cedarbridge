@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="9524333f-f725-4d57-9ac2-023287dc6614"
+         title="Tutorial">
+
+  <Subsection title="Overview" id="aa61fd98-94df-4f5f-9ecd-215d4aba9461">
+    <Paragraph>
+      This section of the manual attempts to provide a basic introduction to the
+      <Term type="package">cedarbridge</Term>
+      language.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Preliminaries" id="6e207632-b49a-484d-80da-2bcde3e4451f">
+    <Paragraph>
+      The syntax of the <Term type="package">cedarbridge</Term> language is based on
+      <LinkExternal target="https://en.wikipedia.org/wiki/S-expression">S-expressions</LinkExternal>, with each <Term type="package">
+      cedarbridge
+    </Term> source file consisting of a series of statements structured as S-expressions.
+    </Paragraph>
+
+    <Paragraph>
+      A <Term type="package">cedarbridge</Term> file should start with a
+      <Term type="term">language statement</Term>
+      indicating which version of the <Term type="package">cedarbridge</Term> language the file is targeting. Should any
+      backwards-incompatible changes be made to the language in the future, any files that explicitly declared which
+      version of the language they are targeting would continue to be compiled correctly without errors. A file that
+      does not contain a <Term type="term">language statement</Term> will be compiled using whatever is the latest
+      version of the language the compiler supports. The following example specifies that the file is intended for
+      <Term type="package">cedarbridge</Term>
+      major version <Term type="constant">1</Term>, minor version <Term type="constant">0</Term>:
+    </Paragraph>
+
+    <FormalItem title="Language Statement">
+      <Verbatim><![CDATA[(language cedarbridge 1 0)]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      The language allows for using parentheses or square brackets to enclose expressions as long as the use is
+      balanced. For example, all of these expressions are valid:
+    </Paragraph>
+
+    <FormalItem title="Valid Parentheses/Brackets">
+      <Verbatim><![CDATA[(language cedarbridge 1 0)
+[language cedarbridge 1 0]
+]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      However, these expressions are not valid and will cause a parse error:
+    </Paragraph>
+
+    <FormalItem title="Valid Parentheses/Brackets">
+      <Verbatim><![CDATA[(language cedarbridge 1 0]
+[language cedarbridge 1 0)
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Packages" id="54297ab0-1925-48ab-a9dc-21b278d01884">
+    <Paragraph>
+      The <Term type="package">cedarbridge</Term> language contains a basic
+      <Term type="term">package</Term>
+      system. All declared message types and protocols must be declared inside packages. A package has a unique name
+      conventionally in lowercase <LinkExternal target="https://en.wikipedia.org/wiki/Reverse_domain_name_notation">
+      reverse domain notation</LinkExternal>. A <Term type="term">package statement</Term> begins the definition of a
+      package, and the definition continues to the next <Term type="term">package statement</Term> or end-of-file,
+      whichever occurs first. The following statement begins defining a package <Term type="expression">
+      com.example</Term>:
+    </Paragraph>
+
+    <FormalItem title="com.example Package">
+      <Verbatim><![CDATA[(package com.example)]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      Packages may <Term type="term">import</Term> other packages using
+      <Term type="term">import statements</Term>:
+    </Paragraph>
+
+    <FormalItem title="Imports">
+      <Verbatim><![CDATA[(import x.y.z z)
+(import a.b.c d)
+]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      An <Term type="term">import statement</Term> <Term type="expression">(import x z)</Term> exposes all of
+      the types present in package <Term type="expression">x</Term> via the <Term type="term">short name</Term>
+      <Term type="expression">z</Term>. For example, if a type <Term type="expression">T</Term> is declared in
+      <Term type="expression">x</Term>, the type can be referred to using the <Term type="term">qualified name</Term>
+      <Term type="expression">z:T</Term>:
+    </Paragraph>
+
+    <FormalItem title="Qualified Names">
+      <Verbatim><![CDATA[(import x.y.z z)
+
+(record Q
+  [field something z:T])
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Types" id="543a8c94-c1c1-4864-920c-95f1dc63424a">
+    <Paragraph>
+      The <Term type="package">cedarbridge</Term> language allows for defining message types based on algebraic sums and
+      products. Product types are referred to as <Term type="term">record</Term> types (similar to
+      <Term type="term">structs</Term>
+      in the C language), and sum types are referred to as
+      <Term type="term">variant</Term>
+      types (similar to algebraic data types in Haskell or the ML family of languages). Types may be parameterized by
+      other types (referred to as
+      <Term type="term">generics</Term>
+      or <Term type="term">parametric polymorphism</Term> in other languages). A record type consists of a series of
+      uniquely-named fields, and the order of fields is significant. The following statement declares a simple
+      <Term type="expression">Color</Term>
+      record type consisting of <Term type="expression">red</Term>,
+      <Term type="expression">green</Term>, and <Term type="expression">blue</Term> fields:
+    </Paragraph>
+
+    <FormalItem title="Example Record">
+      <Verbatim><![CDATA[(record Color
+  [field red   Float64]
+  [field green Float64]
+  [field blue  Float64])
+]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      The <Term type="package">cedarbridge</Term> language supports conventional <Term type="term">variant</Term> types.
+      The classic example for a <Term type="term">variant</Term> type is the
+      <Term type="term">option</Term>
+      type where values of type <Term type="term">option</Term> may either be
+      <Term type="expression">None</Term>
+      or <Term type="expression">Some s</Term> for some value <Term type="expression">s</Term>. The following statement
+      declares the classic parameterized <Term type="term">Option</Term> type, with the <Term type="expression">None
+    </Term> case having zero fields, and the
+      <Term type="expression">Some</Term>
+      case having exactly one field which is given the name
+      <Term type="expression">value</Term>:
+    </Paragraph>
+
+    <FormalItem title="Example Option">
+      <Verbatim><![CDATA[(variant Option
+  [parameter A]
+  [case None]
+  [case Some [field value A]])
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Protocols" id="e14e42dc-14e3-4d37-9e9e-f1dbe859a926">
+    <Paragraph>
+      In the <Term type="package">cedarbridge</Term> language, there are no backwards-compatible changes
+      possible for types: Adding, removing, or reordering record fields is a backwards-incompatible change.
+      Reordering the cases of a variant type, or changing the fields of cases are backwards-incompatible changes.
+      Rather than resort to the horrendously fragile and excessively permissive model used by other message
+      protocol languages such as
+      <LinkExternal target="https://developers.google.com/protocol-buffers/">protobuf</LinkExternal>,
+      the <Term type="package">cedarbridge</Term> language exposes a strict and principled
+      <Term type="term">versioning</Term> mechanism that allows for unambiguous reasoning about any given
+      version of a protocol; if you know the version of the protocol you are speaking, you know the exact
+      shape of any and all messages that appear in that protocol without the possibility of any extra or missing fields.
+    </Paragraph>
+
+    <Paragraph>
+      A <Term type="term">protocol</Term> declares a set of <Term type="term">versions</Term>, with each
+      <Term type="term">version</Term> declaring the set of <Link target="543a8c94-c1c1-4864-920c-95f1dc63424a">types
+    </Link> present in each version of the protocol. The following example defines a simple protocol
+      <Term type="expression">Foo</Term> with three versions:
+    </Paragraph>
+
+    <FormalItem title="Example Protocol">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge cb]
+
+[record Command0
+  [field name cb:String]
+  [field ex   cb:IntegerUnsigned16]]
+
+[record Command1
+  [field name cb:String]
+  [field ex   cb:IntegerUnsigned32]]
+
+[record Command2
+  [field name cb:String]
+  [field ex   cb:IntegerUnsigned64]]
+
+[record Response
+  [field text cb:String]]
+
+[protocol Foo
+  [version 1 Command0 Command1 Response]
+  [version 2 Command0 Command1 Command2 Response]
+  [version 3 Command1 Command2 Response]]
+]]></Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      Note that <Term type="expression">Command0</Term> and <Term type="expression">Command1</Term> appear
+      in the first two versions of the protocol, but version 3 of the protocol drops support for
+      <Term type="expression">Command0</Term>. The <Term type="expression">Response</Term> type appears in
+      all versions of the protocol. This allows for a disciplined approach to versioning; if a newer version of a
+      protocol requires "changing" a message, the approach taken is to simply declare a new protocol version that
+      contains a new message type (and, almost certainly, removes the old message type).
+    </Paragraph>
+  </Subsection>
+
+</Section>

@@ -1,26 +1,42 @@
+[language cedarbridge 1 0]
+
 [package com.io7m.cedarbridge.examples.chat]
 
 [import com.io7m.cedarbridge cb]
 
+[documentation ChatCommandJoin "Join the chat room."]
 [record ChatCommandJoin
-  [field name cb:String]]
+  [field name cb:String]
+  [documentation name "The username with which to join."]]
 
+[documentation ChatCommandSpeak "Send a message to all users in the chat room."]
 [record ChatCommandSpeak
-  [field message cb:String]]
+  [field message cb:String]
+  [documentation message "The message text."]]
 
+[documentation ChatEventJoined "A user joined the chat room."]
 [record ChatEventJoined
-  [field user cb:String]]
+  [field user cb:String]
+  [documentation user "The name of the user."]]
 
+[documentation ChatEventLeft "A user left the chat room."]
 [record ChatEventLeft
-  [field user cb:String]]
+  [field user cb:String]
+  [documentation user "The name of the user."]]
 
+[documentation ChatEventSpoke "A user in the chat room said something."]
 [record ChatEventSpoke
   [field user cb:String]
-  [field message cb:String]]
+  [documentation user "The user that sent the message."]
+  [field message cb:String]
+  [documentation message "The message text."]]
 
+[documentation ChatEventError "An error occurred."]
 [record ChatEventError
-  [field message cb:String]]
+  [field message cb:String]
+  [documentation message "The error message."]]
 
+[documentation Chat "The chat protocol."]
 [protocol Chat
   [version 1
     ChatCommandJoin

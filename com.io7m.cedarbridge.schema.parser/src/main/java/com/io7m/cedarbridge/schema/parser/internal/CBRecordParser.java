@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.schema.parser.internal;
 
+import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTElementType;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
@@ -129,11 +130,14 @@ public final class CBRecordParser
       CBFilters.filter(items, CBASTField.class);
     final var parameters =
       CBFilters.filter(items, CBASTTypeParameterName.class);
+    final var documentations =
+      CBFilters.filter(items, CBASTDocumentation.class);
 
     return new CBASTTypeRecord(
       new CBASTMutableUserData(),
       expression.lexical(),
       name,
+      documentations,
       parameters,
       fields
     );
@@ -149,7 +153,8 @@ public final class CBRecordParser
     final var expectingShapes =
       List.of(
         "(parameter <type-parameter-name>)",
-        "(field <field-name> <type-expression>)"
+        "(field <field-name> <type-expression>)",
+        "(documentation <name> <quoted-string>)"
       );
 
     try (var subContext =
@@ -186,8 +191,16 @@ public final class CBRecordParser
       );
 
     return switch (start.text()) {
-      case "parameter" -> parseRecordMemberParameter(context, expression);
-      case "field" -> new CBFieldParser().parse(context, expression);
+      case "parameter" -> {
+        yield parseRecordMemberParameter(context, expression);
+      }
+      case "field" -> {
+        yield new CBFieldParser().parse(context, expression);
+      }
+      case "documentation" -> {
+        yield new CBDocumentationParser().parse(context, expression);
+      }
+
       default -> throw context.failed(
         expression,
         IS_NOT_FATAL,

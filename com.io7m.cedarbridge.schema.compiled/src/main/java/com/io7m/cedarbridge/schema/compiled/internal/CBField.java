@@ -22,6 +22,7 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
 import com.io7m.cedarbridge.schema.names.CBFieldNames;
 import com.io7m.jaffirm.core.Preconditions;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,22 +34,27 @@ public final class CBField implements CBFieldType
   private final String name;
   private final CBTypeExpressionType type;
   private CBFieldOwnerType owner;
+  private List<String> documentation;
 
   /**
    * Construct a field.
    *
-   * @param inName The name
-   * @param inType The type
+   * @param inName          The name
+   * @param inDocumentation The documentation
+   * @param inType          The type
    */
 
   public CBField(
     final String inName,
+    final List<String> inDocumentation,
     final CBTypeExpressionType inType)
   {
     this.name =
       Objects.requireNonNull(inName, "name");
     this.type =
       Objects.requireNonNull(inType, "type");
+    this.documentation =
+      Objects.requireNonNull(inDocumentation, "documentation");
 
     Preconditions.checkPreconditionV(
       inName,
@@ -85,5 +91,11 @@ public final class CBField implements CBFieldType
   public CBTypeExpressionType type()
   {
     return this.type;
+  }
+
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
   }
 }

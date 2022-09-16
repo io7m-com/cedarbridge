@@ -21,6 +21,7 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.cedarbridge.schema.names.CBTypeParameterNames;
 import com.io7m.jaffirm.core.Preconditions;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -32,20 +33,26 @@ public final class CBTypeParameter implements CBTypeParameterType
   private final String name;
   private final int index;
   private CBTypeDeclarationType owner;
+  private List<String> documentation;
 
   /**
    * Construct a type parameter.
    *
-   * @param inName  The parameter name
-   * @param inIndex The parameter index
+   * @param inName          The parameter name
+   * @param inIndex         The parameter index
+   * @param inDocumentation The documentation
    */
 
   public CBTypeParameter(
     final String inName,
-    final int inIndex)
+    final int inIndex,
+    final List<String> inDocumentation)
   {
-    this.name = Objects.requireNonNull(inName, "name");
+    this.name =
+      Objects.requireNonNull(inName, "name");
     this.index = inIndex;
+    this.documentation =
+      Objects.requireNonNull(inDocumentation, "documentation");
 
     Preconditions.checkPreconditionV(
       inName,
@@ -82,5 +89,11 @@ public final class CBTypeParameter implements CBTypeParameterType
   public CBTypeDeclarationType owner()
   {
     return this.owner;
+  }
+
+  @Override
+  public List<String> documentation()
+  {
+    return this.documentation;
   }
 }

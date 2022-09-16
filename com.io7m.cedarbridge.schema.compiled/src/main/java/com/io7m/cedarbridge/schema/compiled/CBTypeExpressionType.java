@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * The type of type expressions.
  */
 
-public interface CBTypeExpressionType extends Formattable
+public sealed interface CBTypeExpressionType extends Formattable
 {
   /**
    * Determine if the given type parameter occurs in the type expression.
@@ -42,7 +42,7 @@ public interface CBTypeExpressionType extends Formattable
    * A type parameter expression.
    */
 
-  interface CBTypeExprParameterType extends CBTypeExpressionType
+  non-sealed interface CBTypeExprParameterType extends CBTypeExpressionType
   {
     /**
      * @return The type parameter
@@ -72,7 +72,7 @@ public interface CBTypeExpressionType extends Formattable
    * A named type.
    */
 
-  interface CBTypeExprNamedType extends CBTypeExpressionType
+  non-sealed interface CBTypeExprNamedType extends CBTypeExpressionType
   {
     /**
      * @return The target type declaration
@@ -103,7 +103,7 @@ public interface CBTypeExpressionType extends Formattable
    * A type application.
    */
 
-  interface CBTypeExprApplicationType extends CBTypeExpressionType
+  non-sealed interface CBTypeExprApplicationType extends CBTypeExpressionType
   {
     /**
      * @return The target type

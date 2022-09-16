@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.tests.cmdline;
 
 import com.io7m.cedarbridge.cmdline.MainExitless;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -56,6 +57,14 @@ public final class CBCommandLineTest
     this.outputPrint = new PrintStream(this.output);
     System.setOut(null);
     System.setErr(null);
+  }
+
+  @AfterEach
+  public void tearDown()
+    throws IOException
+  {
+    CBTestDirectories.deleteDirectory(this.directory);
+    CBTestDirectories.deleteDirectory(this.directoryOutput);
   }
 
   void flush()
@@ -148,6 +157,40 @@ public final class CBCommandLineTest
   }
 
   @Test
+  public void testHelpListDocGenerators()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    MainExitless.main(new String[]{
+      "help", "list-documentation-generators"
+    });
+
+    this.flush();
+    final var text = this.output.toString();
+    assertTrue(text.contains("Usage: list-documentation-generators"));
+    LOG.debug("{}", text);
+  }
+
+  @Test
+  public void testHelpDocument()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    MainExitless.main(new String[]{
+      "help", "document"
+    });
+
+    this.flush();
+    final var text = this.output.toString();
+    assertTrue(text.contains("Usage: document"));
+    LOG.debug("{}", text);
+  }
+
+  @Test
   public void testVersion()
     throws IOException
   {
@@ -227,6 +270,23 @@ public final class CBCommandLineTest
   }
 
   @Test
+  public void testListDocGenerators()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    MainExitless.main(new String[]{
+      "list-documentation-generators"
+    });
+
+    this.flush();
+    final var text = this.output.toString();
+    assertTrue(text.contains("xhtml"));
+    LOG.debug("{}", text);
+  }
+
+  @Test
   public void testCompileNothing()
     throws IOException
   {
@@ -267,6 +327,35 @@ public final class CBCommandLineTest
       file.toString(),
       "--language",
       "Java 17+",
+      "--output-directory",
+      this.directoryOutput.toString()
+    });
+
+    this.flush();
+    final var text = this.output.toString();
+    LOG.debug("{}", text);
+  }
+
+  @Test
+  public void testDocumentSimple()
+    throws IOException
+  {
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
+
+    final var file =
+      CBTestDirectories.resourceOf(
+        CBCommandLineTest.class,
+        this.directory,
+        "basicWithCore.cbs"
+      );
+
+    MainExitless.main(new String[]{
+      "document",
+      "--file",
+      file.toString(),
+      "--language",
+      "xhtml",
       "--output-directory",
       this.directoryOutput.toString()
     });

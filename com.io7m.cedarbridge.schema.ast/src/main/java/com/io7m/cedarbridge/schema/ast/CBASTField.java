@@ -35,7 +35,7 @@ public record CBASTField(
   LexicalPosition<URI> lexical,
   CBASTFieldName name,
   CBASTTypeExpressionType type)
-  implements CBASTElementType
+  implements CBASTVariantMemberType, CBASTRecordMemberType, CBASTElementType
 {
   /**
    * A field appearing inside a record or a variant case.
