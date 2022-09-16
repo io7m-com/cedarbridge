@@ -1,3 +1,5 @@
+[language cedarbridge 1 0]
+
 [package com.io7m.cedarbridge.examples.chat]
 
 [import com.io7m.cedarbridge cb]

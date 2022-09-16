@@ -1,0 +1,10 @@
+$ cedarbridge compile --file invalid.cbs --language 'Java 17+'
+ERROR: invalid.cbs:3:1: Name "T" has already been defined.
+  Specification: https://www.io7m.com/software/cedarbridge/specification/index.xhtml#id_1cf38aec-7544-4b5e-a5ac-bb01567ffe77
+(record T))
+^
+  See invalid.cbs:2:1:
+(record T))
+^
+
+$ cedarbridge compile --file valid.cbs --language 'Java 17+'

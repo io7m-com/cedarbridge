@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -15,15 +15,7 @@
  */
 
 /**
- * Cedarbridge message protocol (Schema core types)
+ * Cedarbridge documentation.
  */
 
-module com.io7m.cedarbridge.schema.core_types
-{
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
-
-  requires transitive com.io7m.cedarbridge.schema.compiled;
-
-  exports com.io7m.cedarbridge.schema.core_types;
-}
+package com.io7m.cedarbridge.documentation;

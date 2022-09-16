@@ -1,0 +1,10 @@
+$ cedarbridge check --file example.cbs
+
+$ (cat <<EOF
+check
+--file
+example.cbs
+EOF
+) > args.txt
+
+$ cedarbridge @args.txt

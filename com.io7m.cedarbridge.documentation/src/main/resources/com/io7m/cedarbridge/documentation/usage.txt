@@ -1,0 +1,30 @@
+Usage: cedarbridge [options] [command] [command options]
+
+  Options:
+    --verbose
+      Set the minimum logging verbosity level.
+      Default: info
+      Possible Values: [trace, debug, info, warn, error]
+
+  Use the "help" command to examine specific commands:
+
+    $ cedarbridge help help.
+
+  Command-line arguments can be placed one per line into a file, and the file
+  can be referenced using the @ symbol:
+
+    $ echo help > file.txt
+    $ echo help >> file.txt
+    $ cedarbridge @file.txt
+
+  Commands:
+    check                             Type-check a schema file.
+    compile                           Compile a schema file and generate code.
+    document                          Compile a schema file and generate documentation.
+    help                              Show detailed help messages for commands.
+    list-code-generators              List available code generators
+    list-documentation-generators     List available documentation generators
+    version                           Show the application version.
+
+  Documentation:
+    https://www.io7m.com/software/cedarbridge/documentation/

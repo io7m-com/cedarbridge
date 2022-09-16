@@ -26,7 +26,7 @@ module com.io7m.cedarbridge.cmdline
   requires com.io7m.cedarbridge.bridgedoc.api;
   requires com.io7m.cedarbridge.codegen.api;
   requires com.io7m.cedarbridge.schema.compiler.api;
-  requires com.io7m.cedarbridge.schema.core.types;
+  requires com.io7m.cedarbridge.schema.core_types;
   requires com.io7m.cedarbridge.schema.loader.api;
   requires com.io7m.cedarbridge.version;
   requires com.io7m.claypot.core;
@@ -35,7 +35,11 @@ module com.io7m.cedarbridge.cmdline
 
   uses com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 
-  opens com.io7m.cedarbridge.cmdline.internal to jcommander;
+  opens com.io7m.cedarbridge.cmdline.internal
+    to jcommander, com.io7m.cedarbridge.documentation;
 
+  exports com.io7m.cedarbridge.cmdline.internal
+    to com.io7m.cedarbridge.documentation;
 
+  exports com.io7m.cedarbridge.cmdline;
 }
