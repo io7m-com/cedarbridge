@@ -12,6 +12,11 @@
     <dc:language>en</dc:language>
     <dc:source>https://www.io7m.com/software/cedarbridge/</dc:source>
     <dc:title>Cedarbridge User Manual ${project.version}</dc:title>
+
+    <MetaProperty name="com.io7m.xstructural.epub.colophon">colophon_extra.xml</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.epub.cover">documentation.jpg</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.web.branding.header">brand.xml</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.web.branding.footer">brand.xml</MetaProperty>
   </Metadata>
 
   <xi:include href="intro.xml"/>

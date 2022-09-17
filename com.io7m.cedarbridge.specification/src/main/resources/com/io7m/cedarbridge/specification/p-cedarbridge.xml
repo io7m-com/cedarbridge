@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Section xmlns="urn:com.io7m.structural:7:0"
+<Section xmlns="urn:com.io7m.structural:8:0"
          tableOfContentsDepth="1"
          id="fd6629ea-ed28-4acb-8401-17c8814ef433"
          title="Package com.io7m.cedarbridge">

@@ -14,9 +14,15 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+.brandingContainer
+{
+  margin: 1em;
+}
+
 .branding
 {
   font-family: monospace;
+  font-size:   80%;
 }
 
 .command,

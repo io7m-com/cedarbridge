@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Section xmlns="urn:com.io7m.structural:7:0"
+<Section xmlns="urn:com.io7m.structural:8:0"
          id="d7376995-6958-4632-ade9-2d53cd3c8071"
          title="CCBE">
 
@@ -13,6 +13,8 @@
     </Paragraph>
     <Paragraph>
       The <Term type="term">CCBE</Term> is defined as following:
+    </Paragraph>
+    <FormalItem title="CCBE">
       <ListOrdered>
         <Item>
           A simple <Term type="term">base type system</Term> with descriptions of how values of those types are
@@ -23,7 +25,7 @@
           <Term type="term">base type system</Term>.
         </Item>
       </ListOrdered>
-    </Paragraph>
+    </FormalItem>
   </Subsection>
 
   <Subsection title="Bytes" id="d95e6103-77a1-4a14-9a87-96aac074599c">

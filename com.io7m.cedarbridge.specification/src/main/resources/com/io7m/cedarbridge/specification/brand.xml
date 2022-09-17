@@ -16,9 +16,13 @@
   IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 -->
 
-<div xmlns="http://www.w3.org/1999/xhtml" class="branding">
-  <a href="https://www.io7m.com/">io7m</a>
-  | <a href="index.xhtml">single-page</a>
-  | <a href="index-m.xhtml">multi-page</a>
-  | Cedarbridge Language Specification ${project.version}
+<div xmlns="http://www.w3.org/1999/xhtml"
+     class="brandingContainer">
+  <div class="branding">
+    <a href="https://www.io7m.com/">io7m</a> |
+    <a href="index.xhtml">single-page</a> |
+    <a href="index-m.xhtml">multi-page</a> |
+    <a href="documentation.epub">epub</a> |
+    Cedarbridge Language Specification ${project.version}
+  </div>
 </div>
