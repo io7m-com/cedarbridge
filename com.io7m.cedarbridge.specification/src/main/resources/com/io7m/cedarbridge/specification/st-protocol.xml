@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:8:0"
+         id="62659b04-0cc9-4e75-a396-bc6963442fb3"
+         title="protocol">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">protocol</Term>
+      - Declare a protocol
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">protocol</Term> statement declares a new protocol.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax" id="1f9b69fc-7b95-4007-8bd1-6715b07fd69a">
+    <FormalItem title="Protocol Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/007_protocol.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics" id="3db896a5-bad2-4b08-9154-b48943f6f5a3">
+    <Paragraph>
+      A <Term type="statement">protocol</Term> statement, if present, <Term type="term">MUST</Term> occur with
+      a package set in the current <Link target="66b692d7-058e-4326-bdf6-a30a5f7aa5a9">schema context</Link>.
+      In practical terms, this means that <Term type="statement">protocol</Term> statements <Term type="term">MUST</Term> appear
+      <Term type="term">after</Term> the <Link target="e4b13719-3c30-404c-b729-f429724f90b7">package</Link> statement
+      in a given compilation unit.
+    </Paragraph>
+    <Paragraph>
+      The statement <Term type="expression">(protocol T ...)</Term> introduces a new <Term type="term">protocol
+      name</Term> <Term type="expression">T</Term> within the current package in the schema context. Protocol names
+      are unique within a package; it is an error for two or more <Term type="term">protocol declarations</Term> to
+      name the same protocol.
+    </Paragraph>
+    <Paragraph id="404f0595-a150-4baf-b98b-37109250d8bd">
+      A protocol statement declares a contiguous ordered set of <Term type="term">versions</Term>, with each
+      <Term type="term">version</Term> naming a set of <Link target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link>
+      that are included within that version. The intersections of the sets of types between versions are allowed to
+      be non-empty. That is, for versions <Term type="expression">v</Term> and <Term type="expression">w</Term>,
+      if <Term type="expression">P(v)</Term> is the set of types in version <Term type="expression">v</Term> and
+      <Term type="expression">P(w)</Term> is the set of types in version <Term type="expression">w</Term>, then
+      it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
+    </Paragraph>
+    <Paragraph id="15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a">
+      Each type named in each protocol <Term type="term">version</Term> must have kind <Term type="expression">*</Term>.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">types</Term> within a <Term type="term">version</Term> is significant;
+      changing the order of <Term type="statement">type</Term> declarations will change the semantics and serialized
+      form of the protocol.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">versions</Term> within a <Term type="term">protocol</Term> is
+      NOT significant; changing the order of <Term type="statement">version</Term> declarations will not change the
+      semantics or serialized form of the protocol as the declarations are expected to be internally ordered by their
+      declared version number.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statements declare a simple <Term type="term">Echo</Term> protocol with two versions:
+    </Paragraph>
+    <FormalItem title="Protocol Example">
+      <Verbatim><![CDATA[
+(import com.io7m.cedarbridge cb)
+
+(record Hello
+  [field name cb:String])
+
+(record Hello2
+  [field name cb:String]
+  [field id   cb:IntegerUnsigned32])
+
+(record Speak
+  [field message cb:String])
+
+(record Goodbye)
+
+(protocol Echo
+  [version 1
+    Hello
+    Speak
+    Goodbye]
+  [version 2
+    Hello2
+    Speak
+    Goodbye])
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+</Section>

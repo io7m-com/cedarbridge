@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:8:0"
+         id="ab2e6eae-12bb-4338-800a-8d6b6b865c6e"
+         title="language">
+
+  <Subsection title="Description">
+    <Paragraph>
+      <Term type="expression">language</Term>
+      - Declare the language that will be used.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="statement">language</Term> statement declares which language will be used for the subsequent
+      statements in the compilation unit.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax" id="5ce707c0-0cfe-4085-86db-1e5968049b92">
+    <FormalItem title="Language Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/003_language.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics">
+    <Paragraph>
+      A <Term type="statement">language</Term> statement, if present, <Term type="term">MUST</Term> be the first
+      statement in a compilation unit.
+    </Paragraph>
+    <Paragraph id="e03347f6-a042-452c-b34b-eeb6514ee26e">
+      The <Term type="statement">language</Term> statement can appear at most once in a compilation unit.
+    </Paragraph>
+    <Paragraph id="9835ba13-ffc3-44ac-90df-1e3e5cc120fa">
+      If a <Term type="statement">language</Term> statement names an unrecognized language, parsing of the
+      compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
+      unit ignored.
+    </Paragraph>
+    <Paragraph id="a028f13d-dc6f-4fd5-872b-dfa41318ebe4">
+      If a <Term type="statement">language</Term> statement names an unrecognized language major version, parsing of the
+      compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
+      unit ignored.
+    </Paragraph>
+    <Paragraph id="34c52233-ee42-4dec-99ac-9997d7cd4bbe">
+      If a <Term type="statement">language</Term> statement names an unrecognized language minor version, parsing of the
+      compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
+      unit ignored.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Example">
+    <Paragraph>
+      The following statement declares that the compilation unit is written in <Term type="term">Cedarbridge</Term>
+      <Term type="constant">1.0</Term>:
+    </Paragraph>
+    <FormalItem title="Language Example">
+      <Verbatim><![CDATA[(language cedarbridge 1 0)]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+</Section>

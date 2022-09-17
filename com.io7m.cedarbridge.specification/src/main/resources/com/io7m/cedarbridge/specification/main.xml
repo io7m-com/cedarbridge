@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Document xmlns="urn:com.io7m.structural:8:0"
+          xmlns:dc="http://purl.org/dc/elements/1.1/"
+          xmlns:xi="http://www.w3.org/2001/XInclude"
+          tableOfContentsDepth="1">
+
+  <Metadata>
+    <dc:date>2020-12-18T00:00:00+00:00</dc:date>
+    <dc:description>Specification for the Cedarbridge language.</dc:description>
+    <dc:identifier>c3312787-3be5-430d-a78c-cdd66e271a2b</dc:identifier>
+    <dc:language>en</dc:language>
+    <dc:source>https://www.io7m.com/software/cedarbridge/</dc:source>
+    <dc:title>Cedarbridge Language Specification ${project.version}</dc:title>
+
+    <MetaProperty name="com.io7m.xstructural.epub.colophon">colophon_extra.xml</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.epub.cover">specification.jpg</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.web.branding.header">brand.xml</MetaProperty>
+    <MetaProperty name="com.io7m.xstructural.web.branding.footer">brand.xml</MetaProperty>
+  </Metadata>
+
+  <xi:include href="notation.xml"/>
+  <xi:include href="concepts.xml"/>
+  <xi:include href="statements.xml"/>
+  <xi:include href="type_expr.xml"/>
+  <xi:include href="stdlib.xml"/>
+  <xi:include href="binary.xml"/>
+  <xi:include href="container.xml"/>
+
+</Document>

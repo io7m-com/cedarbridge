@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:8:0"
+         tableOfContentsDepth="1"
+         title="Standard Library">
+
+  <Section title="Overview">
+    <Paragraph>
+      The <Term type="term">Cedarbridge</Term> language defines a set of standard <Link
+      target="e4b13719-3c30-404c-b729-f429724f90b7">packages</Link> that all implementations of the
+      language are required to provide.
+    </Paragraph>
+  </Section>
+
+  <xi:include href="p-cedarbridge.xml"/>
+
+</Section>

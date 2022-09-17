@@ -1,0 +1,12 @@
+(package x.y.z)
+
+(record T)
+
+(record U
+  [parameter A]
+  [parameter B]
+  [field x A]
+  [field y B])
+
+(record V
+  [field r (U T T)])

@@ -1,0 +1,6 @@
+(package x.y.z)
+
+(import a.b.c b)
+
+(record V
+  [field r b:T])

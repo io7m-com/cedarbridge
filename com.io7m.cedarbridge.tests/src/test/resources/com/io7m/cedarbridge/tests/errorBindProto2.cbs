@@ -1,0 +1,7 @@
+(package x.y.z)
+
+(record U)
+
+(protocol T
+  [version 0 U]
+  [version 2 U])

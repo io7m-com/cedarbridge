@@ -1,0 +1,4 @@
+(package x.y.z)
+
+(record T)
+(record U [field x T])

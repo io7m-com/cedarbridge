@@ -1,0 +1,21 @@
+(package x.y.z)
+
+(import com.io7m.cedarbridge cb)
+
+(variant List
+  [parameter T]
+  [case Null]
+  [case Cons
+    (field head T)
+    (field rest [List T])])
+
+(record Q
+  [parameter A]
+  [parameter B]
+  [parameter C]
+  (field x [List A])
+  (field y [List B])
+  (field z [List C]))
+
+(record Z
+  (field q [Q cb:IntegerSigned32 cb:String (List cb:IntegerSigned8)]))

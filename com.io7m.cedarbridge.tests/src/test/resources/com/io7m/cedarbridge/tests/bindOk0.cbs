@@ -1,0 +1,15 @@
+(package com.io7m.cedarbridge)
+
+(record U)
+
+(record P
+  [parameter A]
+  [field x A])
+
+(record T
+  [field x (P U)]
+  [field y U])
+
+(protocol Q
+  [version 0 T]
+  [version 1 U])

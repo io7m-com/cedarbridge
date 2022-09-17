@@ -1,0 +1,64 @@
+[language cedarbridge 1 0]
+
+[package com.io7m.cedarbridge.examples.pastebin]
+
+[import com.io7m.cedarbridge cb]
+
+[documentation PasteID "The unique identifier (UUID) for a paste."]
+[record PasteID
+  [documentation msb "The most-significant bytes of the UUID."]
+  [field msb cb:IntegerUnsigned64]
+  [documentation lsb "The least-significant bytes of the UUID."]
+  [field lsb cb:IntegerUnsigned64]]
+
+[documentation PasteCreate "A command to create a new paste."]
+[record PasteCreate
+  [documentation key "The key used to protect the paste from deletion."]
+  [field key cb:String]
+  [documentation text "The paste text."]
+  [field text cb:String]]
+
+[documentation PasteCreated "A paste was created."]
+[record PasteCreated
+  [documentation id "The unique ID of the created paste."]
+  [field id PasteID]]
+
+[documentation PasteDelete "A command to delete a paste."]
+[record PasteDelete
+  [documentation pasteId "The unique ID of the paste."]
+  [field pasteId PasteID]
+  [documentation key "The key used to protect the paste from deletion."]
+  [field key cb:String]]
+
+[documentation PasteDeleted "A paste was deleted."]
+[record PasteDeleted
+  [documentation id "The unique ID of the deleted paste."]
+  [field id PasteID]]
+
+[documentation PasteGet "A command to fetch an existing paste."]
+[record PasteGet
+  [documentation id "The unique ID of the paste."]
+  [field id PasteID]]
+
+[documentation PasteGetResult "A response to an attempt to fetch a paste."]
+[record PasteGetResult
+  [documentation id "The unique ID of the paste."]
+  [field id PasteID]
+  [documentation text "The text of the paste."]
+  [field text cb:String]]
+
+[documentation Error "An error occurred."]
+[record Error
+  [documentation message "The error message."]
+  [field message cb:String]]
+
+[documentation Paste "The pastebin protocol."]
+[protocol Paste
+  [version 1
+    PasteCreate
+    PasteCreated
+    PasteDelete
+    PasteDeleted
+    PasteGet
+    PasteGetResult
+    Error]]

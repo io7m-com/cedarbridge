@@ -1,0 +1,3 @@
+(package com.io7m.cedarbridge)
+
+(record U [field x V])

@@ -1,0 +1,11 @@
+type_path =
+  [ package_name_segment , ":" ] , type_name ;
+
+type_application =
+  type_path , { type_expression } ;
+
+type_expression =
+    type_path
+  | type_parameter_name
+  | type_application
+  ;

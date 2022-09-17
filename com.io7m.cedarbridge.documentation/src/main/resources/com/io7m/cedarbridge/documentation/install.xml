@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="c51289c5-e71f-481f-8bbf-20556763d281"
+         title="Installation">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">cedarbridge</Term> package is available from the following sources:
+    </Paragraph>
+    <FormalItem title="Sources">
+      <ListUnordered>
+        <Item>
+          <Link target="9a5fcbb9-c1a9-417f-8c04-311dc9a3be68">Maven Central</Link>
+        </Item>
+      </ListUnordered>
+    </FormalItem>
+    <Paragraph>
+      Regardless of the distribution method, the <Term type="package">cedarbridge</Term> package
+      will contain a command named <Term type="command">cedarbridge</Term> that acts as the main
+      entrypoint to all the package's functionality. The <Term type="command">cedarbridge</Term>
+      command expects an environment variable named <Term type="variable">CEDARBRIDGE_HOME</Term>
+      to be defined that points to the installation directory. See the documentation for the
+      installation methods below for details.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Maven Central" id="9a5fcbb9-c1a9-417f-8c04-311dc9a3be68">
+    <Paragraph>
+      A distribution package can be found at
+      <LinkExternal
+        target="https://repo1.maven.org/maven2/com/io7m/cedarbridge/com.io7m.cedarbridge.cmdline/${project.version}/com.io7m.cedarbridge.cmdline-${project.version}-distribution.zip">Maven Central</LinkExternal>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="command">cedarbridge</Term> command requires that a Java 17+ compatible
+      JVM be accessible via <Term type="command">/usr/bin/env java</Term>.
+    </Paragraph>
+    <Paragraph>
+      Verify the integrity of the distribution zip file:
+    </Paragraph>
+    <FormalItem title="Verify">
+      <Verbatim><![CDATA[
+$ gpg --verify com.io7m.cedarbridge.cmdline-${project.version}-distribution.zip.asc
+gpg: assuming signed data in 'com.io7m.cedarbridge.cmdline-${project.version}-distribution.zip.asc'
+gpg: Signature made Tue 28 Jun 2022 15:01:56 GMT
+gpg:                using RSA key 3CCE59428B30462D10459909C5607DA146E128B8
+gpg:                issuer "contact@io7m.com"
+gpg: using pgp trust model
+gpg: Good signature from "io7m.com (2022 maven-rsa-key) <contact@io7m.com>" [unknown]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      Unzip the zip file, and set <Term type="variable">CEDARBRIDGE_HOME</Term> appropriately:
+    </Paragraph>
+    <FormalItem title="Extract">
+      <Verbatim><![CDATA[
+$ unzip com.io7m.cedarbridge.cmdline-${project.version}-distribution.zip
+$ export CEDARBRIDGE_HOME=$(realpath cedarbridge)
+$ ./cedarbridge/bin/cedarbridge
+info: Usage: cedarbridge [options] [command] [command options]
+...
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+  
+</Section>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         id="54231934-13b0-4510-9afc-426927fe71b5"
+         title="Introduction">
+
+  <Paragraph>
+    The <Term type="package">cedarbridge</Term> language is a language designed for specifying message protocols
+    with a focus on minimalism and a clean mathematical foundation. The language has the following notable
+    features:
+  </Paragraph>
+
+  <FormalItem title="Features">
+    <ListUnordered>
+      <Item>
+        A carefully written <LinkExternal
+        target="https://www.io7m.com/software/cedarbridge/specification/">language specification</LinkExternal>.
+      </Item>
+      <Item>
+        A minimal data definition language based on algebraic sum and product types.
+      </Item>
+      <Item>
+        Strong versioning as a core aspect of the language.
+      </Item>
+      <Item>
+        A small, easily auditable codebase with a heavy use of modularity for correctness.
+      </Item>
+      <Item>
+        An extensive automated test suite with high coverage.
+      </Item>
+      <Item>
+        A small footprint; the generated Java code consists of trivial record definitions and incredibly simple
+        and straightforward code to serialize and deserialize values.
+      </Item>
+      <Item>
+        Platform independence. No platform-dependent code is included in any form.
+      </Item>
+      <Item>
+        <LinkExternal target="https://www.osgi.org/">OSGi</LinkExternal>-ready
+      </Item>
+      <Item>
+        <LinkExternal target="https://en.wikipedia.org/wiki/Java_Platform_Module_System">JPMS</LinkExternal>-ready
+      </Item>
+      <Item>
+        ISC license
+      </Item>
+    </ListUnordered>
+  </FormalItem>
+
+</Section>

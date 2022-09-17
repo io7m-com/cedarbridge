@@ -1,0 +1,4 @@
+(package x.y.z)
+
+(variant U
+  [parameter A])

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:8:0"
+         id="32bb1b7b-6033-4a4c-94fc-78dc78448837"
+         title="Type Expressions">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      A <Term type="term">type expression</Term> yields a <Term type="term">type</Term> when
+      <Term type="term">evaluated</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Syntax" id="b77ecee0-9add-4182-b3c5-f1d0a75ecfd9">
+    <FormalItem title="Type Expression Syntax">
+      <Verbatim>
+        <xi:include href="ebnf/008_type_expr.ebnf"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Semantics" id="ff59ecee-af8c-42e3-8aa0-5ea348c69b6d">
+    <Paragraph>
+      A <Term type="term">type expression</Term> is an expression that, when <Term type="term">evaluated</Term>,
+      yields a <Term type="term">type</Term>. The evaluation of type expressions, ultimately, terminates in the
+      evaluation of a <Term type="term">type constructor</Term> that can take zero or more type parameters.
+      <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link> and
+      <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> statements declare new
+      type constructors. <Term type="term">Evaluation</Term> of type expressions implicitly occurs as part of
+      type-checking during compilation.
+    </Paragraph>
+    <Paragraph>
+      Types are categorized by <Term type="term">kind</Term>; a type constructor that takes
+      no parameters has kind <Term type="expression">*</Term>. A type constructor that takes one parameter has
+      kind <Term type="expression">* → *</Term>. Applying a type constructor to arguments conceptually reduces
+      the kind: A type constructor with kind <Term type="expression">* → * -> * -> *</Term> applied to three
+      arguments has kind <Term type="expression">*</Term>.
+    </Paragraph>
+    <Paragraph id="66f4a794-7697-4e69-82d5-27066d403f3d">
+      The <Term type="term">partial application</Term> of type constructors is not supported: It is an error
+      if the number of arguments supplied to a type constructor does not match the number of declared parameters
+      for the type constructor.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Type Rules" id="a579aa5e-34ee-44f5-8ad9-89d612d6b716">
+    <Paragraph>
+      The initial, empty type environment is well-formed, and adding a type to the environment that does not already
+      exist results in a well-formed type environment.
+    </Paragraph>
+    <FormalItem title="Initial">
+      <Verbatim>
+        <xi:include href="type/000_type_initial.txt"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      A <Link target="c543caf1-3bab-4b4e-b894-6b45835f436e">record</Link>
+      <Term type="expression">T</Term> declared with <Term type="expression">n</Term>
+      type parameters and any number of fields has kind <Term type="expression">*₀ → ... → *ₙ</Term>
+      and introduces <Term type="expression">T</Term> into the environment:
+    </Paragraph>
+    <FormalItem title="Record Type Rules">
+      <Verbatim>
+        <xi:include href="type/002_type_record.txt"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+
+    <Paragraph>
+      A <Link target="337610e0-ac40-492b-97f8-76dcefdf13b2">variant</Link> <Term type="expression">T</Term>
+      declared with <Term type="expression">n</Term> type parameters any number of cases has kind <Term
+      type="expression">*₀ → ... → *ₙ</Term> and introduces <Term type="expression">T</Term> into the environment:
+    </Paragraph>
+    <FormalItem title="Variant Type Rules">
+      <Verbatim>
+        <xi:include href="type/001_type_variant.txt"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+
+    <Paragraph id="2168e18e-88d5-4434-9a9e-07f489c836c7">
+      The application of a type constructor <Term type="expression">f</Term> that takes <Term type="expression">n-1</Term>
+      parameters to <Term type="expression">n-1</Term> type expressions (each of kind <Term type="expression">*</Term>)
+      is well-formed:
+    </Paragraph>
+    <FormalItem title="Type Application Rules">
+      <Verbatim>
+        <xi:include href="type/003_type_app.txt"
+                    parse="text"/>
+      </Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The list of provided arguments must be non-empty.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Examples">
+    <FormalItem title="Type Expressions Example">
+      <Verbatim><![CDATA[
+(record T
+  [parameter A]
+  [parameter B]
+  [field f0 A]
+  [field f1 B])
+
+(record U)
+
+T              ; Has kind * → * → *
+(T)            ; Error: T has kind * → * → * but no parameters were supplied
+(T U)          ; Error: T has kind * → * → * but only one parameter was supplied
+(T U U)        ; Has kind *
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+</Section>

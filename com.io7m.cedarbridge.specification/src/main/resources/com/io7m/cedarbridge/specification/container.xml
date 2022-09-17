@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         title="Container Protocol">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      This specification section defines a simple protocol for performing <Term type="term">version negotiation</Term>
+      for application protocols.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Dialogue">
+    <Paragraph>
+      The protocol assumes a configuration analogous to a <Term type="term">client</Term> and
+      <Term type="term">server</Term>. That is, one party (the <Term type="term">client</Term>) initiates a connection
+      to the other party (the <Term type="term">server</Term>). The two parties can then communicate over the
+      created two-way connection. A server and client communicating over the open internet using TCP would satisfy
+      this configuration. Alternatively, two microcontrollers communicating over
+      <LinkExternal target="https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter">UART</LinkExternal>
+      could also be made to satisfy this configuration. For the purposes of keeping the specification straightforward,
+      the initiator of the connection will be referred to as the <Term type="term">client</Term>, and the
+      other party will be referred to as the <Term type="term">server</Term>.
+    </Paragraph>
+    <Paragraph>
+      The dialogue between a client <Term type="term">c</Term> and server <Term type="term">s</Term> is as follows:
+    </Paragraph>
+    <FormalItem title="Dialogue">
+      <ListOrdered>
+        <Item>
+          <Term type="expression">c</Term> opens a connection <Term type="expression">p</Term> to
+          <Term type="expression">s</Term>.
+        </Item>
+        <Item>
+          <Term type="expression">s</Term> sends an <Link target="e39ec606-c511-4a9c-bb82-682485498e3a">Available</Link>
+          message to <Term type="expression">c</Term> over <Term type="expression">p</Term>.
+        </Item>
+        <Item>
+          <Term type="expression">c</Term> inspects the <Term type="type">Available</Term> message and picks an
+          appropriate protocol version. If no protocol version is acceptable,
+          <Term type="expression">c</Term> terminates <Term type="expression">p</Term>. If there is a protocol version
+          that <Term type="expression">c</Term> is prepared to accept, <Term type="expression">c</Term> sends a
+          <Link target="91ded986-888d-408c-af3a-c92e87d6ecf2">Use</Link> message to <Term type="expression">s</Term>
+          over <Term type="expression">p</Term>.
+        </Item>
+        <Item>
+          <Term type="expression">s</Term> inspects the <Term type="type">Use</Term> message and checks that
+          the requested version appears in the list that was presented in the original
+          <Term type="type">Available</Term> message. If the <Term type="type">Use</Term> message is unacceptable,
+          <Term type="expression">s</Term> sends a <Link target="e39ec606-c511-4a9c-bb82-682485498e3a">Response</Link>
+          message indicating the error over <Term type="expression">p</Term> and terminates <Term type="expression">
+          p</Term>. If the <Term type="type">Use</Term> message is acceptable,
+          <Term type="expression">s</Term> sends a <Link target="e39ec606-c511-4a9c-bb82-682485498e3a">Response</Link>
+          message indicating success over <Term type="expression">p</Term> and, from this point onwards, <Term
+          type="expression">c</Term> and <Term type="expression">s</Term> communicate exclusively using the
+          negotiated protocol.
+        </Item>
+      </ListOrdered>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Binary Format">
+    <Paragraph>
+      The messages described here are expected to be encoded to binary using
+      <Link target="d7376995-6958-4632-ade9-2d53cd3c8071">CCBE</Link>. However, certain exceptions have been made
+      in order to keep each message type at a fixed size. Protocols such as this container protocol constitute
+      a <LinkExternal target="https://en.wikipedia.org/wiki/Bootstrapping">bootstrapping</LinkExternal> problem in
+      that, if all of the messages were defined in <Term type="package">Cedarbridge</Term>,
+      the two communicating parties would have to speak <Term type="package">Cedarbridge</Term> in order to ask each
+      other if they can both speak <Term type="package">Cedarbridge</Term>. We instead use the
+      <Term type="package">Cedarbridge</Term> language to document the basic structure of the messages, but assume
+      that the protocol messages will be manually read, written, and parsed without necessarily using
+      <Term type="package">Cedarbridge</Term> compiler generated code. For this reason, the protocol does
+      <Term type="term">not</Term> use <Term type="package">Cedarbridge</Term>'s versioning facilities.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Message: Available" id="e39ec606-c511-4a9c-bb82-682485498e3a">
+    <FormalItem title="Available">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge c]
+
+[record ApplicationProtocolID
+  [field msb c:IntegerUnsigned64]
+  [field lsb c:IntegerUnsigned64]]
+
+[record Available
+  [field code                     c:IntegerUnsigned32]
+  [field containerProtocolMinimum c:IntegerUnsigned32]
+  [field containerProtocolMaximum c:IntegerUnsigned32]
+  [field reserved0                c:IntegerUnsigned32]
+
+  [field reserved1                c:IntegerUnsigned32]
+  [field reserved2                c:IntegerUnsigned32]
+  [field reserved3                c:IntegerUnsigned32]
+  [field reserved4                c:IntegerUnsigned32]
+
+  [field appProtocolId            c:ApplicationProtocolID]
+  [field appProtocolMinimum       c:IntegerUnsigned64]
+  [field appProtocolMaximum       c:IntegerUnsigned64]]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The value of the <Term type="expression">code</Term> field MUST be exactly
+      <Term type="constant">0x43420000</Term>.
+    </Paragraph>
+    <Paragraph>
+      The values of the <Term type="expression">containerProtocolMinimum</Term> and
+      <Term type="expression">containerProtocolMaximum</Term> fields define a half-open range describing the
+      range of supported container protocol versions. Currently, the only supported values of
+      <Term type="expression">containerProtocolMinimum</Term> and
+      <Term type="expression">containerProtocolMaximum</Term> are <Term type="constant">1</Term> and
+      <Term type="constant">1</Term>, respectively.
+      The value of the <Term type="expression">containerProtocolMinimum</Term> field MUST be ≤
+      <Term type="expression">containerProtocolMaximum</Term>.
+    </Paragraph>
+    <Paragraph>
+      The values of the <Term type="expression">reserved0</Term>, <Term type="expression">reserved1</Term>,
+      <Term type="expression">reserved2</Term>, <Term type="expression">reserved3</Term>, and
+      <Term type="expression">reserved4</Term> fields MUST be <Term type="constant">0</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">appProtocolId</Term> specifies the bits of a
+      <LinkExternal target="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</LinkExternal>
+      value that uniquely identifies the application protocol. The <Term type="package">Cedarbridge</Term>
+      compiler automatically generates these values for
+      <Link target="62659b04-0cc9-4e75-a396-bc6963442fb3">protocol</Link> declarations.
+    </Paragraph>
+    <Paragraph>
+      The values of the <Term type="expression">appProtocolMinimum</Term> and
+      <Term type="expression">appProtocolMaximum</Term> fields define a half-open range describing the
+      range of supported container protocol versions. The value of the
+      <Term type="expression">appProtocolMinimum</Term> field MUST be ≤
+      <Term type="expression">appProtocolMaximum</Term>.
+    </Paragraph>
+    <Paragraph>
+      The size of the <Term type="type">Available</Term> message, when encoded as a byte sequence, MUST be exactly
+      <Term type="constant">64</Term> bytes.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Message: Use" id="91ded986-888d-408c-af3a-c92e87d6ecf2">
+    <FormalItem title="Use">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge c]
+
+[record Use
+  [field code              c:IntegerUnsigned32]
+  [field containerProtocol c:IntegerUnsigned32]
+  [field appProtocolId     c:ApplicationProtocolID]
+  [field appProtocol       c:IntegerUnsigned64]]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The value of the <Term type="expression">code</Term> field MUST be exactly
+      <Term type="constant">0x43420001</Term>.
+    </Paragraph>
+    <Paragraph>
+      The value of the <Term type="expression">containerProtocol</Term> specifies the container protocol to be
+      used. Currently, the only supported value of <Term type="expression">containerProtocol</Term> is
+      <Term type="constant">1</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">appProtocolId</Term> specifies the bits of a
+      <LinkExternal target="https://en.wikipedia.org/wiki/Universally_unique_identifier">UUID</LinkExternal>
+      value that uniquely identifies the application protocol. The <Term type="package">Cedarbridge</Term>
+      compiler automatically generates these values for
+      <Link target="62659b04-0cc9-4e75-a396-bc6963442fb3">protocol</Link> declarations.
+    </Paragraph>
+    <Paragraph>
+      The value of the <Term type="expression">appProtocol</Term> field specifies the version of the
+      application protocol that will be used. The value of this field MUST be
+      <Term type="expression">appProtocolMinimum ≤ appProtocol ≤ appProtocolMaximum</Term>.
+    </Paragraph>
+    <Paragraph>
+      The size of the <Term type="type">Available</Term> message, when encoded as a byte sequence, MUST be exactly
+      <Term type="constant">32</Term> bytes.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Message: Response" id="505eb9d0-ec9e-4112-ad38-cbf6ed7e8c6a">
+    <FormalItem title="Response">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge c]
+
+[record Response
+  [field code    c:IntegerUnsigned32]
+  [field ok      c:IntegerUnsigned32]
+  [field message c:String]]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The value of the <Term type="expression">code</Term> field MUST be exactly
+      <Term type="constant">0x43420002</Term>.
+    </Paragraph>
+    <Paragraph>
+      The value of the <Term type="expression">ok</Term> field MUST be exactly
+      <Term type="constant">0</Term> if the client tried to use an unsupported protocol. The
+      value of the <Term type="expression">ok</Term> field MUST be exactly
+      <Term type="constant">1</Term> if the client tried to use a supported protocol.
+    </Paragraph>
+    <Paragraph>
+      The value of the <Term type="expression">message</Term> field provides a humanly-readable
+      message explaining why version negotiation failed.
+    </Paragraph>
+    <Paragraph>
+      The size of the <Term type="type">Response</Term> message, when encoded as a byte sequence, MUST be exactly
+      <Term type="constant">256</Term> bytes. Padding bytes with values equal to <Term type="constant">0x00</Term>
+      must be appended to the end of the structure if the <Term type="expression">message</Term>
+      field is shorter than <Term type="constant">244</Term> bytes.
+    </Paragraph>
+  </Subsection>
+
+</Section>

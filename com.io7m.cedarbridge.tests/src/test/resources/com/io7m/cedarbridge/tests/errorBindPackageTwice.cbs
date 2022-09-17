@@ -1,0 +1,3 @@
+(package com.io7m.cedarbridge)
+(import x.y.z b)
+(import a.b.c b)

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+
+  <entry key="errorCircularImport"><![CDATA[Circular import detected.
+  Package: {0}
+  Import path:
+{1}]]></entry>
+
+  <entry key="errorMissingFile"><![CDATA[Could not find the given package.
+  Package: {0}
+  Checked files:
+{1}]]></entry>
+
+  <entry key="errorFileUnexpectedPackage"><![CDATA[The compiled file did not contain the expected package.
+  Expected package: {0}
+  Compiled file:    {1}
+  Loaded packages:  {2}]]></entry>
+
+</properties>

@@ -1,0 +1,5 @@
+(package com.io7m.cedarbridge)
+
+(import x.y.z b)
+
+(record U [field x b:T])

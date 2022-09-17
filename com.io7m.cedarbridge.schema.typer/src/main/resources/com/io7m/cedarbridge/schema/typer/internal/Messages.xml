@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+
+  <entry key="errorType"><![CDATA[{0}:{1}:{2}: {3}
+{4}]]></entry>
+
+  <entry key="errorTypeWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+  Specification: {4}
+{5}]]></entry>
+
+  <entry key="errorTypeApplicationEmpty"><![CDATA[No arguments provided in application.]]></entry>
+
+  <entry key="errorTypeArgumentsIncorrect"><![CDATA[Incorrect number of arguments to type expression.
+  Type expression {0} takes {1} argument(s), but {2} were provided.]]></entry>
+
+  <entry key="errorTypeProtocolKind0"><![CDATA[Types within a protocol are not allowed to have parameters.
+  Type {0} takes {1} argument(s).]]></entry>
+
+</properties>

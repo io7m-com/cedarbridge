@@ -1,0 +1,5 @@
+(package x.y.z)
+
+[import a.b.c b]
+[record U]
+[record T [field x [b:T U]]]

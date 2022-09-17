@@ -1,0 +1,6 @@
+(package x.y.z)
+
+(import a.b.c b)
+
+(variant V
+  (case C [field r b:T]))

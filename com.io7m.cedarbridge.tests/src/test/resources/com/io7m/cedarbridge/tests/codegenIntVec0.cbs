@@ -1,0 +1,13 @@
+(package x)
+
+(import com.io7m.cedarbridge cb)
+
+(record IntVec
+  [field s8 cb:IntegerSigned8]
+  [field s16 cb:IntegerSigned16]
+  [field s32 cb:IntegerSigned32]
+  [field s64 cb:IntegerSigned64]
+  [field u8 cb:IntegerUnsigned8]
+  [field u16 cb:IntegerUnsigned16]
+  [field u32 cb:IntegerUnsigned32]
+  [field u64 cb:IntegerUnsigned64])

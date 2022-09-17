@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         tableOfContentsDepth="1"
+         id="fd6629ea-ed28-4acb-8401-17c8814ef433"
+         title="Package com.io7m.cedarbridge">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">com.io7m.cedarbridge</Term> package declares a set of generally useful types.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerUnsigned8" id="a8c8be72-935e-470f-b394-3672d895fa20">
+    <FormalItem title="Description">
+      <Verbatim>IntegerUnsigned8 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerUnsigned8</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[0, 255]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerUnsigned16" id="1fcb12a8-03bf-45a5-93fd-6896bda180aa">
+    <FormalItem title="Description">
+      <Verbatim>IntegerUnsigned16 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerUnsigned16</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[0, 65535]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerUnsigned32" id="20ad364d-7608-4b92-a5e7-cbaa06e69412">
+    <FormalItem title="Description">
+      <Verbatim>IntegerUnsigned32 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerUnsigned32</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[0, 4294967295]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerUnsigned64" id="ad7ed763-9c10-4b7d-9471-7e0d78c09033">
+    <FormalItem title="Description">
+      <Verbatim>IntegerUnsigned64 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerUnsigned64</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[0, 18446744073709551615]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerSigned8" id="e653cae8-f0b8-4767-96c1-c370397843f3">
+    <FormalItem title="Description">
+      <Verbatim>IntegerSigned8 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerSigned8</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[-128, 127]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerSigned16" id="34f11e2f-c489-4147-b167-71263b1d1bb1">
+    <FormalItem title="Description">
+      <Verbatim>IntegerSigned16 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerSigned16</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[-32768, 32767]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerSigned32" id="6f608a9a-1d0d-428a-a65b-17b73be35177">
+    <FormalItem title="Description">
+      <Verbatim>IntegerSigned32 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerSigned32</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[-2147483648, 2147483647]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="IntegerSigned64" id="d7c832e3-544e-4828-9e42-295efaa3ff4f">
+    <FormalItem title="Description">
+      <Verbatim>IntegerSigned64 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">IntegerSigned64</Term> type is an opaque type that can hold values in the range
+      <Term type="expression">[-9223372036854775808, 9223372036854775807]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="String" id="4cc29d61-b6c1-4dd5-be3c-b878e5ac2520">
+    <FormalItem title="Description">
+      <Verbatim>String : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">String</Term> type is an opaque type that can hold a sequence of at most
+      <Term type="expression">4294967295</Term> octets of UTF-8 encoded data.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="ByteArray" id="8ebd3337-82f6-4028-89eb-0a61fb42bde8">
+    <FormalItem title="Description">
+      <Verbatim>ByteArray : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">ByteArray</Term> type is an opaque type that can hold a sequence of at most
+      <Term type="expression">4294967295</Term> octets of data.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Float16" id="47c52df9-d862-4aaa-9040-f0a9ae725932">
+    <FormalItem title="Description">
+      <Verbatim>Float16 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Float16</Term> type is an opaque type that can hold a single
+      IEEE-754 Binary16 <LinkFootnote target="266978a2-52c7-49f1-ad3f-a387f7edb949"/> value.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Float32" id="e83e762a-b8c1-45c2-9024-b77085b8678c">
+    <FormalItem title="Description">
+      <Verbatim>Float32 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Float32</Term> type is an opaque type that can hold a single
+      IEEE-754 Binary32 <LinkFootnote target="266978a2-52c7-49f1-ad3f-a387f7edb949"/> value.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Float64" id="037e86d1-d215-4b86-a60f-e0f30d31398f">
+    <FormalItem title="Description">
+      <Verbatim>Float64 : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Float64</Term> type is an opaque type that can hold a single
+      IEEE-754 Binary64 <LinkFootnote target="266978a2-52c7-49f1-ad3f-a387f7edb949"/> value.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="List" id="e70b0c3d-1a0f-45a8-9b2b-67d8464aedef">
+    <FormalItem title="Description">
+      <Verbatim>List : * → *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">List</Term> type is an opaque type that can hold a sequence
+      of values of a type equal to the single type parameter.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Option" id="334274ef-06a0-4d20-8e01-ca1189a75c66">
+    <FormalItem title="Description">
+      <Verbatim>Option : * → *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Option</Term> type is an type that can hold zero or one values
+      of a type equal to the single type parameter. The type is equivalent to the following
+      variant declaration:
+    </Paragraph>
+    <FormalItem title="Option Type">
+      <Verbatim><![CDATA[
+(variant Option
+  [parameter A]
+  [case None]
+  [case Some (field value A)])]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="MapEntry" id="bbde69ad-d131-41ab-a35d-29edc189513d">
+    <FormalItem title="Description">
+      <Verbatim>MapEntry : * → * → *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">MapEntry</Term> type is a type used to hold a single entry in
+      a <Link target="fb9c0a9b-8b67-446c-86f7-9b943fddbcc6">Map</Link>. The type is equivalent to the following
+      record declaration:
+    </Paragraph>
+    <FormalItem title="MapEntry Type">
+      <Verbatim><![CDATA[
+(record MapEntry
+  [parameter K]
+  [parameter V]
+  [field key K]
+  [field value V])]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Map" id="fb9c0a9b-8b67-446c-86f7-9b943fddbcc6">
+    <FormalItem title="Description">
+      <Verbatim>Map : * → * → *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Map</Term> type is a type used to hold a sequence of
+      <Link target="bbde69ad-d131-41ab-a35d-29edc189513d">entries</Link>. The type is equivalent to the following
+      record declaration:
+    </Paragraph>
+    <FormalItem title="Map Type">
+      <Verbatim><![CDATA[
+(record Map
+  [parameter K]
+  [parameter V]
+  [field entries (List [MapEntry K V])])]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Footnote id="266978a2-52c7-49f1-ad3f-a387f7edb949">
+    IEEE Standard for Floating-Point Arithmetic (IEEE 754), or equivalently <Term type="constant">ISO/IEC
+    60559:2020</Term>.
+  </Footnote>
+
+</Section>

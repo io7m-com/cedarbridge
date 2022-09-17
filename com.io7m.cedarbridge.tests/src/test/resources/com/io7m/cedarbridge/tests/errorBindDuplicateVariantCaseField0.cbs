@@ -1,0 +1,8 @@
+(package com.io7m.cedarbridge)
+
+(record U)
+
+(variant T
+  [case X
+    (field x U)
+    (field x U)])

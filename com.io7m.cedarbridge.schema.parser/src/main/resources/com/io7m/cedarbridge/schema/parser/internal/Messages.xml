@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+
+<properties>
+  <entry key="errorParse"><![CDATA[{0}:{1}:{2}: {3}
+{4}
+  Object: {5}
+
+  Expected:
+    {6}]]></entry>
+
+  <entry key="errorParseWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+{4}
+  Object:        {5}
+  Specification: {6}
+  Expected:
+    {7}]]></entry>
+
+  <entry key="errorParseBasic"><![CDATA[{0}:{1}:{2}: {3}
+{4}]]></entry>
+
+  <entry key="errorParseBasicWithSpec"><![CDATA[{0}:{1}:{2}: {3}
+  Specification: {4}
+{5}]]></entry>
+
+  <entry key="errorDeclarationInvalid">Invalid package-level declaration.</entry>
+  <entry key="errorDeclarationUnrecognized">Unrecognized package-level declaration.</entry>
+  <entry key="errorDocumentationKeyword">Expected 'documentation' keyword.</entry>
+  <entry key="errorEmptyTypeApplication">Empty type application.</entry>
+  <entry key="errorFieldInvalid">Invalid field.</entry>
+  <entry key="errorFieldNameInvalid">Invalid field name.</entry>
+  <entry key="errorIO">I/O error.</entry>
+  <entry key="errorImportInvalid">Invalid import declaration.</entry>
+  <entry key="errorImportKeyword">Expected 'import' keyword.</entry>
+  <entry key="errorLanguageBadName">Unrecognized language name.</entry>
+  <entry key="errorLanguageBadVersion">Unrecognized or invalid language version.</entry>
+  <entry key="errorLanguageFirst">A language statement must be the first statement in a compilation unit, if present.</entry>
+  <entry key="errorPackageInvalid">Invalid package declaration.</entry>
+  <entry key="errorPackageKeyword">Expected 'package' keyword.</entry>
+  <entry key="errorPackageNameInvalid">Invalid package name.</entry>
+  <entry key="errorPackageNameMissing">No package name was declared.</entry>
+  <entry key="errorPackageNameMultiple">Multiple package names were declared.</entry>
+  <entry key="errorPackageShortNameInvalid">Invalid short package name.</entry>
+  <entry key="errorProtocolInvalidDeclaration">Invalid protocol declaration.</entry>
+  <entry key="errorProtocolVersionInvalidDeclaration">Invalid protocol version declaration.</entry>
+  <entry key="errorRecordInvalidDeclaration">Invalid record declaration.</entry>
+  <entry key="errorRecordInvalidName">Invalid record name.</entry>
+  <entry key="errorRecordInvalidTypeParameter">Invalid type parameter.</entry>
+  <entry key="errorRecordKeyword">Expected 'record' keyword.</entry>
+  <entry key="errorRecordUnrecognizedMember">Unrecognized record member declaration.</entry>
+  <entry key="errorSExpressionInvalid">Invalid S expression.</entry>
+  <entry key="errorTypeNameInvalid">Invalid type name.</entry>
+  <entry key="errorTypeParameterNameInvalid">Invalid type parameter name.</entry>
+  <entry key="errorTypePathInvalid">Invalid type path.</entry>
+  <entry key="errorUnexpectedExpressionForm">Unexpected expression form.</entry>
+  <entry key="errorVariantCaseInvalidDeclaration">Invalid variant case declaration.</entry>
+  <entry key="errorVariantCaseNameInvalid">Invalid variant case name.</entry>
+  <entry key="errorVariantInvalidDeclaration">Invalid variant declaration.</entry>
+  <entry key="errorVariantInvalidName">Invalid variant name.</entry>
+  <entry key="errorVariantInvalidTypeParameter">Invalid type parameter.</entry>
+  <entry key="errorVariantKeyword">Expected 'variant' keyword.</entry>
+  <entry key="errorVariantUnrecognizedMember">Unrecognized variant member declaration.</entry>
+
+  <entry key="objectDeclaration">Package-level declaration</entry>
+  <entry key="objectDocumentation">Documentation declaration</entry>
+  <entry key="objectField">Field</entry>
+  <entry key="objectFieldName">Field name</entry>
+  <entry key="objectImport">Import declaration</entry>
+  <entry key="objectLanguage">Language declaration</entry>
+  <entry key="objectPackage">Package declaration</entry>
+  <entry key="objectPackageName">Package name</entry>
+  <entry key="objectPackageShortName">Package short name</entry>
+  <entry key="objectProtocolDeclaration">Protocol declaration</entry>
+  <entry key="objectProtocolVersion">Protocol version declaration</entry>
+  <entry key="objectRecordDeclaration">Record declaration</entry>
+  <entry key="objectRecordMember">Record member</entry>
+  <entry key="objectRecordName">Record name</entry>
+  <entry key="objectTypeApplication">Type application</entry>
+  <entry key="objectTypeExpression">Type expression</entry>
+  <entry key="objectTypeName">Type name</entry>
+  <entry key="objectTypeParameter">Type parameter</entry>
+  <entry key="objectTypeParameterName">Type parameter name</entry>
+  <entry key="objectTypePath">Type path</entry>
+  <entry key="objectVariantCase">Variant case declaration</entry>
+  <entry key="objectVariantCaseName">Variant case name</entry>
+  <entry key="objectVariantDeclaration">Variant declaration</entry>
+  <entry key="objectVariantField">Variant field</entry>
+  <entry key="objectVariantFieldName">Variant field name</entry>
+  <entry key="objectVariantMember">Variant member</entry>
+  <entry key="objectVariantName">Variant name</entry>
+</properties>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns="urn:com.io7m.structural:8:0"
+         title="Concepts">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">Cedarbridge</Term> language is designed to describe <Term type="term">schemas</Term>
+      that describe <Term type="term">message-based protocols</Term>. Schemas consist of a set of
+      <Link target="8a1db50d-0fe8-4dff-ab57-7e1495b0b65e">packages</Link>, each containing
+      <Link target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link> and
+      <Link target="33a96116-eaba-4ec6-89fd-d5a75ab90e24">protocols</Link>. <Term type="term">Type declarations</Term>
+      express the structure of values exchanged in message protocols, and <Term type="term">protocol declarations</Term>
+      express which types are present in each defined version of a protocol.
+    </Paragraph>
+    <Paragraph>
+      This version of the specification describes the <Term type="package">Cedarbridge</Term> language
+      version <Term type="constant">1.0</Term>. This version of the language can be requested explicitly
+      by schema authors by using the <Link target="ab2e6eae-12bb-4338-800a-8d6b6b865c6e">language</Link> statement.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Compilation Units" id="d6ca89b3-5144-4012-b451-6a9f1571e0de">
+    <Paragraph>
+      The text of a <Term type="package">Cedarbridge</Term> schema is a combination of the texts of separate
+      <Term type="term">compilation units</Term>, where a <Term type="term">compilation unit</Term> typically
+      corresponds to a file in the operating system under
+      which the compiler is running.
+    </Paragraph>
+    <Paragraph>
+      <Term type="term">Compilation units</Term> consist of a series of <Link
+      target="d1cd60f0-8880-4754-964f-5b0489947c59">s-expressions</Link> separated by whitespace.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Schema Context" id="10d2a555-2bea-4eb1-9fa7-9614b382b051">
+    <Paragraph>
+      This specification makes references to a <Term type="term">schema context</Term>. The
+      <Term type="term">schema context</Term> can be thought of as the current state of the schema being constructed
+      during the execution of the language compiler. For example, the
+      <Link target="e4b13719-3c30-404c-b729-f429724f90b7">package</Link> statement modifies the
+      <Term type="term">schema context</Term> by introducing a new package name and setting the
+      new package as the <Term type="term">current package</Term> to which all subsequent statements will apply.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Statements" id="4d76def3-23ac-4a9a-9d52-b5db1fa490a9">
+    <Paragraph>
+      A <Term type="term">statement</Term> in the <Term type="package">Cedarbridge</Term> language can be seen as an
+      instruction that performs some action on the current <Term type="term">schema context</Term> (such as
+      introducing a new type, introducing a  new package, importing a package into the current scope, etc), yielding
+      a new context that may be changed in some manner.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Packages" id="8a1db50d-0fe8-4dff-ab57-7e1495b0b65e">
+    <Paragraph>
+      A <Term type="term">package</Term> is the top level organizational unit for schema objects. A package has a
+      unique fully-qualified name of the form:
+    </Paragraph>
+    <FormalItem title="Package Name">
+      <Verbatim><xi:include href="ebnf/000_package_name.ebnf" parse="text"/></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      An example of a valid package name is <Term type="expression">com.io7m.cedarbridge</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Types" id="6f6e50ac-83e9-4454-9329-149e8ca97cb8">
+    <Paragraph>
+      A <Term type="term">type</Term> in the <Term type="package">Cedarbridge</Term> language is a basic description of
+      the structure of a value. A type has a unique name within a package, and the format of valid type names is as follows:
+    </Paragraph>
+    <FormalItem title="Type Name">
+      <Verbatim><xi:include href="ebnf/001_type_name.ebnf" parse="text"/></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Protocols" id="33a96116-eaba-4ec6-89fd-d5a75ab90e24">
+    <Paragraph>
+      A <Term type="term">protocol</Term> in the <Term type="package">Cedarbridge</Term> language is a set of
+      <Term type="term">versions</Term>, each of which contains a set of <Link
+      target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link>. A type can be present in any number of protocols
+      and protocol versions concurrently. A protocol has a unique name within a package, and the format of valid
+      protocol names matches that of types.
+    </Paragraph>
+    <FormalItem title="Protocol (Type) Name">
+      <Verbatim><xi:include href="ebnf/001_type_name.ebnf" parse="text"/></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="Comments" id="0c319e5d-b5e9-47d0-9e6b-7f2acc451483">
+    <Paragraph>
+      The <Term type="package">Cedarbridge</Term> language uses the <Term type="constant">U+003B SEMICOLON</Term>
+      character to denote line comments. When encountered outside of a quoted string, any text between the
+      <Term type="constant">;</Term> character and the next end-of-line character is ignored.
+    </Paragraph>
+  </Subsection>
+
+</Section>

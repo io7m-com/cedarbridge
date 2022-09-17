@@ -1,0 +1,7 @@
+(package com.io7m.cedarbridge)
+
+(record U)
+
+(record T
+  [field x U]
+  [field x U])
