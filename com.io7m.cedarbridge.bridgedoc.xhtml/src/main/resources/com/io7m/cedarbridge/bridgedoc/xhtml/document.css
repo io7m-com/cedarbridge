@@ -79,14 +79,16 @@
 }
 .cbFieldsTable th
 {
-  border: 1px #ddd solid;
-  text-align: left;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  text-align:     left;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbFieldsTable td
 {
-  border: 1px #ddd solid;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbFieldsTable tr th:nth-child(1)
 {
@@ -104,14 +106,16 @@
 }
 .cbParameterTable th
 {
-  border: 1px #ddd solid;
-  text-align: left;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  text-align:     left;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbParameterTable td
 {
-  border: 1px #ddd solid;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbParameterTable tr th:nth-child(1)
 {
@@ -125,16 +129,33 @@
 }
 .cbProtocolTable th
 {
-  border: 1px #ddd solid;
-  text-align: left;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  text-align:     left;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbProtocolTable td
 {
-  border: 1px #ddd solid;
-  padding: 0.5em;
+  border:         1px #ddd solid;
+  vertical-align: top;
+  padding:        0.5em;
 }
 .cbProtocolTable tr th:nth-child(1)
 {
   width: 12em;
+}
+
+.cbBracketOpen,
+.cbBracketClose
+{
+  color: #aaa;
+}
+.cbBracketOpen {
+  margin-right: -0.5em;
+}
+.cbBracketClose {
+  margin-left: -0.5em;
+}
+.cbBracketTrailing {
+  margin-left: 0em;
 }
