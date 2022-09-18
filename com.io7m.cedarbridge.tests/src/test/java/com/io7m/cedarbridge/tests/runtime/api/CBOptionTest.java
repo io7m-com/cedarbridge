@@ -16,9 +16,13 @@
 
 package com.io7m.cedarbridge.tests.runtime.api;
 
+import com.io7m.cedarbridge.runtime.api.CBIntegerSigned64;
 import com.io7m.cedarbridge.runtime.api.CBIntegerUnsigned32;
 import com.io7m.cedarbridge.runtime.api.CBNone;
+import com.io7m.cedarbridge.runtime.api.CBOptionType;
 import com.io7m.cedarbridge.runtime.api.CBSome;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -55,6 +59,28 @@ public final class CBOptionTest
     assertEquals(
       "(CBNone)",
       String.format("%s", new CBNone<>())
+    );
+  }
+
+  @Property
+  public void toFromOptionIdentity(
+    final @ForAll long value)
+  {
+    final var actual =
+      CBOptionType.fromOptional(Optional.of(new CBIntegerSigned64(value)))
+        .asOptional()
+        .get()
+        .value();
+
+    assertEquals(Long.valueOf(value), actual);
+  }
+
+  @Test
+  public void toFromOptionIdentity()
+  {
+    assertEquals(
+      Optional.empty(),
+      CBOptionType.fromOptional(Optional.empty()).asOptional()
     );
   }
 }

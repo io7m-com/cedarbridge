@@ -34,4 +34,19 @@ public sealed interface CBOptionType<T extends CBSerializableType>
    */
 
   Optional<T> asOptional();
+
+  /**
+   * Convert the given Java optional value to an option value.
+   *
+   * @param opt The Java optional
+   * @param <T> The type of contained values
+   *
+   * @return The option value
+   */
+
+  static <T extends CBSerializableType> CBOptionType<T> fromOptional(
+    final Optional<T> opt)
+  {
+    return opt.isPresent() ? new CBSome<>(opt.get()) : new CBNone<>();
+  }
 }
