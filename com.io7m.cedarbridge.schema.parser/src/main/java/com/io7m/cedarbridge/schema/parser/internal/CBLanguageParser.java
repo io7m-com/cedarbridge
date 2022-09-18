@@ -19,9 +19,9 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTLanguage;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -65,7 +65,7 @@ public final class CBLanguageParser
 
   private static CBASTLanguage parseLanguage(
     final CBParseContextType context,
-    final SExpressionListType list)
+    final SList list)
     throws CBParseFailedException
   {
     if (list.size() != 4) {
@@ -84,21 +84,21 @@ public final class CBLanguageParser
       context.checkExpressionIs(
         list.get(1),
         SPEC_SECTION_LANGUAGE_NAME,
-        SExpressionSymbolType.class
+        SSymbol.class
       ).text();
 
     final var langMajorText =
       context.checkExpressionIs(
         list.get(2),
         SPEC_SECTION_VERSION_MAJOR,
-        SExpressionSymbolType.class
+        SSymbol.class
       ).text();
 
     final var langMinorText =
       context.checkExpressionIs(
         list.get(3),
         SPEC_SECTION_VERSION_MINOR,
-        SExpressionSymbolType.class
+        SSymbol.class
       ).text();
 
     if (!Objects.equals(langName, "cedarbridge")) {
@@ -176,7 +176,7 @@ public final class CBLanguageParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class
+          SList.class
         ));
     }
   }

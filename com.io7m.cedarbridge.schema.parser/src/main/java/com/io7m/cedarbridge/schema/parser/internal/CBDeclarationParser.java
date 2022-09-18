@@ -18,9 +18,9 @@ package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.ast.CBASTDeclarationType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +53,7 @@ public final class CBDeclarationParser
 
   private CBASTDeclarationType parseDeclaration(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
@@ -69,7 +69,7 @@ public final class CBDeclarationParser
       context.checkExpressionIs(
         expression.get(0),
         Optional.empty(),
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     switch (keyword.text()) {
@@ -163,7 +163,7 @@ public final class CBDeclarationParser
         subContext.checkExpressionIs(
           expression,
           Optional.empty(),
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }

@@ -22,9 +22,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageShortName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +59,7 @@ public final class CBImportParser
 
   private static CBASTImport parseImport(
     final CBParseContextType context,
-    final SExpressionListType list)
+    final SList list)
     throws CBParseFailedException
   {
     if (list.size() != 3) {
@@ -78,13 +78,13 @@ public final class CBImportParser
       context.checkExpressionIs(
         list.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
     final var packShort =
       context.checkExpressionIs(
         list.get(2),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     return new CBASTImport(
@@ -97,7 +97,7 @@ public final class CBImportParser
 
   private static CBASTPackageShortName parseShortName(
     final CBParseContextType context,
-    final SExpressionSymbolType packShort)
+    final SSymbol packShort)
     throws CBParseFailedException
   {
     try (var subContext =
@@ -118,7 +118,7 @@ public final class CBImportParser
 
   private static CBASTPackageName parsePackageName(
     final CBParseContextType context,
-    final SExpressionSymbolType packName)
+    final SSymbol packName)
     throws CBParseFailedException
   {
     try (var subContext =
@@ -150,7 +150,7 @@ public final class CBImportParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class
+          SList.class
         );
       return parseImport(subContext, list);
     }

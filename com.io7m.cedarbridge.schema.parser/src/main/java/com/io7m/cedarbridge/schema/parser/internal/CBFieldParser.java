@@ -19,8 +19,8 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
 
 import java.util.List;
 import java.util.Optional;
@@ -49,7 +49,7 @@ public final class CBFieldParser implements CBElementParserType<CBASTField>
 
   private static CBASTField parseField(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var expectingKind =
@@ -93,7 +93,7 @@ public final class CBFieldParser implements CBElementParserType<CBASTField>
       context.checkExpressionIs(
         expression,
         SPEC_SECTION,
-        SExpressionListType.class)
+        SList.class)
     );
   }
 }

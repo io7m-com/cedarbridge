@@ -22,8 +22,8 @@ import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTVariantCaseName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +68,7 @@ public final class CBNames
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION_FIELD_NAME,
-          SExpressionSymbolType.class
+          SSymbol.class
         );
 
       try {
@@ -100,7 +100,7 @@ public final class CBNames
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION_TYPE_PARAMETER_NAME,
-          SExpressionSymbolType.class
+          SSymbol.class
         );
       try {
         return CBASTNames.typeParameterName(expression, symbol.text());
@@ -132,7 +132,7 @@ public final class CBNames
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION_TYPE_NAME,
-          SExpressionSymbolType.class
+          SSymbol.class
         );
 
       try {
@@ -151,7 +151,7 @@ public final class CBNames
 
   static CBASTVariantCaseName parseVariantCaseName(
     final CBParseContextType context,
-    final SExpressionSymbolType expression)
+    final SSymbol expression)
     throws CBParseFailedException
   {
     final var expectingKind =
@@ -165,7 +165,7 @@ public final class CBNames
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION_VARIANT_CASE_NAME,
-          SExpressionSymbolType.class
+          SSymbol.class
         );
       try {
         return CBASTNames.variantCaseName(expression, symbol.text());
