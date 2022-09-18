@@ -11,6 +11,21 @@
     </Paragraph>
   </Subsection>
 
+  <Subsection title="Boolean" id="7c4d5acc-e471-4c79-8751-d514c30bb282">
+    <FormalItem title="Description">
+      <Verbatim>Boolean : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Boolean</Term> type holds simple true or false values.
+    </Paragraph>
+    <FormalItem title="Option Type">
+      <Verbatim><![CDATA[
+(variant Boolean
+  [case False]
+  [case True])]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
   <Subsection title="IntegerUnsigned8" id="a8c8be72-935e-470f-b394-3672d895fa20">
     <FormalItem title="Description">
       <Verbatim>IntegerUnsigned8 : *</Verbatim>

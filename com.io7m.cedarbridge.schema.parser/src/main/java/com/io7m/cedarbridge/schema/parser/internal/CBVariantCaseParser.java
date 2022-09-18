@@ -22,9 +22,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariantCase;
 import com.io7m.cedarbridge.schema.ast.CBASTVariantMemberType;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public final class CBVariantCaseParser
 
   private static CBASTTypeVariantCase parseVariantCase(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var items = new ArrayList<>();
@@ -75,7 +75,7 @@ public final class CBVariantCaseParser
       context.checkExpressionIs(
         expression.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     final var name =
@@ -88,7 +88,7 @@ public final class CBVariantCaseParser
         items.add(parseCaseMember(
           context,
           context.checkExpressionIs(
-            subExpr, SPEC_SECTION, SExpressionListType.class)
+            subExpr, SPEC_SECTION, SList.class)
         ));
       } catch (final CBParseFailedException e) {
         // Ignore this particular exception
@@ -110,7 +110,7 @@ public final class CBVariantCaseParser
 
   private static CBASTVariantMemberType parseCaseMember(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     if (expression.size() == 0) {
@@ -126,7 +126,7 @@ public final class CBVariantCaseParser
       context.checkExpressionIs(
         expression.get(0),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     return switch (start.text()) {
@@ -168,7 +168,7 @@ public final class CBVariantCaseParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }

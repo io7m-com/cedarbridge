@@ -18,8 +18,8 @@ package com.io7m.cedarbridge.schema.parser.internal;
 
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.jlexing.core.LexicalPosition;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.net.URI;
 import java.util.List;
@@ -94,7 +94,7 @@ public interface CBParseContextType extends AutoCloseable
    * @throws CBParseFailedException On errors
    */
 
-  SExpressionSymbolType checkExpressionIsKeyword(
+  SSymbol checkExpressionIsKeyword(
     SExpressionType expression,
     Optional<UUID> specSection,
     String name,

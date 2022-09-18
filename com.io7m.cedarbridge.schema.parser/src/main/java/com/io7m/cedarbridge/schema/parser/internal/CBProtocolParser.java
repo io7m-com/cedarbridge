@@ -21,9 +21,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -56,7 +56,7 @@ public final class CBProtocolParser
 
   private static CBASTProtocolDeclaration parseProtocol(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var items = new ArrayList<CBASTProtocolVersion>();
@@ -81,7 +81,7 @@ public final class CBProtocolParser
       context.checkExpressionIs(
         expression.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     final var name =
@@ -127,14 +127,14 @@ public final class CBProtocolParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }
 
   private static CBASTProtocolVersion parseVersionActual(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     if (expression.size() < 2) {
@@ -150,7 +150,7 @@ public final class CBProtocolParser
       context.checkExpressionIs(
         expression.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     final var items = new ArrayList<CBASTTypeName>();
@@ -206,7 +206,7 @@ public final class CBProtocolParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }

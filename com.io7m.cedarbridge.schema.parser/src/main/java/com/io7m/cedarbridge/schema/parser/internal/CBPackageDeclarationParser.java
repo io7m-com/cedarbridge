@@ -21,9 +21,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTNames;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTPackageName;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.List;
 import java.util.Optional;
@@ -59,7 +59,7 @@ public final class CBPackageDeclarationParser
 
   private static CBASTPackageDeclaration parsePackage(
     final CBParseContextType context,
-    final SExpressionListType list)
+    final SList list)
     throws CBParseFailedException
   {
     if (list.size() != 2) {
@@ -82,7 +82,7 @@ public final class CBPackageDeclarationParser
       context.checkExpressionIs(
         list.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     return new CBASTPackageDeclaration(
@@ -94,7 +94,7 @@ public final class CBPackageDeclarationParser
 
   private static CBASTPackageName parsePackageName(
     final CBParseContextType context,
-    final SExpressionSymbolType packName)
+    final SSymbol packName)
     throws CBParseFailedException
   {
     try (var subContext =
@@ -126,7 +126,7 @@ public final class CBPackageDeclarationParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }

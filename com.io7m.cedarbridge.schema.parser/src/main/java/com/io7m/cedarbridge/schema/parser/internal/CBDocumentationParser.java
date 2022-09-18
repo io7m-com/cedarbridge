@@ -19,10 +19,10 @@ package com.io7m.cedarbridge.schema.parser.internal;
 import com.io7m.cedarbridge.schema.ast.CBASTDocumentation;
 import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionQuotedStringType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SQuotedString;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +58,7 @@ public final class CBDocumentationParser
 
   private static CBASTDocumentation parseDocumentation(
     final CBParseContextType context,
-    final SExpressionListType list)
+    final SList list)
     throws CBParseFailedException
   {
     final var expressionCount = list.size();
@@ -82,14 +82,14 @@ public final class CBDocumentationParser
       context.checkExpressionIs(
         list.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     final var text =
       context.checkExpressionIs(
         list.get(2),
         SPEC_SECTION,
-        SExpressionQuotedStringType.class
+        SQuotedString.class
       ).text();
 
     return new CBASTDocumentation(
@@ -113,7 +113,7 @@ public final class CBDocumentationParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class
+          SList.class
         ));
     }
   }

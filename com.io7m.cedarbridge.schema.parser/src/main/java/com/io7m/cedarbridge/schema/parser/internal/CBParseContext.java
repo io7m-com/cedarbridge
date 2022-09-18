@@ -22,8 +22,8 @@ import com.io7m.cedarbridge.schema.names.CBSpecificationLocation;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
 import com.io7m.cedarbridge.strings.api.CBStringsType;
 import com.io7m.jlexing.core.LexicalPosition;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.net.URI;
 import java.util.LinkedList;
@@ -156,14 +156,14 @@ public final class CBParseContext
     }
 
     @Override
-    public SExpressionSymbolType checkExpressionIsKeyword(
+    public SSymbol checkExpressionIsKeyword(
       final SExpressionType expression,
       final Optional<UUID> specSection,
       final String name,
       final String errorCode)
       throws CBParseFailedException
     {
-      if (expression instanceof final SExpressionSymbolType symbol) {
+      if (expression instanceof final SSymbol symbol) {
         if (!Objects.equals(symbol.text(), name)) {
           throw this.failed(expression, IS_NOT_FATAL, specSection, errorCode);
         }

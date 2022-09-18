@@ -386,6 +386,21 @@ public final class CBParserTest
     }
   }
 
+  @Test
+  public void testBug12()
+    throws Exception
+  {
+    try (var stream = this.stream("bug12.cbs")) {
+      try (var parser = this.parser(stream)) {
+        assertThrows(CBParseFailedException.class, parser::execute);
+        final var e = this.takeError();
+        assertEquals("errorSExpressionInvalid", e.errorCode());
+        assertEquals(94, e.lexical().line());
+        assertEquals(0, this.errors.size());
+      }
+    }
+  }
+
   private InputStream stream(
     final String name)
     throws IOException

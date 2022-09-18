@@ -23,9 +23,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTMutableUserData;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeParameterName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +58,7 @@ public final class CBRecordParser
 
   private static CBASTElementType parseRecordMemberParameter(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var expectingKind =
@@ -82,7 +82,7 @@ public final class CBRecordParser
 
   private static CBASTTypeRecord parseRecord(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var items = new ArrayList<>();
@@ -107,7 +107,7 @@ public final class CBRecordParser
       context.checkExpressionIs(
         expression.get(1),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     final var name =
@@ -164,14 +164,14 @@ public final class CBRecordParser
         subContext.checkExpressionIs(
           subExpression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }
 
   private static CBASTElementType parseRecordMemberActual(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     if (expression.size() < 1) {
@@ -187,7 +187,7 @@ public final class CBRecordParser
       context.checkExpressionIs(
         expression.get(0),
         SPEC_SECTION,
-        SExpressionSymbolType.class
+        SSymbol.class
       );
 
     return switch (start.text()) {
@@ -228,7 +228,7 @@ public final class CBRecordParser
         subContext.checkExpressionIs(
           expression,
           SPEC_SECTION,
-          SExpressionListType.class)
+          SList.class)
       );
     }
   }

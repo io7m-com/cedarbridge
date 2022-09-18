@@ -713,6 +713,86 @@ public final class CBJavaCodeGeneratorTest
     verify(this.context).writeUTF8("A String");
   }
 
+  @Test
+  public void testCodegenBoolean0_0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenBoolean0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(0));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeVariantIndex(0);
+  }
+
+  @Test
+  public void testCodegenBoolean0_1()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenBoolean0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(1));
+
+    final var x = f.deserialize(this.context);
+    f.serialize(this.context, x);
+
+    verify(this.context).writeVariantIndex(1);
+  }
+
+  @Test
+  public void testCodegenBoolean0_2()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenBoolean0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data",
+      "x.DataSerializer",
+      "x.DataSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var f =
+      this.createFactory(loader, "x.DataSerializerFactory");
+
+    when(Integer.valueOf(this.context.readVariantIndex()))
+      .thenReturn(Integer.valueOf(2));
+
+    assertThrows(IllegalStateException.class, () -> {
+      f.deserialize(this.context);
+    });
+  }
+
   private void registerSerializers(
     final CBSerializerCollection serializers)
   {

@@ -33,6 +33,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -89,20 +90,21 @@ public final class CBExpressionSources implements CBExpressionSourceFactoryType
       new CBRecordingUnicodeCharacterReader(reader);
 
     final var lexerConfiguration =
-      JSXLexerConfiguration.builder()
-        .setComments(EnumSet.of(JSXLexerComment.COMMENT_SEMICOLON))
-        .setFile(uri)
-        .setNewlinesInQuotedStrings(true)
-        .setSquareBrackets(true)
-        .build();
+      new JSXLexerConfiguration(
+        true,
+        true,
+        Optional.of(uri),
+        EnumSet.of(JSXLexerComment.COMMENT_SEMICOLON),
+        1
+      );
 
     final var lexer =
       this.lexers.create(lexerConfiguration, loggingReader);
 
     final var parserConfiguration =
-      JSXParserConfiguration.builder()
-        .setPreserveLexical(true)
-        .build();
+      new JSXParserConfiguration(
+        true
+      );
 
     final var parser =
       this.parsers.create(parserConfiguration, lexer);

@@ -22,9 +22,9 @@ import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.parser.api.CBParseFailedException;
-import com.io7m.jsx.SExpressionListType;
-import com.io7m.jsx.SExpressionSymbolType;
 import com.io7m.jsx.SExpressionType;
+import com.io7m.jsx.SExpressionType.SList;
+import com.io7m.jsx.SExpressionType.SSymbol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +55,7 @@ public final class CBTypeExpressionParser
 
   private static CBASTTypeNamed parseTypePath(
     final CBParseContextType context,
-    final SExpressionSymbolType expression)
+    final SSymbol expression)
     throws CBParseFailedException
   {
     final var expectingKind =
@@ -120,13 +120,13 @@ public final class CBTypeExpressionParser
 
     try (var subContext =
            context.openExpectingOneOf(expectingKind, expectingShapes)) {
-      if (expression instanceof SExpressionSymbolType) {
-        return parseTypePath(context, (SExpressionSymbolType) expression);
+      if (expression instanceof SSymbol) {
+        return parseTypePath(context, (SSymbol) expression);
       }
 
-      if (expression instanceof SExpressionListType) {
+      if (expression instanceof SList) {
         return this.parseTypeApplication(
-          context, (SExpressionListType) expression);
+          context, (SList) expression);
       }
 
       throw subContext.failed(
@@ -139,7 +139,7 @@ public final class CBTypeExpressionParser
 
   private CBASTTypeExpressionType parseTypeApplication(
     final CBParseContextType context,
-    final SExpressionListType expression)
+    final SList expression)
     throws CBParseFailedException
   {
     final var expectingKind =
@@ -164,7 +164,7 @@ public final class CBTypeExpressionParser
           subContext.checkExpressionIs(
             expression.get(0),
             SPEC_SECTION,
-            SExpressionSymbolType.class)
+            SSymbol.class)
         );
 
       final var subExpressions = new ArrayList<CBASTTypeExpressionType>();

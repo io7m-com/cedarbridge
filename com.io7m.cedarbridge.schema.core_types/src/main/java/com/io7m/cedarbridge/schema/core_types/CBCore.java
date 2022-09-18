@@ -86,6 +86,17 @@ public final class CBCore
     }
 
     {
+      final var bool = builder.createVariant("Boolean");
+      bool.setExternalName(externalPackageName, "CBBooleanType");
+      bool.setDocumentation(List.of("A boolean value."));
+
+      final var falseV = bool.createCase("False");
+      falseV.setDocumentation(List.of("A false value."));
+      final var trueV = bool.createCase("True");
+      trueV.setDocumentation(List.of("A true value."));
+    }
+
+    {
       final var option = builder.createVariant("Option");
       option.setExternalName(externalPackageName, "CBOptionType");
       option.addTypeParameter("T", List.of("The type of optional values."));
