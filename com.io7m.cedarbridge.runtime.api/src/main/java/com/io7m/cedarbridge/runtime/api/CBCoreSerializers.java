@@ -31,6 +31,7 @@ public final class CBCoreSerializers
       new CBSerializerCollection(
         "com.io7m.cedarbridge",
         List.of(
+          new CBBooleanSerializers(),
           new CBByteArraySerializers(),
           new CBFloat16Serializers(),
           new CBFloat32Serializers(),
