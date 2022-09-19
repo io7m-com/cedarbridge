@@ -816,6 +816,32 @@ public final class CBJavaCodeGeneratorTest
     assertEquals(1, ff.typeParameters().size());
   }
 
+  @Test
+  public void testBug15()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bug15.cbs");
+
+    final var loader = this.loadClasses(
+      "x.IdA1AdminPermissionSerializerFactory",
+      "x.IdA1AdminPermissionSerializer",
+      "x.IdA1AdminPermission",
+      "x.IdA1AdminPermission$UserBan",
+      "x.IdA1AdminPermission$UserRead",
+      "x.IdA1AdminPermission$UserWrite",
+      "x.IdA1AdminPermission$UserCreate",
+      "x.IdA1AdminPermission$UserDelete",
+      "x.IdA1AdminPermission$AuditRead",
+      "x.IdA1AdminPermission$AdminRead",
+      "x.IdA1AdminPermission$AdminWriteSelf",
+      "x.IdA1AdminPermission$AdminWrite",
+      "x.IdA1AdminPermission$AdminDelete",
+      "x.IdA1AdminPermission$AdminCreate",
+      "x.IdA1AdminPermission$AdminBan"
+    );
+  }
+
   private void registerSerializers(
     final CBSerializerCollection serializers)
   {

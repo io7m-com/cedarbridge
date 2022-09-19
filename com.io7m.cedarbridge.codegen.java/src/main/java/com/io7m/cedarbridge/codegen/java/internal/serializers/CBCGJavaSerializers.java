@@ -418,15 +418,14 @@ public final class CBCGJavaSerializers
       final var type = types.get(index);
       final var valueClass = dataTypeNameOf(type.declaration());
       method.beginControlFlow(
-        "if (value instanceof $T)",
+        "if (value instanceof $T c)",
         valueClass
       );
       method.addStatement(
         "context.writeVariantIndex($L)", Integer.valueOf(index));
       method.addStatement(
-        "this.serializer$L.serialize(context, ($T) value)",
-        type.declaration().name(),
-        valueClass
+        "this.serializer$L.serialize(context, c)",
+        type.declaration().name()
       );
       method.addStatement("return");
       method.endControlFlow();
@@ -454,15 +453,15 @@ public final class CBCGJavaSerializers
     for (final var caseV : type.cases()) {
       final var conditional =
         method.beginControlFlow(
-          "if (value instanceof $T)",
-          CBCGJavaTypeNames.dataClassNameOfCase(caseV)
+          "if (value instanceof $T c)",
+          dataTypeNameOfCase(caseV)
         );
 
-      conditional.addStatement(
-        "serialize$L(context, ($T) value)",
-        caseV.name(),
-        dataTypeNameOfCase(caseV)
-      );
+      method.addStatement(
+        "context.writeVariantIndex($T.VARIANT_INDEX)",
+        CBCGJavaTypeNames.dataClassNameOfCase(caseV));
+
+      conditional.addStatement("serialize$L(context, c)", caseV.name());
       conditional.addStatement("return");
       conditional.endControlFlow();
     }
