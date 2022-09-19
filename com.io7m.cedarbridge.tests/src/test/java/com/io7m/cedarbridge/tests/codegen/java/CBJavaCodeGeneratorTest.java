@@ -793,6 +793,29 @@ public final class CBJavaCodeGeneratorTest
     });
   }
 
+  @Test
+  public void testBug14()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bug14.cbs");
+
+    final var loader = this.loadClasses(
+      "x.IdA1Page",
+      "x.IdA1PageSerializer",
+      "x.IdA1PageSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var ffc =
+      loader.loadClass("x.IdA1PageSerializerFactory");
+    final var ff =
+      instantiateFactory(ffc);
+
+    assertEquals(1, ff.typeParameters().size());
+  }
+
   private void registerSerializers(
     final CBSerializerCollection serializers)
   {
