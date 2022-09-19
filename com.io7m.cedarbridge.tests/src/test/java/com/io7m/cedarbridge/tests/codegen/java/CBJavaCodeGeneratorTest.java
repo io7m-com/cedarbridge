@@ -793,6 +793,55 @@ public final class CBJavaCodeGeneratorTest
     });
   }
 
+  @Test
+  public void testBug14()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bug14.cbs");
+
+    final var loader = this.loadClasses(
+      "x.IdA1Page",
+      "x.IdA1PageSerializer",
+      "x.IdA1PageSerializerFactory"
+    );
+
+    this.registerSerializers(CBCoreSerializers.get());
+
+    final var ffc =
+      loader.loadClass("x.IdA1PageSerializerFactory");
+    final var ff =
+      instantiateFactory(ffc);
+
+    assertEquals(1, ff.typeParameters().size());
+  }
+
+  @Test
+  public void testBug15()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bug15.cbs");
+
+    final var loader = this.loadClasses(
+      "x.IdA1AdminPermissionSerializerFactory",
+      "x.IdA1AdminPermissionSerializer",
+      "x.IdA1AdminPermission",
+      "x.IdA1AdminPermission$UserBan",
+      "x.IdA1AdminPermission$UserRead",
+      "x.IdA1AdminPermission$UserWrite",
+      "x.IdA1AdminPermission$UserCreate",
+      "x.IdA1AdminPermission$UserDelete",
+      "x.IdA1AdminPermission$AuditRead",
+      "x.IdA1AdminPermission$AdminRead",
+      "x.IdA1AdminPermission$AdminWriteSelf",
+      "x.IdA1AdminPermission$AdminWrite",
+      "x.IdA1AdminPermission$AdminDelete",
+      "x.IdA1AdminPermission$AdminCreate",
+      "x.IdA1AdminPermission$AdminBan"
+    );
+  }
+
   private void registerSerializers(
     final CBSerializerCollection serializers)
   {

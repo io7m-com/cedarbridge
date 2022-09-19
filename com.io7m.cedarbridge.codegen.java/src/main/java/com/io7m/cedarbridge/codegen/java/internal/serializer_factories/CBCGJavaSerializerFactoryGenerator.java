@@ -23,6 +23,7 @@ import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorException;
 import com.io7m.cedarbridge.runtime.api.CBAbstractSerializerFactory;
 import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
+import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.jodist.ClassName;
 import com.io7m.jodist.JavaFile;
 import com.io7m.jodist.MethodSpec;
@@ -31,7 +32,9 @@ import com.io7m.jodist.TypeSpec;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.dataTypeNameOf;
 import static com.io7m.cedarbridge.codegen.java.internal.CBCGJavaTypeNames.serializerFactoryClassNameOf;
@@ -96,16 +99,25 @@ public final class CBCGJavaSerializerFactoryGenerator
     final var constructor =
       createConstructor(type);
 
-    final var classDefinition =
-      TypeSpec.classBuilder(serializerClassName)
-        .addModifiers(FINAL, PUBLIC)
-        .addSuperinterface(parameterizedSuperinterfaceName)
-        .superclass(parameterizedSuperclassName)
-        .addTypeVariables(createTypeVariables(type.parameters()))
-        .addMethod(constructor)
-        .addMethod(CBCGSerializerInstantiations.generateInstantiationMethod(type))
-        .build();
+    final var classBuilder =
+      TypeSpec.classBuilder(serializerClassName);
 
+    final var typeParameters =
+      type.parameters();
+
+    classBuilder.addModifiers(FINAL, PUBLIC)
+      .addSuperinterface(parameterizedSuperinterfaceName)
+      .superclass(parameterizedSuperclassName)
+      .addTypeVariables(createTypeVariables(typeParameters))
+      .addMethod(constructor)
+      .addMethod(CBCGSerializerInstantiations.generateInstantiationMethod(type));
+
+    if (!typeParameters.isEmpty()) {
+      classBuilder.addMethod(createTypeParametersMethod(typeParameters));
+    }
+
+    final var classDefinition =
+      classBuilder.build();
 
     final var javaFile =
       JavaFile.builder(pack.name(), classDefinition)
@@ -116,5 +128,23 @@ public final class CBCGJavaSerializerFactoryGenerator
     } catch (final IOException e) {
       throw new CBSPICodeGeneratorException(e);
     }
+  }
+
+  private static MethodSpec createTypeParametersMethod(
+    final List<CBTypeParameterType> typeParameters)
+  {
+    final var names =
+      typeParameters.stream()
+        .map(t -> "\"%s\"".formatted(t.name()))
+        .collect(Collectors.joining(", "));
+
+    final var methodBuilder =
+      MethodSpec.methodBuilder("typeParameters")
+        .addModifiers(PUBLIC)
+        .addAnnotation(Override.class)
+        .returns(ParameterizedTypeName.get(List.class, String.class));
+
+    methodBuilder.addStatement("return $T.of(" + names + ")", List.class);
+    return methodBuilder.build();
   }
 }

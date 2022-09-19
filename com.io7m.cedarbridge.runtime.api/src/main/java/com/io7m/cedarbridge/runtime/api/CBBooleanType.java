@@ -31,4 +31,18 @@ public sealed interface CBBooleanType
    */
 
   boolean asBoolean();
+
+  /**
+   * A boolean from the given boolean value.
+   *
+   * @param b The Java boolean
+   *
+   * @return The boolean
+   */
+
+  static CBBooleanType fromBoolean(
+    final boolean b)
+  {
+    return b ? new CBTrue() : new CBFalse();
+  }
 }

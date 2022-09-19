@@ -51,7 +51,7 @@
       However, these expressions are not valid and will cause a parse error:
     </Paragraph>
 
-    <FormalItem title="Valid Parentheses/Brackets">
+    <FormalItem title="Invalid Parentheses/Brackets">
       <Verbatim><![CDATA[(language cedarbridge 1 0]
 [language cedarbridge 1 0)
 ]]></Verbatim>

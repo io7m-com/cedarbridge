@@ -1,0 +1,10 @@
+[package x]
+
+[import com.io7m.cedarbridge cb]
+
+[record IdA1Page
+  [parameter T]
+  [field items [cb:List T]]
+  [field pageIndex cb:IntegerUnsigned32]
+  [field pageCount cb:IntegerUnsigned32]
+  [field pageFirstOffset cb:IntegerUnsigned64]]

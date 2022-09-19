@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.tests</artifactId>
 
@@ -131,6 +131,14 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik-engine</artifactId>
     </dependency>
   </dependencies>
 

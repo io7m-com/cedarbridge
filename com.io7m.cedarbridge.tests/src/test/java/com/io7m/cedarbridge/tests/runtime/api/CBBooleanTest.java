@@ -16,8 +16,11 @@
 
 package com.io7m.cedarbridge.tests.runtime.api;
 
+import com.io7m.cedarbridge.runtime.api.CBBooleanType;
 import com.io7m.cedarbridge.runtime.api.CBFalse;
 import com.io7m.cedarbridge.runtime.api.CBTrue;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -52,6 +55,16 @@ public final class CBBooleanTest
     assertEquals(
       "(CBFalse)",
       String.format("%s", new CBFalse())
+    );
+  }
+
+  @Property
+  public void testIdentity(
+    final @ForAll boolean x)
+  {
+    assertEquals(
+      Boolean.valueOf(x),
+      Boolean.valueOf(CBBooleanType.fromBoolean(x).asBoolean())
     );
   }
 }
