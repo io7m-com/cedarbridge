@@ -13,7 +13,7 @@
 
   <Subsection title="Overview">
     <Paragraph>
-      The <Term type="statement">documentation</Term> specifies a paragraph of documentation for an element.
+      The <Term type="statement">documentation</Term> statement specifies a paragraph of documentation for an element.
     </Paragraph>
   </Subsection>
 

@@ -419,7 +419,7 @@ encode(F64, x) =
       <Link target="57d7a6f1-e12f-42e1-adab-79a7cd70efe0">CCBE</Link>:
     </Paragraph>
     <FormalItem title="Cedarbridge ↔ CCBE">
-      <Table>
+      <Table type="genericTable">
         <Columns>
           <Column>Cedarbridge</Column>
           <Column>CCBE</Column>

@@ -113,3 +113,28 @@
 {
   border-right: none;
 }
+
+.genericTable th
+{
+  text-align: left;
+  padding:    0.5em;
+}
+.genericTable td
+{
+  padding:      0.5em;
+  border-top:   1px solid #eee;
+  border-right: 1px solid #eee;
+  vertical-align: top;
+}
+.genericTable td:nth-child(1)
+{
+  width: 8em;
+}
+.genericTable td:nth-child(2)
+{
+
+}
+.genericTable td:last-child
+{
+  border-right: none;
+}
