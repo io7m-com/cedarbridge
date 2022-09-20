@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.5</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.exprsrc.api</artifactId>
 
