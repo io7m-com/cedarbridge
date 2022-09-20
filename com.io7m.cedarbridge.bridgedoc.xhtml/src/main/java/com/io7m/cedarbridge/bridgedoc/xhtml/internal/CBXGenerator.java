@@ -736,24 +736,31 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     final CBTypeDeclarationType type,
     final List<CBFieldType> fields)
   {
+    final var d = documentedPack.document;
+    if (fields.isEmpty()) {
+      final var p = d.createElementNS(XHTML, "p");
+      p.appendChild(d.createTextNode("The record type has no fields."));
+      return p;
+    }
+
     final var table =
-      documentedPack.document.createElementNS(XHTML, "table");
+      d.createElementNS(XHTML, "table");
 
     table.setAttribute("class", "cbFieldsTable");
 
     {
       final var thead =
-        documentedPack.document.createElementNS(XHTML, "thead");
+        d.createElementNS(XHTML, "thead");
       table.appendChild(thead);
 
       final var tr =
-        documentedPack.document.createElementNS(XHTML, "tr");
+        d.createElementNS(XHTML, "tr");
       final var tname =
-        documentedPack.document.createElementNS(XHTML, "th");
+        d.createElementNS(XHTML, "th");
       final var ttype =
-        documentedPack.document.createElementNS(XHTML, "th");
+        d.createElementNS(XHTML, "th");
       final var tdesc =
-        documentedPack.document.createElementNS(XHTML, "th");
+        d.createElementNS(XHTML, "th");
 
       tname.setTextContent("Name");
       ttype.setTextContent("Type");
@@ -767,21 +774,21 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
 
     {
       final var tbody =
-        documentedPack.document.createElementNS(XHTML, "tbody");
+        d.createElementNS(XHTML, "tbody");
       table.appendChild(tbody);
 
       for (final var field : fields) {
         final var tr =
-          documentedPack.document.createElementNS(XHTML, "tr");
+          d.createElementNS(XHTML, "tr");
         final var tname =
-          documentedPack.document.createElementNS(XHTML, "td");
+          d.createElementNS(XHTML, "td");
         final var ttype =
-          documentedPack.document.createElementNS(XHTML, "td");
+          d.createElementNS(XHTML, "td");
         final var tdesc =
-          documentedPack.document.createElementNS(XHTML, "td");
+          d.createElementNS(XHTML, "td");
 
         final var anchorName =
-          documentedPack.document.createElementNS(XHTML, "a");
+          d.createElementNS(XHTML, "a");
         anchorName.setTextContent(field.name());
 
         final var owner = field.fieldOwner();
@@ -799,11 +806,11 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
 
         tname.appendChild(anchorName);
         ttype.appendChild(
-          processTypeExpression(documentedPack.document, pack, field.type())
+          processTypeExpression(d, pack, field.type())
         );
         tdesc.appendChild(
           processDocumentationInline(
-            documentedPack.document,
+            d,
             field.documentation())
         );
 
