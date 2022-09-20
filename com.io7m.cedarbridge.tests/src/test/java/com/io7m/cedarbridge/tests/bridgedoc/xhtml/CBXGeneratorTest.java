@@ -34,13 +34,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBXGeneratorTest
 {
@@ -49,6 +52,15 @@ public final class CBXGeneratorTest
   private static List<Path> document(
     final List<Path> files,
     final Path outputDirectory)
+    throws Exception
+  {
+    return document(files, outputDirectory, Optional.empty());
+  }
+
+  private static List<Path> document(
+    final List<Path> files,
+    final Path outputDirectory,
+    final Optional<String> customStyle)
     throws Exception
   {
     final var languageName =
@@ -85,7 +97,7 @@ public final class CBXGeneratorTest
       compiler.execute();
 
     final var docGeneratorConfiguration =
-      new CBDocGeneratorConfiguration(outputDirectory);
+      new CBDocGeneratorConfiguration(outputDirectory, customStyle);
 
     final var docGenerator =
       docGeneratorFactory.createGenerator(docGeneratorConfiguration);
@@ -131,7 +143,7 @@ public final class CBXGeneratorTest
         CBXGeneratorTest.class, this.directory, "chat.cbs");
 
     final var results = document(List.of(file), this.directory);
-    assertEquals(2, results.size());
+    assertEquals(4, results.size());
 
     this.validate();
   }
@@ -145,7 +157,7 @@ public final class CBXGeneratorTest
         CBXGeneratorTest.class, this.directory, "pastebin.cbs");
 
     final var results = document(List.of(file), this.directory);
-    assertEquals(2, results.size());
+    assertEquals(4, results.size());
 
     this.validate();
   }
@@ -176,8 +188,48 @@ public final class CBXGeneratorTest
         CBXGeneratorTest.class, this.directory, "Admin1.cbs");
 
     final var results = document(List.of(file), this.directory);
-    assertEquals(2, results.size());
+    assertEquals(4, results.size());
 
     this.validate();
+
+    {
+      final var text = Files.readString(results.get(0));
+      assertTrue(text.contains("cedarbridge-document.css"));
+      assertTrue(text.contains("cedarbridge-reset.css"));
+    }
+
+    {
+      final var text = Files.readString(results.get(1));
+      assertTrue(text.contains("cedarbridge-document.css"));
+      assertTrue(text.contains("cedarbridge-reset.css"));
+    }
+  }
+
+  @Test
+  public void testAdmin1Custom()
+    throws Exception
+  {
+    final var file =
+      CBTestDirectories.resourceOf(
+        CBXGeneratorTest.class, this.directory, "Admin1.cbs");
+
+    final var results = document(List.of(file), this.directory, Optional.of("piltdown"));
+    assertEquals(4, results.size());
+
+    this.validate();
+
+    {
+      final var text = Files.readString(results.get(0));
+      assertTrue(text.contains("cedarbridge-document.css"));
+      assertTrue(text.contains("cedarbridge-reset.css"));
+      assertTrue(text.contains("piltdown.css"));
+    }
+
+    {
+      final var text = Files.readString(results.get(1));
+      assertTrue(text.contains("cedarbridge-document.css"));
+      assertTrue(text.contains("cedarbridge-reset.css"));
+      assertTrue(text.contains("piltdown.css"));
+    }
   }
 }

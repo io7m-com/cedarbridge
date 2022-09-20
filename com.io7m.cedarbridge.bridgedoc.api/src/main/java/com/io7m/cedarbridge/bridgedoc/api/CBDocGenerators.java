@@ -92,7 +92,10 @@ public final class CBDocGenerators implements CBDocGeneratorDirectoryType
   private static CBSPIDocGeneratorConfiguration convertConfiguration(
     final CBDocGeneratorConfiguration configuration)
   {
-    return new CBSPIDocGeneratorConfiguration(configuration.outputDirectory());
+    return new CBSPIDocGeneratorConfiguration(
+      configuration.outputDirectory(),
+      configuration.customStyle()
+    );
   }
 
   @Override

@@ -42,6 +42,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ import java.util.stream.Stream;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
+import static java.nio.file.StandardOpenOption.CREATE;
+import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
 import static javax.xml.transform.OutputKeys.ENCODING;
 import static javax.xml.transform.OutputKeys.INDENT;
 import static javax.xml.transform.OutputKeys.METHOD;
@@ -122,10 +125,33 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
         files.add(this.serializePackage(d));
       }
 
+      files.add(this.writeCSS("cedarbridge-document.css"));
+      files.add(this.writeCSS("cedarbridge-reset.css"));
+
       return new CBSPIDocGeneratorResult(List.copyOf(files));
     } catch (final Exception e) {
       throw new CBSPIDocGeneratorException(e);
     }
+  }
+
+  private Path writeCSS(
+    final String name)
+    throws IOException
+  {
+    final var path =
+      "/com/io7m/cedarbridge/bridgedoc/xhtml/%s".formatted(name);
+    final var outputFile =
+      this.configuration.outputDirectory()
+        .resolve(name);
+
+    try (var output =
+           Files.newOutputStream(outputFile, CREATE, TRUNCATE_EXISTING)) {
+      try (var input = CBXGenerator.class.getResourceAsStream(path)) {
+        input.transferTo(output);
+        output.flush();
+      }
+    }
+    return outputFile;
   }
 
   private Path serializePackage(
@@ -201,7 +227,7 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
       final var style = document.createElementNS(XHTML, "link");
       style.setAttribute("rel", "stylesheet");
       style.setAttribute("type", "text/css");
-      style.setAttribute("href", "reset.css");
+      style.setAttribute("href", "cedarbridge-reset.css");
       head.appendChild(style);
     }
 
@@ -209,9 +235,17 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
       final var style = document.createElementNS(XHTML, "link");
       style.setAttribute("rel", "stylesheet");
       style.setAttribute("type", "text/css");
-      style.setAttribute("href", "document.css");
+      style.setAttribute("href", "cedarbridge-document.css");
       head.appendChild(style);
     }
+
+    this.configuration.customStyle().ifPresent(styleName -> {
+      final var style = document.createElementNS(XHTML, "link");
+      style.setAttribute("rel", "stylesheet");
+      style.setAttribute("type", "text/css");
+      style.setAttribute("href", "%s.css".formatted(styleName));
+      head.appendChild(style);
+    });
 
     {
       final var title = document.createElementNS(XHTML, "title");
@@ -1003,9 +1037,15 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     }
 
     for (final var caseV : var.cases()) {
+      final var kw = d.createElementNS(XHTML, "span");
+      kw.setAttribute("class", "cbKeyword");
+      kw.setTextContent("case");
+
       final var e0 = d.createElementNS(XHTML, "div");
       e0.setAttribute("class", "cbTypeOverviewVariantCaseLine");
-      e0.appendChild(d.createTextNode("[case " + caseV.name()));
+      e0.appendChild(bracketOpen(d, '['));
+      e0.appendChild(kw);
+      e0.appendChild(d.createTextNode(caseV.name()));
 
       for (final var field : caseV.fields()) {
         final var a = d.createElementNS(XHTML, "a");
@@ -1014,14 +1054,14 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
           anchorPlus(var, "%s_%s".formatted(caseV.name(), field.name())));
         a.setTextContent(field.name());
 
-        final var kw = d.createElementNS(XHTML, "span");
-        kw.setAttribute("class", "cbKeyword");
-        kw.setTextContent("field");
+        final var fieldKw = d.createElementNS(XHTML, "span");
+        fieldKw.setAttribute("class", "cbKeyword");
+        fieldKw.setTextContent("field");
 
         final var e1 = d.createElementNS(XHTML, "div");
         e1.setAttribute("class", "cbTypeOverviewFieldLine");
         e1.appendChild(bracketOpen(d, '['));
-        e1.appendChild(kw);
+        e1.appendChild(fieldKw);
         e1.appendChild(a);
         e1.appendChild(processTypeExpression(d, pack, field.type()));
         e1.appendChild(bracketClose(d, ']', false));
@@ -1042,36 +1082,32 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
   }
 
   private static Element processTypeExpression(
-    final Document document,
+    final Document d,
     final CBPackageType currentPackage,
     final CBTypeExpressionType type)
   {
     if (type instanceof CBTypeExpressionApplication app) {
-      final var e =
-        document.createElementNS(XHTML, "span");
-      e.appendChild(document.createTextNode("["));
-      e.appendChild(processTypeExpression(
-        document,
-        currentPackage,
-        app.target()));
+      final var e = d.createElementNS(XHTML, "span");
+      e.appendChild(bracketOpen(d, '['));
+      e.appendChild(processTypeExpression(d, currentPackage, app.target()));
       for (final var ex : app.arguments()) {
-        e.appendChild(processTypeExpression(document, currentPackage, ex));
+        e.appendChild(processTypeExpression(d, currentPackage, ex));
       }
-      e.appendChild(document.createTextNode("]"));
+      e.appendChild(bracketClose(d, ']', false));
       return e;
     }
 
     if (type instanceof CBTypeExprParameterType exprParam) {
       final var param = exprParam.parameter();
       final var e =
-        document.createElementNS(XHTML, "a");
+        d.createElementNS(XHTML, "a");
       e.setAttribute("href", anchorPlus(param.owner(), param.name()));
       e.setTextContent(param.name());
       return e;
     }
 
     if (type instanceof CBTypeExprNamedType named) {
-      final var e = document.createElementNS(XHTML, "a");
+      final var e = d.createElementNS(XHTML, "a");
       final var targetType = named.declaration();
       final var targetOwner = targetType.owner();
       if (Objects.equals(targetOwner, currentPackage)) {
