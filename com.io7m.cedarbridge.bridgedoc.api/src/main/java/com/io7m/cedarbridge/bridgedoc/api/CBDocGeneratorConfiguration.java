@@ -18,22 +18,27 @@ package com.io7m.cedarbridge.bridgedoc.api;
 
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Configuration information for documentation generators.
  *
  * @param outputDirectory The directory to which documentation is written
+ * @param customStyle     The name of the custom style to use
  */
 public record CBDocGeneratorConfiguration(
-  Path outputDirectory)
+  Path outputDirectory,
+  Optional<String> customStyle)
 {
   /**
    * Configuration information for documentation generators.
    *
    * @param outputDirectory The directory to which documentation is written
+   * @param customStyle     The name of the custom style to use
    */
   public CBDocGeneratorConfiguration
   {
     Objects.requireNonNull(outputDirectory, "outputDirectory");
+    Objects.requireNonNull(customStyle, "customStyle");
   }
 }

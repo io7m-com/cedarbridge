@@ -30,6 +30,7 @@ import com.io7m.claypot.core.CLPCommandContextType;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
@@ -74,6 +75,13 @@ public final class CBCommandDocument extends CLPAbstractCommand
     description = "The language name used to select a documentation generator"
   )
   private String languageName;
+
+  @Parameter(
+    names = "--custom-style",
+    required = false,
+    description = "The name of the custom style used for documentation"
+  )
+  private String customStyle;
 
   /**
    * Construct a command.
@@ -134,7 +142,10 @@ public final class CBCommandDocument extends CLPAbstractCommand
     }
 
     final var docGeneratorConfiguration =
-      new CBDocGeneratorConfiguration(this.output);
+      new CBDocGeneratorConfiguration(
+        this.output,
+        Optional.ofNullable(this.customStyle)
+      );
 
     final var docGenerator =
       docGeneratorFactory.createGenerator(docGeneratorConfiguration);

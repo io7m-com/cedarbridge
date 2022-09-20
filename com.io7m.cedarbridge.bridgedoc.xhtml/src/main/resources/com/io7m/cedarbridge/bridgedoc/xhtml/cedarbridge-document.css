@@ -99,6 +99,16 @@
   width: 12em;
 }
 
+.cbFieldsTable tr td:nth-child(1)
+{
+  font-family: monospace;
+}
+.cbFieldsTable tr td:nth-child(2)
+{
+  font-family: monospace;
+}
+
+
 .cbParameterTable
 {
   width:           100%;
@@ -120,6 +130,10 @@
 .cbParameterTable tr th:nth-child(1)
 {
   width: 12em;
+}
+.cbParameterTable tr td:nth-child(1)
+{
+  font-family: monospace;
 }
 
 .cbProtocolTable
@@ -143,6 +157,10 @@
 .cbProtocolTable tr th:nth-child(1)
 {
   width: 12em;
+}
+.cbProtocolTable tr td:nth-child(1)
+{
+  font-family: monospace;
 }
 
 .cbBracketOpen,
