@@ -166,4 +166,18 @@ public final class CBXGeneratorTest
     final var proc = new XSProcessors();
     proc.create(request);
   }
+
+  @Test
+  public void testAdmin1()
+    throws Exception
+  {
+    final var file =
+      CBTestDirectories.resourceOf(
+        CBXGeneratorTest.class, this.directory, "Admin1.cbs");
+
+    final var results = document(List.of(file), this.directory);
+    assertEquals(2, results.size());
+
+    this.validate();
+  }
 }
