@@ -1,0 +1,10 @@
+[language cedarbridge 1 0]
+
+[package x.y.z]
+
+[record U]
+
+[record T
+  [document x "Invalid!"]
+  [field x U]
+]

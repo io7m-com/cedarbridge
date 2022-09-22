@@ -16,6 +16,10 @@
 
 package com.io7m.cedarbridge.schema.compiler.api;
 
+import com.io7m.cedarbridge.errors.CBError;
+
+import java.util.function.Consumer;
+
 /**
  * A factory of compilers.
  */
@@ -32,4 +36,17 @@ public interface CBSchemaCompilerFactoryType
 
   CBSchemaCompilerType createCompiler(
     CBSchemaCompilerConfiguration configuration);
+
+  /**
+   * Create a compiler for the given configuration.
+   *
+   * @param configuration The compiler configuration
+   * @param errorConsumer An error consumer function
+   *
+   * @return A new compiler
+   */
+
+  CBSchemaCompilerType createCompiler(
+    CBSchemaCompilerConfiguration configuration,
+    Consumer<CBError> errorConsumer);
 }

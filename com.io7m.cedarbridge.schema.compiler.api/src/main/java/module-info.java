@@ -23,6 +23,7 @@ module com.io7m.cedarbridge.schema.compiler.api
   requires static org.osgi.annotation.bundle;
   requires static org.osgi.annotation.versioning;
 
+  requires transitive com.io7m.cedarbridge.errors;
   requires transitive com.io7m.cedarbridge.schema.compiled;
   requires transitive com.io7m.cedarbridge.schema.loader.api;
 
