@@ -91,7 +91,8 @@ public final class CBExpressionSource implements CBExpressionSourceType
     Objects.requireNonNull(position, "position");
 
     final int lineNumber = position.line();
-    final var current = this.showLineFor(lineNumber);
+    final var current =
+      this.showLineFor(Math.max(0, lineNumber - 1));
     if (current.isPresent()) {
       final var builder = new StringBuilder(current.get());
       builder.append(System.lineSeparator());

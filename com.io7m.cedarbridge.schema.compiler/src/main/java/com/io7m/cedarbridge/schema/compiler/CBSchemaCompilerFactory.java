@@ -97,6 +97,17 @@ public final class CBSchemaCompilerFactory
       }
     };
 
+    return this.createCompiler(configuration, errorConsumer);
+  }
+
+  @Override
+  public CBSchemaCompilerType createCompiler(
+    final CBSchemaCompilerConfiguration configuration,
+    final Consumer<CBError> errorConsumer)
+  {
+    Objects.requireNonNull(configuration, "configuration");
+    Objects.requireNonNull(errorConsumer, "errorConsumer");
+
     return this.factory.createNewCompiler(
       errorConsumer,
       configuration,
