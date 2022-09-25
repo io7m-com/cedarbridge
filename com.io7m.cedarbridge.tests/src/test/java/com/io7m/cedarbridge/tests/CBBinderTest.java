@@ -393,8 +393,8 @@ public final class CBBinderTest
       final var v0 = t.versions().get(0);
       assertEquals(0, v0.version().longValue());
 
-      final var t0 = v0.types().get(0);
-      this.checkHaveSeenBefore(t0);
+      v0.typesRemoved().forEach(this::checkHaveSeenBefore);
+      v0.typesAdded().forEach(this::checkHaveSeenBefore);
     }
 
     assertEquals(0, this.errors.size());
@@ -432,6 +432,55 @@ public final class CBBinderTest
         (CBBindingExternal) fType.userData().get(CBBindingType.class);
 
       assertSame(rec, fBind.type());
+    }
+
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testOK2()
+    throws Exception
+  {
+    final var otherPack = new CBFakePackage("x.y.z");
+    final var rec = new CBFakeRecord("T", 0);
+    otherPack.addType(rec);
+    this.loader.register(otherPack);
+
+    final var pack = this.bind("bindOk2.cbs");
+
+    assertEquals(0, pack.imports().size());
+
+    final var types = pack.types();
+    assertEquals(2, types.size());
+
+    final var proto = pack.protocols();
+    assertEquals(1, proto.size());
+
+    {
+      final var v = proto.get(0).versions().get(0);
+      assertEquals(2, v.typesAdded().size());
+      assertEquals(0, v.typesRemoved().size());
+
+      {
+        final var t = v.typesAdded().get(0);
+        assertEquals("A", t.text());
+      }
+
+      {
+        final var t = v.typesAdded().get(1);
+        assertEquals("B", t.text());
+      }
+    }
+
+    {
+      final var v = proto.get(0).versions().get(1);
+      assertEquals(0, v.typesAdded().size());
+      assertEquals(1, v.typesRemoved().size());
+
+      {
+        final var t = v.typesRemoved().get(0);
+        assertEquals("B", t.text());
+      }
     }
 
     assertEquals(0, this.errors.size());

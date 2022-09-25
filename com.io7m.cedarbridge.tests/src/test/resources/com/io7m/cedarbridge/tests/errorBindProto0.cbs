@@ -1,4 +1,4 @@
 (package x.y.z)
 
 (protocol T
-  [version 0 U])
+  [version 0 [types-added U]])

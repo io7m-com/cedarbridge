@@ -3,5 +3,5 @@
 (record U)
 
 (protocol T
-  [version 0 U]
-  [version 0 U])
+  [version 0 [types-added U]]
+  [version 0 [types-added U]])

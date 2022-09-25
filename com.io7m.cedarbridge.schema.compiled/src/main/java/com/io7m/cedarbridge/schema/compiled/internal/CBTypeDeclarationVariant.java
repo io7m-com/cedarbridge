@@ -124,6 +124,11 @@ public final class CBTypeDeclarationVariant implements CBVariantType
   {
     Objects.requireNonNull(caseV, "caseV");
 
+    Preconditions.checkPreconditionV(
+      this.cases.size() < 255,
+      "Number of cases must be <= 255"
+    );
+
     final var fName = caseV.name();
     Preconditions.checkPreconditionV(
       this.cases().stream()

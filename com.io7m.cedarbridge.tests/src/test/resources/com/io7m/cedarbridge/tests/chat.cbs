@@ -37,9 +37,10 @@
 [documentation Chat "The chat protocol."]
 [protocol Chat
   [version 1
-    ChatCommandJoin
-    ChatCommandSpeak
-    ChatEventJoined
-    ChatEventLeft
-    ChatEventSpoke
-    ChatEventError]]
+    [types-added
+      ChatCommandJoin
+      ChatCommandSpeak
+      ChatEventJoined
+      ChatEventLeft
+      ChatEventSpoke
+      ChatEventError]]]

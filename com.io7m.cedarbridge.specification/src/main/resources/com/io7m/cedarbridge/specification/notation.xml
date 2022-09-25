@@ -227,7 +227,7 @@
       <LinkExternal target="https://en.wikipedia.org/wiki/Propositional_logic">propositional logic</LinkExternal>:
     </Paragraph>
     <FormalItem title="Propositional Logic">
-      <Table>
+      <Table type="genericTable">
         <Columns>
           <Column>Notation</Column>
           <Column>Description</Column>
@@ -294,7 +294,7 @@
       type-system-specific and is usually described when the rules are given.
     </Paragraph>
 
-    <FormalItem title="Type Rule Notation">
+    <FormalItem title="Type Rule Notation" type="genericTable">
       <Table>
         <Columns>
           <Column>Notation</Column>

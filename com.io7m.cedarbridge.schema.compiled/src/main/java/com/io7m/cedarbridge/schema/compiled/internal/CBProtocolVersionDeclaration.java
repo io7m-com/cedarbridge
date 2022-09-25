@@ -18,12 +18,14 @@ package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
+import com.io7m.jaffirm.core.Preconditions;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 
@@ -34,10 +36,9 @@ import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeEx
 public final class CBProtocolVersionDeclaration
   implements CBProtocolVersionDeclarationType
 {
-  private final List<CBTypeExprNamedType> typesRead;
   private final BigInteger version;
   private final CBProtocolDeclarationType owner;
-  private final List<CBTypeExprNamedType> types;
+  private final Set<CBTypeExprNamedType> types;
 
   /**
    * Construct a version declaration.
@@ -55,9 +56,7 @@ public final class CBProtocolVersionDeclaration
     this.version =
       Objects.requireNonNull(inVersion, "version");
     this.types =
-      new ArrayList<>();
-    this.typesRead =
-      Collections.unmodifiableList(this.types);
+      new HashSet<>();
   }
 
   @Override
@@ -73,9 +72,11 @@ public final class CBProtocolVersionDeclaration
   }
 
   @Override
-  public List<CBTypeExprNamedType> types()
+  public List<CBTypeExprNamedType> typesInOrder()
   {
-    return this.typesRead;
+    return this.types.stream()
+      .sorted(Comparator.comparing(o -> o.declaration().name()))
+      .toList();
   }
 
   /**
@@ -87,6 +88,11 @@ public final class CBProtocolVersionDeclaration
   public void addType(
     final CBTypeExprNamedType type)
   {
+    Preconditions.checkPreconditionV(
+      this.types.size() < 255,
+      "Number of types must be <= 255"
+    );
+
     this.types.add(type);
   }
 }

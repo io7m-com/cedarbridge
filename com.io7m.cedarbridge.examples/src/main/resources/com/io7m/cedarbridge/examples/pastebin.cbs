@@ -55,10 +55,11 @@
 [documentation Paste "The pastebin protocol."]
 [protocol Paste
   [version 1
-    PasteCreate
-    PasteCreated
-    PasteDelete
-    PasteDeleted
-    PasteGet
-    PasteGetResult
-    Error]]
+    [types-added
+      PasteCreate
+      PasteCreated
+      PasteDelete
+      PasteDeleted
+      PasteGet
+      PasteGetResult
+      Error]]]

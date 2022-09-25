@@ -44,25 +44,85 @@
     <Paragraph id="404f0595-a150-4baf-b98b-37109250d8bd">
       A protocol statement declares a contiguous ordered set of <Term type="term">versions</Term>, with each
       <Term type="term">version</Term> naming a set of <Link target="6f6e50ac-83e9-4454-9329-149e8ca97cb8">types</Link>
-      that are included within that version. The intersections of the sets of types between versions are allowed to
+      that are included within that version by nature of being added to or removed from the previous version.
+      Accordingly, the intersections of the sets of types between versions are allowed to
       be non-empty. That is, for versions <Term type="expression">v</Term> and <Term type="expression">w</Term>,
       if <Term type="expression">P(v)</Term> is the set of types in version <Term type="expression">v</Term> and
       <Term type="expression">P(w)</Term> is the set of types in version <Term type="expression">w</Term>, then
       it is not an error if <Term type="expression">P(v) ∩ P(w) ≠ ∅</Term>.
     </Paragraph>
+    <Paragraph>
+      A <Term type="expression">(types-added ...)</Term> declaration adds a set of types to a protocol version
+      relative to the previous version.
+    </Paragraph>
+    <Paragraph>
+      A <Term type="expression">(types-removed ...)</Term> declaration removes a set of types from a protocol version
+      relative to the previous version.
+    </Paragraph>
+    <Paragraph>
+      A <Term type="expression">(types-removed-all)</Term> declaration is a convenient declaration that removes
+      all types from a protocol version. It is equivalent to a <Term type="expression">(types-removed ...)</Term>
+      declaration where the declaration names <Term type="term">all</Term> the types that are present in the previous
+      version.
+    </Paragraph>
     <Paragraph id="15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a">
       Each type named in each protocol <Term type="term">version</Term> must have kind <Term type="expression">*</Term>.
     </Paragraph>
     <Paragraph>
-      The declaration order of <Term type="term">types</Term> within a <Term type="term">version</Term> is significant;
-      changing the order of <Term type="statement">type</Term> declarations will change the semantics and serialized
-      form of the protocol.
+      For each protocol version <Term type="expression">vc</Term>, additions and removals are processed as follows:
+      Let <Term type="expression">tp</Term> be the set of types present in the version <Term type="expression">vp</Term>
+      that is the version immediately previous to <Term type="expression">vc</Term>. If <Term type="expression">vc</Term>
+      is the first version in the protocol, <Term type="expression">tp = ∅</Term>. All the types in all of the
+      <Term type="expression">(types-added ...)</Term> declarations in <Term type="expression">vc</Term> are
+      collected into the <Term type="term">addition</Term> set <Term type="expression">ta</Term>.
+      All the types in all of the
+      <Term type="expression">(types-removed ...)</Term> declarations in <Term type="expression">vc</Term> are
+      collected into the <Term type="term">removal</Term> set <Term type="expression">tr</Term>.
+      If a <Term type="expression">(types-removed-all)</Term> declaration is
+      present, then <Term type="expression">tr = tp</Term>.
+      Then, for each type <Term type="expression">r</Term> in <Term type="expression">tr</Term>,
+      <Term type="expression">r</Term> is removed from
+      <Term type="expression">tp</Term>.
+      Then, for each type
+      <Term type="expression">a</Term> in <Term type="expression">ta</Term>,
+      <Term type="expression">a</Term> is added to <Term type="expression">tp</Term>. <Term type="expression">tp</Term>
+      is now considered to be the set of types present in <Term type="expression">vc</Term>.
+    </Paragraph>
+    <Paragraph id="200ef52c-2863-468d-9056-45e29a6e93dc">
+      It is an error if the set of types in a version is empty after all additions and removals have been
+      processed.
+    </Paragraph>
+    <Paragraph id="7715beef-680d-4f29-b418-9f79e24c599b">
+      It is an error if a type named by a <Term type="expression">(types-removed ...)</Term> declaration
+      is not present in the protocol version prior to additions and removals being processed. That is, it is not
+      valid to attempt to remove a type from a protocol version when that type is not present in the protocol
+      version in the first place.
+    </Paragraph>
+    <Paragraph id="78e0481d-8da4-426f-bbce-cfba8f636f0d">
+      It is an error if a type named by a <Term type="expression">(types-added ...)</Term> declaration
+      is already present in the protocol version prior to additions and removals being processed. That is, it is not
+      valid to attempt to redundantly add a type to a protocol version when that type is already present in the protocol
+      version.
+    </Paragraph>
+    <Paragraph id="c2ea4d3a-8854-4621-abb2-1154bd861b63">
+      It is an error if a given protocol version contains <Term type="expression">&gt; 255</Term> types.
+    </Paragraph>
+    <Paragraph>
+      The declaration order of <Term type="term">type</Term> additions and removals within a
+      <Term type="term">version</Term> is
+      NOT significant; changing the order of <Term type="statement">version</Term> declarations will not change the
+      semantics or serialized form of the protocol as the declarations <Term type="term">MUST</Term> be reordered
+      by the compiler into ascending lexicographical order of the type names.
+    </Paragraph>
+    <Paragraph id="0f1809c1-9828-497e-bb57-c3b40c82e051">
+      The first <Term type="term">version</Term> in a protocol cannot have any
+      <Term type="expression">(types-removed ...)</Term> declarations.
     </Paragraph>
     <Paragraph>
       The declaration order of <Term type="term">versions</Term> within a <Term type="term">protocol</Term> is
       NOT significant; changing the order of <Term type="statement">version</Term> declarations will not change the
-      semantics or serialized form of the protocol as the declarations are expected to be internally ordered by their
-      declared version number.
+      semantics or serialized form of the protocol as the declarations <Term type="term">MUST</Term> be reordered
+      by the compiler into ascending order by their declared version number.
     </Paragraph>
   </Subsection>
 
@@ -88,14 +148,15 @@
 
 (protocol Echo
   [version 1
-    Hello
-    Speak
-    Goodbye]
+    [types-added Hello Speak Goodbye]]
   [version 2
-    Hello2
-    Speak
-    Goodbye])
+    [types-removed Hello]
+    [types-added Hello2]])
 ]]></Verbatim>
     </FormalItem>
+    <Paragraph>
+      The first version consists of types <Term type="expression">{ Hello, Speak, Goodbye }</Term> whilst the
+      second version consists of types <Term type="expression">{ Hello2, Speak, Goodbye }</Term>.
+    </Paragraph>
   </Subsection>
 </Section>

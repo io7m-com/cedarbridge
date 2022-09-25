@@ -32,7 +32,8 @@ public record CBTypeAssignment(
    * @param arity The arity of the type (the number of type parameters)
    */
 
-  public CBTypeAssignment {
+  public CBTypeAssignment
+  {
     Preconditions.checkPreconditionI(
       arity,
       arity >= 0,

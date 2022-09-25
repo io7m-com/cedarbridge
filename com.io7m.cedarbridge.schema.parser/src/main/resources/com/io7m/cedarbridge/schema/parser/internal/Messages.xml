@@ -61,6 +61,7 @@
   <entry key="errorVariantInvalidTypeParameter">Invalid type parameter.</entry>
   <entry key="errorVariantKeyword">Expected 'variant' keyword.</entry>
   <entry key="errorVariantUnrecognizedMember">Unrecognized variant member declaration.</entry>
+  <entry key="errorProtocolVersionModificationInvalidDeclaration">Invalid version modification declaration.</entry>
 
   <entry key="objectDeclaration">Package-level declaration</entry>
   <entry key="objectDocumentation">Documentation declaration</entry>
@@ -89,4 +90,5 @@
   <entry key="objectVariantFieldName">Variant field name</entry>
   <entry key="objectVariantMember">Variant member</entry>
   <entry key="objectVariantName">Variant name</entry>
+  <entry key="objectVersionModificationExpression">Version modification declaration</entry>
 </properties>

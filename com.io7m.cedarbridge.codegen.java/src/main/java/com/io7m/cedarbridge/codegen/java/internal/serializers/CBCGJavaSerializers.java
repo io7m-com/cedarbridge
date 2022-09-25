@@ -163,7 +163,7 @@ public final class CBCGJavaSerializers
     final var switchStatement =
       method.beginControlFlow("switch (variantIndex)");
 
-    final var types = proto.types();
+    final var types = proto.typesInOrder();
     final var size = types.size();
     for (int index = 0; index < size; ++index) {
       final var type =
@@ -413,7 +413,7 @@ public final class CBCGJavaSerializers
       "value",
       FINAL);
 
-    final var types = proto.types();
+    final var types = proto.typesInOrder();
     for (int index = 0; index < types.size(); ++index) {
       final var type = types.get(index);
       final var valueClass = dataTypeNameOf(type.declaration());
@@ -539,7 +539,7 @@ public final class CBCGJavaSerializers
   {
     Objects.requireNonNull(proto, "proto");
 
-    return proto.types()
+    return proto.typesInOrder()
       .stream()
       .map(CBCGJavaSerializers::createFieldForProtoType)
       .collect(Collectors.toList());
@@ -617,7 +617,7 @@ public final class CBCGJavaSerializers
     final var method = MethodSpec.constructorBuilder();
     method.addModifiers(PUBLIC);
 
-    for (final CBTypeExprNamedType protoType : proto.types()) {
+    for (final CBTypeExprNamedType protoType : proto.typesInOrder()) {
       final var type =
         CBCGJavaTypeExpressions.evaluateTypeExpression(protoType);
       final var fieldType =

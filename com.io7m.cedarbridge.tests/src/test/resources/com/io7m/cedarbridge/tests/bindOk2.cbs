@@ -1,0 +1,8 @@
+(package com.io7m.cedarbridge)
+
+[record A]
+[record B]
+
+(protocol Q
+  [version 0 [types-added A B]]
+  [version 1 [types-removed B]])

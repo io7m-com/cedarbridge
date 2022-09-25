@@ -4,4 +4,4 @@
   [parameter A]]
 
 [protocol P
-  [version 0 T]]
+  [version 0 [types-added T]]]

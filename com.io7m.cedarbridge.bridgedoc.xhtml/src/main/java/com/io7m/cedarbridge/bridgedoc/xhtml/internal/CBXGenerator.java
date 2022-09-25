@@ -437,7 +437,7 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
         doc.createElementNS(XHTML, "tbody");
       table.appendChild(tbody);
 
-      for (final var type : version.types()) {
+      for (final var type : version.typesInOrder()) {
         final var tr =
           doc.createElementNS(XHTML, "tr");
         tbody.appendChild(tr);
