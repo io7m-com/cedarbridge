@@ -186,7 +186,7 @@ public final class CBSerializationContextBSSIO
   public int readVariantIndex()
     throws IOException
   {
-    return (int) this.reader.readU32BE();
+    return this.reader.readU8();
   }
 
   @Override
@@ -310,7 +310,7 @@ public final class CBSerializationContextBSSIO
   public void writeVariantIndex(final int x)
     throws IOException
   {
-    this.writer.writeU32BE(Integer.toUnsignedLong(x));
+    this.writer.writeU8(x);
   }
 
   @Override

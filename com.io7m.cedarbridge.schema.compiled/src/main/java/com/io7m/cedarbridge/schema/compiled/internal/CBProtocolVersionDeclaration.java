@@ -18,6 +18,7 @@ package com.io7m.cedarbridge.schema.compiled.internal;
 
 import com.io7m.cedarbridge.schema.compiled.CBProtocolDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBProtocolVersionDeclarationType;
+import com.io7m.jaffirm.core.Preconditions;
 
 import java.math.BigInteger;
 import java.util.Comparator;
@@ -87,6 +88,11 @@ public final class CBProtocolVersionDeclaration
   public void addType(
     final CBTypeExprNamedType type)
   {
+    Preconditions.checkPreconditionV(
+      this.types.size() < 255,
+      "Number of types must be <= 255"
+    );
+
     this.types.add(type);
   }
 }

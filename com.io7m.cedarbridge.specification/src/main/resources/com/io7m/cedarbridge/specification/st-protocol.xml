@@ -104,6 +104,9 @@
       valid to attempt to redundantly add a type to a protocol version when that type is already present in the protocol
       version.
     </Paragraph>
+    <Paragraph id="c2ea4d3a-8854-4621-abb2-1154bd861b63">
+      It is an error if a given protocol version contains <Term type="expression">&gt; 255</Term> types.
+    </Paragraph>
     <Paragraph>
       The declaration order of <Term type="term">type</Term> additions and removals within a
       <Term type="term">version</Term> is

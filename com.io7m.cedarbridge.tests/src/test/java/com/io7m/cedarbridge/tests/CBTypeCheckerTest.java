@@ -48,6 +48,7 @@ import com.io7m.cedarbridge.schema.typer.api.CBTypesForProtocolVersion;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -927,6 +928,43 @@ public final class CBTypeCheckerTest
     });
 
     assertEquals("errorTypeProtocolAlreadyPresent", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorVariantTypeTooLarge()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("bigVariant0.cbs");
+    });
+
+    assertEquals("errorTypeVariantTooManyCases", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorProtoTooLarge()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("bigProto0.cbs");
+    });
+
+    assertEquals("errorTypeProtocolTooManyTypes", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  @Disabled("Not yet implemented.")
+  public void testErrorRecordTypeTooLarge()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("bigRecord0.cbs");
+    });
+
+    assertEquals("errorTypeRecordTooManyTypeReferences", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 

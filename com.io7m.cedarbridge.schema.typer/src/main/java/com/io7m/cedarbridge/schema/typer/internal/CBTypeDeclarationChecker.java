@@ -43,6 +43,8 @@ public final class CBTypeDeclarationChecker
     uuid("06c63d66-019b-420a-809c-98ed41c3cfb2");
   private static final Optional<UUID> SPEC_SECTION_VARIANT_FIELD_KIND_0 =
     uuid("9d1d4d2e-bee3-43eb-90db-0e75e40ce882");
+  private static final Optional<UUID> SPEC_SECTION_TOO_MANY_CASES =
+    uuid("d6278815-2947-4cfa-a623-dfadb8f6f913");
 
   /**
    * Type checking of type declarations.
@@ -121,6 +123,18 @@ public final class CBTypeDeclarationChecker
         tracker.addException(e);
       }
     }
+
+    final var caseCount = decl.cases().size();
+    if (caseCount > 255) {
+      throw context.failed(
+        SPEC_SECTION_TOO_MANY_CASES,
+        decl.lexical(),
+        "errorTypeVariantTooManyCases",
+        decl.name().text(),
+        Integer.valueOf(caseCount)
+      );
+    }
+
     tracker.throwIfNecessary();
   }
 

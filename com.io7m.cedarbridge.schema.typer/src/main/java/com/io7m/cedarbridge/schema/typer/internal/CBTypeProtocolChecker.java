@@ -59,6 +59,9 @@ public final class CBTypeProtocolChecker
   private static final Optional<UUID> SPEC_SECTION_REMOVAL_ALREADY_PRESENT =
     uuid("78e0481d-8da4-426f-bbce-cfba8f636f0d");
 
+  private static final Optional<UUID> SPEC_SECTION_TOO_MANY_TYPES =
+    uuid("c2ea4d3a-8854-4621-abb2-1154bd861b63");
+
   /**
    * Type checking of protocol declarations.
    */
@@ -119,10 +122,7 @@ public final class CBTypeProtocolChecker
         );
       }
 
-      current.userData()
-        .put(
-          CBTypesForProtocolVersion.class,
-          new CBTypesForProtocolVersion(Set.copyOf(currentAdded)));
+      checkResultingTypes(context, current, new HashSet<>(currentAdded));
       return;
     }
 
@@ -183,7 +183,16 @@ public final class CBTypeProtocolChecker
       currentEvaluation.add(a);
     }
 
-    if (currentEvaluation.isEmpty()) {
+    checkResultingTypes(context, current, currentEvaluation);
+  }
+
+  private static void checkResultingTypes(
+    final CBTyperContextType context,
+    final CBASTProtocolVersion current,
+    final HashSet<CBASTTypeName> types)
+    throws CBTypeCheckFailedException
+  {
+    if (types.isEmpty()) {
       throw context.failed(
         SPEC_SECTION_BECOMES_EMPTY,
         current.lexical(),
@@ -191,10 +200,20 @@ public final class CBTypeProtocolChecker
       );
     }
 
+    if (types.size() >= 255) {
+      throw context.failed(
+        SPEC_SECTION_TOO_MANY_TYPES,
+        current.lexical(),
+        "errorTypeProtocolTooManyTypes",
+        current.version(),
+        Integer.valueOf(types.size())
+      );
+    }
+
     current.userData()
       .put(
         CBTypesForProtocolVersion.class,
-        new CBTypesForProtocolVersion(Set.copyOf(currentEvaluation)));
+        new CBTypesForProtocolVersion(Set.copyOf(types)));
   }
 
   private static void checkVersion(

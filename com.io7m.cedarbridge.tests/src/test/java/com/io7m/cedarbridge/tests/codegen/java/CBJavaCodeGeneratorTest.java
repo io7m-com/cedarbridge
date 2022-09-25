@@ -29,6 +29,7 @@ import com.io7m.cedarbridge.tests.CBFakePackage;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.verification.Times;
 
@@ -839,6 +840,92 @@ public final class CBJavaCodeGeneratorTest
       "x.IdA1AdminPermission$AdminDelete",
       "x.IdA1AdminPermission$AdminCreate",
       "x.IdA1AdminPermission$AdminBan"
+    );
+  }
+
+  @Test
+  @Disabled("Not valid for large variants.")
+  public void testBigVariant0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigVariant0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.TSerializerFactory",
+      "x.TSerializer",
+      "x.Serializers"
+    );
+  }
+
+  @Test
+  public void testBigVariant1()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigVariant1.cbs");
+
+    final var loader = this.loadClasses(
+      "x.TSerializerFactory",
+      "x.TSerializer",
+      "x.Serializers"
+    );
+  }
+
+  @Test
+  @Disabled("Not valid for large protocols.")
+  public void testBigProto0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigProto0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.TSerializerFactory",
+      "x.TSerializer",
+      "x.Serializers"
+    );
+  }
+
+  @Test
+  public void testBigProto1()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigProto1.cbs");
+
+    final var loader = this.loadClasses(
+      "x.ProtocolPv1SerializerFactory",
+      "x.ProtocolPv1Serializer"
+    );
+  }
+
+  @Test
+  @Disabled("Not yet implemented.")
+  public void testBigRecord0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigRecord0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.TSerializerFactory",
+      "x.TSerializer",
+      "x.Serializers"
+    );
+  }
+
+  @Test
+  public void testBigRecord1()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("bigRecord1.cbs");
+
+    final var loader = this.loadClasses(
+      "x.TSerializerFactory",
+      "x.TSerializer",
+      "x.Serializers"
     );
   }
 

@@ -23,5 +23,6 @@
   <entry key="errorTypeProtocolBecameEmpty">The resulting protocol version is empty.</entry>
   <entry key="errorTypeProtocolWasNotPresent">The type {0} is not present in the current protocol version.</entry>
   <entry key="errorTypeProtocolAlreadyPresent">The type {0} is already present in the current protocol version.</entry>
-
+  <entry key="errorTypeProtocolTooManyTypes">Protocol version {0} has too many ({1} &gt; 255) types.</entry>
+  <entry key="errorTypeVariantTooManyCases">Variant type {0} has too many ({1} &gt; 255) cases.</entry>
 </properties>
