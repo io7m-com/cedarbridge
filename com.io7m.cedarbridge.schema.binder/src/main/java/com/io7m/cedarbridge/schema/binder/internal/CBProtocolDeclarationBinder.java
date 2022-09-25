@@ -37,7 +37,7 @@ import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 public final class CBProtocolDeclarationBinder
   implements CBElementBinderType<CBASTProtocolDeclaration>
 {
-  private static final Optional<UUID> SPEC_SECTION_VERSION_CONTIGUOUS =
+  private static final Optional<UUID> SPEC_SECTION_VERSION =
     uuid("404f0595-a150-4baf-b98b-37109250d8bd");
 
   /**
@@ -78,7 +78,7 @@ public final class CBProtocolDeclarationBinder
         if (!numbers.contains(current)) {
           exceptions.addException(
             context.failed(
-              SPEC_SECTION_VERSION_CONTIGUOUS,
+              SPEC_SECTION_VERSION,
               item.lexical(),
               "errorProtocolVersionMissing",
               min,
@@ -102,15 +102,25 @@ public final class CBProtocolDeclarationBinder
       .put(
         CBBindingType.class,
         context.bindProtocolVersion(
-          SPEC_SECTION_VERSION_CONTIGUOUS,
+          SPEC_SECTION_VERSION,
           version.version(),
           version.lexical())
       );
 
-    for (final var type : version.types()) {
+    for (final var type : version.typesAdded()) {
       final var binding =
         context.checkTypeBinding(
-          SPEC_SECTION_VERSION_CONTIGUOUS,
+          SPEC_SECTION_VERSION,
+          type.text(),
+          type.lexical()
+        );
+      type.userData().put(CBBindingType.class, binding);
+    }
+
+    for (final var type : version.typesRemoved()) {
+      final var binding =
+        context.checkTypeBinding(
+          SPEC_SECTION_VERSION,
           type.text(),
           type.lexical()
         );

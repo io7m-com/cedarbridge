@@ -42,6 +42,6 @@
 
 (protocol Z
   [version 0
-    UnitType])
+    [types-added UnitType]])
 
 (documentation NONEXISTENT9 "A Z")

@@ -16,28 +16,28 @@
 
 package com.io7m.cedarbridge.schema.typer.api;
 
-import com.io7m.jaffirm.core.Preconditions;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
+
+import java.util.Objects;
+import java.util.Set;
 
 /**
- * An assignment of a type to an object.
+ * The evaluated set of types present in a protocol version.
  *
- * @param arity The arity of the type (the number of type parameters)
+ * @param types The types
  */
-public record CBTypeAssignment(
-  int arity)
+
+public record CBTypesForProtocolVersion(
+  Set<CBASTTypeName> types)
 {
   /**
-   * An assignment of a type to an object.
+   * The evaluated set of types present in a protocol version.
    *
-   * @param arity The arity of the type (the number of type parameters)
+   * @param types The types
    */
 
-  public CBTypeAssignment
+  public CBTypesForProtocolVersion
   {
-    Preconditions.checkPreconditionI(
-      arity,
-      arity >= 0,
-      value -> "Arity must be non-negative"
-    );
+    Objects.requireNonNull(types, "types");
   }
 }

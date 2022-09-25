@@ -38,6 +38,7 @@ import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionApplication;
 import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseBuilderType;
+import com.io7m.cedarbridge.schema.typer.api.CBTypesForProtocolVersion;
 import com.io7m.junreachable.UnreachableCodeException;
 
 import java.util.ArrayList;
@@ -213,8 +214,10 @@ public final class CBTypePackageConverter
     for (final var version : protoDecl.versions()) {
       final var versionBuilder =
         protoBuilder.createVersion(version.version());
+      final var evaluatedTypes =
+        version.userData().get(CBTypesForProtocolVersion.class);
 
-      for (final var type : version.types()) {
+      for (final var type : evaluatedTypes.types()) {
         versionBuilder.addType(builder.referenceType(type.text()));
       }
     }

@@ -26,26 +26,33 @@ import java.util.Objects;
 /**
  * A protocol version declaration.
  *
- * @param userData The user data
- * @param lexical  The lexical info
- * @param version  The version
- * @param types    The type declarations
+ * @param userData        The user data
+ * @param lexical         The lexical info
+ * @param version         The version
+ * @param typesAdded      The types added in this protocol version
+ * @param typesRemoved    The types removed in this protocol version
+ * @param typesRemovedAll All types from the previous version should be removed
  */
 
 public record CBASTProtocolVersion(
   CBASTMutableUserData userData,
   LexicalPosition<URI> lexical,
   BigInteger version,
-  List<CBASTTypeName> types)
+  List<CBASTTypeName> typesAdded,
+  List<CBASTTypeName> typesRemoved,
+  boolean typesRemovedAll)
   implements CBASTDeclarationType
 {
   /**
    * A protocol version declaration.
    *
-   * @param userData The user data
-   * @param lexical  The lexical info
-   * @param version  The version
-   * @param types    The type declarations
+   * @param userData        The user data
+   * @param lexical         The lexical info
+   * @param version         The version
+   * @param typesAdded      The types added in this protocol version
+   * @param typesRemoved    The types removed in this protocol version
+   * @param typesRemovedAll All types from the previous version should be
+   *                        removed
    */
 
   public CBASTProtocolVersion
@@ -53,6 +60,7 @@ public record CBASTProtocolVersion(
     Objects.requireNonNull(userData, "userData");
     Objects.requireNonNull(lexical, "lexical");
     Objects.requireNonNull(version, "version");
-    Objects.requireNonNull(types, "types");
+    Objects.requireNonNull(typesAdded, "typesAdded");
+    Objects.requireNonNull(typesRemoved, "typesRemoved");
   }
 }

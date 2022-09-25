@@ -4,8 +4,20 @@ protocol_name =
 version_number =
   [0-9] , { [0-9] } ;
 
+types_added_declaration =
+  "(" , "types-added" , { type_name } , ")" ;
+
+types_removed_declaration =
+  "(" , "types-removed" , { type_name } , ")" ;
+
+types_removed_all_declaration =
+  "(" , "types-removed-all" ")" ;
+
+version_modification_declaration =
+  types_added_declaration | types_removed_declaration | types_removed_all_declaration;
+
 version_declaration =
-  "(" , "version" , version_number , { type_name } , ")" ;
+  "(" , "version" , version_number , { version_modification_declaration } , ")" ;
 
 protocol_declaration =
   "(" , "protocol" , protocol_name , { version_declaration } , ")" ;

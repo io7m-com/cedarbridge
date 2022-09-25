@@ -211,7 +211,7 @@ public final class CBCGSerializerInstantiations
     final var typeArguments =
       new HashMap<CBTypeExpressionType, OpBuildTypeArgumentType>();
 
-    for (final var type : proto.types()) {
+    for (final var type : proto.typesInOrder()) {
       buildTypeArguments(names, lines, typeArguments, type);
     }
 
@@ -223,7 +223,7 @@ public final class CBCGSerializerInstantiations
     final var serializerFetches =
       new HashMap<CBTypeExpressionType, OpFetchSerializerType>();
 
-    for (final var type : proto.types()) {
+    for (final var type : proto.typesInOrder()) {
       fetchSerializerForNamed(
         names,
         lines,
@@ -432,7 +432,7 @@ public final class CBCGSerializerInstantiations
     final CBProtocolVersionDeclarationType proto)
   {
     final var fetches =
-      proto.types()
+      proto.typesInOrder()
         .stream()
         .map(serializerFetches::get)
         .collect(Collectors.toList());

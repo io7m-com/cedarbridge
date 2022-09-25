@@ -1,0 +1,8 @@
+(package x.y.z)
+
+[record A]
+
+[protocol P
+  [version 0 [types-added A]]
+  [version 1 [types-removed A]]
+]

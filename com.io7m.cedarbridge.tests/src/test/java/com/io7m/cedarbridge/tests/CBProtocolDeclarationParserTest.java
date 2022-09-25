@@ -33,8 +33,8 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class CBProtocolDeclarationParserTest extends
-  CBElementParserContract
+public final class CBProtocolDeclarationParserTest
+  extends CBElementParserContract
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBProtocolDeclarationParserTest.class);
@@ -87,13 +87,15 @@ public final class CBProtocolDeclarationParserTest extends
   public void testProtocolOK1()
     throws Exception
   {
-    final var declV = this.parse("[protocol P [version 0 T]]");
+    final var declV =
+      this.parse("[protocol P [version 0 [types-added T]]]");
     assertEquals("P", declV.name().text());
     assertEquals(1, declV.versions().size());
     final var v0 = declV.versions().get(0);
     assertEquals(0L, v0.version().longValue());
-    assertEquals(1, v0.types().size());
-    assertEquals("T", v0.types().get(0).text());
+    assertEquals(1, v0.typesAdded().size());
+    assertEquals("T", v0.typesAdded().get(0).text());
+    assertEquals(0, v0.typesRemoved().size());
   }
 
   @Test
@@ -152,7 +154,91 @@ public final class CBProtocolDeclarationParserTest extends
       this.parse("[protocol K [version 3 4]]");
     });
     LOG.debug("", ex);
+    assertEquals("errorUnexpectedExpressionForm", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad5()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-added]]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorProtocolVersionModificationInvalidDeclaration", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad6()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-removed]]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorProtocolVersionModificationInvalidDeclaration", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad7()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-what]]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorProtocolVersionModificationInvalidDeclaration", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad8()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-added 1]]]");
+    });
+    LOG.debug("", ex);
     assertEquals("errorTypeNameInvalid", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad9()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-removed 1]]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorTypeNameInvalid", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad10()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 []]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorProtocolVersionModificationInvalidDeclaration", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testProtocolBad11()
+    throws Exception
+  {
+    final var ex = assertThrows(CBParseFailedException.class, () -> {
+      this.parse("[protocol K [version 1 [types-removed-all x]]]");
+    });
+    LOG.debug("", ex);
+    assertEquals("errorProtocolVersionModificationInvalidDeclaration", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 }

@@ -19,4 +19,9 @@
   <entry key="errorTypeProtocolKind0"><![CDATA[Types within a protocol are not allowed to have parameters.
   Type {0} takes {1} argument(s).]]></entry>
 
+  <entry key="errorTypeProtocolFirstNoRemovals">The first version in a protocol cannot have types removed.</entry>
+  <entry key="errorTypeProtocolBecameEmpty">The resulting protocol version is empty.</entry>
+  <entry key="errorTypeProtocolWasNotPresent">The type {0} is not present in the current protocol version.</entry>
+  <entry key="errorTypeProtocolAlreadyPresent">The type {0} is already present in the current protocol version.</entry>
+
 </properties>

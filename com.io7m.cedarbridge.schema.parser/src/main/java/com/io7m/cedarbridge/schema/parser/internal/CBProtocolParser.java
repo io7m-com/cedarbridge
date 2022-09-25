@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
 import static com.io7m.cedarbridge.schema.parser.api.CBParseFailedException.Fatal.IS_NOT_FATAL;
@@ -153,11 +154,19 @@ public final class CBProtocolParser
         SSymbol.class
       );
 
-    final var items = new ArrayList<CBASTTypeName>();
+    final var typesAdded = new ArrayList<CBASTTypeName>();
+    final var typesRemoved = new ArrayList<CBASTTypeName>();
+    final var typesRemovedAll = new AtomicBoolean(false);
     final var errorsThen = context.errorCount();
     for (var index = 2; index < expression.size(); ++index) {
       try {
-        items.add(parseTypeName(context, expression.get(index)));
+        parseModification(
+          context,
+          expression.get(index),
+          typesAdded,
+          typesRemoved,
+          typesRemovedAll
+        );
       } catch (final CBParseFailedException e) {
         // Ignore this particular exception
       }
@@ -184,8 +193,160 @@ public final class CBProtocolParser
       new CBASTMutableUserData(),
       expression.get(1).lexical(),
       versionNumber,
-      items
+      typesAdded,
+      typesRemoved,
+      typesRemovedAll.get()
     );
+  }
+
+  private static void parseModification(
+    final CBParseContextType context,
+    final SExpressionType expr,
+    final ArrayList<CBASTTypeName> typesAdded,
+    final ArrayList<CBASTTypeName> typesRemoved,
+    final AtomicBoolean typesRemovedAll)
+    throws CBParseFailedException
+  {
+    final var expectingKind =
+      "objectVersionModificationExpression";
+    final var expectingShapes =
+      List.of(
+        "(types-added <type-name-decl> ...)",
+        "(types-removed <type-name-decl> ...)",
+        "(types-removed-all)"
+      );
+
+    try (var subContext =
+           context.openExpectingOneOf(expectingKind, expectingShapes)) {
+      parseModificationList(
+        subContext,
+        subContext.checkExpressionIs(expr, SPEC_SECTION, SList.class),
+        typesAdded,
+        typesRemoved,
+        typesRemovedAll
+      );
+    }
+  }
+
+  private static void parseModificationList(
+    final CBParseContextType context,
+    final SList expression,
+    final ArrayList<CBASTTypeName> typesAdded,
+    final ArrayList<CBASTTypeName> typesRemoved,
+    final AtomicBoolean typesRemovedAll)
+    throws CBParseFailedException
+  {
+    if (expression.size() < 1) {
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorProtocolVersionModificationInvalidDeclaration"
+      );
+    }
+
+    final var op =
+      context.checkExpressionIs(
+        expression.get(0),
+        SPEC_SECTION,
+        SSymbol.class
+      );
+
+    switch (op.text()) {
+      case "types-added" -> {
+        if (expression.size() < 2) {
+          throw context.failed(
+            expression,
+            IS_NOT_FATAL,
+            SPEC_SECTION,
+            "errorProtocolVersionModificationInvalidDeclaration"
+          );
+        }
+
+        parseModificationListTypesAdded(
+          context,
+          expression,
+          typesAdded
+        );
+      }
+      case "types-removed" -> {
+        if (expression.size() < 2) {
+          throw context.failed(
+            expression,
+            IS_NOT_FATAL,
+            SPEC_SECTION,
+            "errorProtocolVersionModificationInvalidDeclaration"
+          );
+        }
+
+        parseModificationListTypesRemoved(
+          context,
+          expression,
+          typesRemoved
+        );
+      }
+      case "types-removed-all" -> {
+        parseModificationListTypesRemovedAll(
+          context,
+          expression,
+          typesRemovedAll
+        );
+      }
+      default -> {
+        throw context.failed(
+          expression,
+          IS_NOT_FATAL,
+          SPEC_SECTION,
+          "errorProtocolVersionModificationInvalidDeclaration"
+        );
+      }
+    }
+  }
+
+  private static void parseModificationListTypesRemovedAll(
+    final CBParseContextType context,
+    final SList expression,
+    final AtomicBoolean typesRemovedAll)
+    throws CBParseFailedException
+  {
+    if (expression.size() != 1) {
+      throw context.failed(
+        expression,
+        IS_NOT_FATAL,
+        SPEC_SECTION,
+        "errorProtocolVersionModificationInvalidDeclaration"
+      );
+    }
+
+    typesRemovedAll.set(true);
+  }
+
+  private static void parseModificationListTypesRemoved(
+    final CBParseContextType context,
+    final SList expression,
+    final ArrayList<CBASTTypeName> typesRemoved)
+  {
+    for (int index = 1; index < expression.size(); ++index) {
+      try {
+        typesRemoved.add(parseTypeName(context, expression.get(index)));
+      } catch (final CBParseFailedException e) {
+        // Ignored
+      }
+    }
+  }
+
+  private static void parseModificationListTypesAdded(
+    final CBParseContextType context,
+    final SList expression,
+    final ArrayList<CBASTTypeName> typesAdded)
+  {
+    for (int index = 1; index < expression.size(); ++index) {
+      try {
+        typesAdded.add(parseTypeName(context, expression.get(index)));
+      } catch (final CBParseFailedException e) {
+        // Ignored
+      }
+    }
   }
 
   @Override

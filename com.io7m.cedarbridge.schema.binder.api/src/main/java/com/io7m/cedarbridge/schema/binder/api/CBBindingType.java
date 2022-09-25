@@ -25,7 +25,8 @@ import java.net.URI;
  * A binding to a name.
  */
 
-public sealed interface CBBindingType extends LexicalType<URI>
+public sealed interface CBBindingType
+  extends LexicalType<URI>
   permits CBBindingExternal, CBBindingLocalType
 {
   /**

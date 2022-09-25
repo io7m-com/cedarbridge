@@ -80,7 +80,7 @@ public final class CBCGProtocolVersionedInterfaceGenerator
     );
 
     final var allTypes = new ArrayList<TypeName>();
-    for (final var t : proto.types()) {
+    for (final var t : proto.typesInOrder()) {
       final var td = t.declaration();
       allTypes.add(CBCGJavaTypeNames.dataTypeNameOf(td));
       if (td instanceof CBVariantType var) {

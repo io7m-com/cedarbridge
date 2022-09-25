@@ -21,8 +21,11 @@ import com.io7m.cedarbridge.exprsrc.CBExpressionSources;
 import com.io7m.cedarbridge.exprsrc.api.CBExpressionSourceType;
 import com.io7m.cedarbridge.schema.ast.CBASTField;
 import com.io7m.cedarbridge.schema.ast.CBASTPackage;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
+import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeApplication;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeExpressionType;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeNamed;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeRecord;
 import com.io7m.cedarbridge.schema.ast.CBASTTypeVariant;
@@ -41,6 +44,7 @@ import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
+import com.io7m.cedarbridge.schema.typer.api.CBTypesForProtocolVersion;
 import com.io7m.junreachable.UnreachableCodeException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,6 +59,8 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprApplicationType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
@@ -62,6 +68,7 @@ import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeEx
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBTypeCheckerTest
 {
@@ -149,12 +156,19 @@ public final class CBTypeCheckerTest
           tarProto.versions().get(srcV.version());
         assertEquals(srcV.version(), tarV.version());
 
-        final var srcVT = srcV.types();
-        final var tarVT = tarV.types();
-        for (var tIndex = 0; tIndex < srcVT.size(); ++tIndex) {
-          final var srcT = srcVT.get(tIndex);
-          final var tarT = tarVT.get(tIndex);
-          assertEquals(srcT.text(), tarT.declaration().name());
+        final var evalT =
+          srcV.userData()
+            .get(CBTypesForProtocolVersion.class);
+
+        final var srcVT = evalT.types();
+        assertEquals(srcVT.size(), tarV.typesInOrder().size());
+
+        final var tarVT = tarV.typesInOrder();
+        for (final var srcT : srcVT) {
+          assertTrue(
+            tarVT.stream()
+              .anyMatch(t -> Objects.equals(t.declaration().name(), srcT.text()))
+          );
         }
       }
     }
@@ -496,6 +510,90 @@ public final class CBTypeCheckerTest
   }
 
   @Test
+  public void testProtoOk0()
+    throws Exception
+  {
+    final var trec = new CBFakeRecord("T", 1);
+
+    final var pack = this.check("typeProtoOK0.cbs");
+    assertEquals(0, this.errors.size());
+
+    final var p = pack.protocols().get(0);
+    final var pv = p.versions();
+
+    {
+      final var v = pv.get(0);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(1, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "A")));
+    }
+
+    {
+      final var v = pv.get(1);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(2, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "A")));
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "B")));
+    }
+
+    {
+      final var v = pv.get(2);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(2, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "A")));
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "C")));
+    }
+
+    {
+      final var v = pv.get(3);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(1, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "C")));
+    }
+  }
+
+  @Test
+  public void testProtoOk1()
+    throws Exception
+  {
+    final var trec = new CBFakeRecord("T", 1);
+
+    final var pack = this.check("typeProtoOK1.cbs");
+    assertEquals(0, this.errors.size());
+
+    final var p = pack.protocols().get(0);
+    final var pv = p.versions();
+
+    {
+      final var v = pv.get(0);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(1, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "A")));
+    }
+
+    {
+      final var v = pv.get(1);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(1, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "B")));
+    }
+
+    {
+      final var v = pv.get(2);
+      final var ts = v.userData().get(CBTypesForProtocolVersion.class);
+      final var tt = ts.types();
+      assertEquals(1, tt.size());
+      assertTrue(tt.stream().anyMatch(t -> Objects.equals(t.text(), "C")));
+    }
+  }
+
+  @Test
   public void testError0()
     throws Exception
   {
@@ -781,6 +879,54 @@ public final class CBTypeCheckerTest
     });
 
     assertEquals("errorTypeProtocolKind0", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorProtoBecomesEmpty()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorProtoBecomesEmpty.cbs");
+    });
+
+    assertEquals("errorTypeProtocolBecameEmpty", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorProtoFirstRemoval()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorProtoFirstRemoval.cbs");
+    });
+
+    assertEquals("errorTypeProtocolFirstNoRemovals", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorProtoTypeWasNotPresent()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorProtoWasNotPresent.cbs");
+    });
+
+    assertEquals("errorTypeProtocolWasNotPresent", this.takeError().errorCode());
+    assertEquals(0, this.errors.size());
+  }
+
+  @Test
+  public void testErrorProtoTypeAlreadyPresent()
+    throws Exception
+  {
+    assertThrows(CBTypeCheckFailedException.class, () -> {
+      this.check("errorProtoAlreadyPresent.cbs");
+    });
+
+    assertEquals("errorTypeProtocolAlreadyPresent", this.takeError().errorCode());
     assertEquals(0, this.errors.size());
   }
 

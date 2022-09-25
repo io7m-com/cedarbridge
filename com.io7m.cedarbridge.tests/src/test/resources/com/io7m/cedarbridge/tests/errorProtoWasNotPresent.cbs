@@ -1,0 +1,10 @@
+(package x.y.z)
+
+[record A]
+[record B]
+[record C]
+
+[protocol P
+  [version 1 [types-added A C]]
+  [version 2 [types-removed B]]
+]

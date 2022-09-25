@@ -19,14 +19,20 @@ package com.io7m.cedarbridge.schema.typer.internal;
 import com.io7m.cedarbridge.errors.CBExceptionTracker;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolDeclaration;
 import com.io7m.cedarbridge.schema.ast.CBASTProtocolVersion;
+import com.io7m.cedarbridge.schema.ast.CBASTTypeName;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingLocalTypeDeclaration;
 import com.io7m.cedarbridge.schema.binder.api.CBBindingType;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeAssignment;
 import com.io7m.cedarbridge.schema.typer.api.CBTypeCheckFailedException;
+import com.io7m.cedarbridge.schema.typer.api.CBTypesForProtocolVersion;
 import com.io7m.junreachable.UnreachableCodeException;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 import static com.io7m.cedarbridge.schema.names.CBUUIDs.uuid;
@@ -40,6 +46,18 @@ public final class CBTypeProtocolChecker
 {
   private static final Optional<UUID> SPEC_SECTION_KIND_0 =
     uuid("15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a");
+
+  private static final Optional<UUID> SPEC_SECTION_FIRST_NO_REMOVALS =
+    uuid("0f1809c1-9828-497e-bb57-c3b40c82e051");
+
+  private static final Optional<UUID> SPEC_SECTION_BECOMES_EMPTY =
+    uuid("200ef52c-2863-468d-9056-45e29a6e93dc");
+
+  private static final Optional<UUID> SPEC_SECTION_REMOVAL_WASNT_PRESENT =
+    uuid("7715beef-680d-4f29-b418-9f79e24c599b");
+
+  private static final Optional<UUID> SPEC_SECTION_REMOVAL_ALREADY_PRESENT =
+    uuid("78e0481d-8da4-426f-bbce-cfba8f636f0d");
 
   /**
    * Type checking of protocol declarations.
@@ -63,7 +81,120 @@ public final class CBTypeProtocolChecker
         tracker.addException(e);
       }
     }
+
+    final var sorted = new ArrayList<>(decl.versions());
+    sorted.sort(Comparator.comparing(CBASTProtocolVersion::version));
+
+    CBASTProtocolVersion previous = null;
+    for (int index = 0; index < sorted.size(); ++index) {
+      final CBASTProtocolVersion current = sorted.get(index);
+      try {
+        evaluateVersion(context, Optional.ofNullable(previous), current);
+      } catch (final CBTypeCheckFailedException e) {
+        tracker.addException(e);
+      }
+      previous = current;
+    }
+
     tracker.throwIfNecessary();
+  }
+
+  private static void evaluateVersion(
+    final CBTyperContextType context,
+    final Optional<CBASTProtocolVersion> previousOpt,
+    final CBASTProtocolVersion current)
+    throws CBTypeCheckFailedException
+  {
+    final var currentRemoved =
+      current.typesRemoved();
+    final var currentAdded =
+      current.typesAdded();
+
+    if (previousOpt.isEmpty()) {
+      if (!currentRemoved.isEmpty() || current.typesRemovedAll()) {
+        throw context.failed(
+          SPEC_SECTION_FIRST_NO_REMOVALS,
+          current.lexical(),
+          "errorTypeProtocolFirstNoRemovals"
+        );
+      }
+
+      current.userData()
+        .put(
+          CBTypesForProtocolVersion.class,
+          new CBTypesForProtocolVersion(Set.copyOf(currentAdded)));
+      return;
+    }
+
+    final var previous =
+      previousOpt.get();
+    final var previousSet =
+      previous.userData()
+        .get(CBTypesForProtocolVersion.class);
+
+    final var currentEvaluation = new HashSet<>(previousSet.types());
+    if (current.typesRemovedAll()) {
+      currentEvaluation.clear();
+    } else {
+      for (final var r : currentRemoved) {
+        final var existing =
+          currentEvaluation.stream()
+            .filter(t -> {
+              final var b0 =
+                t.userData().get(CBBindingType.class);
+              final var b1 =
+                r.userData().get(CBBindingType.class);
+              return Objects.equals(b0, b1);
+            }).findFirst();
+
+        if (existing.isEmpty()) {
+          throw context.failed(
+            SPEC_SECTION_REMOVAL_WASNT_PRESENT,
+            current.lexical(),
+            "errorTypeProtocolWasNotPresent",
+            r.text()
+          );
+        }
+
+        currentEvaluation.remove(existing.get());
+      }
+    }
+
+    for (final var a : currentAdded) {
+      final var existing =
+        currentEvaluation.stream()
+          .filter(t -> {
+            final var b0 =
+              t.userData().get(CBBindingType.class);
+            final var b1 =
+              a.userData().get(CBBindingType.class);
+            return Objects.equals(b0, b1);
+          }).findFirst();
+
+      if (existing.isPresent()) {
+        throw context.failed(
+          SPEC_SECTION_REMOVAL_ALREADY_PRESENT,
+          current.lexical(),
+          "errorTypeProtocolAlreadyPresent",
+          a.text()
+        );
+      }
+
+      currentEvaluation.add(a);
+    }
+
+    if (currentEvaluation.isEmpty()) {
+      throw context.failed(
+        SPEC_SECTION_BECOMES_EMPTY,
+        current.lexical(),
+        "errorTypeProtocolBecameEmpty"
+      );
+    }
+
+    current.userData()
+      .put(
+        CBTypesForProtocolVersion.class,
+        new CBTypesForProtocolVersion(Set.copyOf(currentEvaluation)));
   }
 
   private static void checkVersion(
@@ -72,30 +203,52 @@ public final class CBTypeProtocolChecker
     throws CBTypeCheckFailedException
   {
     final var tracker = new CBExceptionTracker<CBTypeCheckFailedException>();
-    for (final var type : version.types()) {
-      final var binding =
-        type.userData().get(CBBindingType.class);
 
-      if (binding instanceof CBBindingLocalTypeDeclaration) {
-        final var targetType =
-          ((CBBindingLocalTypeDeclaration) binding).type();
-        final var typeAssignment =
-          targetType.userData().get(CBTypeAssignment.class);
-
-        if (typeAssignment.arity() != 0) {
-          throw context.failed(
-            SPEC_SECTION_KIND_0,
-            type.lexical(),
-            "errorTypeProtocolKind0",
-            targetType.name().text(),
-            Integer.valueOf(typeAssignment.arity())
-          );
-        }
-      } else {
-        throw new UnreachableCodeException();
+    for (final var type : version.typesAdded()) {
+      try {
+        checkVersionType(context, type);
+      } catch (final CBTypeCheckFailedException e) {
+        tracker.addException(e);
       }
     }
+
+    for (final var type : version.typesRemoved()) {
+      try {
+        checkVersionType(context, type);
+      } catch (final CBTypeCheckFailedException e) {
+        tracker.addException(e);
+      }
+    }
+
     tracker.throwIfNecessary();
+  }
+
+  private static void checkVersionType(
+    final CBTyperContextType context,
+    final CBASTTypeName type)
+    throws CBTypeCheckFailedException
+  {
+    final var binding =
+      type.userData().get(CBBindingType.class);
+
+    if (binding instanceof CBBindingLocalTypeDeclaration) {
+      final var targetType =
+        ((CBBindingLocalTypeDeclaration) binding).type();
+      final var typeAssignment =
+        targetType.userData().get(CBTypeAssignment.class);
+
+      if (typeAssignment.arity() != 0) {
+        throw context.failed(
+          SPEC_SECTION_KIND_0,
+          type.lexical(),
+          "errorTypeProtocolKind0",
+          targetType.name().text(),
+          Integer.valueOf(typeAssignment.arity())
+        );
+      }
+    } else {
+      throw new UnreachableCodeException();
+    }
   }
 
   @Override

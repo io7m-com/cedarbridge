@@ -44,7 +44,7 @@ public interface CBProtocolVersionDeclarationType
    * @return The types in this version
    */
 
-  List<CBTypeExprNamedType> types();
+  List<CBTypeExprNamedType> typesInOrder();
 
   /**
    * @param type The type
@@ -55,7 +55,7 @@ public interface CBProtocolVersionDeclarationType
   default boolean containsType(
     final CBTypeDeclarationType type)
   {
-    return this.types()
+    return this.typesInOrder()
       .stream()
       .anyMatch(name -> Objects.equals(name.declaration(), type));
   }
