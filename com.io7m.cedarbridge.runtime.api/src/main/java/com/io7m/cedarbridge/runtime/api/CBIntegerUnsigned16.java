@@ -74,4 +74,40 @@ public record CBIntegerUnsigned16(int value)
       throw new UncheckedIOException(exception);
     }
   }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBIntegerUnsigned16 x)
+    throws IOException
+  {
+    context.writeU16(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBIntegerUnsigned16 deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBIntegerUnsigned16(context.readU16());
+  }
 }

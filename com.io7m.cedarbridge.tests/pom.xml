@@ -80,6 +80,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.codegen.javastatic</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.runtime.container_protocol</artifactId>
       <version>${project.version}</version>
     </dependency>

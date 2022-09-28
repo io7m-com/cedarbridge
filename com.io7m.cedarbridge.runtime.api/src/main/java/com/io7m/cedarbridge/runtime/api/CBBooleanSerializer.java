@@ -40,31 +40,17 @@ public final class CBBooleanSerializer
     final CBBooleanType value)
     throws IOException
   {
-    if (value instanceof CBTrue) {
-      serializeTrue(context);
+    if (value instanceof CBTrue t) {
+      CBTrue.serialize(context, t);
       return;
     }
-    if (value instanceof CBFalse) {
-      serializeFalse(context);
+    if (value instanceof CBFalse f) {
+      CBFalse.serialize(context, f);
       return;
     }
     throw new IllegalStateException(
       String.format("Unrecognized variant case: %s", value.getClass())
     );
-  }
-
-  private static void serializeFalse(
-    final CBSerializationContextType context)
-    throws IOException
-  {
-    context.writeVariantIndex(CBFalse.VARIANT_INDEX);
-  }
-
-  private static void serializeTrue(
-    final CBSerializationContextType context)
-    throws IOException
-  {
-    context.writeVariantIndex(CBTrue.VARIANT_INDEX);
   }
 
   @Override
@@ -74,22 +60,12 @@ public final class CBBooleanSerializer
   {
     final var index = context.readVariantIndex();
     return switch (index) {
-      case CBFalse.VARIANT_INDEX -> deserializeFalse();
-      case CBTrue.VARIANT_INDEX -> deserializeTrue();
+      case CBFalse.VARIANT_INDEX -> CBFalse.deserialize(context);
+      case CBTrue.VARIANT_INDEX -> CBTrue.deserialize(context);
       default -> throw new IllegalStateException(
         String.format(
           "Unrecognized variant index: %d", Integer.valueOf(index))
       );
     };
-  }
-
-  private static CBBooleanType deserializeTrue()
-  {
-    return new CBTrue();
-  }
-
-  private static CBBooleanType deserializeFalse()
-  {
-    return new CBFalse();
   }
 }

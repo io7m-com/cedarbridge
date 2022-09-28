@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -289,5 +290,23 @@ public final class CBSerializationContextSize
     final int index)
   {
 
+  }
+
+  @Override
+  public IOException errorUnrecognizedVariantIndex(
+    final int index)
+  {
+    return new IOException(
+      "Unrecognized variant index: %d".formatted(index)
+    );
+  }
+
+  @Override
+  public IOException errorUnrecognizedVariantCaseClass(
+    final Class<?> clazz)
+  {
+    return new IOException(
+      "Unrecognized variant case class: %s".formatted(clazz)
+    );
   }
 }

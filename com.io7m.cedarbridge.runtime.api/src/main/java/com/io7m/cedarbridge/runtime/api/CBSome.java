@@ -17,6 +17,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formatter;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,5 +63,45 @@ public record CBSome<T extends CBSerializableType>(T value)
   public Optional<T> asOptional()
   {
     return Optional.of(this.value());
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   * @param ft      A serializer for {@code T}
+   * @param <T>     The type of list values
+   *
+   * @throws IOException On errors
+   */
+
+  public static <T extends CBSerializableType> void serialize(
+    final CBSerializationContextType context,
+    final CBSome<T> x,
+    final CBSerializeType<T> ft)
+    throws IOException
+  {
+    context.writeVariantIndex(VARIANT_INDEX);
+    ft.execute(context, x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static <T extends CBSerializableType> CBSome<T> deserialize(
+    final CBSerializationContextType context,
+    final CBDeserializeType<T> ft)
+    throws IOException
+  {
+    return new CBSome<>(ft.execute(context));
   }
 }

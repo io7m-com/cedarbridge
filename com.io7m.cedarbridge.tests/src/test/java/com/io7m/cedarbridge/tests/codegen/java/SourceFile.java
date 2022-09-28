@@ -25,12 +25,12 @@ import java.util.Objects;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.tools.JavaFileObject.Kind.SOURCE;
 
-final class SourceFile
+public final class SourceFile
   extends SimpleJavaFileObject
 {
   private final Path path;
 
-  SourceFile(final Path inPath)
+  public SourceFile(final Path inPath)
   {
     super(inPath.toUri(), SOURCE);
     this.path = Objects.requireNonNull(inPath, "path");

@@ -17,6 +17,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
@@ -38,5 +39,41 @@ public record CBByteArray(ByteBuffer value)
   public CBByteArray
   {
     Objects.requireNonNull(value, "value");
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBByteArray x)
+    throws IOException
+  {
+    context.writeByteArray(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBByteArray deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBByteArray(context.readByteArray());
   }
 }

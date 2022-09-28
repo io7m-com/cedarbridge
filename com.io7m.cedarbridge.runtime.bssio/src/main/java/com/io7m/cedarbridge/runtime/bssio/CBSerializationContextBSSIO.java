@@ -186,7 +186,7 @@ public final class CBSerializationContextBSSIO
   public int readVariantIndex()
     throws IOException
   {
-    return this.reader.readU8();
+    return (int) this.reader.readU32BE();
   }
 
   @Override
@@ -310,7 +310,7 @@ public final class CBSerializationContextBSSIO
   public void writeVariantIndex(final int x)
     throws IOException
   {
-    this.writer.writeU8(x);
+    this.writer.writeU32BE(Integer.toUnsignedLong(x));
   }
 
   @Override
@@ -438,5 +438,23 @@ public final class CBSerializationContextBSSIO
     final int index)
   {
 
+  }
+
+  @Override
+  public IOException errorUnrecognizedVariantIndex(
+    final int index)
+  {
+    return new IOException(
+      "Unrecognized variant index: %d".formatted(index)
+    );
+  }
+
+  @Override
+  public IOException errorUnrecognizedVariantCaseClass(
+    final Class<?> clazz)
+  {
+    return new IOException(
+      "Unrecognized variant case class: %s".formatted(clazz)
+    );
   }
 }

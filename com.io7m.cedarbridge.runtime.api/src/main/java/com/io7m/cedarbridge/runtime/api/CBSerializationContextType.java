@@ -23,7 +23,8 @@ package com.io7m.cedarbridge.runtime.api;
 public interface CBSerializationContextType
   extends CBSerializationContextInputType,
   CBSerializationContextOutputType,
-  CBSerializationContextTracingType
+  CBSerializationContextTracingType,
+  CBSerializationContextErrorType
 {
 
 }

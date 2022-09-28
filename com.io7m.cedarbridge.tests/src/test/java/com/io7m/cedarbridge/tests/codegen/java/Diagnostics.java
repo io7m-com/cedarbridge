@@ -26,13 +26,13 @@ import java.net.URI;
 
 import static java.util.Locale.ROOT;
 
-final class Diagnostics
+public final class Diagnostics
   implements DiagnosticListener<JavaFileObject>
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(Diagnostics.class);
 
-  Diagnostics()
+  public Diagnostics()
   {
 
   }
