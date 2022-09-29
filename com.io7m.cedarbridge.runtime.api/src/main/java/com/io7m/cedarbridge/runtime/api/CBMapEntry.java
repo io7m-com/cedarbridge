@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formattable;
 import java.util.Formatter;
 import java.util.Objects;
@@ -55,5 +56,69 @@ public record CBMapEntry<K extends CBSerializableType, V extends CBSerializableT
     final int precision)
   {
     formatter.format("(%s %s)", this.key(), this.value());
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   * @param fk      A serializer for {@code K}
+   * @param fv      A serializer of {@code V}
+   * @param <K>     The type of keys
+   * @param <V>     The type of values
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static <K extends CBSerializableType, V extends CBSerializableType> void serialize(
+    final CBSerializationContextType context,
+    final CBMapEntry<K, V> x,
+    final CBSerializeType<K> fk,
+    final CBSerializeType<V> fv)
+    throws IOException
+  {
+    context.begin("key");
+    fk.execute(context, x.key);
+    context.end("key");
+    context.begin("value");
+    fv.execute(context, x.value);
+    context.end("value");
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static <K extends CBSerializableType, V extends CBSerializableType> CBMapEntry<K, V> deserialize(
+    final CBSerializationContextType context,
+    final CBDeserializeType<K> fk,
+    final CBDeserializeType<V> fv)
+    throws IOException
+  {
+    final K k;
+    final V v;
+
+    context.begin("key");
+    try {
+      k = fk.execute(context);
+    } finally {
+      context.end("key");
+    }
+    context.begin("value");
+    try {
+      v = fv.execute(context);
+    } finally {
+      context.end("value");
+    }
+    return new CBMapEntry<>(k, v);
   }
 }

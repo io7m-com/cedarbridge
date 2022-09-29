@@ -74,4 +74,40 @@ public record CBIntegerUnsigned8(int value)
       throw new UncheckedIOException(exception);
     }
   }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBIntegerUnsigned8 x)
+    throws IOException
+  {
+    context.writeU8(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBIntegerUnsigned8 deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBIntegerUnsigned8(context.readU8());
+  }
 }

@@ -62,4 +62,40 @@ public record CBString(String value)
       throw new UncheckedIOException(exception);
     }
   }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBString x)
+    throws IOException
+  {
+    context.writeUTF8(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBString deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBString(context.readUTF8());
+  }
 }

@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formatter;
 
 /**
@@ -42,5 +43,41 @@ public record CBFloat16(double value)
     final int precision)
   {
     formatter.format("%f", Double.valueOf(this.value()));
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBFloat16 x)
+    throws IOException
+  {
+    context.writeF16(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBFloat16 deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBFloat16(context.readF16());
   }
 }

@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.7</version>
+    <version>0.0.8</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
 
@@ -31,7 +31,7 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.codegen.java</artifactId>
+      <artifactId>com.io7m.cedarbridge.codegen.javastatic</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

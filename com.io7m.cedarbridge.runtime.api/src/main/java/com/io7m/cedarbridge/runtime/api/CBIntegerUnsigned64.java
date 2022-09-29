@@ -49,4 +49,40 @@ public record CBIntegerUnsigned64(long value)
       throw new UncheckedIOException(exception);
     }
   }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBIntegerUnsigned64 x)
+    throws IOException
+  {
+    context.writeU64(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBIntegerUnsigned64 deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBIntegerUnsigned64(context.readU64());
+  }
 }

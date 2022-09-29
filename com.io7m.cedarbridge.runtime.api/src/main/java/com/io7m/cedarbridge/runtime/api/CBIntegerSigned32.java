@@ -49,4 +49,40 @@ public record CBIntegerSigned32(int value)
       throw new UncheckedIOException(exception);
     }
   }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBIntegerSigned32 x)
+    throws IOException
+  {
+    context.writeS32(x.value);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBIntegerSigned32 deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBIntegerSigned32(context.readS32());
+  }
 }

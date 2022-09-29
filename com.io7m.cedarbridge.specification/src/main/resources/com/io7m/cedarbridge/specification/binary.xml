@@ -516,24 +516,89 @@ encode(F64, x) =
       construct <Term type="expression">r</Term>, the byte sequence produced for <Term type="expression">r</Term>
       is <Term type="expression">k ⊕ p ⊕ []</Term>, where <Term type="expression">k</Term> is the result of encoding
       <Term type="expression">v</Term> as if it were a value of type <Link
-      target="4aa46f1b-e80d-4e4c-87b6-49d41c7b68a6">U8</Link>, and <Term type="expression">p</Term>
+      target="ac6c99ce-4a6c-4824-bebe-83612709f9dd">U32</Link>, and <Term type="expression">p</Term>
       is the concatenation of the byte sequences produced by encoding the fields of
       <Term type="expression">r</Term> in the order that the fields
       were declared in the declaration of <Term type="expression">c</Term>.
     </Paragraph>
   </Subsection>
 
+  <Subsection title="Encoding Protocols" id="3e1c4399-fc00-4d2e-9172-2760e4f0313e">
+    <Paragraph>
+      Conceptually, each <Link target="15d2bb7d-2dbc-4a0c-8a25-7003cb3f7e3a">type</Link> present in
+      a protocol version is added to one effectively anonymous variant type per version. The cases of
+      the variant are ordered lexicographically by the names of the types. This anonymous variant type
+      is then encoded exactly as regular <Link target="b7d4ffba-fc3a-42a6-a381-92f00a7f117f">variant</Link> types
+      are normally encoded.
+    </Paragraph>
+    <Paragraph>
+      For example, assuming the following definitions:
+    </Paragraph>
+    <FormalItem title="Vector3f">
+      <Verbatim><![CDATA[
+[import com.io7m.cedarbridge cb]
+
+[record A [field x cb:IntegerUnsigned8]]
+
+[record B [field x cb:IntegerUnsigned8]]
+
+[variant C
+  [case C0 [field x cb:IntegerUnsigned8]]
+  [case C1 [field x cb:IntegerUnsigned8]]
+]
+
+[protocol P
+  [version 1 [types-added A B]]
+  [version 2 [types-added C]]
+  [version 3 [types-removed A]]
+]
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      When a message <Term type="expression">M</Term> is encoded in versioned form, we use
+      the notation <Term type="expression">V(M)</Term> to refer to the versioned nature of
+      the message.
+    </Paragraph>
+    <Paragraph>
+      In protocol version 1, the expression
+      <Term type="expression">V(A 23) : A</Term> is encoded as the byte sequence
+      <Term type="expression">0x00 0x00 0x00 0x00 0x17</Term>. That is, the first
+      four bytes specify the type at case <Term type="constant">0</Term> of the
+      anonymous variant implicitly defined by the <Term type="expression">[version 1 ...]</Term>
+      declaration, followed by the encoded form of <Term type="expression">(A 23) : A</Term>.
+    </Paragraph>
+    <Paragraph>
+      In protocol version 2, the expression
+      <Term type="expression">V(C1 23) : C</Term> is encoded as the byte sequence
+      <Term type="expression">0x00 0x00 0x00 0x02 0x00 0x00 0x00 0x01 0x17</Term>. That is, the first
+      four bytes specify the type at case <Term type="constant">2</Term> of the
+      anonymous variant implicitly defined by the <Term type="expression">[version 2 ...]</Term>
+      declaration, followed by the encoded form of <Term type="expression">(C1 23) : C</Term>.
+    </Paragraph>
+    <Paragraph>
+      In protocol version 3, the expression
+      <Term type="expression">P (B 23) : B</Term> is encoded as the byte sequence
+      <Term type="expression">0x00 0x00 0x00 0x00 0x17</Term>. That is, the first
+      four bytes specify the type at case <Term type="constant">0</Term> of the
+      anonymous variant implicitly defined by the <Term type="expression">[version 3 ...]</Term>
+      declaration. Because the type <Term type="expression">A</Term> was removed in version 3,
+      <Term type="expression">B</Term> is now the type at case <Term type="constant">0</Term>,
+      whereas it was previously the type at case <Term type="constant">1</Term> in versions 1
+      and 2.
+    </Paragraph>
+  </Subsection>
+
   <Subsection title="Encoding Examples" id="a5b4c98a-5378-430d-882b-8fad538004a7">
     <Paragraph>
       The expression <Term type="expression">(Some 23) : [Option IntegerUnsigned32]</Term> is encoded
-      as the byte sequence <Term type="expression">0x01 0x00 0x00 0x00 0x17</Term>. This encoding
+      as the byte sequence <Term type="expression">0x00 0x00 0x00 0x01 0x00 0x00 0x00 0x17</Term>. This encoding
       comes from the fact that <Term type="expression">Option</Term> is a variant type,
       <Term type="expression">Some</Term> is case number <Term type="constant">1</Term>, and the value
       of the one and only field of <Term type="expression">Some</Term> is <Term type="expression">23 (0x17)</Term>.
     </Paragraph>
     <Paragraph>
       The expression <Term type="expression">None : [Option IntegerUnsigned32]</Term> is encoded
-      as the byte sequence <Term type="expression">0x00</Term>. This encoding
+      as the byte sequence <Term type="expression">0x00 0x00 0x00 0x00</Term>. This encoding
       comes from the fact that <Term type="expression">Option</Term> is a variant type,
       <Term type="expression">None</Term> is case number <Term type="constant">0</Term>, and there
       are no fields in the case.

@@ -17,8 +17,7 @@
 package com.io7m.cedarbridge.examples.generic;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
-import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollectionType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
+import com.io7m.cedarbridge.runtime.api.CBProtocolType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,8 +53,7 @@ public final class CBExServer<M, P extends CBProtocolMessageType>
     LoggerFactory.getLogger(CBExServer.class);
 
   private final ExecutorService threadPool;
-  private final CBSerializerDirectoryMutable serializers;
-  private final CBProtocolSerializerCollectionType<P> protocols;
+  private final CBProtocolType<P> protocols;
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final Supplier<CBExServerClientCoreType<M>> core;
   private volatile State state;
@@ -65,18 +63,14 @@ public final class CBExServer<M, P extends CBProtocolMessageType>
    *
    * @param inCore        A supplier of server-client cores
    * @param inProtocols   The protocol serializer collection
-   * @param inSerializers A serializer directory
    * @param inTranslators A translator directory
    */
 
   public CBExServer(
-    final CBSerializerDirectoryMutable inSerializers,
-    final CBProtocolSerializerCollectionType<P> inProtocols,
+    final CBProtocolType<P> inProtocols,
     final CBExMessageTranslatorDirectory<M, P> inTranslators,
     final Supplier<CBExServerClientCoreType<M>> inCore)
   {
-    this.serializers =
-      Objects.requireNonNull(inSerializers, "serializers");
     this.protocols =
       Objects.requireNonNull(inProtocols, "protocols");
     this.translators =
@@ -140,7 +134,6 @@ public final class CBExServer<M, P extends CBProtocolMessageType>
                 LOG,
                 clientSocket,
                 clientAddress,
-                this.serializers,
                 this.protocols,
                 this.translators,
                 this.core.get()

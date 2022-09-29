@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formattable;
 import java.util.Optional;
 
@@ -48,5 +49,59 @@ public sealed interface CBOptionType<T extends CBSerializableType>
     final Optional<T> opt)
   {
     return opt.isPresent() ? new CBSome<>(opt.get()) : new CBNone<>();
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   * @param ft      A serializer for {@code T}
+   * @param <T>     The type of optional values
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  static <T extends CBSerializableType> void serialize(
+    final CBSerializationContextType context,
+    final CBOptionType<T> x,
+    final CBSerializeType<T> ft)
+    throws IOException
+  {
+    if (x instanceof CBSome<T> s) {
+      CBSome.serialize(context, s, ft);
+      return;
+    }
+    if (x instanceof CBNone<T> n) {
+      CBNone.serialize(context, n, ft);
+      return;
+    }
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   * @param <T>     The type of optional values
+   * @param fv      A deserializer for {@code T}
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  static <T extends CBSerializableType> CBOptionType<T> deserialize(
+    final CBSerializationContextType context,
+    final CBDeserializeType<T> fv)
+    throws IOException
+  {
+    final var index = context.readVariantIndex();
+    return switch (index) {
+      case CBSome.VARIANT_INDEX -> CBSome.deserialize(context, fv);
+      case CBNone.VARIANT_INDEX -> CBNone.deserialize(context, fv);
+      default -> throw context.errorUnrecognizedVariantIndex(index);
+    };
   }
 }

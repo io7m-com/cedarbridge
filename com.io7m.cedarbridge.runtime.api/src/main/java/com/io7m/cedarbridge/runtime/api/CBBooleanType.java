@@ -16,6 +16,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formattable;
 
 /**
@@ -44,5 +45,56 @@ public sealed interface CBBooleanType
     final boolean b)
   {
     return b ? new CBTrue() : new CBFalse();
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  static void serialize(
+    final CBSerializationContextType context,
+    final CBBooleanType x)
+    throws IOException
+  {
+    if (x instanceof CBTrue t) {
+      CBTrue.serialize(context, t);
+      return;
+    }
+    if (x instanceof CBFalse f) {
+      CBFalse.serialize(context, f);
+      return;
+    }
+    throw new IllegalStateException(
+      String.format("Unrecognized variant case: %s", x.getClass())
+    );
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  static CBBooleanType deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    final var index = context.readVariantIndex();
+    return switch (index) {
+      case CBTrue.VARIANT_INDEX -> CBTrue.deserialize(context);
+      case CBFalse.VARIANT_INDEX -> CBFalse.deserialize(context);
+      default -> throw context.errorUnrecognizedVariantIndex(index);
+    };
   }
 }

@@ -1,0 +1,23 @@
+[package x.y.z]
+
+[record N]
+
+[record M
+  [parameter A]
+]
+
+[record T
+  [parameter A]
+  [parameter B]
+  [parameter C]
+  [field x A]
+  [field y B]
+  [field z C]
+  [field a A]
+  [field b B]
+  [field c C]
+]
+
+[record U
+  [field x [T [M N] N [T N [T N N N] [M N]]]]
+]

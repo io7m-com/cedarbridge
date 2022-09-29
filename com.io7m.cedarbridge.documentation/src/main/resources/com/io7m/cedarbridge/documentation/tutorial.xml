@@ -191,9 +191,15 @@
   [field text cb:String]]
 
 [protocol Foo
-  [version 1 Command0 Command1 Response]
-  [version 2 Command0 Command1 Command2 Response]
-  [version 3 Command1 Command2 Response]]
+  [version 1
+    [types-added Command0 Command1 Response]
+  ]
+  [version 2
+    [types-added Command2]
+  ]
+  [version 3
+    [types-removed Command0]
+  ]
 ]]></Verbatim>
     </FormalItem>
 

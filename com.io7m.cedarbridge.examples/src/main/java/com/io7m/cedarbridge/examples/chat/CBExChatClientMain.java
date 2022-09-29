@@ -19,8 +19,6 @@ package com.io7m.cedarbridge.examples.chat;
 import com.io7m.cedarbridge.examples.generic.CBExClient;
 import com.io7m.cedarbridge.examples.generic.CBExClientCoreType;
 import com.io7m.cedarbridge.examples.generic.CBExMessageTranslatorDirectory;
-import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 
 /**
  * The main client.
@@ -61,19 +59,13 @@ public final class CBExChatClientMain
       }
     }
 
-    final var serializers = new CBSerializerDirectoryMutable();
-    serializers.addCollection(CBCoreSerializers.get());
-    serializers.addCollection(Serializers.get());
-
     final var protocols =
-      ProtocolChat.factories();
-
+      new ProtocolChat();
     final var translators =
       new CBExMessageTranslatorDirectory<CBExChatMessageType, ProtocolChatType>();
     translators.addTranslator(1L, new CBExChatMessagesV1());
 
-    try (var client =
-           new CBExClient<>(serializers, protocols, translators, core)) {
+    try (var client = new CBExClient<>(protocols, translators, core)) {
       client.start();
       while (!client.isDone()) {
         try {
