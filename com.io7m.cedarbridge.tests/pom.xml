@@ -144,6 +144,32 @@
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-samples</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <configuration>
+              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
+              <arguments>
+                <argument>compile</argument>
+                <argument>--output-directory</argument>
+                <argument>${project.build.directory}/generated-test-sources/test-annotations</argument>
+                <argument>--file</argument>
+                <argument>${project.basedir}/src/test/resources/com/io7m/cedarbridge/tests/identityTests.cbs</argument>
+                <argument>--language</argument>
+                <argument>Java 17+</argument>
+              </arguments>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- Determine test coverage -->
       <plugin>
         <groupId>org.jacoco</groupId>

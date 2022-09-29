@@ -38,7 +38,6 @@ import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import com.io7m.jodist.ClassName;
 import com.io7m.jodist.CodeBlock;
-import com.io7m.jodist.FieldSpec;
 import com.io7m.jodist.JavaFile;
 import com.io7m.jodist.MethodSpec;
 import com.io7m.jodist.ParameterSpec;
@@ -67,7 +66,6 @@ import static com.io7m.cedarbridge.codegen.javastatic.internal.generics.CBGeneri
 import static com.io7m.cedarbridge.codegen.javastatic.internal.generics.CBGenericSerializerMethodDirection.SERIALIZE;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.PUBLIC;
 import static javax.lang.model.element.Modifier.SEALED;
 import static javax.lang.model.element.Modifier.STATIC;
@@ -157,6 +155,7 @@ public final class CBCGDataClassGenerator
     containerBuilder.addMethod(
       createVariantSerializeMethod(
         names,
+        className,
         typeName,
         typeParameters,
         type.cases()
@@ -165,6 +164,7 @@ public final class CBCGDataClassGenerator
     containerBuilder.addMethod(
       createVariantDeserializeMethod(
         names,
+        className,
         typeName,
         typeParameters,
         type.cases()
@@ -195,6 +195,7 @@ public final class CBCGDataClassGenerator
 
   private static MethodSpec createVariantDeserializeMethod(
     final CBCGJavaNamePool names,
+    final ClassName className,
     final TypeName typeName,
     final List<CBTypeParameterType> parameters,
     final List<CBVariantCaseType> cases)
@@ -259,14 +260,14 @@ public final class CBCGDataClassGenerator
 
       if (parameters.isEmpty()) {
         switchCase.addStatement(
-          "return $L.deserialize($L)",
-          dataClassNameOf(caseV.owner()),
+          "return $T.deserialize($L)",
+          dataClassNameOfCase(caseV),
           "$context"
         );
       } else {
         switchCase.addStatement(
-          "return $L.deserialize($L, $L)",
-          dataClassNameOf(caseV.owner()),
+          "return $T.deserialize($L, $L)",
+          dataClassNameOfCase(caseV),
           "$context",
           deserializerParameters
         );
@@ -293,13 +294,13 @@ public final class CBCGDataClassGenerator
      * Generate JavaDoc for the method.
      */
 
-    generateDeserializerJavadoc(typeName, parameters, builder);
-
+    generateDeserializerJavadoc(className, parameters, builder);
     return builder.build();
   }
 
   private static MethodSpec createVariantSerializeMethod(
     final CBCGJavaNamePool names,
+    final ClassName className,
     final TypeName typeName,
     final List<CBTypeParameterType> parameters,
     final List<CBVariantCaseType> cases)
@@ -344,13 +345,20 @@ public final class CBCGDataClassGenerator
         .map(n -> CodeBlock.of("$L", n))
         .collect(CodeBlock.joining(","));
 
-    for (final var caseV : cases) {
+    for (int index = 0; index < cases.size(); ++index) {
+      final var caseV = cases.get(index);
       final var block = CodeBlock.builder();
       block.beginControlFlow(
         "if ($L instanceof $T $L)",
         "$x",
         dataTypeNameOfCase(caseV),
         "$y"
+      );
+
+      block.addStatement(
+        "$L.writeVariantIndex($L)",
+        "$context",
+        Integer.toUnsignedString(index)
       );
 
       if (parameters.isEmpty()) {
@@ -385,8 +393,7 @@ public final class CBCGDataClassGenerator
      * Generate JavaDoc for the method.
      */
 
-    generateSerializerJavadoc(typeName, parameters, builder);
-
+    generateSerializerJavadoc(className, parameters, builder);
     return builder.build();
   }
 
@@ -445,13 +452,6 @@ public final class CBCGDataClassGenerator
       classBuilder.addSuperinterface(containerInterface.get());
     }
 
-    variantIndex.ifPresent(index -> {
-      final var field =
-        FieldSpec.builder(TypeName.INT, "VARIANT_INDEX", PRIVATE, STATIC, FINAL);
-      field.initializer(CodeBlock.of("$L", Integer.valueOf(index)));
-      classBuilder.addField(field.build());
-    });
-
     classBuilder.addTypeVariables(typeVariables);
     classBuilder.addRecordComponents(fields);
     classBuilder.compactConstructor(createCompactConstructor(fields));
@@ -459,6 +459,7 @@ public final class CBCGDataClassGenerator
     classBuilder.addMethod(
       createRecordlikeSerializeMethod(
         names,
+        className,
         dataTypeName,
         variantIndex,
         parameters,
@@ -467,6 +468,7 @@ public final class CBCGDataClassGenerator
     classBuilder.addMethod(
       createRecordlikeDeserializeMethod(
         names,
+        className,
         dataTypeName,
         parameters,
         fieldList)
@@ -504,6 +506,7 @@ public final class CBCGDataClassGenerator
 
   private static MethodSpec createRecordlikeDeserializeMethod(
     final CBCGJavaNamePool names,
+    final ClassName className,
     final TypeName typeName,
     final List<CBTypeParameterType> parameters,
     final List<CBFieldType> fields)
@@ -586,12 +589,12 @@ public final class CBCGDataClassGenerator
 
     builder.addCode(constructorCall);
 
-    generateDeserializerJavadoc(typeName, parameters, builder);
+    generateDeserializerJavadoc(className, parameters, builder);
     return builder.build();
   }
 
   private static void generateDeserializerJavadoc(
-    final TypeName typeName,
+    final ClassName typeName,
     final List<CBTypeParameterType> parameters,
     final MethodSpec.Builder builder)
   {
@@ -619,6 +622,7 @@ public final class CBCGDataClassGenerator
 
   private static MethodSpec createRecordlikeSerializeMethod(
     final CBCGJavaNamePool names,
+    final ClassName className,
     final TypeName typeName,
     final OptionalInt variantIndex,
     final List<CBTypeParameterType> parameters,
@@ -689,21 +693,17 @@ public final class CBCGDataClassGenerator
      * Generate the calls to serialize() methods (or local lambda expressions).
      */
 
-    variantIndex.ifPresent(value -> {
-      builder.addStatement("$L.writeVariantIndex(VARIANT_INDEX)", "$context");
-    });
-
     builder.addComment("Serialization calls in field order.");
     for (final var fieldRef : fieldMethodRefs) {
       callSerializeMethod(builder, fieldRef);
     }
 
-    generateSerializerJavadoc(typeName, parameters, builder);
+    generateSerializerJavadoc(className, parameters, builder);
     return builder.build();
   }
 
   private static void generateSerializerJavadoc(
-    final TypeName typeName,
+    final ClassName typeName,
     final List<CBTypeParameterType> parameters,
     final MethodSpec.Builder builder)
   {

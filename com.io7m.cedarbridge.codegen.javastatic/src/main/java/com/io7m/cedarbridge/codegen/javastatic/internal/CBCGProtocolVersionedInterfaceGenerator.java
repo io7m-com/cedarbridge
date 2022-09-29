@@ -33,7 +33,6 @@ import com.io7m.jodist.TypeSpec;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -85,20 +84,35 @@ public final class CBCGProtocolVersionedInterfaceGenerator
       proto.version()
     );
 
+    /*
+     * Separately track the types contained directly within the protocol,
+     * and the types that result from expanding all the variant cases.
+     *
+     * The variant cases need to be added in the "permits" clause, but should
+     * not be referenced in serialize/deserialize methods.
+     */
+
+    final var directTypes = new ArrayList<TypeName>();
     final var allTypes = new ArrayList<TypeName>();
+
     for (final var t : proto.typesInOrder()) {
       final var td = t.declaration();
+      directTypes.add(CBCGJavaTypeNames.dataTypeNameOf(td));
       allTypes.add(CBCGJavaTypeNames.dataTypeNameOf(td));
+
       if (td instanceof CBVariantType var) {
         for (final var c : var.cases()) {
           allTypes.add(CBCGJavaTypeNames.dataClassNameOfCase(c));
         }
       }
     }
-    Collections.sort(allTypes, Comparator.comparing(TypeName::toString));
+
+    directTypes.sort(Comparator.comparing(TypeName::toString));
+    allTypes.sort(Comparator.comparing(TypeName::toString));
+
     classBuilder.addPermittedSubclasses(allTypes);
-    classBuilder.addMethod(createSerializeMethod(className, allTypes));
-    classBuilder.addMethod(createDeserializeMethod(className, allTypes));
+    classBuilder.addMethod(createSerializeMethod(className, directTypes));
+    classBuilder.addMethod(createDeserializeMethod(className, directTypes));
 
     final var classDefinition = classBuilder.build();
 
@@ -151,7 +165,7 @@ public final class CBCGProtocolVersionedInterfaceGenerator
         );
 
       switchCase.addStatement(
-        "return $L.deserialize($L)",
+        "return $T.deserialize($L)",
         type,
         "$context"
       );

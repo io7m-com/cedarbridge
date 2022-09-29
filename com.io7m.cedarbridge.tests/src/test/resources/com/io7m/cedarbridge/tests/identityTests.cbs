@@ -1,0 +1,101 @@
+;
+; Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+;
+; Permission to use, copy, modify, and/or distribute this software for any
+; purpose with or without fee is hereby granted, provided that the above
+; copyright notice and this permission notice appear in all copies.
+;
+; THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+; WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+; MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
+; SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+; WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+; ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR
+; IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+;
+
+[package com.io7m.cedarbridge.tests.identity]
+
+[import com.io7m.cedarbridge cb]
+
+[documentation Enum0 "An enumeration with empty cases."]
+[variant Enum0
+  [case Case0]
+  [case Case1]
+  [case Case2]
+  [case Case3]
+]
+
+[documentation ListOfEnum0 "A list of enum values."]
+[record ListOfEnum0
+  [field items [cb:List Enum0]]
+]
+
+[documentation Vector3 "A vector of floats."]
+[record Vector3
+  [field x cb:Float32]
+  [field y cb:Float32]
+  [field z cb:Float32]
+]
+
+[documentation SomeOptionals "Some optionals."]
+[record SomeOptionals
+  [field s8 [cb:Option cb:IntegerSigned8]]
+  [field s16 [cb:Option cb:IntegerSigned16]]
+  [field s32 [cb:Option cb:IntegerSigned32]]
+  [field s64 [cb:Option cb:IntegerSigned64]]
+]
+
+[documentation SomeStrings "Some strings and lists of strings."]
+[record SomeStrings
+  [field s0 cb:String]
+  [field s1 cb:String]
+  [field s2 cb:String]
+  [field s3 [cb:List cb:String]]
+]
+
+[record GenericABC
+  [parameter A]
+  [parameter B]
+  [parameter C]
+  [field a A]
+  [field b B]
+  [field c C]
+]
+
+[documentation SomeGenerics "A fairly complex set of generic fields."]
+[record SomeGenerics
+  [field r0 [GenericABC cb:IntegerSigned8 cb:IntegerSigned16 cb:IntegerSigned32]]
+  [field r1 [GenericABC cb:String cb:String cb:String]]
+  [field r2 [GenericABC cb:IntegerSigned8 [cb:List cb:IntegerSigned8] [cb:Option cb:IntegerSigned8]]]
+]
+
+[documentation EveryScalar "A record of every scalar type."]
+[record EveryScalar
+  [field s8 cb:IntegerSigned8]
+  [field s16 cb:IntegerSigned16]
+  [field s32 cb:IntegerSigned32]
+  [field s64 cb:IntegerSigned64]
+  [field u8 cb:IntegerUnsigned8]
+  [field u16 cb:IntegerUnsigned16]
+  [field u32 cb:IntegerUnsigned32]
+  [field u64 cb:IntegerUnsigned64]
+  [field f16 cb:Float16]
+  [field f32 cb:Float32]
+  [field f64 cb:Float64]
+  [field b cb:Boolean]
+]
+
+[protocol Identity
+  [version 1
+    [types-added
+      Enum0
+      EveryScalar
+      ListOfEnum0
+      SomeGenerics
+      SomeOptionals
+      SomeStrings
+      Vector3
+    ]
+  ]
+]
