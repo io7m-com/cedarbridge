@@ -27,20 +27,26 @@ public interface CBSerializationContextErrorType
   /**
    * An unrecognized variant index was encountered.
    *
-   * @param index The index
+   * @param reader The class attempting the read
+   * @param index  The index
    *
    * @return An exception detailing the errors
    */
 
-  IOException errorUnrecognizedVariantIndex(int index);
+  IOException errorUnrecognizedVariantIndex(
+    Class<?> reader,
+    int index);
 
   /**
    * An unrecognized variant case class was encountered.
    *
-   * @param clazz The class
+   * @param writer The class attempting the write
+   * @param clazz  The class
    *
    * @return An exception detailing the errors
    */
 
-  IOException errorUnrecognizedVariantCaseClass(Class<?> clazz);
+  IOException errorUnrecognizedVariantCaseClass(
+    Class<?> writer,
+    Class<?> clazz);
 }

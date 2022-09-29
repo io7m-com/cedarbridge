@@ -94,7 +94,7 @@ public sealed interface CBBooleanType
     return switch (index) {
       case CBTrue.VARIANT_INDEX -> CBTrue.deserialize(context);
       case CBFalse.VARIANT_INDEX -> CBFalse.deserialize(context);
-      default -> throw context.errorUnrecognizedVariantIndex(index);
+      default -> throw context.errorUnrecognizedVariantIndex(CBBooleanType.class, index);
     };
   }
 }

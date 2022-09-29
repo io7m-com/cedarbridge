@@ -177,8 +177,9 @@ public final class CBCGProtocolVersionedInterfaceGenerator
         switchStatement.beginControlFlow("default: ");
 
       defaultCase.addStatement(
-        "throw $L.errorUnrecognizedVariantIndex($L)",
+        "throw $L.errorUnrecognizedVariantIndex($T.class, $L)",
         "$context",
+        className,
         "$i"
       );
       defaultCase.endControlFlow();
@@ -243,8 +244,9 @@ public final class CBCGProtocolVersionedInterfaceGenerator
     }
 
     builder.addStatement(
-      "throw $L.errorUnrecognizedVariantCaseClass($L.getClass())",
+      "throw $L.errorUnrecognizedVariantCaseClass($T.class, $L.getClass())",
       "$context",
+      className,
       "$x"
     );
 
