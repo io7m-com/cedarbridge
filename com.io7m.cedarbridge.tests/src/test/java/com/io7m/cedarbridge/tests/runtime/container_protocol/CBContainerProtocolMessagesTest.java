@@ -17,11 +17,9 @@
 package com.io7m.cedarbridge.tests.runtime.container_protocol;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
-import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollection;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
-import com.io7m.cedarbridge.tests.runtime.FakeProtocolSerializerFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -210,40 +208,6 @@ public final class CBContainerProtocolMessagesTest
     });
 
     LOG.debug("", ex);
-  }
-
-  @Test
-  public void testErrorMessageLength()
-    throws IOException
-  {
-    final var id = UUID.randomUUID();
-    final var collection =
-      CBProtocolSerializerCollection.builder(id)
-        .addFactory(new FakeProtocolSerializerFactory(
-          id,
-          0xffff_ffff_ffff_fffdL,
-          CBProtocolMessageType.class))
-        .addFactory(new FakeProtocolSerializerFactory(
-          id,
-          0xffff_ffff_ffff_fffeL,
-          CBProtocolMessageType.class))
-        .build();
-
-    final var ex =
-      assertThrows(IllegalArgumentException.class, () -> {
-        collection.checkSupportedVersion(id, 0xffff_ffff_ffff_ffffL);
-      });
-
-    final var response =
-      CBContainerProtocolMessages.serializeResponseAsBytes(
-        new CBContainerProtocolResponse(false, ex.getMessage())
-      );
-
-    assertEquals(256, response.length);
-
-    final var file = this.directory.resolve("response.bin");
-    LOG.debug("file: {}", file);
-    Files.write(file, response);
   }
 
   @Test

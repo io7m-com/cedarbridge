@@ -44,7 +44,7 @@ public final class CBCGJavaTypeNames
    *
    * @param proto The protocol
    *
-   * @return The Java class name
+   * @return The Java interface name
    */
 
   public static ClassName protoNameOf(
@@ -221,91 +221,6 @@ public final class CBCGJavaTypeNames
   }
 
   /**
-   * Generate the Java serializer class name for the given protocol version.
-   *
-   * @param proto The protocol version
-   *
-   * @return The Java serializer class name
-   */
-
-  public static ClassName protoSerializerClassNameOf(
-    final CBProtocolVersionDeclarationType proto)
-  {
-    final var ownerProto = proto.owner();
-    final var ownerPack = ownerProto.owner();
-
-    return ClassName.get(
-      ownerPack.name(),
-      String.format(
-        "Protocol%sv%sSerializer",
-        ownerProto.name(),
-        proto.version()
-      )
-    );
-  }
-
-  /**
-   * Generate the Java serializer factory class name for the given protocol
-   * version.
-   *
-   * @param proto The protocol version
-   *
-   * @return The Java serializer factory class name
-   */
-
-  public static ClassName protoSerializerFactoryClassNameOf(
-    final CBProtocolVersionDeclarationType proto)
-  {
-    final var ownerProto = proto.owner();
-    final var ownerPack = ownerProto.owner();
-
-    return ClassName.get(
-      ownerPack.name(),
-      String.format(
-        "Protocol%sv%sSerializerFactory",
-        ownerProto.name(),
-        proto.version()
-      )
-    );
-  }
-
-  /**
-   * Generate the Java serializer class name for the given type.
-   *
-   * @param type The type
-   *
-   * @return The Java serializer class name
-   */
-
-  public static ClassName serializerClassNameOf(
-    final CBTypeDeclarationType type)
-  {
-    final var externalName = externalNameOf(type);
-    return ClassName.get(
-      externalName.externalPackage(),
-      String.format("%sSerializer", externalName.externalName())
-    );
-  }
-
-  /**
-   * Generate the Java serializer factory class name for the given type.
-   *
-   * @param type The type
-   *
-   * @return The Java serializer factory class name
-   */
-
-  public static ClassName serializerFactoryClassNameOf(
-    final CBTypeDeclarationType type)
-  {
-    final var externalName = externalNameOf(type);
-    return ClassName.get(
-      externalName.externalPackage(),
-      String.format("%sSerializerFactory", externalName.externalName())
-    );
-  }
-
-  /**
    * Generate the external name for the given type.
    *
    * @param type The type
@@ -373,20 +288,6 @@ public final class CBCGJavaTypeNames
   }
 
   /**
-   * Generate the serializer collection class name for the given package name.
-   *
-   * @param packageName The package name
-   *
-   * @return The serializer collection class name
-   */
-
-  public static ClassName serializerCollectionClassNameOf(
-    final String packageName)
-  {
-    return ClassName.get(packageName, "Serializers");
-  }
-
-  /**
    * Generate the name used for the serialization function for a given type
    * parameter.
    *
@@ -414,5 +315,29 @@ public final class CBCGJavaTypeNames
     final CBTypeParameterType parameter)
   {
     return "$deserialize%s".formatted(parameter.name());
+  }
+
+  /**
+   * Generate the name used for the serializer for a versioned protocol.
+   *
+   * @param proto The protocol
+   *
+   * @return The name
+   */
+
+  public static ClassName protoVersionedSerializerNameOf(
+    final CBProtocolVersionDeclarationType proto)
+  {
+    final var ownerProto = proto.owner();
+    final var ownerPack = ownerProto.owner();
+
+    return ClassName.get(
+      ownerPack.name(),
+      String.format(
+        "Protocol%sv%sSerializer",
+        ownerProto.name(),
+        proto.version()
+      )
+    );
   }
 }

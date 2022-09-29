@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,14 +14,23 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
+
+package com.io7m.cedarbridge.runtime.api;
+
+import java.math.BigInteger;
+
 /**
- * Cedarbridge message protocol (Runtime API)
+ * The type of serializers for (versioned) protocol messages.
+ *
+ * @param <T> The precise type of protocol message
  */
 
-module com.io7m.cedarbridge.runtime.api
+public interface CBProtocolMessageVersionedSerializerType<T extends CBProtocolMessageType>
+  extends CBProtocolMessageSerializerType<T>
 {
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+  /**
+   * @return The protocol version
+   */
 
-  exports com.io7m.cedarbridge.runtime.api;
+  BigInteger version();
 }

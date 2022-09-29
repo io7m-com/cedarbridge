@@ -99,13 +99,26 @@ public final class CBCGJava implements CBSPICodeGeneratorType
       LOG.debug("generate: {}", wroteProtoInterface);
       createdFiles.add(wroteProtoInterface);
 
+      final var wroteClass =
+        new CBCGProtocolGenerator()
+          .execute(this.configuration, pack.name(), proto);
+
+      LOG.debug("generate: {}", wroteClass);
+      createdFiles.add(wroteClass);
+
       for (final var version : proto.versions().values()) {
         final var wroteInterface =
           new CBCGProtocolVersionedInterfaceGenerator()
             .execute(this.configuration, pack.name(), version);
+        final var wroteSerializer =
+          new CBCGProtocolMessageSerializerGenerator()
+            .execute(this.configuration, pack.name(), version);
 
         LOG.debug("generate: {}", wroteInterface);
+        LOG.debug("generate: {}", wroteSerializer);
+
         createdFiles.add(wroteInterface);
+        createdFiles.add(wroteSerializer);
       }
     }
   }

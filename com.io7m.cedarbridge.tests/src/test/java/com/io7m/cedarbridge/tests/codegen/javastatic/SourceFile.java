@@ -14,14 +14,33 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-/**
- * Cedarbridge message protocol (Runtime API)
- */
+package com.io7m.cedarbridge.tests.codegen.javastatic;
 
-module com.io7m.cedarbridge.runtime.api
+import javax.tools.SimpleJavaFileObject;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static javax.tools.JavaFileObject.Kind.SOURCE;
+
+public final class SourceFile
+  extends SimpleJavaFileObject
 {
-  requires static org.osgi.annotation.bundle;
-  requires static org.osgi.annotation.versioning;
+  private final Path path;
 
-  exports com.io7m.cedarbridge.runtime.api;
+  public SourceFile(final Path inPath)
+  {
+    super(inPath.toUri(), SOURCE);
+    this.path = Objects.requireNonNull(inPath, "path");
+  }
+
+  @Override
+  public CharSequence getCharContent(
+    final boolean ignoreEncodingErrors)
+    throws IOException
+  {
+    return Files.readString(this.path, UTF_8);
+  }
 }

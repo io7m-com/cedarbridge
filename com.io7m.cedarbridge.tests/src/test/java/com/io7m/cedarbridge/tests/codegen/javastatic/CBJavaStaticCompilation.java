@@ -16,7 +16,6 @@
 
 package com.io7m.cedarbridge.tests.codegen.javastatic;
 
-import com.io7m.cedarbridge.codegen.java.CBCGJavaFactory;
 import com.io7m.cedarbridge.codegen.javastatic.CBCGJavaSFactory;
 import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorConfiguration;
 import com.io7m.cedarbridge.errors.CBError;
@@ -30,8 +29,6 @@ import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import com.io7m.cedarbridge.tests.CBZip;
-import com.io7m.cedarbridge.tests.codegen.java.Diagnostics;
-import com.io7m.cedarbridge.tests.codegen.java.SourceFile;
 import com.sun.source.util.JavacTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

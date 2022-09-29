@@ -932,30 +932,6 @@ public final class CBTypeCheckerTest
   }
 
   @Test
-  public void testErrorVariantTypeTooLarge()
-    throws Exception
-  {
-    assertThrows(CBTypeCheckFailedException.class, () -> {
-      this.check("bigVariant0.cbs");
-    });
-
-    assertEquals("errorTypeVariantTooManyCases", this.takeError().errorCode());
-    assertEquals(0, this.errors.size());
-  }
-
-  @Test
-  public void testErrorProtoTooLarge()
-    throws Exception
-  {
-    assertThrows(CBTypeCheckFailedException.class, () -> {
-      this.check("bigProto0.cbs");
-    });
-
-    assertEquals("errorTypeProtocolTooManyTypes", this.takeError().errorCode());
-    assertEquals(0, this.errors.size());
-  }
-
-  @Test
   @Disabled("Not yet implemented.")
   public void testErrorRecordTypeTooLarge()
     throws Exception

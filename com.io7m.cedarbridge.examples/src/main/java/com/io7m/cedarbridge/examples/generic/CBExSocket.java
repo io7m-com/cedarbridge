@@ -17,7 +17,7 @@
 package com.io7m.cedarbridge.examples.generic;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
-import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolMessageVersionedSerializerType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextSize;
 import com.io7m.cedarbridge.runtime.bssio.CBSerializationContextBSSIO;
 import com.io7m.jbssio.api.BSSReaderProviderType;
@@ -53,7 +53,7 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
   private final CBExMessageTranslatorType<M, P> translator;
   private final InputStream inputStream;
   private final OutputStream outputStream;
-  private final CBProtocolSerializerType<P> serializer;
+  private final CBProtocolMessageVersionedSerializerType<P> serializer;
   private final ByteBuffer writeSizeBuffer;
   private final byte[] writeSizeData;
   private volatile ReadStateType<M> readState;
@@ -75,7 +75,7 @@ public final class CBExSocket<M, P extends CBProtocolMessageType>
     final BSSWriterProviderType inWriters,
     final Socket inSocket,
     final CBExMessageTranslatorType<M, P> inTranslator,
-    final CBProtocolSerializerType<P> inSerializer)
+    final CBProtocolMessageVersionedSerializerType<P> inSerializer)
     throws IOException
   {
     this.readers =

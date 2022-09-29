@@ -31,7 +31,7 @@ public final class CBCGJavaSFactory implements CBSPICodeGeneratorFactoryType
   private static final CBSPICodeGeneratorDescription DESCRIPTION =
     new CBSPICodeGeneratorDescription(
       "com.io7m.cedarbridge.javastatic17",
-      "Java 17+ Static",
+      "Java 17+",
       "A generator that produces Java 17 sources."
     );
 

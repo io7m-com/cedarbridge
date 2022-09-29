@@ -16,15 +16,10 @@
 
 package com.io7m.cedarbridge.tests.codegen.javastatic;
 
-import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
 import com.io7m.cedarbridge.runtime.api.CBDeserializeType;
 import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializeType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerCollection;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
-import com.io7m.cedarbridge.runtime.api.CBSerializerFactoryType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
@@ -42,7 +37,6 @@ import java.nio.ByteBuffer;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -63,7 +57,6 @@ public final class CBJavaStaticCodeGeneratorTest
   private Path moduleDirectory;
   private CBFakeLoader loader;
   private CBSerializationContextType context;
-  private CBSerializerDirectoryMutable serializers;
   private CBJavaStaticCompilation compiled;
 
   @BeforeEach
@@ -78,8 +71,6 @@ public final class CBJavaStaticCodeGeneratorTest
       new CBFakeLoader();
     this.context =
       mock(CBSerializationContextType.class);
-    this.serializers =
-      new CBSerializerDirectoryMutable();
 
     when(this.context.errorUnrecognizedVariantIndex(Mockito.anyInt()))
       .thenReturn(new IOException("Unrecognized variant index"));
@@ -128,13 +119,6 @@ public final class CBJavaStaticCodeGeneratorTest
       loader.loadClass(Objects.requireNonNull(clazz, "clazz"));
     }
     return loader;
-  }
-
-  private static CBSerializerFactoryType<?> instantiateFactory(
-    final Class<?> tsfc)
-    throws Exception
-  {
-    return (CBSerializerFactoryType<?>) tsfc.getConstructor().newInstance();
   }
 
   @Test
@@ -1075,25 +1059,5 @@ public final class CBJavaStaticCodeGeneratorTest
         throw new IllegalStateException(e);
       }
     });
-  }
-
-  private void registerSerializers(
-    final CBSerializerCollection serializers)
-  {
-    for (final var s : serializers.serializers()) {
-      this.serializers.addSerializer(s);
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  private <T extends CBSerializableType> CBSerializerType<T> createFactory(
-    final ClassLoader loader,
-    final String name)
-    throws Exception
-  {
-    final var ffc = loader.loadClass(name);
-    final var ff = instantiateFactory(ffc);
-    assertEquals(0, ff.typeParameters().size());
-    return (CBSerializerType<T>) ff.create(this.serializers, List.of());
   }
 }

@@ -201,7 +201,8 @@ public final class CBCGProtocolVersionedInterfaceGenerator
       FINAL
     );
 
-    for (final var type : types) {
+    for (int index = 0; index < types.size(); ++index) {
+      final var type = types.get(index);
       final var block = CodeBlock.builder();
       block.beginControlFlow(
         "if ($L instanceof $T $L)",
@@ -210,6 +211,11 @@ public final class CBCGProtocolVersionedInterfaceGenerator
         "$y"
       );
 
+      block.addStatement(
+        "$L.writeVariantIndex($L)",
+        "$context",
+        Integer.toUnsignedString(index)
+      );
       block.addStatement(
         "$T.serialize($L, $L)",
         type,
