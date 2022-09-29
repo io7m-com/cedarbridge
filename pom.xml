@@ -26,7 +26,7 @@
     <module>com.io7m.cedarbridge.bridgedoc.xhtml</module>
     <module>com.io7m.cedarbridge.cmdline</module>
     <module>com.io7m.cedarbridge.codegen.api</module>
-    <module>com.io7m.cedarbridge.codegen.java</module>
+    <module>com.io7m.cedarbridge.codegen.javastatic</module>
     <module>com.io7m.cedarbridge.codegen.spi</module>
     <module>com.io7m.cedarbridge.documentation</module>
     <module>com.io7m.cedarbridge.errors</module>
@@ -267,6 +267,18 @@
   </dependencyManagement>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-checkstyle-plugin</artifactId>
+          <configuration>
+            <suppressionsLocation>checkstyle-filter.xml</suppressionsLocation>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
       <!-- Generate immutables.org types -->
       <plugin>

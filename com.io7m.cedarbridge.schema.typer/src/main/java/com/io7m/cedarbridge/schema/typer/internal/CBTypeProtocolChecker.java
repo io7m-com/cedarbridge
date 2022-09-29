@@ -59,9 +59,6 @@ public final class CBTypeProtocolChecker
   private static final Optional<UUID> SPEC_SECTION_REMOVAL_ALREADY_PRESENT =
     uuid("78e0481d-8da4-426f-bbce-cfba8f636f0d");
 
-  private static final Optional<UUID> SPEC_SECTION_TOO_MANY_TYPES =
-    uuid("c2ea4d3a-8854-4621-abb2-1154bd861b63");
-
   /**
    * Type checking of protocol declarations.
    */
@@ -197,16 +194,6 @@ public final class CBTypeProtocolChecker
         SPEC_SECTION_BECOMES_EMPTY,
         current.lexical(),
         "errorTypeProtocolBecameEmpty"
-      );
-    }
-
-    if (types.size() >= 255) {
-      throw context.failed(
-        SPEC_SECTION_TOO_MANY_TYPES,
-        current.lexical(),
-        "errorTypeProtocolTooManyTypes",
-        current.version(),
-        Integer.valueOf(types.size())
       );
     }
 

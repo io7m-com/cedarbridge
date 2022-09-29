@@ -19,8 +19,6 @@ package com.io7m.cedarbridge.examples.pastebin;
 import com.io7m.cedarbridge.examples.generic.CBExClient;
 import com.io7m.cedarbridge.examples.generic.CBExClientCoreType;
 import com.io7m.cedarbridge.examples.generic.CBExMessageTranslatorDirectory;
-import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 
 import java.util.Objects;
 
@@ -53,19 +51,14 @@ public final class CBExPasteClientMain
       }
     }
 
-    final var serializers = new CBSerializerDirectoryMutable();
-    serializers.addCollection(CBCoreSerializers.get());
-    serializers.addCollection(Serializers.get());
-
-    final var protocols =
-      ProtocolPaste.factories();
-
+    final var protocol =
+      new ProtocolPaste();
     final var translators =
       new CBExMessageTranslatorDirectory<CBExPasteMessageType, ProtocolPasteType>();
+
     translators.addTranslator(1L, new CBExPasteMessagesV1());
 
-    try (var client =
-           new CBExClient<>(serializers, protocols, translators, core)) {
+    try (var client = new CBExClient<>(protocol, translators, core)) {
       client.start();
       while (!client.isDone()) {
         try {

@@ -17,6 +17,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formatter;
 
 /**
@@ -32,6 +33,24 @@ public record CBFalse()
 
   static final int VARIANT_INDEX = 0;
 
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static void serialize(
+    final CBSerializationContextType context,
+    final CBFalse x)
+    throws IOException
+  {
+    context.writeVariantIndex(VARIANT_INDEX);
+  }
+
   @Override
   public void formatTo(
     final Formatter formatter,
@@ -46,5 +65,23 @@ public record CBFalse()
   public boolean asBoolean()
   {
     return false;
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static CBFalse deserialize(
+    final CBSerializationContextType context)
+    throws IOException
+  {
+    return new CBFalse();
   }
 }

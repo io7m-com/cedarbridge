@@ -17,8 +17,8 @@
 package com.io7m.cedarbridge.examples.generic;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
-import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollectionType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolMessageVersionedSerializerType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolType;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolAvailable;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
@@ -34,8 +34,8 @@ import java.util.Objects;
 
 /**
  * A client on the server. The clients read and writes messages of type
- * {@code M}, converting them to messages of type {@code P} for transfer on
- * the wire.
+ * {@code M}, converting them to messages of type {@code P} for transfer on the
+ * wire.
  *
  * @param <M> The application-level message types
  * @param <P> The wire-level message types
@@ -48,8 +48,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
   private final Logger logger;
   private final Socket socket;
   private final SocketAddress clientAddress;
-  private final CBSerializerDirectoryType serializers;
-  private final CBProtocolSerializerCollectionType<P> protocols;
+  private final CBProtocolType<P> protocols;
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final CBExServerClientCoreType<M> core;
 
@@ -60,7 +59,6 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
    * @param inLogger        The logger
    * @param inSocket        The client socket
    * @param inClientAddress The client address
-   * @param inSerializers   The serializer directory
    * @param inProtocols     The protocol directory
    * @param inTranslators   The translator directory
    * @param inCore          The client core
@@ -71,8 +69,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
     final Logger inLogger,
     final Socket inSocket,
     final SocketAddress inClientAddress,
-    final CBSerializerDirectoryType inSerializers,
-    final CBProtocolSerializerCollectionType<P> inProtocols,
+    final CBProtocolType<P> inProtocols,
     final CBExMessageTranslatorDirectory<M, P> inTranslators,
     final CBExServerClientCoreType<M> inCore)
   {
@@ -84,8 +81,6 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
       Objects.requireNonNull(inSocket, "socket");
     this.clientAddress =
       Objects.requireNonNull(inClientAddress, "clientAddress");
-    this.serializers =
-      Objects.requireNonNull(inSerializers, "inSerializers");
     this.protocols =
       Objects.requireNonNull(inProtocols, "inProtocols");
     this.translators =
@@ -121,9 +116,9 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
           new CBContainerProtocolAvailable(
             1L,
             1L,
-            this.protocols.id(),
-            this.protocols.versionLower(),
-            this.protocols.versionUpper()
+            this.protocols.protocolId(),
+            this.protocols.protocolVersions().first().longValueExact(),
+            this.protocols.protocolVersions().last().longValueExact()
           )
         )
       );
@@ -133,11 +128,19 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
       final var useMessage =
         CBContainerProtocolMessages.parseUse(useBuffer);
 
+      final var versionUsed =
+        useMessage.applicationProtocolVersion();
+
+      final CBProtocolMessageVersionedSerializerType<P> protocol;
+
       try {
-        this.protocols.checkSupportedVersion(
-          useMessage.applicationProtocolId(),
-          useMessage.applicationProtocolVersion()
-        );
+        protocol =
+          this.protocols.serializerForProtocolVersion(versionUsed)
+          .orElseThrow(() -> {
+            return new IllegalArgumentException(
+              "Unsupported protocol version."
+            );
+          });
       } catch (final IllegalArgumentException e) {
         output.write(
           CBContainerProtocolMessages.serializeResponseAsBytes(
@@ -152,7 +155,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
         "[{}] client protocol {} version {}",
         this.clientAddress,
         useMessage.applicationProtocolId(),
-        Long.valueOf(useMessage.applicationProtocolVersion())
+        Long.valueOf(versionUsed)
       );
 
       output.write(
@@ -161,11 +164,6 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
         )
       );
 
-      final var protocolFactory =
-        this.protocols.findOrThrow(useMessage.applicationProtocolVersion());
-      final var protocol =
-        protocolFactory.create(this.serializers);
-
       this.socket.setSoTimeout(10);
 
       final var exSocket =
@@ -173,7 +171,7 @@ public final class CBExServerClient<M, P extends CBProtocolMessageType>
           new BSSReaders(),
           new BSSWriters(),
           this.socket,
-          this.translators.get(useMessage.applicationProtocolVersion()),
+          this.translators.get(versionUsed),
           protocol
         );
 

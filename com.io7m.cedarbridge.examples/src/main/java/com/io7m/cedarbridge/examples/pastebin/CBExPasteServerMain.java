@@ -18,8 +18,6 @@ package com.io7m.cedarbridge.examples.pastebin;
 
 import com.io7m.cedarbridge.examples.generic.CBExMessageTranslatorDirectory;
 import com.io7m.cedarbridge.examples.generic.CBExServer;
-import com.io7m.cedarbridge.runtime.api.CBCoreSerializers;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryMutable;
 
 /**
  * The main pastebin server.
@@ -41,19 +39,17 @@ public final class CBExPasteServerMain
   public static void main(
     final String[] args)
   {
-    final var serializers = new CBSerializerDirectoryMutable();
-    serializers.addCollection(CBCoreSerializers.get());
-    serializers.addCollection(Serializers.get());
-
     final var protocols =
-      ProtocolPaste.factories();
-
+      new ProtocolPaste();
     final var translators =
       new CBExMessageTranslatorDirectory<CBExPasteMessageType, ProtocolPasteType>();
     translators.addTranslator(1L, new CBExPasteMessagesV1());
 
-    try (var server = new CBExServer<>(
-      serializers, protocols, translators, CBExPasteServerClientCore::new)) {
+    try (var server =
+           new CBExServer<>(
+             protocols,
+             translators,
+             CBExPasteServerClientCore::new)) {
       server.start();
       while (!server.isDone()) {
         try {

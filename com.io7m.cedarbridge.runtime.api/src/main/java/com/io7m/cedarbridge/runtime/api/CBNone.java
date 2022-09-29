@@ -17,6 +17,7 @@
 
 package com.io7m.cedarbridge.runtime.api;
 
+import java.io.IOException;
 import java.util.Formatter;
 import java.util.Optional;
 
@@ -49,5 +50,45 @@ public record CBNone<T extends CBSerializableType>()
   public Optional<T> asOptional()
   {
     return Optional.empty();
+  }
+
+  /**
+   * Serialize the given value.
+   *
+   * @param context The serialization context
+   * @param x       The value
+   * @param ft      A serializer for {@code T}
+   * @param <T>     The type of list values
+   *
+   * @throws IOException On errors
+   */
+
+  @CBSerializerMethod
+  public static <T extends CBSerializableType> void serialize(
+    final CBSerializationContextType context,
+    final CBNone<T> x,
+    final CBSerializeType<T> ft)
+    throws IOException
+  {
+    context.writeVariantIndex(VARIANT_INDEX);
+  }
+
+  /**
+   * Deserialize the given value.
+   *
+   * @param context The serialization context
+   *
+   * @return The deserialized value
+   *
+   * @throws IOException On errors
+   */
+
+  @CBDeserializerMethod
+  public static <T extends CBSerializableType> CBNone<T> deserialize(
+    final CBSerializationContextType context,
+    final CBDeserializeType<T> ft)
+    throws IOException
+  {
+    return new CBNone<>();
   }
 }

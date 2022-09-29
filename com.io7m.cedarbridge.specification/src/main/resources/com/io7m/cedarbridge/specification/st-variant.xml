@@ -49,9 +49,6 @@
       a <Term type="statement">variant</Term> statement are unique within that variant type. It is an error for two
       or more <Term type="term">cases</Term> within a variant to have the same name.
     </Paragraph>
-    <Paragraph id="d6278815-2947-4cfa-a623-dfadb8f6f913">
-      It is an error if a given variant declaration contains <Term type="expression">&gt; 255</Term> cases.
-    </Paragraph>
     <Paragraph>
       The declaration order of <Term type="term">cases</Term> within a variant type is significant; changing the
       order of <Term type="statement">case</Term> declarations will change the semantics and serialized form of

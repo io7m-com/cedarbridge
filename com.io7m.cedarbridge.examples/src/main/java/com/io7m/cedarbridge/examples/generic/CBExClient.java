@@ -17,8 +17,8 @@
 package com.io7m.cedarbridge.examples.generic;
 
 import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
-import com.io7m.cedarbridge.runtime.api.CBProtocolSerializerCollectionType;
-import com.io7m.cedarbridge.runtime.api.CBSerializerDirectoryType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolMessageVersionedSerializerType;
+import com.io7m.cedarbridge.runtime.api.CBProtocolType;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolUse;
 import com.io7m.jbssio.vanilla.BSSReaders;
@@ -56,8 +56,7 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
     LoggerFactory.getLogger(CBExClient.class);
 
   private final ExecutorService threadPool;
-  private final CBSerializerDirectoryType serializers;
-  private final CBProtocolSerializerCollectionType<P> protocols;
+  private final CBProtocolType<P> protocols;
   private final CBExMessageTranslatorDirectory<M, P> translators;
   private final CBExClientCoreType<M> core;
   private volatile CBExClient.State state;
@@ -66,19 +65,15 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
    * Construct a client.
    *
    * @param inCore        A supplier of client cores
-   * @param inProtocols   The protocol serializer collection
-   * @param inSerializers A serializer directory
+   * @param inProtocols   The protocol
    * @param inTranslators A translator directory
    */
 
   public CBExClient(
-    final CBSerializerDirectoryType inSerializers,
-    final CBProtocolSerializerCollectionType<P> inProtocols,
+    final CBProtocolType<P> inProtocols,
     final CBExMessageTranslatorDirectory<M, P> inTranslators,
     final CBExClientCoreType<M> inCore)
   {
-    this.serializers =
-      Objects.requireNonNull(inSerializers, "serializers");
     this.protocols =
       Objects.requireNonNull(inProtocols, "protocols");
     this.translators =
@@ -143,25 +138,58 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
       final var available =
         CBContainerProtocolMessages.parseAvailable(availableBuffer);
 
-      final var highestVersion =
-        this.protocols.highestSupportedVersion(
-          available.applicationProtocolId(),
-          available.applicationProtocolMinimumVersion(),
-          available.applicationProtocolMaximumVersion()
+      final var localSupportedLowest =
+        this.protocols.protocolVersions().first().longValue();
+      final var localSupportedHighest =
+        this.protocols.protocolVersions().last().longValue();
+      final var localSupportedId =
+        this.protocols.protocolId();
+
+      final var peerSupportedLowest =
+        available.applicationProtocolMinimumVersion();
+      final var peerSupportedHighest =
+        available.applicationProtocolMaximumVersion();
+      final var peerSupportedId =
+        available.applicationProtocolId();
+
+      final var interLowest =
+        Math.max(localSupportedLowest, peerSupportedLowest);
+      final var interHighest =
+        Math.min(localSupportedHighest, peerSupportedHighest);
+      final var versionOk =
+        Long.compareUnsigned(interHighest, interLowest) >= 0;
+      final var protocolOk =
+        Objects.equals(peerSupportedId, localSupportedId);
+
+      if (!(versionOk && protocolOk)) {
+        LOG.error("no supported protocols in common");
+        LOG.error(
+          "server has: {} [{}, {}]",
+          peerSupportedId,
+          Long.valueOf(peerSupportedLowest),
+          Long.valueOf(peerSupportedHighest)
         );
+        LOG.error(
+          "client has: {} [{}, {}]",
+          localSupportedId,
+          Long.valueOf(localSupportedLowest),
+          Long.valueOf(localSupportedHighest)
+        );
+        return;
+      }
 
       LOG.debug(
         "requesting protocol {} version {}",
-        available.applicationProtocolId(),
-        Long.valueOf(highestVersion)
+        peerSupportedId,
+        Long.valueOf(interHighest)
       );
 
       output.write(
         CBContainerProtocolMessages.serializeUseAsBytes(
           new CBContainerProtocolUse(
             1L,
-            available.applicationProtocolId(),
-            highestVersion
+            peerSupportedId,
+            interHighest
           )
         )
       );
@@ -178,17 +206,18 @@ public final class CBExClient<M, P extends CBProtocolMessageType>
 
       socket.setSoTimeout(10);
 
-      final var protocolFactory =
-        this.protocols.findOrThrow(highestVersion);
-      final var protocol =
-        protocolFactory.create(this.serializers);
+      final CBProtocolMessageVersionedSerializerType<P> protocol =
+        this.protocols.serializerForProtocolVersion(interHighest)
+          .orElseThrow(() -> {
+            return new IllegalStateException("Missing protocol version!");
+          });
 
       final var exSocket =
         new CBExSocket<>(
           new BSSReaders(),
           new BSSWriters(),
           socket,
-          this.translators.get(highestVersion),
+          this.translators.get(interHighest),
           protocol
         );
 

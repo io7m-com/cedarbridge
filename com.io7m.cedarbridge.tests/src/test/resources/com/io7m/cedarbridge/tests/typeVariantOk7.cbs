@@ -1,0 +1,19 @@
+[package x.y.z]
+
+[documentation T "A variant with three cases."]
+[variant T
+  [documentation A "The type of embedded values."]
+  [parameter A]
+  [documentation C0 "The first case."]
+  [case C0
+    [documentation x "A field named x."]
+    [field x A]]
+  [documentation C1 "The second case."]
+  [case C1
+    [documentation y "A field named y."]
+    [field y A]]
+  [documentation C2 "The third case."]
+  [case C2
+    [documentation z "A field named z."]
+    [field z A]]
+]
