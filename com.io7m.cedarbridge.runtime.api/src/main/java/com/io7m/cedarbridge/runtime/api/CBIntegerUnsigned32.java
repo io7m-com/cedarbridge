@@ -41,7 +41,7 @@ public record CBIntegerUnsigned32(long value)
       throw new IllegalArgumentException(
         String.format(
           "Value %s must be in the range [0, 4294967295]",
-          Long.toUnsignedString(this.value()))
+          Long.toUnsignedString(value))
       );
     }
 
@@ -49,7 +49,7 @@ public record CBIntegerUnsigned32(long value)
       throw new IllegalArgumentException(
         String.format(
           "Value %s must be in the range [0, 4294967295]",
-          Long.toUnsignedString(this.value()))
+          Long.toUnsignedString(value))
       );
     }
   }

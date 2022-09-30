@@ -41,7 +41,7 @@ public record CBIntegerUnsigned8(int value)
       throw new IllegalArgumentException(
         String.format(
           "Value %d must be in the range [0, 255]",
-          Integer.valueOf(this.value()))
+          Integer.valueOf(value))
       );
     }
 
@@ -49,7 +49,7 @@ public record CBIntegerUnsigned8(int value)
       throw new IllegalArgumentException(
         String.format(
           "Value %d must be in the range [0, 255]",
-          Integer.valueOf(this.value()))
+          Integer.valueOf(value))
       );
     }
   }
