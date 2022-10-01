@@ -13,7 +13,7 @@
 
   <groupId>com.io7m.cedarbridge</groupId>
   <artifactId>com.io7m.cedarbridge</artifactId>
-  <version>0.0.9-SNAPSHOT</version>
+  <version>0.0.9</version>
 
   <packaging>pom</packaging>
   <name>com.io7m.cedarbridge</name>
