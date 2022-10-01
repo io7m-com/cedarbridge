@@ -72,9 +72,9 @@ public final class CBJavaStaticCodeGeneratorTest
     this.context =
       mock(CBSerializationContextType.class);
 
-    when(this.context.errorUnrecognizedVariantIndex(Mockito.anyInt()))
+    when(this.context.errorUnrecognizedVariantIndex(Mockito.any(), Mockito.anyInt()))
       .thenReturn(new IOException("Unrecognized variant index"));
-    when(this.context.errorUnrecognizedVariantCaseClass(Mockito.any()))
+    when(this.context.errorUnrecognizedVariantCaseClass(Mockito.any(), Mockito.any()))
       .thenReturn(new IOException("Unrecognized variant class"));
   }
 
@@ -82,8 +82,8 @@ public final class CBJavaStaticCodeGeneratorTest
   public void tearDown()
     throws IOException
   {
-    // CBTestDirectories.deleteDirectory(this.directory);
-    // CBTestDirectories.deleteDirectory(this.moduleDirectory);
+    CBTestDirectories.deleteDirectory(this.directory);
+    CBTestDirectories.deleteDirectory(this.moduleDirectory);
   }
 
   private void compile(

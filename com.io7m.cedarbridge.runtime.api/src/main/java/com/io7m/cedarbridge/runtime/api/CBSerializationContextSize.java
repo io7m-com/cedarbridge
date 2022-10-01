@@ -294,19 +294,27 @@ public final class CBSerializationContextSize
 
   @Override
   public IOException errorUnrecognizedVariantIndex(
+    final Class<?> readerClass,
     final int index)
   {
-    return new IOException(
-      "Unrecognized variant index: %d".formatted(index)
+    return new CBSerializationException(
+      "%s: Unrecognized variant index: %d"
+        .formatted(readerClass.getSimpleName(), index),
+      0L,
+      ""
     );
   }
 
   @Override
   public IOException errorUnrecognizedVariantCaseClass(
+    final Class<?> writerClass,
     final Class<?> clazz)
   {
-    return new IOException(
-      "Unrecognized variant case class: %s".formatted(clazz)
+    return new CBSerializationException(
+      "%s: Unrecognized variant case class: %s"
+        .formatted(writerClass.getSimpleName(), clazz),
+      0L,
+      ""
     );
   }
 }

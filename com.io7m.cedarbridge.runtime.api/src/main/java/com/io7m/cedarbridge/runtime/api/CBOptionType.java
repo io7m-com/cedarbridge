@@ -101,7 +101,7 @@ public sealed interface CBOptionType<T extends CBSerializableType>
     return switch (index) {
       case CBSome.VARIANT_INDEX -> CBSome.deserialize(context, fv);
       case CBNone.VARIANT_INDEX -> CBNone.deserialize(context, fv);
-      default -> throw context.errorUnrecognizedVariantIndex(index);
+      default -> throw context.errorUnrecognizedVariantIndex(CBOptionType.class, index);
     };
   }
 }
