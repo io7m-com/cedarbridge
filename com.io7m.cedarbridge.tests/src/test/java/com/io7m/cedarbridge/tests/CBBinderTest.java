@@ -533,6 +533,14 @@ public final class CBBinderTest
     assertTrue(this.errors.get(9).message().contains("NONEXISTENT9"));
   }
 
+  @Test
+  public void testBug29()
+    throws Exception
+  {
+    final var pack = this.bind("bug29.cbs");
+    assertEquals(0, this.errors.size());
+  }
+
   private CBBindingLocalType checkHaveSeenBefore(
     final CBASTElementType element)
   {
