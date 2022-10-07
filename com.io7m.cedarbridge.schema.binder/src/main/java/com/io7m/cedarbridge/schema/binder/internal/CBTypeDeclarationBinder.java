@@ -259,19 +259,13 @@ public final class CBTypeDeclarationBinder
       exceptions.addException(e);
     }
 
-    try {
-      bindFields(context, caseV.fields());
-    } catch (final CBBindFailedException e) {
-      exceptions.addException(e);
-    }
-
-    try {
-      bindDocumentationsInRecord(
-        context,
-        caseV.documentations()
-      );
-    } catch (final CBBindFailedException e) {
-      exceptions.addException(e);
+    try (var subContext = context.openBindingScope()) {
+      try {
+        bindFields(subContext, caseV.fields());
+        bindDocumentationsInRecord(subContext, caseV.documentations());
+      } catch (final CBBindFailedException e) {
+        exceptions.addException(e);
+      }
     }
 
     exceptions.throwIfNecessary();

@@ -1,0 +1,28 @@
+[language cedarbridge 1 0]
+
+[package x.y.z]
+
+[record T]
+
+[documentation Ic1PermissionScoped "A scoped permission."]
+[variant Ic1PermissionScoped
+  [documentation Global "A globally scoped permission."]
+  [case Global
+    [documentation permission "The permission."]
+    [field permission T]
+  ]
+  [documentation Projectwide "A project-scoped permission."]
+  [case Projectwide
+    [documentation project "The project ID."]
+    [field project T]
+    [documentation permission "The permission."]
+    [field permission T]
+  ]
+  [documentation Ticketwide "A ticket-scoped permission."]
+  [case Ticketwide
+    [documentation ticket "The ticket ID."]
+    [field ticket T]
+    [documentation permission "The permission."]
+    [field permission T]
+  ]
+]
