@@ -65,13 +65,6 @@
   padding: 1em;
 }
 
-.cbTypeOverviewParameterLine,
-.cbTypeOverviewFieldLine,
-.cbTypeOverviewVariantCaseLine
-{
-  margin-left: 1em;
-}
-
 .cbFieldsTable
 {
   width:           100%;
@@ -161,19 +154,4 @@
 .cbProtocolTable tr td:nth-child(1)
 {
   font-family: monospace;
-}
-
-.cbBracketOpen,
-.cbBracketClose
-{
-  color: #aaa;
-}
-.cbBracketOpen {
-  margin-right: -0.5em;
-}
-.cbBracketClose {
-  margin-left: -0.5em;
-}
-.cbBracketTrailing {
-  margin-left: 0em;
 }
