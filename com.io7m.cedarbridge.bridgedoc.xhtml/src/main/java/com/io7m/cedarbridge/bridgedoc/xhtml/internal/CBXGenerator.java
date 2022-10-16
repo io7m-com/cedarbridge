@@ -376,6 +376,20 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     header.appendChild(anchor);
     holder.appendChild(header);
 
+    {
+      final var id =
+        documentedPack.document.createElementNS(XHTML, "p");
+      id.appendChild(
+        documentedPack.document.createTextNode("Protocol identifier: "));
+
+      final var uuid =
+        documentedPack.document.createElementNS(XHTML, "tt");
+      uuid.setTextContent(protocol.id().toString());
+      id.appendChild(uuid);
+
+      holder.appendChild(id);
+    }
+
     for (final var docText : protocol.documentation()) {
       final var p =
         documentedPack.document.createElementNS(XHTML, "p");
