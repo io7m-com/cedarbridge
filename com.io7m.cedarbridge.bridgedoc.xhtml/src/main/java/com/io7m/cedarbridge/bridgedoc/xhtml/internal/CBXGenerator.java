@@ -170,7 +170,6 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
 
       final var domWriter = lsImplementation.createLSSerializer();
       final var domConfig = domWriter.getDomConfig();
-      domConfig.setParameter("indent", FALSE);
       domConfig.setParameter("xml-declaration", FALSE);
 
       fileWriter.append(xmlDirective());
