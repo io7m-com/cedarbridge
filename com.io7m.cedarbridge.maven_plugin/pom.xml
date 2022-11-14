@@ -11,12 +11,16 @@
     <groupId>com.io7m.cedarbridge</groupId>
     <version>0.0.11</version>
   </parent>
-  <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
+  <artifactId>com.io7m.cedarbridge.maven_plugin</artifactId>
 
-  <packaging>jar</packaging>
-  <name>com.io7m.cedarbridge.cmdline</name>
-  <description>Cedarbridge message protocol (Command-line interface)</description>
+  <packaging>maven-plugin</packaging>
+  <name>com.io7m.cedarbridge.maven_plugin</name>
+  <description>Cedarbridge message protocol (Maven plugin)</description>
   <url>https://www.io7m.com/software/cedarbridge</url>
+
+  <properties>
+    <bnd.baseline.skip>true</bnd.baseline.skip>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -91,6 +95,10 @@
     </dependency>
 
     <dependency>
+      <groupId>com.io7m.jaffirm</groupId>
+      <artifactId>com.io7m.jaffirm.core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.io7m.jsx</groupId>
       <artifactId>com.io7m.jsx.core</artifactId>
     </dependency>
@@ -98,101 +106,53 @@
       <groupId>com.io7m.jsx</groupId>
       <artifactId>com.io7m.jsx.parser</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.io7m.claypot</groupId>
-      <artifactId>com.io7m.claypot.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>org.osgi</groupId>
-      <artifactId>org.osgi.annotation.versioning</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.annotation.bundle</artifactId>
       <scope>provided</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-plugin-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
     <plugins>
-      <!-- Ignore dependencies that bytecode analysis gets wrong. -->
+      <!-- Ignore dependencies that bytecode analysis misses. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <configuration>
           <failOnWarning>true</failOnWarning>
           <ignoredUnusedDeclaredDependencies>
-            <ignoredUnusedDeclaredDependency>com.io7m.cedarbridge:*:*</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>com.io7m.jsx:*:*</ignoredUnusedDeclaredDependency>
-            <ignoredUnusedDeclaredDependency>ch.qos.logback:logback-classic:*</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.io7m.cedarbridge:*</ignoredUnusedDeclaredDependency>
+            <ignoredUnusedDeclaredDependency>com.io7m.jsx:*</ignoredUnusedDeclaredDependency>
           </ignoredUnusedDeclaredDependencies>
         </configuration>
       </plugin>
 
-      <!-- Produce command-line onejar -->
+      <!-- Generate sources -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-shade-plugin</artifactId>
+        <artifactId>maven-plugin-plugin</artifactId>
         <executions>
           <execution>
-            <phase>package</phase>
+            <id>mojo-descriptor</id>
+            <phase>process-classes</phase>
             <goals>
-              <goal>shade</goal>
+              <goal>descriptor</goal>
             </goals>
-            <configuration>
-              <createDependencyReducedPom>false</createDependencyReducedPom>
-              <minimizeJar>false</minimizeJar>
-              <shadedClassifierName>main</shadedClassifierName>
-              <shadedArtifactAttached>true</shadedArtifactAttached>
-              <transformers>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                  <manifestEntries>
-                    <Main-Class>com.io7m.cedarbridge.cmdline.Main</Main-Class>
-                  </manifestEntries>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
-                  <resource>.SF</resource>
-                  <resource>.RSA</resource>
-                </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-              </transformers>
-              <filters>
-                <filter>
-                  <artifact>org.slf4j:slf4j-api</artifact>
-                  <excludes>
-                    <exclude>**/module-info.class</exclude>
-                  </excludes>
-                </filter>
-              </filters>
-            </configuration>
           </execution>
         </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>io.github.zlika</groupId>
-        <artifactId>reproducible-build-maven-plugin</artifactId>
       </plugin>
     </plugins>
   </build>

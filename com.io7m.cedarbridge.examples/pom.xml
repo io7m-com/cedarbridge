@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.10</version>
+    <version>0.0.11</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.examples</artifactId>
 
@@ -19,11 +19,6 @@
   <url>https://www.io7m.com/software/cedarbridge</url>
 
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.runtime.container_protocol</artifactId>
@@ -99,45 +94,68 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.io7m.cedarbridge.maven_plugin</artifactId>
+        <version>${project.version}</version>
+
         <executions>
           <execution>
             <id>generate-paste</id>
             <phase>generate-sources</phase>
             <goals>
-              <goal>java</goal>
+              <goal>compile</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
-              <arguments>
-                <argument>compile</argument>
-                <argument>--output-directory</argument>
-                <argument>${project.build.directory}/generated-sources/annotations</argument>
-                <argument>--file</argument>
-                <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</argument>
-                <argument>--language</argument>
-                <argument>Java 17+</argument>
-              </arguments>
+              <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</file>
+              </files>
+              <languageName>Java 17+</languageName>
             </configuration>
           </execution>
+
           <execution>
             <id>generate-chat</id>
             <phase>generate-sources</phase>
             <goals>
-              <goal>java</goal>
+              <goal>compile</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
-              <arguments>
-                <argument>compile</argument>
-                <argument>--output-directory</argument>
-                <argument>${project.build.directory}/generated-sources/annotations</argument>
-                <argument>--file</argument>
-                <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</argument>
-                <argument>--language</argument>
-                <argument>Java 17+</argument>
-              </arguments>
+              <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</file>
+              </files>
+              <languageName>Java 17+</languageName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-paste-doc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>document</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/bridgedoc</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</file>
+              </files>
+              <languageName>XHTML</languageName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-chat-doc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>document</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/bridgedoc</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</file>
+              </files>
+              <languageName>XHTML</languageName>
             </configuration>
           </execution>
         </executions>

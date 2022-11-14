@@ -30,19 +30,18 @@ import com.io7m.cedarbridge.schema.compiled.CBRecordType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeDeclarationType;
 import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionApplication;
 import com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType;
-import com.io7m.cedarbridge.schema.compiled.CBTypeParameterType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantCaseType;
 import com.io7m.cedarbridge.schema.compiled.CBVariantType;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.DOMImplementationLS;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -58,13 +57,9 @@ import java.util.stream.Stream;
 
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprNamedType;
 import static com.io7m.cedarbridge.schema.compiled.CBTypeExpressionType.CBTypeExprParameterType;
+import static java.lang.Boolean.FALSE;
 import static java.nio.file.StandardOpenOption.CREATE;
 import static java.nio.file.StandardOpenOption.TRUNCATE_EXISTING;
-import static javax.xml.transform.OutputKeys.ENCODING;
-import static javax.xml.transform.OutputKeys.INDENT;
-import static javax.xml.transform.OutputKeys.METHOD;
-import static javax.xml.transform.OutputKeys.OMIT_XML_DECLARATION;
-import static javax.xml.transform.OutputKeys.VERSION;
 
 /**
  * An XHTML generator.
@@ -120,9 +115,14 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
         this.processPackage(p);
       }
 
+      final var registry =
+        DOMImplementationRegistry.newInstance();
+      final var lsImplementation =
+        (DOMImplementationLS) registry.getDOMImplementation("LS");
+
       final var files = new ArrayList<Path>();
       for (final var d : this.documented.values()) {
-        files.add(this.serializePackage(d));
+        files.add(this.serializePackage(d, lsImplementation));
       }
 
       files.add(this.writeCSS("cedarbridge-document.css"));
@@ -155,35 +155,30 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
   }
 
   private Path serializePackage(
-    final CBDocumentedPackage documentedPackage)
+    final CBDocumentedPackage documentedPackage,
+    final DOMImplementationLS lsImplementation)
     throws Exception
   {
     final var fileOutput =
       this.configuration.outputDirectory()
         .resolve(documentedPackage.name() + ".xhtml");
 
-    final var source = new DOMSource(documentedPackage.document());
-    try (var output = Files.newBufferedWriter(fileOutput)) {
-      final var result =
-        new StreamResult(output);
-      final var transformerFactory =
-        TransformerFactory.newInstance();
+    try (var fileWriter = Files.newBufferedWriter(fileOutput)) {
+      final var output = lsImplementation.createLSOutput();
+      output.setEncoding(StandardCharsets.UTF_8.name());
+      output.setCharacterStream(fileWriter);
 
-      final var transformer =
-        transformerFactory.newTransformer();
+      final var domWriter = lsImplementation.createLSSerializer();
+      final var domConfig = domWriter.getDomConfig();
+      domConfig.setParameter("xml-declaration", FALSE);
 
-      output.append(xmlDirective());
-      output.newLine();
-      output.append(xmlDoctype());
-      output.newLine();
-
-      transformer.setOutputProperty(ENCODING, "UTF-8");
-      transformer.setOutputProperty(VERSION, "1.0");
-      transformer.setOutputProperty(METHOD, "xml");
-      transformer.setOutputProperty(INDENT, "yes");
-      transformer.setOutputProperty(OMIT_XML_DECLARATION, "yes");
-      transformer.transform(source, result);
-      output.flush();
+      fileWriter.append(xmlDirective());
+      fileWriter.append("\n");
+      fileWriter.append(xmlDoctype());
+      fileWriter.append("\n");
+      domWriter.write(documentedPackage.document, output);
+      fileWriter.append("\n");
+      fileWriter.flush();
     }
 
     return fileOutput;
@@ -375,6 +370,20 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     anchor.setTextContent(protocol.name());
     header.appendChild(anchor);
     holder.appendChild(header);
+
+    {
+      final var id =
+        documentedPack.document.createElementNS(XHTML, "p");
+      id.appendChild(
+        documentedPack.document.createTextNode("Protocol identifier: "));
+
+      final var uuid =
+        documentedPack.document.createElementNS(XHTML, "tt");
+      uuid.setTextContent(protocol.id().toString());
+      id.appendChild(uuid);
+
+      holder.appendChild(id);
+    }
 
     for (final var docText : protocol.documentation()) {
       final var p =
@@ -867,91 +876,63 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     final var e = d.createElementNS(XHTML, "div");
     e.setAttribute("class", "cbTypeOverview");
 
+    final var et = d.createElementNS(XHTML, "pre");
+    et.appendChild(d.createTextNode("["));
+
     {
+      final var kw =
+        createKeyword(d, "record");
+
       final var a = d.createElementNS(XHTML, "a");
       a.setAttribute("href", anchor(rec));
       a.setTextContent(rec.name());
 
-      final var kw = d.createElementNS(XHTML, "span");
-      kw.setAttribute("class", "cbKeyword");
-      kw.setTextContent("record");
-
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.setAttribute("class", "cbTypeOverviewRecordLine");
-      e0.appendChild(bracketOpen(d, '('));
-      e0.appendChild(kw);
-      e0.appendChild(a);
-      e.appendChild(e0);
+      et.appendChild(kw);
+      et.appendChild(d.createTextNode(" "));
+      et.appendChild(a);
     }
 
-    for (final var parameter : rec.parameters()) {
-      final var a = d.createElementNS(XHTML, "a");
-      a.setAttribute("href", anchorPlus(rec, parameter.name()));
-      a.setTextContent(parameter.name());
+    if (!rec.parameters().isEmpty()) {
+      et.appendChild(d.createTextNode("\n"));
 
-      final var kw = d.createElementNS(XHTML, "span");
-      kw.setAttribute("class", "cbKeyword");
-      kw.setTextContent("parameter");
+      for (final var parameter : rec.parameters()) {
+        final var a = d.createElementNS(XHTML, "a");
+        a.setAttribute("href", anchorPlus(rec, parameter.name()));
+        a.setTextContent(parameter.name());
 
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.setAttribute("class", "cbTypeOverviewParameterLine");
-      e0.appendChild(bracketOpen(d, '['));
-      e0.appendChild(kw);
-      e0.appendChild(a);
-      e0.appendChild(bracketClose(d, ']', false));
-      e.appendChild(e0);
+        final var kw =
+          createKeyword(d, "parameter");
+
+        et.appendChild(d.createTextNode("  ["));
+        et.appendChild(kw);
+        et.appendChild(d.createTextNode(" "));
+        et.appendChild(a);
+        et.appendChild(d.createTextNode("]\n"));
+      }
     }
 
-    for (final var field : rec.fields()) {
-      final var a = d.createElementNS(XHTML, "a");
-      a.setAttribute("href", anchorPlus(rec, field.name()));
-      a.setTextContent(field.name());
+    if (!rec.fields().isEmpty()) {
+      et.appendChild(d.createTextNode("\n"));
 
-      final var kw = d.createElementNS(XHTML, "span");
-      kw.setAttribute("class", "cbKeyword");
-      kw.setTextContent("field");
+      for (final var field : rec.fields()) {
+        final var a = d.createElementNS(XHTML, "a");
+        a.setAttribute("href", anchorPlus(rec, field.name()));
+        a.setTextContent(field.name());
 
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.setAttribute("class", "cbTypeOverviewFieldLine");
-      e0.appendChild(bracketOpen(d, '['));
-      e0.appendChild(kw);
-      e0.appendChild(a);
-      e0.appendChild(processTypeExpression(d, pack, field.type()));
-      e0.appendChild(bracketClose(d, ']', false));
-      e.appendChild(e0);
+        final var kw = createKeyword(d, "field");
+
+        et.appendChild(d.createTextNode("  ["));
+        et.appendChild(kw);
+        et.appendChild(d.createTextNode(" "));
+        et.appendChild(a);
+        et.appendChild(d.createTextNode(" "));
+        et.appendChild(processTypeExpression(d, pack, field.type()));
+        et.appendChild(d.createTextNode("]\n"));
+      }
     }
 
-    {
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.appendChild(bracketClose(d, ')', true));
-      e.appendChild(e0);
-    }
-
-    return e;
-  }
-
-  private static Element bracketOpen(
-    final Document d,
-    final char type)
-  {
-    final var e = d.createElementNS(XHTML, "span");
-    e.setAttribute("class", "cbBracketOpen");
-    e.setTextContent("" + type);
-    return e;
-  }
-
-  private static Element bracketClose(
-    final Document d,
-    final char type,
-    final boolean trailing)
-  {
-    final var e = d.createElementNS(XHTML, "span");
-    if (trailing) {
-      e.setAttribute("class", "cbBracketClose cbBracketTrailing");
-    } else {
-      e.setAttribute("class", "cbBracketClose");
-    }
-    e.setTextContent("" + type);
+    et.appendChild(d.createTextNode("]\n"));
+    e.appendChild(et);
     return e;
   }
 
@@ -966,43 +947,30 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     e.setAttribute("class", "cbTypeOverview");
 
     {
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.appendChild(bracketOpen(d, '['));
-      e0.appendChild(d.createTextNode("external"));
-      e0.appendChild(d.createTextNode(" "));
-      e0.appendChild(d.createTextNode(ext.name()));
-      e.appendChild(e0);
+      final var e0 =
+        d.createElementNS(XHTML, "pre");
+      final var text =
+        new StringBuilder(128);
 
-      for (final var parameter : ext.parameters()) {
-        e.appendChild(processParameter(ext, d, parameter));
+      text.append("[external ");
+      text.append(ext.name());
+
+      if (!ext.parameters().isEmpty()) {
+        text.append("\n");
+        for (final var parameter : ext.parameters()) {
+          text.append("  ");
+          text.append("[parameter ");
+          text.append(parameter.name());
+          text.append("]\n");
+        }
       }
 
-      e.appendChild(bracketClose(d, ']', true));
+      text.append(']');
+      e0.setTextContent(text.toString());
+      e.appendChild(e0);
     }
 
     return e;
-  }
-
-  private static Element processParameter(
-    final CBTypeDeclarationType ext,
-    final Document d,
-    final CBTypeParameterType parameter)
-  {
-    final var a = d.createElementNS(XHTML, "a");
-    a.setAttribute("href", anchorPlus(ext, parameter.name()));
-    a.setTextContent(parameter.name());
-
-    final var kw = d.createElementNS(XHTML, "span");
-    kw.setAttribute("class", "cbKeyword");
-    kw.setTextContent("parameter");
-
-    final var e1 = d.createElementNS(XHTML, "div");
-    e1.setAttribute("class", "cbTypeOverviewParameterLine");
-    e1.appendChild(bracketOpen(d, '['));
-    e1.appendChild(kw);
-    e1.appendChild(a);
-    e1.appendChild(bracketClose(d, ']', false));
-    return e1;
   }
 
   private static Element renderTypeVariant(
@@ -1015,70 +983,103 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
     final var e = d.createElementNS(XHTML, "div");
     e.setAttribute("class", "cbTypeOverview");
 
+    final var et = d.createElementNS(XHTML, "pre");
+    et.appendChild(d.createTextNode("["));
+
     {
+      final var kw =
+        createKeyword(d, "variant");
+
       final var a = d.createElementNS(XHTML, "a");
       a.setAttribute("href", anchor(var));
       a.setTextContent(var.name());
 
-      final var kw = d.createElementNS(XHTML, "span");
-      kw.setAttribute("class", "cbKeyword");
-      kw.setTextContent("variant");
-
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.setAttribute("class", "cbTypeOverviewVariantLine");
-      e0.appendChild(bracketOpen(d, '('));
-      e0.appendChild(kw);
-      e0.appendChild(a);
-      e.appendChild(e0);
+      et.appendChild(kw);
+      et.appendChild(d.createTextNode(" "));
+      et.appendChild(a);
     }
 
-    for (final var parameter : var.parameters()) {
-      e.appendChild(processParameter(var, d, parameter));
-    }
+    if (!var.parameters().isEmpty()) {
+      et.appendChild(d.createTextNode("\n"));
 
-    for (final var caseV : var.cases()) {
-      final var kw = d.createElementNS(XHTML, "span");
-      kw.setAttribute("class", "cbKeyword");
-      kw.setTextContent("case");
-
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.setAttribute("class", "cbTypeOverviewVariantCaseLine");
-      e0.appendChild(bracketOpen(d, '['));
-      e0.appendChild(kw);
-      e0.appendChild(d.createTextNode(caseV.name()));
-
-      for (final var field : caseV.fields()) {
+      for (final var parameter : var.parameters()) {
         final var a = d.createElementNS(XHTML, "a");
-        a.setAttribute(
-          "href",
-          anchorPlus(var, "%s_%s".formatted(caseV.name(), field.name())));
-        a.setTextContent(field.name());
+        a.setAttribute("href", anchorPlus(var, parameter.name()));
+        a.setTextContent(parameter.name());
 
-        final var fieldKw = d.createElementNS(XHTML, "span");
-        fieldKw.setAttribute("class", "cbKeyword");
-        fieldKw.setTextContent("field");
+        final var kw =
+          createKeyword(d, "parameter");
 
-        final var e1 = d.createElementNS(XHTML, "div");
-        e1.setAttribute("class", "cbTypeOverviewFieldLine");
-        e1.appendChild(bracketOpen(d, '['));
-        e1.appendChild(fieldKw);
-        e1.appendChild(a);
-        e1.appendChild(processTypeExpression(d, pack, field.type()));
-        e1.appendChild(bracketClose(d, ']', false));
-        e0.appendChild(e1);
+        et.appendChild(d.createTextNode("  ["));
+        et.appendChild(kw);
+        et.appendChild(d.createTextNode(" "));
+        et.appendChild(a);
+        et.appendChild(d.createTextNode("]"));
       }
-
-      e0.appendChild(bracketClose(d, ']', false));
-      e.appendChild(e0);
     }
 
-    {
-      final var e0 = d.createElementNS(XHTML, "div");
-      e0.appendChild(bracketClose(d, ')', true));
-      e.appendChild(e0);
+    if (!var.cases().isEmpty()) {
+      et.appendChild(d.createTextNode("\n"));
+
+      for (final var caseV : var.cases()) {
+        final var kw = createKeyword(d, "case");
+
+        et.appendChild(d.createTextNode("  ["));
+        et.appendChild(kw);
+        et.appendChild(d.createTextNode(" "));
+        et.appendChild(d.createTextNode(caseV.name()));
+
+        if (!caseV.fields().isEmpty()) {
+          et.appendChild(d.createTextNode("\n"));
+
+          for (final var field : caseV.fields()) {
+            final var fa = 
+              createFieldInCaseAnchor(d, var, caseV, field);
+            final var fieldKw =
+              createKeyword(d, "field");
+
+            et.appendChild(d.createTextNode("    ["));
+            et.appendChild(fieldKw);
+            et.appendChild(d.createTextNode(" "));
+            et.appendChild(fa);
+            et.appendChild(d.createTextNode(" "));
+            et.appendChild(processTypeExpression(d, pack, field.type()));
+            et.appendChild(d.createTextNode("]\n"));
+          }
+          et.appendChild(d.createTextNode("  ]\n"));
+        } else {
+          et.appendChild(d.createTextNode("]\n"));
+        }
+      }
     }
 
+    et.appendChild(d.createTextNode("]\n"));
+    e.appendChild(et);
     return e;
+  }
+
+  private static Element createKeyword(
+    final Document d,
+    final String name)
+  {
+    final var kw = d.createElementNS(XHTML, "span");
+    kw.setAttribute("class", "cbKeyword");
+    kw.setTextContent(name);
+    return kw;
+  }
+
+  private static Element createFieldInCaseAnchor(
+    final Document d,
+    final CBVariantType var,
+    final CBVariantCaseType caseV,
+    final CBFieldType field)
+  {
+    final var fa = d.createElementNS(XHTML, "a");
+    fa.setAttribute(
+      "href",
+      anchorPlus(var, "%s_%s".formatted(caseV.name(), field.name())));
+    fa.setTextContent(field.name());
+    return fa;
   }
 
   private static Element processTypeExpression(
@@ -1088,12 +1089,12 @@ public final class CBXGenerator implements CBSPIDocGeneratorType
   {
     if (type instanceof CBTypeExpressionApplication app) {
       final var e = d.createElementNS(XHTML, "span");
-      e.appendChild(bracketOpen(d, '['));
+      e.appendChild(d.createTextNode("["));
       e.appendChild(processTypeExpression(d, currentPackage, app.target()));
       for (final var ex : app.arguments()) {
         e.appendChild(processTypeExpression(d, currentPackage, ex));
       }
-      e.appendChild(bracketClose(d, ']', false));
+      e.appendChild(d.createTextNode("]"));
       return e;
     }
 
