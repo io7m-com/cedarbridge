@@ -108,11 +108,12 @@
             <configuration>
               <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
               <files>
-                <file>src/main/resources/com/io7m/cedarbridge/examples/pastebin.cbs</file>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</file>
               </files>
-              <language>Java 17+</language>
+              <languageName>Java 17+</languageName>
             </configuration>
           </execution>
+
           <execution>
             <id>generate-chat</id>
             <phase>generate-sources</phase>
@@ -122,9 +123,39 @@
             <configuration>
               <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
               <files>
-                <file>src/main/resources/com/io7m/cedarbridge/examples/chat.cbs</file>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</file>
               </files>
-              <language>Java 17+</language>
+              <languageName>Java 17+</languageName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-paste-doc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>document</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/bridgedoc</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</file>
+              </files>
+              <languageName>XHTML</languageName>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>generate-chat-doc</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>document</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/bridgedoc</outputDirectory>
+              <files>
+                <file>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</file>
+              </files>
+              <languageName>XHTML</languageName>
             </configuration>
           </execution>
         </executions>

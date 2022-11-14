@@ -16,9 +16,9 @@
 
 package com.io7m.cedarbridge.maven_plugin;
 
-import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorConfiguration;
-import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorException;
-import com.io7m.cedarbridge.codegen.api.CBCodeGenerators;
+import com.io7m.cedarbridge.bridgedoc.api.CBDocGeneratorConfiguration;
+import com.io7m.cedarbridge.bridgedoc.api.CBDocGeneratorException;
+import com.io7m.cedarbridge.bridgedoc.api.CBDocGenerators;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
@@ -30,28 +30,30 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
 
 /**
- * The "compile" mojo.
+ * The "document" mojo.
  */
 
-@Mojo(name = "compile", defaultPhase = GENERATE_SOURCES)
-public final class CBCompileMojo extends AbstractMojo
+@Mojo(name = "document", defaultPhase = GENERATE_SOURCES)
+public final class CBDocumentMojo extends AbstractMojo
 {
   @Parameter(
-    name = "files",
-    required = true
+    name = "files"
   )
   private List<String> files = List.of();
 
   @Parameter(
-    name = "includes",
-    required = false
+    name = "includes"
   )
   private List<String> includes = List.of();
 
@@ -62,9 +64,7 @@ public final class CBCompileMojo extends AbstractMojo
   private String outputDirectory;
 
   @Parameter(
-    name = "noCore",
-    required = false,
-    defaultValue = "false"
+    name = "noCore"
   )
   private boolean noCore;
 
@@ -75,6 +75,12 @@ public final class CBCompileMojo extends AbstractMojo
   private String languageName;
 
   @Parameter(
+    name = "customStyle",
+    required = false
+  )
+  private String customStyle;
+
+  @Parameter(
     required = false,
     name = "skip",
     property = "cedarbridge.skip",
@@ -83,10 +89,10 @@ public final class CBCompileMojo extends AbstractMojo
   private boolean skip;
 
   /**
-   * The "compile" mojo.
+   * The "document" mojo.
    */
 
-  public CBCompileMojo()
+  public CBDocumentMojo()
   {
 
   }
@@ -99,15 +105,15 @@ public final class CBCompileMojo extends AbstractMojo
       return;
     }
 
-    final var codeGenerators =
-      new CBCodeGenerators();
+    final var docGenerators =
+      new CBDocGenerators();
     final var compilers =
       CBServices.findService(CBSchemaCompilerFactoryType.class);
 
-    final var codeGeneratorFactory =
-      codeGenerators.findByLanguageName(this.languageName)
+    final var docGeneratorFactory =
+      docGenerators.findByLanguageName(this.languageName)
         .orElseThrow(() -> new IllegalArgumentException(String.format(
-          "No code generator available for the language '%s'",
+          "No documentation generator available for the language '%s'",
           this.languageName)
         ));
 
@@ -129,35 +135,47 @@ public final class CBCompileMojo extends AbstractMojo
         compileFiles
       );
 
+    final var compiler =
+      compilers.createCompiler(configuration);
+
+    if (!this.noCore) {
+      compiler.loader().register(CBCore.get());
+    }
+
     try {
-      final var compiler =
-        compilers.createCompiler(configuration);
-
-      if (!this.noCore) {
-        compiler.loader().register(CBCore.get());
-      }
-
       final var compilation =
         compiler.execute();
 
-      final var codeGeneratorConfiguration =
-        new CBCodeGeneratorConfiguration(Path.of(this.outputDirectory));
+      final var outputPath =
+        Path.of(this.outputDirectory).toAbsolutePath();
 
-      final var codeGenerator =
-        codeGeneratorFactory.createGenerator(codeGeneratorConfiguration);
+      Files.createDirectories(outputPath);
 
-      for (final var packV : compilation.compiledPackages()) {
-        final var result = codeGenerator.execute(packV);
-        final var created = result.createdFiles();
-        created.forEach(path -> {
-          this.getLog().info("create %s".formatted(path));
-        });
-        Postconditions.checkPostconditionV(
-          !created.isEmpty(),
-          "Must have created at least one file."
+      final var docGeneratorConfiguration =
+        new CBDocGeneratorConfiguration(
+          outputPath,
+          Optional.ofNullable(this.customStyle)
         );
+
+      final var docGenerator =
+        docGeneratorFactory.createGenerator(docGeneratorConfiguration);
+
+      final var created = new HashSet<Path>();
+      for (final var packV : compilation.compiledPackages()) {
+        final var result = docGenerator.execute(packV);
+        created.addAll(result.createdFiles());
       }
-    } catch (final CBSchemaCompilerException | CBCodeGeneratorException e) {
+
+      created.forEach(path -> {
+        this.getLog().info("create %s".formatted(path));
+      });
+      Postconditions.checkPostconditionV(
+        !created.isEmpty(),
+        "Must have created at least one file."
+      );
+    } catch (final CBSchemaCompilerException
+                   | CBDocGeneratorException
+                   | IOException e) {
       throw new MojoExecutionException(e);
     }
   }
