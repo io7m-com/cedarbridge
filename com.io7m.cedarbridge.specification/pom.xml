@@ -149,7 +149,7 @@
               <brandingFile>${project.build.directory}/specification/brand.xml</brandingFile>
               <sourceFile>${project.build.directory}/specification/main.xml</sourceFile>
               <outputDirectory>${project.build.directory}/epub</outputDirectory>
-              <outputFileName>documentation.epub</outputFileName>
+              <outputFileName>specification.epub</outputFileName>
             </configuration>
           </execution>
         </executions>
