@@ -21,11 +21,6 @@
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.runtime.container_protocol</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -99,45 +94,37 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>com.io7m.cedarbridge.maven_plugin</artifactId>
+        <version>${project.version}</version>
+
         <executions>
           <execution>
             <id>generate-paste</id>
             <phase>generate-sources</phase>
             <goals>
-              <goal>java</goal>
+              <goal>compile</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
-              <arguments>
-                <argument>compile</argument>
-                <argument>--output-directory</argument>
-                <argument>${project.build.directory}/generated-sources/annotations</argument>
-                <argument>--file</argument>
-                <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/pastebin.cbs</argument>
-                <argument>--language</argument>
-                <argument>Java 17+</argument>
-              </arguments>
+              <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+              <files>
+                <file>src/main/resources/com/io7m/cedarbridge/examples/pastebin.cbs</file>
+              </files>
+              <language>Java 17+</language>
             </configuration>
           </execution>
           <execution>
             <id>generate-chat</id>
             <phase>generate-sources</phase>
             <goals>
-              <goal>java</goal>
+              <goal>compile</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
-              <arguments>
-                <argument>compile</argument>
-                <argument>--output-directory</argument>
-                <argument>${project.build.directory}/generated-sources/annotations</argument>
-                <argument>--file</argument>
-                <argument>${project.build.resources[0].directory}/com/io7m/cedarbridge/examples/chat.cbs</argument>
-                <argument>--language</argument>
-                <argument>Java 17+</argument>
-              </arguments>
+              <outputDirectory>${project.build.directory}/generated-sources/annotations</outputDirectory>
+              <files>
+                <file>src/main/resources/com/io7m/cedarbridge/examples/chat.cbs</file>
+              </files>
+              <language>Java 17+</language>
             </configuration>
           </execution>
         </executions>
