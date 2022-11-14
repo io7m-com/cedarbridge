@@ -112,6 +112,16 @@
     <dependency>
       <groupId>com.io7m.xstructural</groupId>
       <artifactId>com.io7m.xstructural.vanilla</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.w3c</groupId>
+          <artifactId>epubcheck</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.tika</groupId>
+          <artifactId>tika-core</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
