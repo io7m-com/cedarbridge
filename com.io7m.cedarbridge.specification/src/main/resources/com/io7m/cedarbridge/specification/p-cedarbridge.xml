@@ -171,7 +171,7 @@
       <Verbatim>Option : * → *</Verbatim>
     </FormalItem>
     <Paragraph>
-      The <Term type="type">Option</Term> type is an type that can hold zero or one values
+      The <Term type="type">Option</Term> type is a type that can hold zero or one values
       of a type equal to the single type parameter. The type is equivalent to the following
       variant declaration:
     </Paragraph>
@@ -219,6 +219,29 @@
   [parameter V]
   [field entries (List [MapEntry K V])])]]></Verbatim>
     </FormalItem>
+  </Subsection>
+
+  <Subsection title="UUID" id="98e0a74f-28dc-4ad9-a8ed-7249988ae1fa">
+    <FormalItem title="Description">
+      <Verbatim>UUID : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">UUID</Term> type represents an
+      <LinkExternal target="https://datatracker.ietf.org/doc/html/rfc4122">RFC 4122</LinkExternal>
+      universally unique identifier value. The type is equivalent to the following
+      record declaration:
+    </Paragraph>
+    <FormalItem title="UUID Type">
+      <Verbatim><![CDATA[
+(record UUID
+  [field msb cb:IntegerUnsigned64]
+  [field lsb cb:IntegerUnsigned64]
+)]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The 64 most significant bits are held in the <Term type="expression">msb</Term> field, and the
+      64 least significant bits are held in the <Term type="expression">lsb</Term> field.
+    </Paragraph>
   </Subsection>
 
   <Footnote id="266978a2-52c7-49f1-ad3f-a387f7edb949">

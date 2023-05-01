@@ -16,4 +16,5 @@
   (field f32 cb:Float32)
   (field f64 cb:Float64)
   (field ba cb:ByteArray)
+  (field uu cb:UUID)
 )

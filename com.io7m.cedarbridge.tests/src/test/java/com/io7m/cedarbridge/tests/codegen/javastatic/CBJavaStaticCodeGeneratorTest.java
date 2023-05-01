@@ -17,7 +17,6 @@
 package com.io7m.cedarbridge.tests.codegen.javastatic;
 
 import com.io7m.cedarbridge.runtime.api.CBDeserializeType;
-import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializeType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
@@ -35,7 +34,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.ByteBuffer;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -46,7 +44,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -72,9 +69,13 @@ public final class CBJavaStaticCodeGeneratorTest
     this.context =
       mock(CBSerializationContextType.class);
 
-    when(this.context.errorUnrecognizedVariantIndex(Mockito.any(), Mockito.anyInt()))
+    when(this.context.errorUnrecognizedVariantIndex(
+      Mockito.any(),
+      Mockito.anyInt()))
       .thenReturn(new IOException("Unrecognized variant index"));
-    when(this.context.errorUnrecognizedVariantCaseClass(Mockito.any(), Mockito.any()))
+    when(this.context.errorUnrecognizedVariantCaseClass(
+      Mockito.any(),
+      Mockito.any()))
       .thenReturn(new IOException("Unrecognized variant class"));
   }
 
@@ -882,6 +883,40 @@ public final class CBJavaStaticCodeGeneratorTest
         d.invoke(c, this.context);
       });
     assertInstanceOf(IOException.class, ex.getCause());
+  }
+
+  @Test
+  public void testCodegenUUID0()
+    throws Exception
+  {
+    this.loader.register(CBCore.get());
+    this.compile("codegenUUID0.cbs");
+
+    final var loader = this.loadClasses(
+      "x.Data"
+    );
+
+    final var c =
+      loader.loadClass("x.Data");
+    final var d =
+      c.getMethod("deserialize", CBSerializationContextType.class);
+    final var s =
+      c.getMethod("serialize", CBSerializationContextType.class, c);
+
+    when(this.context.readU64())
+      .thenReturn(
+        0x11223344_55667788L,
+        0x99aabbcc_ddeeff00L
+      );
+
+    final var x = d.invoke(c, this.context);
+    s.invoke(c, this.context, x);
+
+    verify(this.context, new Times(2)).begin("s");
+    verify(this.context, new Times(2)).readU64();
+    verify(this.context, new Times(2)).end("s");
+    verify(this.context).writeU64(0x11223344_55667788L);
+    verify(this.context).writeU64(0x99aabbcc_ddeeff00L);
   }
 
   @Test

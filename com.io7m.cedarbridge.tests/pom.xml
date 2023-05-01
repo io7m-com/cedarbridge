@@ -88,6 +88,11 @@
       <artifactId>com.io7m.cedarbridge.runtime.bssio</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.runtime.convenience</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.io7m.jsx</groupId>
