@@ -11,14 +11,20 @@
     <groupId>com.io7m.cedarbridge</groupId>
     <version>0.0.12</version>
   </parent>
-  <artifactId>com.io7m.cedarbridge.runtime.container_protocol</artifactId>
+  <artifactId>com.io7m.cedarbridge.runtime.convenience</artifactId>
 
   <packaging>jar</packaging>
-  <name>com.io7m.cedarbridge.runtime.container_protocol</name>
-  <description>Cedarbridge message protocol (Runtime container protocol)</description>
+  <name>com.io7m.cedarbridge.runtime.convenience</name>
+  <description>Cedarbridge message protocol (Convenient conversion methods)</description>
   <url>https://www.io7m.com/software/cedarbridge</url>
 
   <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.runtime.api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.annotation.versioning</artifactId>

@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.11</version>
+    <version>0.0.12</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.specification</artifactId>
 
@@ -149,7 +149,7 @@
               <brandingFile>${project.build.directory}/specification/brand.xml</brandingFile>
               <sourceFile>${project.build.directory}/specification/main.xml</sourceFile>
               <outputDirectory>${project.build.directory}/epub</outputDirectory>
-              <outputFileName>documentation.epub</outputFileName>
+              <outputFileName>specification.epub</outputFileName>
             </configuration>
           </execution>
         </executions>

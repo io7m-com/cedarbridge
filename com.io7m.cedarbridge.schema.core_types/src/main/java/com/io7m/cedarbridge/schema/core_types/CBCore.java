@@ -16,10 +16,13 @@
 
 package com.io7m.cedarbridge.schema.core_types;
 
+import com.io7m.cedarbridge.schema.compiled.CBPackageBuilderType;
 import com.io7m.cedarbridge.schema.compiled.CBPackageType;
 import com.io7m.cedarbridge.schema.compiled.CBPackages;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * The core package.
@@ -33,8 +36,27 @@ public final class CBCore
   }
 
   private static final CBPackageType PACKAGE_VALUE;
+  private static final Map<String, String> EXTERNAL_TYPE_DOCUMENTATION;
 
   static {
+    EXTERNAL_TYPE_DOCUMENTATION =
+      Map.ofEntries(
+        Map.entry("IntegerUnsigned8", "An 8-bit unsigned integer."),
+        Map.entry("IntegerUnsigned16", "A 16-bit unsigned integer"),
+        Map.entry("IntegerUnsigned32", "A 32-bit unsigned integer."),
+        Map.entry("IntegerUnsigned64", "A 64-bit unsigned integer."),
+        Map.entry("IntegerSigned8", "An 8-bit signed integer."),
+        Map.entry("IntegerSigned16", "A 16-bit signed integer"),
+        Map.entry("IntegerSigned32", "A 32-bit signed integer."),
+        Map.entry("IntegerSigned64", "A 64-bit signed integer."),
+        Map.entry("Float16", "A 16-bit IEEE binary16 floating-point value."),
+        Map.entry("Float32", "A 32-bit IEEE binary32 floating-point value."),
+        Map.entry("Float64", "A 64-bit IEEE binary64 floating-point value."),
+        Map.entry("String", "A UTF-8 string."),
+        Map.entry("ByteArray", "An array of bytes."),
+        Map.entry("UUID", "A UUID value.")
+      );
+
     final var externalPackageName =
       "com.io7m.cedarbridge.runtime.api";
     final var packageName =
@@ -42,48 +64,7 @@ public final class CBCore
     final var builder =
       CBPackages.createPackage(packageName);
 
-    for (final var name : List.of(
-      "IntegerUnsigned8",
-      "IntegerUnsigned16",
-      "IntegerUnsigned32",
-      "IntegerUnsigned64",
-      "IntegerSigned8",
-      "IntegerSigned16",
-      "IntegerSigned32",
-      "IntegerSigned64",
-      "Float16",
-      "Float32",
-      "Float64",
-      "String",
-      "ByteArray"
-    )) {
-      final var t =
-        builder.createExternalType(
-          externalPackageName,
-          String.format("CB%s", name),
-          name
-        );
-      t.setDocumentation(
-        List.of(
-          switch (name) {
-            case "IntegerUnsigned8" -> "An 8-bit unsigned integer.";
-            case "IntegerUnsigned16" -> "A 16-bit unsigned integer";
-            case "IntegerUnsigned32" -> "A 32-bit unsigned integer.";
-            case "IntegerUnsigned64" -> "A 64-bit unsigned integer.";
-            case "IntegerSigned8" -> "An 8-bit signed integer.";
-            case "IntegerSigned16" -> "A 16-bit signed integer";
-            case "IntegerSigned32" -> "A 32-bit signed integer.";
-            case "IntegerSigned64" -> "A 64-bit signed integer.";
-            case "Float16" -> "A 16-bit IEEE binary16 floating-point value.";
-            case "Float32" -> "A 32-bit IEEE binary32 floating-point value.";
-            case "Float64" -> "A 64-bit IEEE binary64 floating-point value.";
-            case "String" -> "A UTF-8 string.";
-            case "ByteArray" -> "An array of bytes.";
-            default -> throw new IllegalStateException(name);
-          }
-        )
-      );
-    }
+    createExternalTypes(externalPackageName, builder);
 
     {
       final var bool = builder.createVariant("Boolean");
@@ -106,7 +87,10 @@ public final class CBCore
       none.setDocumentation(List.of("No value is present."));
 
       final var some = option.createCase("Some");
-      some.createField("value", option.referenceParameter("T"), List.of("The current value."));
+      some.createField(
+        "value",
+        option.referenceParameter("T"),
+        List.of("The current value."));
       some.setDocumentation(List.of("A value is present."));
     }
 
@@ -124,7 +108,9 @@ public final class CBCore
     {
       final var list =
         builder.createExternalType(externalPackageName, "CBList", "List");
-      list.addTypeParameter("A", List.of("The type of values within the list."));
+      list.addTypeParameter(
+        "A",
+        List.of("The type of values within the list."));
       list.setDocumentation(List.of("A sequence of values."));
     }
 
@@ -137,6 +123,41 @@ public final class CBCore
     }
 
     PACKAGE_VALUE = builder.build();
+  }
+
+  private static void createExternalTypes(
+    final String externalPackageName,
+    final CBPackageBuilderType builder)
+  {
+    for (final var name : List.of(
+      "IntegerUnsigned8",
+      "IntegerUnsigned16",
+      "IntegerUnsigned32",
+      "IntegerUnsigned64",
+      "IntegerSigned8",
+      "IntegerSigned16",
+      "IntegerSigned32",
+      "IntegerSigned64",
+      "Float16",
+      "Float32",
+      "Float64",
+      "String",
+      "ByteArray",
+      "UUID"
+    )) {
+      final var t =
+        builder.createExternalType(
+          externalPackageName,
+          String.format("CB%s", name),
+          name
+        );
+      t.setDocumentation(
+        List.of(
+          Optional.ofNullable(EXTERNAL_TYPE_DOCUMENTATION.get(name))
+            .orElseThrow()
+        )
+      );
+    }
   }
 
   /**
