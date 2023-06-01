@@ -48,8 +48,8 @@
     </Paragraph>
     <Paragraph id="34c52233-ee42-4dec-99ac-9997d7cd4bbe">
       If a <Term type="statement">language</Term> statement names an unrecognized language minor version, parsing of the
-      compilation unit <Term type="term">MUST</Term> be aborted, and all subsequent statements in the compilation
-      unit ignored.
+      compilation unit <Term type="term">MAY</Term> produce a warning, but compilation of the unit must continue as if
+      known minor version had been specified <LinkFootnote target="435568c6-83ca-4f9c-8210-cecf26588def"/>.
     </Paragraph>
   </Subsection>
 
@@ -62,4 +62,9 @@
       <Verbatim><![CDATA[(language cedarbridge 1 0)]]></Verbatim>
     </FormalItem>
   </Subsection>
+
+  <Footnote id="435568c6-83ca-4f9c-8210-cecf26588def">
+    As all minor versions within a given major version are strictly compatible, the assumption is safe.
+  </Footnote>
+
 </Section>
