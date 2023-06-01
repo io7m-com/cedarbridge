@@ -18,5 +18,6 @@
   (field f64 cb:Float64)
   (field ba cb:ByteArray)
   (field uu cb:UUID)
+  (field uuu cb:URI)
   (field odt ct:OffsetDateTime)
 )

@@ -54,7 +54,8 @@ public final class CBCore
         Map.entry("Float64", "A 64-bit IEEE binary64 floating-point value."),
         Map.entry("String", "A UTF-8 string."),
         Map.entry("ByteArray", "An array of bytes."),
-        Map.entry("UUID", "A UUID value.")
+        Map.entry("UUID", "A UUID value."),
+        Map.entry("URI", "A URI value.")
       );
 
     final var externalPackageName =
@@ -143,7 +144,8 @@ public final class CBCore
       "Float64",
       "String",
       "ByteArray",
-      "UUID"
+      "UUID",
+      "URI"
     )) {
       final var t =
         builder.createExternalType(
