@@ -28,7 +28,9 @@ module com.io7m.cedarbridge.cmdline
   requires com.io7m.cedarbridge.schema.compiler.api;
   requires com.io7m.cedarbridge.schema.core_types;
   requires com.io7m.cedarbridge.schema.loader.api;
+  requires com.io7m.cedarbridge.schema.time;
   requires com.io7m.cedarbridge.version;
+
   requires com.io7m.claypot.core;
   requires jcommander;
   requires org.slf4j;

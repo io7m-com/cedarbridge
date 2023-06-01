@@ -60,6 +60,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.time</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.typer</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -91,6 +96,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.runtime.convenience</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.runtime.time</artifactId>
       <version>${project.version}</version>
     </dependency>
 

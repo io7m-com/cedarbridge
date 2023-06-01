@@ -38,6 +38,7 @@
     <module>com.io7m.cedarbridge.runtime.bssio</module>
     <module>com.io7m.cedarbridge.runtime.container_protocol</module>
     <module>com.io7m.cedarbridge.runtime.convenience</module>
+    <module>com.io7m.cedarbridge.runtime.time</module>
     <module>com.io7m.cedarbridge.schema.ast</module>
     <module>com.io7m.cedarbridge.schema.binder.api</module>
     <module>com.io7m.cedarbridge.schema.binder</module>
@@ -49,6 +50,7 @@
     <module>com.io7m.cedarbridge.schema.names</module>
     <module>com.io7m.cedarbridge.schema.parser.api</module>
     <module>com.io7m.cedarbridge.schema.parser</module>
+    <module>com.io7m.cedarbridge.schema.time</module>
     <module>com.io7m.cedarbridge.schema.typer.api</module>
     <module>com.io7m.cedarbridge.schema.typer</module>
     <module>com.io7m.cedarbridge.specification</module>
