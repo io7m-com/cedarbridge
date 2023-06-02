@@ -93,12 +93,6 @@ public final class CBCommandCheck implements QCommandType
   }
 
   @Override
-  public QParametersPositionalType onListPositionalParameters()
-  {
-    return new QParametersPositionalNone();
-  }
-
-  @Override
   public QCommandStatus onExecute(
     final QCommandContextType context)
   {

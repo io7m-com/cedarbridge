@@ -61,15 +61,8 @@ public final class CBCommandListDocGenerators implements QCommandType
   }
 
   @Override
-  public QParametersPositionalType onListPositionalParameters()
-  {
-    return new QParametersPositionalNone();
-  }
-
-  @Override
   public QCommandStatus onExecute(
     final QCommandContextType context)
-    throws Exception
   {
     final var docGenerators = new CBDocGenerators();
 
