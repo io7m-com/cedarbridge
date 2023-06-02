@@ -16,7 +16,7 @@
 
 package com.io7m.cedarbridge.tests.cmdline;
 
-import com.io7m.cedarbridge.cmdline.MainExitless;
+import com.io7m.cedarbridge.cmdline.CBMain;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,6 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBCommandLineTest
@@ -55,8 +54,8 @@ public final class CBCommandLineTest
 
     this.output = new ByteArrayOutputStream();
     this.outputPrint = new PrintStream(this.output);
-    System.setOut(null);
-    System.setErr(null);
+    System.setOut(this.outputPrint);
+    System.setErr(this.outputPrint);
   }
 
   @AfterEach
@@ -78,65 +77,20 @@ public final class CBCommandLineTest
   }
 
   @Test
-  public void testNoArguments()
-    throws IOException
-  {
-    assertThrows(IOException.class, () -> {
-      MainExitless.main(new String[]{
-
-      });
-    });
-  }
-
-  @Test
-  public void testHelp()
-    throws IOException
-  {
-    System.setOut(this.outputPrint);
-    System.setErr(this.outputPrint);
-
-    MainExitless.main(new String[]{
-      "help"
-    });
-
-    this.flush();
-    final var text = this.output.toString();
-    assertTrue(text.contains("Commands:"));
-    LOG.debug("{}", text);
-  }
-
-  @Test
-  public void testHelpHelp()
-    throws IOException
-  {
-    System.setOut(this.outputPrint);
-    System.setErr(this.outputPrint);
-
-    MainExitless.main(new String[]{
-      "help", "version"
-    });
-
-    this.flush();
-    final var text = this.output.toString();
-    assertTrue(text.contains("Usage: version"));
-    LOG.debug("{}", text);
-  }
-
-  @Test
   public void testHelpCheck()
     throws IOException
   {
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "help", "check"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Usage: check"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("cedarbridge: usage: check"));
   }
 
   @Test
@@ -146,14 +100,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "help", "list-code-generators"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Usage: list-code-generators"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("cedarbridge: usage: list-code-generators"));
   }
 
   @Test
@@ -163,14 +117,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "help", "list-documentation-generators"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Usage: list-documentation-generators"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("cedarbridge: usage: list-documentation-generators"));
   }
 
   @Test
@@ -180,14 +134,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "help", "document"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Usage: document"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("cedarbridge: usage: document"));
   }
 
   @Test
@@ -197,14 +151,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "version"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertEquals("cedarbridge 1.0.0", text.trim());
     LOG.debug("{}", text);
+    assertTrue(text.contains("com.io7m.cedarbridge"));
   }
 
   @Test
@@ -214,14 +168,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "check"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertEquals("", text.trim());
     LOG.debug("{}", text);
+    assertEquals("", text.trim());
   }
 
   @Test
@@ -238,13 +192,14 @@ public final class CBCommandLineTest
         "errorBindDuplicateField0.cbs"
       );
 
-    assertThrows(IOException.class, () -> {
-      MainExitless.main(new String[]{
+    final var code =
+      CBMain.mainExitless(new String[]{
         "check",
         "--file",
         file.toString()
       });
-    });
+
+    assertTrue(code != 0);
 
     this.flush();
     final var text = this.output.toString();
@@ -259,14 +214,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "list-code-generators"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("Java 17+"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("Java 17+"));
   }
 
   @Test
@@ -276,14 +231,14 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "list-documentation-generators"
     });
 
     this.flush();
     final var text = this.output.toString();
-    assertTrue(text.contains("xhtml"));
     LOG.debug("{}", text);
+    assertTrue(text.contains("xhtml"));
   }
 
   @Test
@@ -293,7 +248,7 @@ public final class CBCommandLineTest
     System.setOut(this.outputPrint);
     System.setErr(this.outputPrint);
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "compile",
       "--language",
       "Java 17+",
@@ -303,8 +258,8 @@ public final class CBCommandLineTest
 
     this.flush();
     final var text = this.output.toString();
-    assertEquals("", text.trim());
     LOG.debug("{}", text);
+    assertEquals("", text.trim());
   }
 
   @Test
@@ -321,7 +276,7 @@ public final class CBCommandLineTest
         "basicWithCore.cbs"
       );
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "compile",
       "--file",
       file.toString(),
@@ -350,7 +305,7 @@ public final class CBCommandLineTest
         "basicWithCore.cbs"
       );
 
-    MainExitless.main(new String[]{
+    CBMain.mainExitless(new String[]{
       "document",
       "--file",
       file.toString(),

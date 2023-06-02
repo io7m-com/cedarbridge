@@ -16,35 +16,43 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.beust.jcommander.Parameters;
 import com.io7m.cedarbridge.codegen.api.CBCodeGenerators;
-import com.io7m.claypot.core.CLPAbstractCommand;
-import com.io7m.claypot.core.CLPCommandContextType;
+import com.io7m.quarrel.core.QCommandContextType;
+import com.io7m.quarrel.core.QCommandMetadata;
+import com.io7m.quarrel.core.QCommandStatus;
+import com.io7m.quarrel.core.QCommandType;
+import com.io7m.quarrel.core.QParameterNamedType;
+import com.io7m.quarrel.core.QParametersPositionalNone;
+import com.io7m.quarrel.core.QParametersPositionalType;
+import com.io7m.quarrel.core.QStringType;
 
-import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * The "list-code-generators" command.
  */
 
-@Parameters(commandDescription = "List available code generators")
-public final class CBCommandListCodeGenerators extends CLPAbstractCommand
+public final class CBCommandListCodeGenerators implements QCommandType
 {
   /**
    * Construct a command.
-   *
-   * @param inContext The command context
    */
 
-  public CBCommandListCodeGenerators(
-    final CLPCommandContextType inContext)
+  public CBCommandListCodeGenerators()
   {
-    super(inContext);
+
   }
 
   @Override
-  protected Status executeActual()
-    throws Exception
+  public List<QParameterNamedType<?>> onListNamedParameters()
+  {
+    return List.of();
+  }
+
+  @Override
+  public QCommandStatus onExecute(
+    final QCommandContextType context)
   {
     final var codeGenerators = new CBCodeGenerators();
 
@@ -61,12 +69,16 @@ public final class CBCommandListCodeGenerators extends CLPAbstractCommand
       );
     }
 
-    return SUCCESS;
+    return QCommandStatus.SUCCESS;
   }
 
   @Override
-  public String name()
+  public QCommandMetadata metadata()
   {
-    return "list-code-generators";
+    return new QCommandMetadata(
+      "list-code-generators",
+      new QStringType.QConstant("List available code generators."),
+      Optional.empty()
+    );
   }
 }

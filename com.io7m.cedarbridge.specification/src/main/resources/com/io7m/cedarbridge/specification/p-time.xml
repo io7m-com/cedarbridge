@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Section xmlns="urn:com.io7m.structural:8:0"
+         tableOfContentsDepth="1"
+         id="31267e73-bff5-4b8b-941e-54d95d7feada"
+         title="Package com.io7m.cedarbridge.time">
+
+  <Subsection title="Overview">
+    <Paragraph>
+      The <Term type="package">com.io7m.cedarbridge.time</Term> package declares a set of types related to times
+      and dates.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="Duration" id="f0891bc5-8a4c-4cb0-bec5-8e6016198afc">
+    <FormalItem title="Description">
+      <Verbatim>Duration : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">Duration</Term> type holds a quantity of time in terms of seconds and nanoseconds.
+    </Paragraph>
+    <FormalItem title="Duration Type">
+      <Verbatim><![CDATA[
+(import com.io7m.cedarbridge cb)
+
+(record Duration
+  [field seconds cb:IntegerUnsigned64]
+  [field nanos   cb:IntegerUnsigned32]
+)
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="expression">seconds</Term> field holds the number of seconds in the duration.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">nanoseconds</Term> field holds the number of nanoseconds in the duration. This
+      value is added to the <Term type="expression">seconds</Term> field to produce the full duration. The value
+      of the <Term type="expression">nanoseconds</Term> field may only be in the range
+      <Term type="expression">[0, 999999999]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="LocalDate" id="65751673-cfb9-45f0-8583-cdd604d1dee8">
+    <FormalItem title="Description">
+      <Verbatim>LocalDate : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">LocalDate</Term> type represents a date in an unspecified time zone.
+    </Paragraph>
+    <FormalItem title="LocalDate Type">
+      <Verbatim><![CDATA[
+(import com.io7m.cedarbridge cb)
+
+(record LocalDate
+  [field year  cb:IntegerUnsigned32]
+  [field month cb:IntegerUnsigned8]
+  [field day   cb:IntegerUnsigned8]
+)
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="expression">year</Term> field holds the year.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">month</Term> field holds the month of the year in the range
+      <Term type="expression">[1, 12]</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">day</Term> field holds the day of the month in the range
+      <Term type="expression">[1, 31]</Term>.
+    </Paragraph>
+    <Paragraph>
+      Not all combinations of <Term type="expression">month</Term> field and
+      <Term type="expression">day</Term> field values are guaranteed to produce valid dates. Implementations
+      are expected to validate dates after deserialization.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="LocalTime" id="b7f585c8-4973-43d4-aa7c-a645f0d5407d">
+    <FormalItem title="Description">
+      <Verbatim>LocalTime : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">LocalTime</Term> type represents a time in an unspecified time zone.
+    </Paragraph>
+    <FormalItem title="LocalDate Type">
+      <Verbatim><![CDATA[
+(import com.io7m.cedarbridge cb)
+
+(record LocalTime
+  [field hour   cb:Unsigned8]
+  [field minute cb:Unsigned8]
+  [field second cb:Unsigned8]
+  [field nanos  cb:Unsigned32]
+)
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="expression">hour</Term> field holds the hour in the range
+      <Term type="expression">[0, 23]</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">minute</Term> field holds the minute in the range
+      <Term type="expression">[0, 59]</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">second</Term> field holds the second in the range
+      <Term type="expression">[0, 59]</Term>.
+    </Paragraph>
+    <Paragraph>
+      The <Term type="expression">nanos</Term> field holds the nanosecond in the range
+      <Term type="expression">[0, 999999999]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="LocalDateTime" id="69f0af57-8c8b-4330-be58-26cb708cf130">
+    <FormalItem title="Description">
+      <Verbatim>LocalDateTime : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">LocalDateTime</Term> type represents a date and time in an unspecified time zone.
+    </Paragraph>
+    <FormalItem title="LocalDate Type">
+      <Verbatim><![CDATA[
+(record LocalDateTime
+  [field date LocalDate]
+  [field time LocalTime]
+)
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+  <Subsection title="ZoneOffset" id="6d928de2-48e6-45d5-a845-1f7642a62a34">
+    <FormalItem title="Description">
+      <Verbatim>ZoneOffset : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">ZoneOffset</Term> type represents a timezone offset.
+    </Paragraph>
+    <FormalItem title="LocalDate Type">
+      <Verbatim><![CDATA[
+(record ZoneOffset
+  [field seconds cb:IntegerSigned32]
+)
+]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="expression">seconds</Term> field holds the offset in the range
+      <Term type="expression">[-64800, 64800]</Term>.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="OffsetDateTime" id="9f6c8599-e45e-482f-91d2-bdadad822777">
+    <FormalItem title="Description">
+      <Verbatim>OffsetDateTime : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">OffsetDateTime</Term> type represents a date and time in a specific time zone.
+    </Paragraph>
+    <FormalItem title="LocalDate Type">
+      <Verbatim><![CDATA[
+(record OffsetDateTime
+  [field localDateTime LocalDateTime]
+  [field zoneOffset    ZoneOffset]
+)
+]]></Verbatim>
+    </FormalItem>
+  </Subsection>
+
+</Section>

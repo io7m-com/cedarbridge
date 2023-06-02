@@ -14,5 +14,6 @@
   </Section>
 
   <xi:include href="p-cedarbridge.xml"/>
+  <xi:include href="p-time.xml"/>
 
 </Section>

@@ -20,6 +20,7 @@ import com.io7m.cedarbridge.runtime.api.CBDeserializeType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializeType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
+import com.io7m.cedarbridge.schema.time.CBTime;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBFakePackage;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
@@ -435,6 +436,7 @@ public final class CBJavaStaticCodeGeneratorTest
     throws Exception
   {
     this.loader.register(CBCore.get());
+    this.loader.register(CBTime.get());
 
     this.compile("basicWithCore.cbs");
 

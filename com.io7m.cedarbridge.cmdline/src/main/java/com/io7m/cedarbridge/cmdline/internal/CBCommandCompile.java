@@ -16,8 +16,6 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.io7m.cedarbridge.codegen.api.CBCodeGeneratorConfiguration;
 import com.io7m.cedarbridge.codegen.api.CBCodeGenerators;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilation;
@@ -25,91 +23,126 @@ import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
-import com.io7m.claypot.core.CLPAbstractCommand;
-import com.io7m.claypot.core.CLPCommandContextType;
+import com.io7m.cedarbridge.schema.time.CBTime;
+import com.io7m.quarrel.core.QCommandContextType;
+import com.io7m.quarrel.core.QCommandMetadata;
+import com.io7m.quarrel.core.QCommandStatus;
+import com.io7m.quarrel.core.QCommandType;
+import com.io7m.quarrel.core.QParameterNamed0N;
+import com.io7m.quarrel.core.QParameterNamed1;
+import com.io7m.quarrel.core.QParameterNamedType;
+import com.io7m.quarrel.core.QParametersPositionalNone;
+import com.io7m.quarrel.core.QParametersPositionalType;
+import com.io7m.quarrel.core.QStringType.QConstant;
+import com.io7m.quarrel.ext.logback.QLogback;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
-import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
+import java.util.stream.Stream;
 
 /**
  * The "compile" command.
  */
 
-@Parameters(commandDescription = "Compile a schema file and generate code.")
-public final class CBCommandCompile extends CLPAbstractCommand
+public final class CBCommandCompile implements QCommandType
 {
-  @Parameter(
-    names = "--file",
-    description = "The file(s) to type-check"
-  )
-  private List<Path> files = List.of();
+  private static final QParameterNamed0N<Path> FILES =
+    new QParameterNamed0N<>(
+      "--file",
+      List.of(),
+      new QConstant("The file(s) to type-check."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--include",
-    description = "The directories containing source files"
-  )
-  private List<Path> includes = List.of();
+  private static final QParameterNamed0N<Path> INCLUDES =
+    new QParameterNamed0N<>(
+      "--include",
+      List.of(),
+      new QConstant("The directories containing source files."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--output-directory",
-    required = true,
-    description = "The output directory containing generated files"
-  )
-  private Path output;
+  private static final QParameterNamed1<Boolean> NO_CORE =
+    new QParameterNamed1<>(
+      "--no-core",
+      List.of(),
+      new QConstant(
+        "Disable registration of the core com.io7m.cedarbridge packages."),
+      Optional.of(Boolean.FALSE),
+      Boolean.class
+    );
 
-  @Parameter(
-    names = "--no-core",
-    arity = 1,
-    description = "Disable registration of the core com.io7m.cedarbridge package"
-  )
-  private boolean noCore;
+  private static final QParameterNamed1<Path> OUTPUT_DIRECTORY =
+    new QParameterNamed1<>(
+      "--output-directory",
+      List.of(),
+      new QConstant("The output directory containing generated files."),
+      Optional.empty(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--language",
-    required = true,
-    description = "The language name used to select a code generator"
-  )
-  private String languageName;
+  private static final QParameterNamed1<String> LANGUAGE =
+    new QParameterNamed1<>(
+      "--language",
+      List.of(),
+      new QConstant("The language name used to select a code generator."),
+      Optional.empty(),
+      String.class
+    );
 
   /**
    * Construct a command.
-   *
-   * @param inContext The command context
    */
 
-  public CBCommandCompile(
-    final CLPCommandContextType inContext)
+  public CBCommandCompile()
   {
-    super(inContext);
+
   }
 
   @Override
-  protected Status executeActual()
+  public List<QParameterNamedType<?>> onListNamedParameters()
+  {
+    return Stream.concat(
+      Stream.of(FILES, INCLUDES, NO_CORE, OUTPUT_DIRECTORY, LANGUAGE),
+      QLogback.parameters().stream()
+    ).toList();
+  }
+
+  @Override
+  public QCommandStatus onExecute(
+    final QCommandContextType context)
     throws Exception
   {
+    QLogback.configure(context);
+
     final var codeGenerators =
       new CBCodeGenerators();
     final var compilers =
       CBServices.findService(CBSchemaCompilerFactoryType.class);
 
+    final var languageName =
+      context.parameterValue(LANGUAGE);
+
     final var codeGeneratorFactory =
-      codeGenerators.findByLanguageName(this.languageName)
+      codeGenerators.findByLanguageName(languageName)
         .orElseThrow(() -> new IllegalArgumentException(String.format(
           "No code generator available for the language '%s'",
-          this.languageName)
+          languageName)
         ));
 
     final var compileFiles =
-      this.files.stream()
+      context.parameterValues(FILES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
     final var includeDirectories =
-      this.includes.stream()
+      context.parameterValues(INCLUDES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
@@ -122,19 +155,21 @@ public final class CBCommandCompile extends CLPAbstractCommand
     final var compiler =
       compilers.createCompiler(configuration);
 
-    if (!this.noCore) {
-      compiler.loader().register(CBCore.get());
+    if (!context.<Boolean>parameterValue(NO_CORE).booleanValue()) {
+      final var loader = compiler.loader();
+      loader.register(CBCore.get());
+      loader.register(CBTime.get());
     }
 
     final CBSchemaCompilation compilation;
     try {
       compilation = compiler.execute();
     } catch (final CBSchemaCompilerException e) {
-      return FAILURE;
+      return QCommandStatus.FAILURE;
     }
 
     final var codeGeneratorConfiguration =
-      new CBCodeGeneratorConfiguration(this.output);
+      new CBCodeGeneratorConfiguration(context.parameterValue(OUTPUT_DIRECTORY));
 
     final var codeGenerator =
       codeGeneratorFactory.createGenerator(codeGeneratorConfiguration);
@@ -143,12 +178,16 @@ public final class CBCommandCompile extends CLPAbstractCommand
       codeGenerator.execute(packV);
     }
 
-    return SUCCESS;
+    return QCommandStatus.SUCCESS;
   }
 
   @Override
-  public String name()
+  public QCommandMetadata metadata()
   {
-    return "compile";
+    return new QCommandMetadata(
+      "compile",
+      new QConstant("Compile a schema file and generate code."),
+      Optional.empty()
+    );
   }
 }

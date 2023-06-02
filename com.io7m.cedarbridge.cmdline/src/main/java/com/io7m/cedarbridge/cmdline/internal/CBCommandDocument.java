@@ -16,8 +16,6 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.io7m.cedarbridge.bridgedoc.api.CBDocGeneratorConfiguration;
 import com.io7m.cedarbridge.bridgedoc.api.CBDocGenerators;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilation;
@@ -25,78 +23,114 @@ import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
-import com.io7m.claypot.core.CLPAbstractCommand;
-import com.io7m.claypot.core.CLPCommandContextType;
+import com.io7m.cedarbridge.schema.time.CBTime;
+import com.io7m.quarrel.core.QCommandContextType;
+import com.io7m.quarrel.core.QCommandMetadata;
+import com.io7m.quarrel.core.QCommandStatus;
+import com.io7m.quarrel.core.QCommandType;
+import com.io7m.quarrel.core.QParameterNamed01;
+import com.io7m.quarrel.core.QParameterNamed0N;
+import com.io7m.quarrel.core.QParameterNamed1;
+import com.io7m.quarrel.core.QParameterNamedType;
+import com.io7m.quarrel.core.QParametersPositionalNone;
+import com.io7m.quarrel.core.QParametersPositionalType;
+import com.io7m.quarrel.core.QStringType.QConstant;
+import com.io7m.quarrel.ext.logback.QLogback;
 
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
-import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
+import java.util.stream.Stream;
 
 /**
  * The "document" command.
  */
 
-@Parameters(commandDescription = "Compile a schema file and generate documentation.")
-public final class CBCommandDocument extends CLPAbstractCommand
+public final class CBCommandDocument implements QCommandType
 {
-  @Parameter(
-    names = "--file",
-    description = "The file(s) to type-check"
-  )
-  private List<Path> files = List.of();
+  private static final QParameterNamed0N<Path> FILES =
+    new QParameterNamed0N<>(
+      "--file",
+      List.of(),
+      new QConstant("The file(s) to type-check."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--include",
-    description = "The directories containing source files"
-  )
-  private List<Path> includes = List.of();
+  private static final QParameterNamed0N<Path> INCLUDES =
+    new QParameterNamed0N<>(
+      "--include",
+      List.of(),
+      new QConstant("The directories containing source files."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--output-directory",
-    required = true,
-    description = "The output directory containing generated files"
-  )
-  private Path output;
+  private static final QParameterNamed1<Boolean> NO_CORE =
+    new QParameterNamed1<>(
+      "--no-core",
+      List.of(),
+      new QConstant(
+        "Disable registration of the core com.io7m.cedarbridge packages."),
+      Optional.of(Boolean.FALSE),
+      Boolean.class
+    );
 
-  @Parameter(
-    names = "--no-core",
-    arity = 1,
-    description = "Disable registration of the core com.io7m.cedarbridge package"
-  )
-  private boolean noCore;
+  private static final QParameterNamed1<Path> OUTPUT_DIRECTORY =
+    new QParameterNamed1<>(
+      "--output-directory",
+      List.of(),
+      new QConstant("The output directory containing generated files."),
+      Optional.empty(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--language",
-    required = true,
-    description = "The language name used to select a documentation generator"
-  )
-  private String languageName;
+  private static final QParameterNamed1<String> LANGUAGE =
+    new QParameterNamed1<>(
+      "--language",
+      List.of(),
+      new QConstant("The language name used to select a code generator."),
+      Optional.empty(),
+      String.class
+    );
 
-  @Parameter(
-    names = "--custom-style",
-    required = false,
-    description = "The name of the custom style used for documentation"
-  )
-  private String customStyle;
+  private static final QParameterNamed01<String> CUSTOM_STYLE =
+    new QParameterNamed01<>(
+      "--custom-style",
+      List.of(),
+      new QConstant("The name of the custom style used for documentation."),
+      Optional.empty(),
+      String.class
+    );
 
   /**
    * Construct a command.
-   *
-   * @param inContext The command context
    */
 
-  public CBCommandDocument(
-    final CLPCommandContextType inContext)
+  public CBCommandDocument()
   {
-    super(inContext);
+
   }
 
   @Override
-  protected Status executeActual()
+  public List<QParameterNamedType<?>> onListNamedParameters()
+  {
+    return Stream.concat(
+      Stream.of(
+        FILES,
+        INCLUDES,
+        NO_CORE,
+        OUTPUT_DIRECTORY,
+        LANGUAGE,
+        CUSTOM_STYLE),
+      QLogback.parameters().stream()
+    ).toList();
+  }
+
+  @Override
+  public QCommandStatus onExecute(
+    final QCommandContextType context)
     throws Exception
   {
     final var docGenerators =
@@ -104,20 +138,25 @@ public final class CBCommandDocument extends CLPAbstractCommand
     final var compilers =
       CBServices.findService(CBSchemaCompilerFactoryType.class);
 
+    final var languageName =
+      context.parameterValue(LANGUAGE);
+
     final var docGeneratorFactory =
-      docGenerators.findByLanguageName(this.languageName)
+      docGenerators.findByLanguageName(languageName)
         .orElseThrow(() -> new IllegalArgumentException(String.format(
           "No documentation generator available for the language '%s'",
-          this.languageName)
+          languageName)
         ));
 
     final var compileFiles =
-      this.files.stream()
+      context.parameterValues(FILES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
     final var includeDirectories =
-      this.includes.stream()
+      context.parameterValues(INCLUDES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
@@ -130,21 +169,23 @@ public final class CBCommandDocument extends CLPAbstractCommand
     final var compiler =
       compilers.createCompiler(configuration);
 
-    if (!this.noCore) {
-      compiler.loader().register(CBCore.get());
+    if (!context.<Boolean>parameterValue(NO_CORE).booleanValue()) {
+      final var loader = compiler.loader();
+      loader.register(CBCore.get());
+      loader.register(CBTime.get());
     }
 
     final CBSchemaCompilation compilation;
     try {
       compilation = compiler.execute();
     } catch (final CBSchemaCompilerException e) {
-      return FAILURE;
+      return QCommandStatus.FAILURE;
     }
 
     final var docGeneratorConfiguration =
       new CBDocGeneratorConfiguration(
-        this.output,
-        Optional.ofNullable(this.customStyle)
+        context.parameterValue(OUTPUT_DIRECTORY),
+        context.parameterValue(CUSTOM_STYLE)
       );
 
     final var docGenerator =
@@ -154,12 +195,16 @@ public final class CBCommandDocument extends CLPAbstractCommand
       docGenerator.execute(packV);
     }
 
-    return SUCCESS;
+    return QCommandStatus.SUCCESS;
   }
 
   @Override
-  public String name()
+  public QCommandMetadata metadata()
   {
-    return "document";
+    return new QCommandMetadata(
+      "document",
+      new QConstant("Compile a schema file and generate documentation."),
+      Optional.empty()
+    );
   }
 }

@@ -17,15 +17,29 @@
 package com.io7m.cedarbridge.tests.runtime.api;
 
 import com.io7m.cedarbridge.runtime.api.CBUUID;
+import com.io7m.jbssio.vanilla.BSSReaders;
+import com.io7m.jbssio.vanilla.BSSWriters;
+import net.jqwik.api.Arbitraries;
+import net.jqwik.api.Arbitrary;
+import net.jqwik.api.Combinators;
+import net.jqwik.api.ForAll;
+import net.jqwik.api.Property;
+import net.jqwik.api.Provide;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
+import static com.io7m.cedarbridge.runtime.bssio.CBSerializationContextBSSIO.createFromByteArray;
+import static com.io7m.cedarbridge.runtime.bssio.CBSerializationContextBSSIO.createFromOutputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public final class CBUUIDTest
 {
+  private static final BSSReaders READERS = new BSSReaders();
+  private static final BSSWriters WRITERS = new BSSWriters();
+
   @Test
   public void testCompare()
   {
@@ -49,5 +63,31 @@ public final class CBUUIDTest
       "20579b1b-92b0-48ac-b6f1-9e70c29e4b71",
       String.format("%s", bigger)
     );
+  }
+
+  @Provide
+  public static Arbitrary<UUID> uris()
+  {
+    return Combinators.combine(Arbitraries.longs(), Arbitraries.longs())
+      .as(UUID::new);
+  }
+
+  @Property
+  public void testUUID(
+    final @ForAll("uris") UUID x)
+    throws Exception
+  {
+    final var bao = new ByteArrayOutputStream();
+    final var ctxOut = createFromOutputStream(WRITERS, bao);
+
+    final var x0 = new CBUUID(x);
+    CBUUID.serialize(ctxOut, x0);
+
+    final var ctxIn = createFromByteArray(READERS, bao.toByteArray());
+    final var x1 = CBUUID.deserialize(ctxIn);
+
+    assertEquals(x0, x1);
+    assertEquals(String.format("%s", x0), String.format("%s", x1));
+    assertEquals(0, x0.compareTo(x1));
   }
 }

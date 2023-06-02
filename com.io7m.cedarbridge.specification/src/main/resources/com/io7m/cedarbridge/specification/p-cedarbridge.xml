@@ -18,7 +18,7 @@
     <Paragraph>
       The <Term type="type">Boolean</Term> type holds simple true or false values.
     </Paragraph>
-    <FormalItem title="Option Type">
+    <FormalItem title="Boolean Type">
       <Verbatim><![CDATA[
 (variant Boolean
   [case False]
@@ -241,6 +241,26 @@
     <Paragraph>
       The 64 most significant bits are held in the <Term type="expression">msb</Term> field, and the
       64 least significant bits are held in the <Term type="expression">lsb</Term> field.
+    </Paragraph>
+  </Subsection>
+
+  <Subsection title="URI" id="ed1f8998-e72f-4c04-b05b-6191b79498c4">
+    <FormalItem title="Description">
+      <Verbatim>URI : *</Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="type">URI</Term> type represents an
+      <LinkExternal target="https://datatracker.ietf.org/doc/html/rfc3986">RFC 3986</LinkExternal>
+      URI value. The type is equivalent to the following record declaration:
+    </Paragraph>
+    <FormalItem title="UUID Type">
+      <Verbatim><![CDATA[
+(record URI
+  [field value cb:String]
+)]]></Verbatim>
+    </FormalItem>
+    <Paragraph>
+      The <Term type="expression">value</Term> field holds the UTF-8 encoded string representation of the URI.
     </Paragraph>
   </Subsection>
 

@@ -24,6 +24,7 @@ import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.compiler.internal.CBServices;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
+import com.io7m.cedarbridge.schema.time.CBTime;
 import com.io7m.jaffirm.core.Postconditions;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -134,7 +135,9 @@ public final class CBCompileMojo extends AbstractMojo
         compilers.createCompiler(configuration);
 
       if (!this.noCore) {
-        compiler.loader().register(CBCore.get());
+        final var loader = compiler.loader();
+        loader.register(CBCore.get());
+        loader.register(CBTime.get());
       }
 
       final var compilation =

@@ -1,6 +1,7 @@
 (package x.y.z)
 
 (import com.io7m.cedarbridge cb)
+(import com.io7m.cedarbridge.time ct)
 
 (record Mix
   (field u8 cb:IntegerUnsigned8)
@@ -17,4 +18,6 @@
   (field f64 cb:Float64)
   (field ba cb:ByteArray)
   (field uu cb:UUID)
+  (field uuu cb:URI)
+  (field odt ct:OffsetDateTime)
 )

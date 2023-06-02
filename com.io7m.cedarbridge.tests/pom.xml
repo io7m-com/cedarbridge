@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.12</version>
+    <version>1.0.0-beta0001</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.tests</artifactId>
 
@@ -60,6 +60,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.time</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.typer</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -91,6 +96,11 @@
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.runtime.convenience</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.runtime.time</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -170,7 +180,7 @@
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
+              <mainClass>com.io7m.cedarbridge.cmdline.CBExitlessMain</mainClass>
               <arguments>
                 <argument>compile</argument>
                 <argument>--output-directory</argument>

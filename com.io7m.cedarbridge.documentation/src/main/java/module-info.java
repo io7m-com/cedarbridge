@@ -49,9 +49,7 @@ open module com.io7m.cedarbridge.documentation
   requires com.io7m.cedarbridge.strings.api;
   requires com.io7m.cedarbridge.version;
 
-  requires com.io7m.claypot.core;
   requires java.xml;
-  requires jcommander;
 
   exports com.io7m.cedarbridge.documentation;
 }

@@ -9,7 +9,7 @@
   <parent>
     <artifactId>com.io7m.cedarbridge</artifactId>
     <groupId>com.io7m.cedarbridge</groupId>
-    <version>0.0.12</version>
+    <version>1.0.0-beta0001</version>
   </parent>
   <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
 
@@ -76,6 +76,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.schema.time</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.schema.loader.api</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -91,20 +96,21 @@
     </dependency>
 
     <dependency>
+      <groupId>com.io7m.quarrel</groupId>
+      <artifactId>com.io7m.quarrel.ext.logback</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.io7m.quarrel</groupId>
+      <artifactId>com.io7m.quarrel.core</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>com.io7m.jsx</groupId>
       <artifactId>com.io7m.jsx.core</artifactId>
     </dependency>
     <dependency>
       <groupId>com.io7m.jsx</groupId>
       <artifactId>com.io7m.jsx.parser</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.claypot</groupId>
-      <artifactId>com.io7m.claypot.core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.beust</groupId>
-      <artifactId>jcommander</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -128,14 +134,37 @@
   </dependencies>
 
   <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
     <plugins>
+      <!-- Generate version information. -->
+      <plugin>
+        <groupId>com.io7m.stmp</groupId>
+        <artifactId>string-template-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-version</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>render</goal>
+            </goals>
+            <configuration>
+              <templates>
+                <template>
+                  <directory>src/main/string-template</directory>
+                  <name>CBVersion</name>
+                  <target>
+                    ${project.build.directory}/generated-sources/string-template/com/io7m/cedarbridge/cmdline/CBVersion.java
+                  </target>
+                  <properties>
+                    <appVersion>${project.version}</appVersion>
+                    <appBuild>${buildNumber}</appBuild>
+                  </properties>
+                </template>
+              </templates>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!-- Ignore dependencies that bytecode analysis gets wrong. -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
