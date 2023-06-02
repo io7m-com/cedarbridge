@@ -62,6 +62,7 @@
   <properties>
     <com.io7m.jbssio.version>2.0.0</com.io7m.jbssio.version>
     <com.io7m.jsx.version>3.0.1</com.io7m.jsx.version>
+    <com.io7m.quarrel.version>1.0.0-beta0001</com.io7m.quarrel.version>
     <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <io7m.api.previousVersion>0.0.13-SNAPSHOT</io7m.api.previousVersion>
     <io7m.maven-api.version>3.9.2</io7m.maven-api.version>
@@ -123,16 +124,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.io7m.claypot</groupId>
-        <artifactId>com.io7m.claypot.core</artifactId>
-        <version>0.0.8</version>
-      </dependency>
-      <dependency>
-        <groupId>com.beust</groupId>
-        <artifactId>jcommander</artifactId>
-        <version>1.82</version>
-      </dependency>
       <dependency>
         <groupId>com.io7m.primogenitor</groupId>
         <artifactId>com.io7m.primogenitor.support</artifactId>
@@ -219,11 +210,6 @@
         <version>3.0.0</version>
       </dependency>
       <dependency>
-        <groupId>nl.jqno.equalsverifier</groupId>
-        <artifactId>equalsverifier</artifactId>
-        <version>3.14.1</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.junreachable</groupId>
         <artifactId>com.io7m.junreachable.core</artifactId>
         <version>4.0.0</version>
@@ -248,6 +234,13 @@
         <artifactId>com.io7m.xstructural.vanilla</artifactId>
         <version>${com.io7m.xstructural.version}</version>
       </dependency>
+
+      <!-- Test suite. -->
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>3.14.1</version>
+      </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
@@ -262,6 +255,23 @@
         <groupId>net.jqwik</groupId>
         <artifactId>jqwik-engine</artifactId>
         <version>${jqwik.version}</version>
+      </dependency>
+
+      <!-- CLI -->
+      <dependency>
+        <groupId>com.io7m.quarrel</groupId>
+        <artifactId>com.io7m.quarrel.core</artifactId>
+        <version>${com.io7m.quarrel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.quarrel</groupId>
+        <artifactId>com.io7m.quarrel.ext.logback</artifactId>
+        <version>${com.io7m.quarrel.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.io7m.quarrel</groupId>
+        <artifactId>com.io7m.quarrel.ext.xstructural</artifactId>
+        <version>${com.io7m.quarrel.version}</version>
       </dependency>
 
       <dependency>
@@ -312,6 +322,12 @@
           <configuration>
             <suppressionsLocation>checkstyle-filter.xml</suppressionsLocation>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>com.io7m.stmp</groupId>
+          <artifactId>string-template-maven-plugin</artifactId>
+          <version>1.2.0</version>
         </plugin>
 
         <plugin>

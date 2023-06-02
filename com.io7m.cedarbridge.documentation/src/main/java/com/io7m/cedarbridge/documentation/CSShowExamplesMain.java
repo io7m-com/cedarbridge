@@ -16,7 +16,7 @@
 
 package com.io7m.cedarbridge.documentation;
 
-import com.io7m.cedarbridge.cmdline.MainExitless;
+import com.io7m.cedarbridge.cmdline.CBMain;
 
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -69,7 +69,7 @@ public final class CSShowExamplesMain
              Files.newOutputStream(path, CREATE, WRITE, TRUNCATE_EXISTING)) {
         System.setOut(new PrintStream(output, true, UTF_8));
         System.setErr(new PrintStream(output, true, UTF_8));
-        MainExitless.main(new String[]{
+        CBMain.mainExitless(new String[]{
           "help",
           command,
         });

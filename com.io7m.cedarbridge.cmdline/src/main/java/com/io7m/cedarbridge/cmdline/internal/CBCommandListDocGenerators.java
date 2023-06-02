@@ -16,34 +16,59 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.beust.jcommander.Parameters;
 import com.io7m.cedarbridge.bridgedoc.api.CBDocGenerators;
-import com.io7m.claypot.core.CLPAbstractCommand;
-import com.io7m.claypot.core.CLPCommandContextType;
+import com.io7m.quarrel.core.QCommandContextType;
+import com.io7m.quarrel.core.QCommandMetadata;
+import com.io7m.quarrel.core.QCommandStatus;
+import com.io7m.quarrel.core.QCommandType;
+import com.io7m.quarrel.core.QParameterNamedType;
+import com.io7m.quarrel.core.QParametersPositionalNone;
+import com.io7m.quarrel.core.QParametersPositionalType;
+import com.io7m.quarrel.core.QStringType;
 
-import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
+import java.util.List;
+import java.util.Optional;
 
 /**
- * The "list-doc-generators" command.
+ * The "list-documentation-generators" command.
  */
 
-@Parameters(commandDescription = "List available documentation generators")
-public final class CBCommandListDocGenerators extends CLPAbstractCommand
+public final class CBCommandListDocGenerators implements QCommandType
 {
   /**
    * Construct a command.
-   *
-   * @param inContext The command context
    */
 
-  public CBCommandListDocGenerators(
-    final CLPCommandContextType inContext)
+  public CBCommandListDocGenerators()
   {
-    super(inContext);
+
   }
 
   @Override
-  protected Status executeActual()
+  public QCommandMetadata metadata()
+  {
+    return new QCommandMetadata(
+      "list-documentation-generators",
+      new QStringType.QConstant("List available documentation generators."),
+      Optional.empty()
+    );
+  }
+
+  @Override
+  public List<QParameterNamedType<?>> onListNamedParameters()
+  {
+    return List.of();
+  }
+
+  @Override
+  public QParametersPositionalType onListPositionalParameters()
+  {
+    return new QParametersPositionalNone();
+  }
+
+  @Override
+  public QCommandStatus onExecute(
+    final QCommandContextType context)
     throws Exception
   {
     final var docGenerators = new CBDocGenerators();
@@ -61,12 +86,6 @@ public final class CBCommandListDocGenerators extends CLPAbstractCommand
       );
     }
 
-    return SUCCESS;
-  }
-
-  @Override
-  public String name()
-  {
-    return "list-documentation-generators";
+    return QCommandStatus.SUCCESS;
   }
 }

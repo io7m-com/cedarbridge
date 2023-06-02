@@ -180,7 +180,7 @@
               <goal>java</goal>
             </goals>
             <configuration>
-              <mainClass>com.io7m.cedarbridge.cmdline.MainExitless</mainClass>
+              <mainClass>com.io7m.cedarbridge.cmdline.CBExitlessMain</mainClass>
               <arguments>
                 <argument>compile</argument>
                 <argument>--output-directory</argument>

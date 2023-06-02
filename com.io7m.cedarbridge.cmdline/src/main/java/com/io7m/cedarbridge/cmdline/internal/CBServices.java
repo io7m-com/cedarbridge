@@ -16,11 +16,6 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.io7m.cedarbridge.version.CBVersion;
-import com.io7m.cedarbridge.version.CBVersions;
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ServiceLoader;
 
 /**
@@ -57,24 +52,5 @@ public final class CBServices
     return new IllegalStateException(String.format(
       "No available implementations of service: %s",
       clazz.getCanonicalName()));
-  }
-
-  /**
-   * @return The application version
-   *
-   * @throws IOException On I/O errors
-   */
-
-  public static CBVersion findApplicationVersion()
-    throws IOException
-  {
-    final URL resource =
-      CBServices.class.getResource(
-        "/com/io7m/cedarbridge/cmdline/internal/version.properties"
-      );
-
-    try (var stream = resource.openStream()) {
-      return CBVersions.ofStream(stream);
-    }
   }
 }

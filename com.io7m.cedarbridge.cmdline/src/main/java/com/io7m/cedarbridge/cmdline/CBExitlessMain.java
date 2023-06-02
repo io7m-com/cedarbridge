@@ -1,5 +1,5 @@
 /*
- * Copyright © 2020 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -16,15 +16,15 @@
 
 package com.io7m.cedarbridge.cmdline;
 
-import java.io.IOException;
+import static com.io7m.cedarbridge.cmdline.CBMain.mainExitless;
 
 /**
- * Main command line entry point that does not call {@code exit()}.
+ * Main command line entry point.
  */
 
-public final class MainExitless
+public final class CBExitlessMain
 {
-  private MainExitless()
+  private CBExitlessMain()
   {
 
   }
@@ -33,33 +33,19 @@ public final class MainExitless
    * The main entry point.
    *
    * @param args Command line arguments
-   *
-   * @throws IOException On errors
    */
 
-  // CHECKSTYLE:OFF
   public static void main(
     final String[] args)
-    throws IOException
   {
-    // CHECKSTYLE:ON
-    final Main cm = new Main(args);
-    cm.run();
-
-    final int exitCode = cm.exitCode();
-    if (exitCode != 0) {
-      throw new IOException(
-        String.format("Returned exit code %d", Integer.valueOf(exitCode)),
-        cm.exitCause().orElse(null)
-      );
-    }
+    mainExitless(args);
   }
 
   @Override
   public String toString()
   {
     return String.format(
-      "[MainExitless 0x%s]",
+      "[CBMainExitless 0x%s]",
       Long.toUnsignedString(System.identityHashCode(this), 16)
     );
   }

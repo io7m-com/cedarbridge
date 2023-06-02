@@ -16,75 +16,106 @@
 
 package com.io7m.cedarbridge.cmdline.internal;
 
-import com.beust.jcommander.Parameter;
-import com.beust.jcommander.Parameters;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.schema.time.CBTime;
-import com.io7m.claypot.core.CLPAbstractCommand;
-import com.io7m.claypot.core.CLPCommandContextType;
+import com.io7m.quarrel.core.QCommandContextType;
+import com.io7m.quarrel.core.QCommandMetadata;
+import com.io7m.quarrel.core.QCommandStatus;
+import com.io7m.quarrel.core.QCommandType;
+import com.io7m.quarrel.core.QParameterNamed0N;
+import com.io7m.quarrel.core.QParameterNamed1;
+import com.io7m.quarrel.core.QParameterNamedType;
+import com.io7m.quarrel.core.QParametersPositionalNone;
+import com.io7m.quarrel.core.QParametersPositionalType;
+import com.io7m.quarrel.core.QStringType.QConstant;
+import com.io7m.quarrel.ext.logback.QLogback;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static com.io7m.claypot.core.CLPCommandType.Status.FAILURE;
-import static com.io7m.claypot.core.CLPCommandType.Status.SUCCESS;
 
 /**
  * The "check" command.
  */
 
-@Parameters(commandDescription = "Type-check a schema file.")
-public final class CBCommandCheck extends CLPAbstractCommand
+public final class CBCommandCheck implements QCommandType
 {
-  @Parameter(
-    names = "--file",
-    description = "The file(s) to type-check"
-  )
-  private List<Path> files = List.of();
+  private static final QParameterNamed0N<Path> FILES =
+    new QParameterNamed0N<>(
+      "--file",
+      List.of(),
+      new QConstant("The file(s) to type-check."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--include",
-    description = "The directories containing source files"
-  )
-  private List<Path> includes = List.of();
+  private static final QParameterNamed0N<Path> INCLUDES =
+    new QParameterNamed0N<>(
+      "--include",
+      List.of(),
+      new QConstant("The directories containing source files."),
+      List.of(),
+      Path.class
+    );
 
-  @Parameter(
-    names = "--no-core",
-    arity = 1,
-    description = "Disable registration of the core com.io7m.cedarbridge package"
-  )
-  private boolean noCore;
+  private static final QParameterNamed1<Boolean> NO_CORE =
+    new QParameterNamed1<>(
+      "--no-core",
+      List.of(),
+      new QConstant(
+        "Disable registration of the core com.io7m.cedarbridge packages."),
+      Optional.of(Boolean.FALSE),
+      Boolean.class
+    );
 
   /**
    * Construct a command.
-   *
-   * @param inContext The command context
    */
 
-  public CBCommandCheck(
-    final CLPCommandContextType inContext)
+  public CBCommandCheck()
   {
-    super(inContext);
+
   }
 
   @Override
-  protected Status executeActual()
-    throws Exception
+  public List<QParameterNamedType<?>> onListNamedParameters()
   {
+    return Stream.concat(
+      Stream.of(FILES, INCLUDES, NO_CORE),
+      QLogback.parameters().stream()
+    ).toList();
+  }
+
+  @Override
+  public QParametersPositionalType onListPositionalParameters()
+  {
+    return new QParametersPositionalNone();
+  }
+
+  @Override
+  public QCommandStatus onExecute(
+    final QCommandContextType context)
+  {
+    QLogback.configure(context);
+
     final var compilers =
       CBServices.findService(CBSchemaCompilerFactoryType.class);
 
     final var compileFiles =
-      this.files.stream()
+      context.parameterValues(FILES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
     final var includeDirectories =
-      this.includes.stream()
+      context.parameterValues(INCLUDES)
+        .stream()
         .map(Path::toAbsolutePath)
         .collect(Collectors.toList());
 
@@ -97,7 +128,7 @@ public final class CBCommandCheck extends CLPAbstractCommand
     final var compiler =
       compilers.createCompiler(configuration);
 
-    if (!this.noCore) {
+    if (!context.<Boolean>parameterValue(NO_CORE).booleanValue()) {
       final var loader = compiler.loader();
       loader.register(CBCore.get());
       loader.register(CBTime.get());
@@ -106,15 +137,19 @@ public final class CBCommandCheck extends CLPAbstractCommand
     try {
       compiler.execute();
     } catch (final CBSchemaCompilerException e) {
-      return FAILURE;
+      return QCommandStatus.FAILURE;
     }
 
-    return SUCCESS;
+    return QCommandStatus.SUCCESS;
   }
 
   @Override
-  public String name()
+  public QCommandMetadata metadata()
   {
-    return "check";
+    return new QCommandMetadata(
+      "check",
+      new QConstant("Type-check a schema file."),
+      Optional.empty()
+    );
   }
 }

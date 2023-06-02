@@ -31,14 +31,14 @@ module com.io7m.cedarbridge.cmdline
   requires com.io7m.cedarbridge.schema.time;
   requires com.io7m.cedarbridge.version;
 
-  requires com.io7m.claypot.core;
-  requires jcommander;
+  requires com.io7m.quarrel.core;
+  requires com.io7m.quarrel.ext.logback;
   requires org.slf4j;
 
   uses com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 
-  opens com.io7m.cedarbridge.cmdline.internal
-    to jcommander, com.io7m.cedarbridge.documentation;
+  opens com.io7m.cedarbridge.cmdline.internal to
+    com.io7m.cedarbridge.documentation;
 
   exports com.io7m.cedarbridge.cmdline.internal
     to com.io7m.cedarbridge.documentation;
