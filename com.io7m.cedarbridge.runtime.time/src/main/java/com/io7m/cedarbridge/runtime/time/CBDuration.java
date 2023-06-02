@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.runtime.time;
 
 import com.io7m.cedarbridge.runtime.api.CBDeserializerMethod;
+import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerMethod;
 
@@ -34,7 +35,7 @@ import java.util.Objects;
  */
 
 public record CBDuration(Duration value)
-  implements Comparable<CBDuration>, Formattable
+  implements Comparable<CBDuration>, Formattable, CBSerializableType
 {
   /**
    * The type of ISO duration values.

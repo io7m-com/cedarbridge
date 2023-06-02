@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.runtime.time;
 
 import com.io7m.cedarbridge.runtime.api.CBDeserializerMethod;
+import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerMethod;
 
@@ -36,7 +37,7 @@ import static java.lang.Integer.toUnsignedLong;
  */
 
 public record CBLocalDate(LocalDate value)
-  implements Comparable<CBLocalDate>, Formattable
+  implements Comparable<CBLocalDate>, Formattable, CBSerializableType
 {
   /**
    * The type of local date values.
