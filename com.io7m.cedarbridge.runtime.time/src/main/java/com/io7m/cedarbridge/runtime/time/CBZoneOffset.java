@@ -17,6 +17,7 @@
 package com.io7m.cedarbridge.runtime.time;
 
 import com.io7m.cedarbridge.runtime.api.CBDeserializerMethod;
+import com.io7m.cedarbridge.runtime.api.CBSerializableType;
 import com.io7m.cedarbridge.runtime.api.CBSerializationContextType;
 import com.io7m.cedarbridge.runtime.api.CBSerializerMethod;
 
@@ -34,7 +35,7 @@ import java.util.Objects;
  */
 
 public record CBZoneOffset(ZoneOffset value)
-  implements Comparable<CBZoneOffset>, Formattable
+  implements Comparable<CBZoneOffset>, Formattable, CBSerializableType
 {
   /**
    * The type of time zone offset values.
