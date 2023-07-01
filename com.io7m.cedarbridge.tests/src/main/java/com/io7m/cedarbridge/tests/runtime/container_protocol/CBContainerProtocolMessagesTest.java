@@ -16,7 +16,6 @@
 
 package com.io7m.cedarbridge.tests.runtime.container_protocol;
 
-import com.io7m.cedarbridge.runtime.api.CBProtocolMessageType;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolMessages;
 import com.io7m.cedarbridge.runtime.container_protocol.CBContainerProtocolResponse;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
@@ -29,9 +28,7 @@ import org.slf4j.LoggerFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;

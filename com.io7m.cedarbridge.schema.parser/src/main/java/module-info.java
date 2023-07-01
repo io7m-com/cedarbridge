@@ -44,4 +44,7 @@ module com.io7m.cedarbridge.schema.parser
   uses com.io7m.jsx.api.serializer.JSXSerializerSupplierType;
 
   exports com.io7m.cedarbridge.schema.parser;
+
+  exports com.io7m.cedarbridge.schema.parser.internal
+    to com.io7m.cedarbridge.tests;
 }

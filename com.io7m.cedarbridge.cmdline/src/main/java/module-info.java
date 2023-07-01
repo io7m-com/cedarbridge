@@ -41,7 +41,8 @@ module com.io7m.cedarbridge.cmdline
     com.io7m.cedarbridge.documentation;
 
   exports com.io7m.cedarbridge.cmdline.internal
-    to com.io7m.cedarbridge.documentation;
+    to com.io7m.cedarbridge.documentation,
+    com.io7m.cedarbridge.tests;
 
   exports com.io7m.cedarbridge.cmdline;
 }

@@ -20,12 +20,18 @@
 
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
+    <checkstyle.skip>true</checkstyle.skip>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>com.io7m.cedarbridge.cmdline</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>com.io7m.cedarbridge.examples</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -116,28 +122,6 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
     </dependency>
-    <dependency>
-      <groupId>nl.jqno.equalsverifier</groupId>
-      <artifactId>equalsverifier</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.io7m.xstructural</groupId>
-      <artifactId>com.io7m.xstructural.vanilla</artifactId>
-      <exclusions>
-        <exclusion>
-          <groupId>org.w3c</groupId>
-          <artifactId>epubcheck</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.tika</groupId>
-          <artifactId>tika-core</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
 
     <dependency>
       <groupId>org.osgi</groupId>
@@ -149,6 +133,7 @@
       <artifactId>org.osgi.annotation.bundle</artifactId>
       <scope>provided</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
@@ -165,10 +150,77 @@
       <groupId>net.jqwik</groupId>
       <artifactId>jqwik-engine</artifactId>
     </dependency>
+    <dependency>
+      <groupId>nl.jqno.equalsverifier</groupId>
+      <artifactId>equalsverifier</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy-agent</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.bytebuddy</groupId>
+      <artifactId>byte-buddy</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>com.io7m.stmp</groupId>
+        <artifactId>string-template-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>generate-version</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>render</goal>
+            </goals>
+            <configuration>
+              <templates>
+                <template>
+                  <directory>src/main/string-template</directory>
+                  <name>CBTestPaths</name>
+                  <target>
+                    ${project.build.directory}/generated-sources/string-template/com/io7m/cedarbridge/tests/CBTestPaths.java
+                  </target>
+                  <properties>
+                    <TEST_SOURCE_DEPENDENCIES>
+                      ${project.build.directory}/test-runtime-dependencies
+                    </TEST_SOURCE_DEPENDENCIES>
+                  </properties>
+                </template>
+              </templates>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-test-compile-dependencies</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <includeGroupIds>com.io7m.cedarbridge</includeGroupIds>
+              <outputDirectory>
+                ${project.build.directory}/test-runtime-dependencies
+              </outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
@@ -184,9 +236,10 @@
               <arguments>
                 <argument>compile</argument>
                 <argument>--output-directory</argument>
-                <argument>${project.build.directory}/generated-test-sources/test-annotations</argument>
+                <argument>${project.build.directory}/generated-sources/annotations</argument>
                 <argument>--file</argument>
-                <argument>${project.basedir}/src/test/resources/com/io7m/cedarbridge/tests/identityTests.cbs</argument>
+                <argument>
+                  ${project.basedir}/src/main/resources/com/io7m/cedarbridge/tests/identityTests.cbs</argument>
                 <argument>--language</argument>
                 <argument>Java 17+</argument>
               </arguments>

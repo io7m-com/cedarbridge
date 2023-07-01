@@ -28,8 +28,8 @@ import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
+import com.io7m.cedarbridge.tests.CBTestPaths;
 import com.io7m.cedarbridge.tests.CBZip;
-import com.sun.source.util.JavacTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,12 +137,16 @@ public final class CBJavaStaticCompilation
           "-Werror",
           "-Xdiags:verbose",
           "-Xlint:unchecked",
+          "--add-modules",
+          "ALL-MODULE-PATH",
+          "-p",
+          CBTestPaths.TEST_SOURCE_DEPENDENCIES,
           "-d",
           this.directory.toAbsolutePath().toString()
         );
 
       final var task =
-        (JavacTask) tool.getTask(
+        tool.getTask(
           null,
           fileManager,
           listener,

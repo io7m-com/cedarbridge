@@ -1,5 +1,5 @@
 /*
- * Copyright © 2022 Mark Raynsford <code@io7m.com> https://www.io7m.com
+ * Copyright © 2023 Mark Raynsford <code@io7m.com> https://www.io7m.com
  *
  * Permission to use, copy, modify, and/or distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -14,27 +14,26 @@
  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-import com.io7m.cedarbridge.codegen.javastatic.CBCGJavaSFactory;
-import com.io7m.cedarbridge.codegen.spi.CBSPICodeGeneratorFactoryType;
-
 /**
- * Cedarbridge message protocol (Java code generator)
+ * Cedarbridge message protocol (Examples)
  */
 
-module com.io7m.cedarbridge.codegen.javastatic
+module com.io7m.cedarbridge.examples
 {
-  requires static org.osgi.annotation.versioning;
   requires static org.osgi.annotation.bundle;
+  requires static org.osgi.annotation.versioning;
+  requires static com.io7m.immutables.style;
+  requires static org.immutables.value;
 
-  requires transitive com.io7m.cedarbridge.codegen.spi;
-  requires transitive com.io7m.cedarbridge.runtime.api;
+  requires com.io7m.cedarbridge.runtime.api;
+  requires com.io7m.cedarbridge.runtime.bssio;
+  requires com.io7m.cedarbridge.runtime.container_protocol;
 
-  provides CBSPICodeGeneratorFactoryType with CBCGJavaSFactory;
-
-  requires org.slf4j;
+  requires com.io7m.jbssio.vanilla;
   requires com.io7m.junreachable.core;
-  requires com.io7m.jodist;
-  requires java.compiler;
+  requires org.slf4j;
 
-  exports com.io7m.cedarbridge.codegen.javastatic;
+  exports com.io7m.cedarbridge.examples.chat;
+  exports com.io7m.cedarbridge.examples.generic;
+  exports com.io7m.cedarbridge.examples.pastebin;
 }
