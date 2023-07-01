@@ -21,6 +21,10 @@
   <properties>
     <mdep.analyze.skip>true</mdep.analyze.skip>
     <checkstyle.skip>true</checkstyle.skip>
+
+    <com.io7m.cedarbridge.test_deps_path>
+      ${project.build.directory}/test-runtime-dependencies
+    </com.io7m.cedarbridge.test_deps_path>
   </properties>
 
   <dependencies>
@@ -170,37 +174,18 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>com.io7m.stmp</groupId>
-        <artifactId>string-template-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>generate-version</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>render</goal>
-            </goals>
-            <configuration>
-              <templates>
-                <template>
-                  <directory>src/main/string-template</directory>
-                  <name>CBTestPaths</name>
-                  <target>
-                    ${project.build.directory}/generated-sources/string-template/com/io7m/cedarbridge/tests/CBTestPaths.java
-                  </target>
-                  <properties>
-                    <TEST_SOURCE_DEPENDENCIES>
-                      ${project.build.directory}/test-runtime-dependencies
-                    </TEST_SOURCE_DEPENDENCIES>
-                  </properties>
-                </template>
-              </templates>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>false</filtering>
+      </resource>
+      <resource>
+        <directory>src/main/resources-filtered</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
 
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -214,7 +199,7 @@
             <configuration>
               <includeGroupIds>com.io7m.cedarbridge</includeGroupIds>
               <outputDirectory>
-                ${project.build.directory}/test-runtime-dependencies
+                ${com.io7m.cedarbridge.test_deps_path}
               </outputDirectory>
             </configuration>
           </execution>

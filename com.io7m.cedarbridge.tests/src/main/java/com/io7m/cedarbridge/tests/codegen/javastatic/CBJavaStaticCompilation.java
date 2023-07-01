@@ -28,7 +28,6 @@ import com.io7m.cedarbridge.schema.parser.CBParserFactory;
 import com.io7m.cedarbridge.schema.typer.CBTypeCheckerFactory;
 import com.io7m.cedarbridge.tests.CBFakeLoader;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
-import com.io7m.cedarbridge.tests.CBTestPaths;
 import com.io7m.cedarbridge.tests.CBZip;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +35,14 @@ import org.slf4j.LoggerFactory;
 import javax.tools.SimpleJavaFileObject;
 import javax.tools.ToolProvider;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.lang.module.ModuleFinder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.Set;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -53,6 +54,19 @@ public final class CBJavaStaticCompilation
 {
   private static final Logger LOG =
     LoggerFactory.getLogger(CBJavaStaticCompilation.class);
+
+  private static final Properties TEST_PATHS =
+    new Properties();
+
+  static {
+    try (var stream =
+           CBJavaStaticCompilation.class.getResourceAsStream(
+      "/com/io7m/cedarbridge/tests/testPaths.properties")) {
+      TEST_PATHS.load(stream);
+    } catch (final IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 
   private final CBBinderFactory binders;
   private final CBParserFactory parsers;
@@ -140,7 +154,7 @@ public final class CBJavaStaticCompilation
           "--add-modules",
           "ALL-MODULE-PATH",
           "-p",
-          CBTestPaths.TEST_SOURCE_DEPENDENCIES.toString(),
+          TEST_PATHS.getProperty("testDependenciesPath"),
           "-d",
           this.directory.toAbsolutePath().toString()
         );
