@@ -18,10 +18,12 @@ CBTestPaths(TEST_SOURCE_DEPENDENCIES) ::= <<
 
 package com.io7m.cedarbridge.tests;
 
+import java.nio.file.Path;
+
 public final class CBTestPaths
 {
-  public static final String TEST_SOURCE_DEPENDENCIES =
-    "<TEST_SOURCE_DEPENDENCIES>";
+  public static final Path TEST_SOURCE_DEPENDENCIES =
+    Path.of("<TEST_SOURCE_DEPENDENCIES>");
 
   private CBTestPaths()
   {

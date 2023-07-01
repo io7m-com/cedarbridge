@@ -140,7 +140,7 @@ public final class CBJavaStaticCompilation
           "--add-modules",
           "ALL-MODULE-PATH",
           "-p",
-          CBTestPaths.TEST_SOURCE_DEPENDENCIES,
+          CBTestPaths.TEST_SOURCE_DEPENDENCIES.toString(),
           "-d",
           this.directory.toAbsolutePath().toString()
         );
