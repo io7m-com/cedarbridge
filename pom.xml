@@ -62,12 +62,12 @@
   <properties>
     <com.io7m.jbssio.version>2.0.0</com.io7m.jbssio.version>
     <com.io7m.jsx.version>3.0.1</com.io7m.jsx.version>
-    <com.io7m.quarrel.version>1.4.0</com.io7m.quarrel.version>
+    <com.io7m.quarrel.version>1.6.0</com.io7m.quarrel.version>
     <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
     <io7m.api.previousVersion>1.2.0</io7m.api.previousVersion>
     <io7m.maven-api.version>3.9.6</io7m.maven-api.version>
-    <jqwik.version>1.8.2</jqwik.version>
-    <org.immutables.version>2.10.0</org.immutables.version>
+    <jqwik.version>1.8.4</jqwik.version>
+    <org.immutables.version>2.10.1</org.immutables.version>
   </properties>
 
   <licenses>
@@ -177,7 +177,7 @@
       <dependency>
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.10.1</version>
+        <version>5.10.2</version>
       </dependency>
       <dependency>
         <groupId>com.io7m.jaffirm</groupId>
@@ -217,12 +217,12 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>2.0.10</version>
+        <version>2.0.12</version>
       </dependency>
       <dependency>
         <groupId>ch.qos.logback</groupId>
         <artifactId>logback-classic</artifactId>
-        <version>1.4.14</version>
+        <version>1.5.3</version>
       </dependency>
       <dependency>
         <groupId>com.squareup</groupId>
@@ -244,7 +244,7 @@
       <dependency>
         <groupId>nl.jqno.equalsverifier</groupId>
         <artifactId>equalsverifier</artifactId>
-        <version>3.15.5</version>
+        <version>3.15.8</version>
       </dependency>
       <dependency>
         <groupId>net.jqwik</groupId>
@@ -261,17 +261,17 @@
       <dependency>
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
-        <version>5.8.0</version>
+        <version>5.11.0</version>
       </dependency>
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy-agent</artifactId>
-        <version>1.14.11</version>
+        <version>1.14.12</version>
       </dependency>
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.14.11</version>
+        <version>1.14.12</version>
       </dependency>
 
       <!-- CLI -->
@@ -300,7 +300,7 @@
       <dependency>
         <groupId>org.apache.maven.plugin-tools</groupId>
         <artifactId>maven-plugin-annotations</artifactId>
-        <version>3.10.2</version>
+        <version>3.11.0</version>
         <scope>provided</scope>
       </dependency>
       <dependency>
