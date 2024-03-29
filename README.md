@@ -2,10 +2,10 @@ cedarbridge
 ===
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.cedarbridge/com.io7m.cedarbridge.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.cedarbridge%22)
-[![Maven Central (snapshot)](https://img.shields.io/nexus/s/https/s01.oss.sonatype.org/com.io7m.cedarbridge/com.io7m.cedarbridge.svg?style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/cedarbridge/)
+[![Maven Central (snapshot)](https://img.shields.io/nexus/s/com.io7m.cedarbridge/com.io7m.cedarbridge?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/cedarbridge/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m/cedarbridge.svg?style=flat-square)](https://codecov.io/gh/io7m/cedarbridge)
 
-![cedarbridge](./src/site/resources/cedarbridge.jpg?raw=true)
+![com.io7m.cedarbridge](./src/site/resources/cedarbridge.jpg?raw=true)
 
 | JVM | Platform | Status |
 |-----|----------|--------|
