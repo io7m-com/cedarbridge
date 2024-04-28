@@ -84,9 +84,9 @@
   </licenses>
 
   <scm>
-    <url>https://github.com/io7m/cedarbridge</url>
-    <connection>scm:git:https://github.com/io7m/cedarbridge</connection>
-    <developerConnection>scm:git:https://github.com/io7m/cedarbridge</developerConnection>
+    <url>https://www.github.com/io7m-com/cedarbridge</url>
+    <connection>scm:git:https://www.github.com/io7m-com/cedarbridge</connection>
+    <developerConnection>scm:git:https://www.github.com/io7m-com/cedarbridge</developerConnection>
   </scm>
 
   <developers>
@@ -99,7 +99,7 @@
   </developers>
 
   <issueManagement>
-    <url>https://www.github.com/io7m/cedarbridge/issues</url>
+    <url>https://www.github.com/io7m-com/cedarbridge/issues</url>
     <system>GitHub Issues</system>
   </issueManagement>
 
@@ -121,7 +121,7 @@
 
   <ciManagement>
     <system>GitHub Actions</system>
-    <url>https://github.com/cedarbridge/actions</url>
+    <url>https://github.com/io7m-com/cedarbridge/actions</url>
   </ciManagement>
 
   <prerequisites>
