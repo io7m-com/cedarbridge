@@ -4,7 +4,7 @@ cedarbridge
 [![Maven Central](https://img.shields.io/maven-central/v/com.io7m.cedarbridge/com.io7m.cedarbridge.svg?style=flat-square)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.io7m.cedarbridge%22)
 [![Maven Central (snapshot)](https://img.shields.io/nexus/s/com.io7m.cedarbridge/com.io7m.cedarbridge?server=https%3A%2F%2Fs01.oss.sonatype.org&style=flat-square)](https://s01.oss.sonatype.org/content/repositories/snapshots/com/io7m/cedarbridge/)
 [![Codecov](https://img.shields.io/codecov/c/github/io7m-com/cedarbridge.svg?style=flat-square)](https://codecov.io/gh/io7m-com/cedarbridge)
-![Java Version](https://img.shields.io/badge/21-java?label=java&color=007fff)
+![Java Version](https://img.shields.io/badge/21-java?label=java&color=e6c35c)
 
 ![com.io7m.cedarbridge](./src/site/resources/cedarbridge.jpg?raw=true)
 
