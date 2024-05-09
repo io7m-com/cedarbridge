@@ -64,7 +64,7 @@
     <com.io7m.jbssio.version>2.0.0</com.io7m.jbssio.version>
     <com.io7m.jsx.version>3.0.1</com.io7m.jsx.version>
     <com.io7m.quarrel.version>1.6.0</com.io7m.quarrel.version>
-    <com.io7m.xstructural.version>1.8.0</com.io7m.xstructural.version>
+    <com.io7m.xstructural.version>1.8.1</com.io7m.xstructural.version>
     <io7m.maven-api.version>3.9.6</io7m.maven-api.version>
 
     <!-- Configuration. -->
