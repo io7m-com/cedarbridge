@@ -22,7 +22,6 @@ import com.io7m.cedarbridge.schema.compiler.CBSchemaCompilerFactory;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerException;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

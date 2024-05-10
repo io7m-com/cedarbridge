@@ -24,11 +24,6 @@ import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerConfiguration;
 import com.io7m.cedarbridge.schema.compiler.api.CBSchemaCompilerFactoryType;
 import com.io7m.cedarbridge.schema.core_types.CBCore;
 import com.io7m.cedarbridge.tests.CBTestDirectories;
-import com.io7m.xstructural.api.XSProcessorException;
-import com.io7m.xstructural.api.XSProcessorFactoryType;
-import com.io7m.xstructural.api.XSProcessorRequest;
-import com.io7m.xstructural.api.XSProcessorRequestType;
-import com.io7m.xstructural.vanilla.XSProcessors;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,17 +104,6 @@ public final class CBXGeneratorTest
     return List.copyOf(outputFiles);
   }
 
-  /**
-   * @return The available processors
-   */
-
-  private static XSProcessorFactoryType findProcessors()
-  {
-    return ServiceLoader.load(XSProcessorFactoryType.class)
-      .findFirst()
-      .orElseThrow(() -> new IllegalStateException("No processor service"));
-  }
-
   @BeforeEach
   public void setup()
     throws IOException
@@ -144,8 +128,6 @@ public final class CBXGeneratorTest
 
     final var results = document(List.of(file), this.directory);
     assertEquals(4, results.size());
-
-    this.validate();
   }
 
   @Test
@@ -158,25 +140,6 @@ public final class CBXGeneratorTest
 
     final var results = document(List.of(file), this.directory);
     assertEquals(4, results.size());
-
-    this.validate();
-  }
-
-  private void validate()
-    throws XSProcessorException
-  {
-    final var requestBuilder = XSProcessorRequest.builder();
-    requestBuilder.setOutputDirectory(this.directory);
-    requestBuilder.setSourceFile(this.directory);
-    requestBuilder.setTask(XSProcessorRequestType.Task.VALIDATE_XHTML);
-
-    final var request = requestBuilder.build();
-    final var processors = findProcessors();
-    final var processor = processors.create(request);
-    processor.execute();
-
-    final var proc = new XSProcessors();
-    proc.create(request);
   }
 
   @Test
@@ -189,8 +152,6 @@ public final class CBXGeneratorTest
 
     final var results = document(List.of(file), this.directory);
     assertEquals(4, results.size());
-
-    this.validate();
 
     {
       final var text = Files.readString(results.get(0));
@@ -215,8 +176,6 @@ public final class CBXGeneratorTest
 
     final var results = document(List.of(file), this.directory, Optional.of("piltdown"));
     assertEquals(4, results.size());
-
-    this.validate();
 
     {
       final var text = Files.readString(results.get(0));

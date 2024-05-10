@@ -35,4 +35,6 @@ module com.io7m.cedarbridge.codegen.javastatic
   requires com.io7m.junreachable.core;
   requires com.io7m.jodist;
   requires java.compiler;
+
+  exports com.io7m.cedarbridge.codegen.javastatic;
 }

@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.UUID;
 
 import static com.io7m.cedarbridge.runtime.bssio.CBSerializationContextBSSIO.createFromByteArray;
