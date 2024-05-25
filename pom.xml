@@ -72,7 +72,7 @@
     <io7m.java.targetJavaVersion>21</io7m.java.targetJavaVersion>
 
     <!-- Third-party dependencies. -->
-    <jqwik.version>1.8.4</jqwik.version>
+    <jqwik.version>1.8.5</jqwik.version>
     <org.immutables.version>2.10.1</org.immutables.version>
   </properties>
 
