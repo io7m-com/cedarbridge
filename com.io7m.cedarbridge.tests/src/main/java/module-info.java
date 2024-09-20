@@ -59,6 +59,7 @@ open module com.io7m.cedarbridge.tests
   exports com.io7m.cedarbridge.tests;
 
   requires com.io7m.jbssio.vanilla;
+  requires com.io7m.junreachable.core;
   requires java.compiler;
   requires net.bytebuddy.agent;
   requires net.bytebuddy;
@@ -71,7 +72,7 @@ open module com.io7m.cedarbridge.tests
   requires org.junit.jupiter.engine;
   requires org.junit.platform.commons;
   requires org.junit.platform.engine;
-  requires com.io7m.junreachable.core;
+  requires org.junit.platform.launcher;
 
   provides net.jqwik.api.providers.ArbitraryProvider
     with com.io7m.cedarbridge.tests.CBIdentityTestProvider;

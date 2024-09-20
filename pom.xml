@@ -74,6 +74,7 @@
     <!-- Third-party dependencies. -->
     <jqwik.version>1.9.0</jqwik.version>
     <org.immutables.version>2.10.1</org.immutables.version>
+    <org.junit.version>5.11.0</org.junit.version>
   </properties>
 
   <licenses>
@@ -181,11 +182,6 @@
         <version>2.0.0</version>
       </dependency>
       <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.10.3</version>
-      </dependency>
-      <dependency>
         <groupId>com.io7m.jaffirm</groupId>
         <artifactId>com.io7m.jaffirm.core</artifactId>
         <version>4.0.1</version>
@@ -247,6 +243,13 @@
       </dependency>
 
       <!-- Test suite. -->
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <version>${org.junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
       <dependency>
         <groupId>nl.jqno.equalsverifier</groupId>
         <artifactId>equalsverifier</artifactId>
