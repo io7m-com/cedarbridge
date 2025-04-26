@@ -171,8 +171,10 @@ public final class CBExServer<M, P extends CBProtocolMessageType>
 
   enum State
   {
+    // CHECKSTYLE:OFF
     STATE_INITIAL,
     STATE_RUNNING,
     STATE_DONE
+    // CHECKSTYLE:ON
   }
 }

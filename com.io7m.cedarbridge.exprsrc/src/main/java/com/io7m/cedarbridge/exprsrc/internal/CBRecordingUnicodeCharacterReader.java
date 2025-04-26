@@ -150,7 +150,13 @@ public final class CBRecordingUnicodeCharacterReader
 
   enum State
   {
+    /**
+     * In text.
+     */
     IN_TEXT,
+    /**
+     * In a carriage return.
+     */
     IN_CR
   }
 }

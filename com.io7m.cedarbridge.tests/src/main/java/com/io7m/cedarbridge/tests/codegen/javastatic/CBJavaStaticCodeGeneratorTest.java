@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.verification.Times;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -46,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -483,7 +483,7 @@ public final class CBJavaStaticCodeGeneratorTest
       });
     assertInstanceOf(IOException.class, ex.getCause());
 
-    verify(this.context, new Times(1)).readVariantIndex();
+    verify(this.context, times(1)).readVariantIndex();
   }
 
   @Test
@@ -532,14 +532,14 @@ public final class CBJavaStaticCodeGeneratorTest
     verify(this.context).writeU16(160L);
     verify(this.context).writeU32(320L);
     verify(this.context).writeU64(640L);
-    verify(this.context, new Times(1)).readS8();
-    verify(this.context, new Times(1)).readS16();
-    verify(this.context, new Times(1)).readS32();
-    verify(this.context, new Times(1)).readS64();
-    verify(this.context, new Times(1)).readU8();
-    verify(this.context, new Times(1)).readU16();
-    verify(this.context, new Times(1)).readU32();
-    verify(this.context, new Times(1)).readU64();
+    verify(this.context, times(1)).readS8();
+    verify(this.context, times(1)).readS16();
+    verify(this.context, times(1)).readS32();
+    verify(this.context, times(1)).readS64();
+    verify(this.context, times(1)).readU8();
+    verify(this.context, times(1)).readU16();
+    verify(this.context, times(1)).readU32();
+    verify(this.context, times(1)).readU64();
   }
 
   @Test
@@ -573,9 +573,9 @@ public final class CBJavaStaticCodeGeneratorTest
     verify(this.context).writeF16(16.0);
     verify(this.context).writeF32(32.0);
     verify(this.context).writeF64(64.0);
-    verify(this.context, new Times(1)).readF16();
-    verify(this.context, new Times(1)).readF32();
-    verify(this.context, new Times(1)).readF64();
+    verify(this.context, times(1)).readF16();
+    verify(this.context, times(1)).readF32();
+    verify(this.context, times(1)).readF64();
   }
 
   @Test
@@ -914,9 +914,9 @@ public final class CBJavaStaticCodeGeneratorTest
     final var x = d.invoke(c, this.context);
     s.invoke(c, this.context, x);
 
-    verify(this.context, new Times(2)).begin("s");
-    verify(this.context, new Times(2)).readU64();
-    verify(this.context, new Times(2)).end("s");
+    verify(this.context, times(2)).begin("s");
+    verify(this.context, times(2)).readU64();
+    verify(this.context, times(2)).end("s");
     verify(this.context).writeU64(0x11223344_55667788L);
     verify(this.context).writeU64(0x99aabbcc_ddeeff00L);
   }
