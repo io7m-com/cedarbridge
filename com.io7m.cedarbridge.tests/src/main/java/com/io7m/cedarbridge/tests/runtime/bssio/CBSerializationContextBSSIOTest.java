@@ -310,7 +310,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(1L, ex.byteOffset());
-        assertEquals("@0x1: Broken output stream", ex.getMessage());
+        assertEquals("@0x1: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -322,7 +322,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(2L, ex.byteOffset());
-        assertEquals("@0x2: Broken output stream", ex.getMessage());
+        assertEquals("@0x2: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -334,7 +334,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -346,7 +346,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(8L, ex.byteOffset());
-        assertEquals("@0x8: Broken output stream", ex.getMessage());
+        assertEquals("@0x8: Broken output stream: write(int)", ex.getMessage());
       },
 
       () -> {
@@ -359,7 +359,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(1L, ex.byteOffset());
-        assertEquals("@0x1: Broken output stream", ex.getMessage());
+        assertEquals("@0x1: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -371,7 +371,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(2L, ex.byteOffset());
-        assertEquals("@0x2: Broken output stream", ex.getMessage());
+        assertEquals("@0x2: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -383,7 +383,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -395,7 +395,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(8L, ex.byteOffset());
-        assertEquals("@0x8: Broken output stream", ex.getMessage());
+        assertEquals("@0x8: Broken output stream: write(int)", ex.getMessage());
       },
 
       () -> {
@@ -408,7 +408,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(2L, ex.byteOffset());
-        assertEquals("@0x2: Broken output stream", ex.getMessage());
+        assertEquals("@0x2: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -420,7 +420,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -432,7 +432,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(8L, ex.byteOffset());
-        assertEquals("@0x8: Broken output stream", ex.getMessage());
+        assertEquals("@0x8: Broken output stream: write(int)", ex.getMessage());
       },
 
       () -> {
@@ -445,7 +445,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -457,7 +457,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
 
       () -> {
@@ -470,7 +470,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       },
       () -> {
         final var c = this.brokenWriteContext();
@@ -482,7 +482,7 @@ public final class CBSerializationContextBSSIOTest
           });
         assertEquals("x.y.z", ex.path());
         assertEquals(4L, ex.byteOffset());
-        assertEquals("@0x4: Broken output stream", ex.getMessage());
+        assertEquals("@0x4: Broken output stream: write(int)", ex.getMessage());
       }
     );
   }
