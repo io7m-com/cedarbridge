@@ -62,6 +62,6 @@ product types, and strong versioning.
 
 ## Usage
 
-See the [documentation](https://www.io7m.com/software/cedarbridge) and
-[language specification](https://www.io7m.com/software/cedarbridge).
+See the [documentation](https://www.io7m.com/software/cedarbridge#documentation) and
+[language specification](https://www.io7m.com/software/cedarbridge#documentation).
 
