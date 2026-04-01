@@ -65,7 +65,7 @@
     <com.io7m.jsx.version>3.0.1</com.io7m.jsx.version>
     <com.io7m.quarrel.version>1.8.0</com.io7m.quarrel.version>
     <com.io7m.xstructural.version>1.9.0</com.io7m.xstructural.version>
-    <io7m.maven-api.version>3.9.12</io7m.maven-api.version>
+    <io7m.maven-api.version>3.9.14</io7m.maven-api.version>
 
     <!-- Configuration. -->
     <io7m.api.previousVersion>2.0.0</io7m.api.previousVersion>
